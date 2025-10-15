@@ -5,10 +5,11 @@ import React from "react";
 import useSWR from "swr";
 import { AuthContextType } from "./type";
 import { AxiosError } from "axios";
-import { useNetworkError } from "./side_effects/network-error";
-import { useLoadToken } from "./side_effects/load_token";
+import { useNetworkError } from "../_side-effects/network-error";
+import { useLoadToken } from "../_side-effects/load_token";
 import { User } from "@/data/user/type";
-import { useUnAuthorized } from "./side_effects/unauthorized";
+import { useUnAuthorized } from "../_side-effects/unauthorized";
+import { useAuthorized } from "../_side-effects/authorized";
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
@@ -25,7 +26,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
     }
   );
 
+  // side effects
+  // if user is authorized, redirect to console
+  useAuthorized(data);
+  // if user is unauthorized, redirect to authentication
   useUnAuthorized(error);
+  // if there is a network error, show a network error dialog
   useNetworkError(error);
 
   return (
