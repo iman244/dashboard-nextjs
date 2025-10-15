@@ -1,7 +1,7 @@
 "use client";
 
 import { me, USER_ME_KEY } from "@/data/user/fetches";
-import React from "react";
+import React, { useEffect } from "react";
 import useSWR from "swr";
 import { AuthContextType } from "./type";
 import { AxiosError } from "axios";
@@ -16,8 +16,8 @@ const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { token_found } = useLoadToken();
-  const { data, error } = useSWR<User, AxiosError>(
+  const { token_found, loadToken } = useLoadToken();
+  const { data, error, isLoading } = useSWR<User, AxiosError>(
     token_found ? USER_ME_KEY : null,
     me,
     {
@@ -25,6 +25,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
       errorRetryCount: 0,
     }
   );
+
+  useEffect(()=>{
+    console.log({token_found})
+  },[token_found])
 
   // side effects
   // if user is authorized, redirect to console
@@ -35,7 +39,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   useNetworkError(error);
 
   return (
-    <AuthContext.Provider value={{ user: data }}>
+    <AuthContext.Provider value={{ user: data, token_found, loadToken, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

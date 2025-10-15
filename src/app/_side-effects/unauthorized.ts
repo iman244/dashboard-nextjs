@@ -1,4 +1,4 @@
-import { Paths } from "@/app/paths";
+import { AppRoutes } from "@/app/paths";
 import { ACCESS_TOKEN_KEY } from "@/settings";
 import { AxiosError, isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ export const useUnAuthorized = (error: AxiosError | undefined) => {
       console.log({ unauthorized: error });
       if (error.status === 401) {
         localStorage.removeItem(ACCESS_TOKEN_KEY);
-        router.push(Paths.AUTHENTICATION);
+        router.push(AppRoutes.AUTHENTICATION);
       }
     }
   }, [error, router]);

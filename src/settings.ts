@@ -6,4 +6,6 @@ export const DJANGO_API_PATH =
 export const AUTHORIZATION_TOKEN_NAME =
   process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME || "JWT";
 export const ACCESS_TOKEN_KEY =
-  process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY || "access_token";
+  process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY || "access";
+export const REFRESH_TOKEN_KEY =
+  process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY || "refresh";

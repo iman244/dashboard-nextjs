@@ -22,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOnLogin } from "./_side-effects/on-login";
+import { useAuth } from "@/app/_auth";
+import Loading from "@/app/loading";
 
 // Define the form schema
 const loginSchema = z.object({
@@ -37,6 +39,7 @@ async function loginUser(url: string, { arg }: { arg: LoginFormData }) {
 }
 
 export function Client() {
+  const { isLoading } = useAuth();
   const [apiError, setApiError] = useState<JwtCreateApiError | null>(null);
 
   const { onLogin } = useOnLogin();
@@ -61,6 +64,7 @@ export function Client() {
     setApiError(null);
     trigger(data);
   };
+
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-background">
