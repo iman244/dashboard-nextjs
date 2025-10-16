@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "../_auth";
 import Loading from "../loading";
 import { AuthenticationStatus } from "../_auth/type";
-import { AppRoutes, getAuthRedirectUrl } from "../paths";
+import { getAuthRedirectUrl } from "../paths";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
