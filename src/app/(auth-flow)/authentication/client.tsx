@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import useSWRMutation from "swr/mutation";
 import Link from "next/link";
 import {
   jwt_create,
@@ -22,8 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOnLogin } from "./_side-effects/on-login";
-import { useAuth } from "@/app/_auth";
-import Loading from "@/app/loading";
+import { useMutation } from "@tanstack/react-query";
 
 // Define the form schema
 const loginSchema = z.object({
@@ -33,13 +31,7 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-// SWR mutation function
-async function loginUser(url: string, { arg }: { arg: LoginFormData }) {
-  return jwt_create({ payload: arg });
-}
-
 export function Client() {
-  const { isLoading } = useAuth();
   const [apiError, setApiError] = useState<JwtCreateApiError | null>(null);
 
   const { onLogin } = useOnLogin();
@@ -52,7 +44,9 @@ export function Client() {
     },
   });
 
-  const { trigger, isMutating } = useSWRMutation(JWT_CREATE_KEY, loginUser, {
+  const { mutate, isPending } = useMutation({
+    mutationKey: [JWT_CREATE_KEY],
+    mutationFn: jwt_create,
     onSuccess: onLogin,
     onError: (error: JwtCreateApiError) => {
       console.error("Login failed:", error);
@@ -60,11 +54,13 @@ export function Client() {
     },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    setApiError(null);
-    trigger(data);
-  };
-
+  const onSubmit = React.useCallback(
+    async (data: LoginFormData) => {
+      setApiError(null);
+      mutate({ payload: data });
+    },
+    [mutate]
+  );
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-background">
@@ -88,7 +84,7 @@ export function Client() {
                     <Input
                       placeholder="Enter your username"
                       {...field}
-                      disabled={isMutating}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -107,7 +103,7 @@ export function Client() {
                       type="password"
                       placeholder="Enter your password"
                       {...field}
-                      disabled={isMutating}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -121,16 +117,18 @@ export function Client() {
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={isMutating}>
-              {isMutating ? "Signing in..." : "Sign In"}
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? "Signing in..." : "Sign In"}
             </Button>
           </form>
         </Form>
 
         <div className="text-center text-sm">
-          <span className="text-muted-foreground">Don&apos;t have an account? </span>
-          <Link 
-            href="/authentication/register" 
+          <span className="text-muted-foreground">
+            Don&apos;t have an account?{" "}
+          </span>
+          <Link
+            href="/authentication/register"
             className="text-primary hover:underline font-medium"
           >
             Sign up

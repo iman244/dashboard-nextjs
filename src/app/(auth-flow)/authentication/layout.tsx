@@ -2,13 +2,53 @@
 
 import { useAuth } from "@/app/_auth";
 import Loading from "@/app/loading";
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { AppRoutes } from "@/app/paths";
+import { AuthenticationStatus } from "@/app/_auth/type";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { token_found } = useAuth();
+  const { authStatus } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextPath = searchParams.get("next");
 
-  if (token_found === undefined) {
+  useEffect(() => {
+    if (authStatus === AuthenticationStatus.Authenticated) {
+      console.log(
+        "user is authenticated, redirecting to",
+        nextPath || AppRoutes.CONSOLE
+      );
+      const timeout = setTimeout(() => {
+        router.push(nextPath || AppRoutes.CONSOLE);
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [authStatus, router, nextPath]);
+
+  if (authStatus === AuthenticationStatus.Loading) {
     return <Loading />;
+  }
+
+  if (authStatus === AuthenticationStatus.Authenticated) {
+    console.log(
+      "user is authenticated, redirecting to",
+      nextPath || AppRoutes.CONSOLE
+    );
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 h-screen max-w-lg mx-auto">
+        <p className="text-center text-lg font-medium text-muted-foreground">
+          You are authenticated, you will be redirected to console in a few
+          seconds. If you are not redirected, please click{" "}
+          <Link href={AppRoutes.CONSOLE} className="text-primary hover:underline">here</Link>.
+        </p>
+        <Button asChild>
+          <Link href={AppRoutes.CONSOLE}>Redirect to console</Link>
+        </Button>
+      </div>
+    );
   }
 
   return <>{children}</>;

@@ -23,14 +23,14 @@ export const useAuthorized = (user: User | undefined) => {
 
     const isUserAuthenticated = Boolean(user);
 
-    if (isAuthFlowRoute(pathname)) {
-      if (isUserAuthenticated) {
-        console.log(
-          "user is authenticated and on auth flow pages, redirecting to console"
-        );
-        router.push(AppRoutes.CONSOLE);
-      }
-    }
+    // if (isAuthFlowRoute(pathname)) {
+    //   if (isUserAuthenticated) {
+    //     console.log(
+    //       "user is authenticated and on auth flow pages, redirecting to console"
+    //     );
+    //     router.push(AppRoutes.CONSOLE);
+    //   }
+    // }
 
     if (isProtectedRoute(pathname)) {
       if (!isUserAuthenticated) {

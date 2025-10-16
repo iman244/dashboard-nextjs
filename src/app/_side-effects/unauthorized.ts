@@ -8,7 +8,6 @@ export const useUnAuthorized = (error: AxiosError | undefined) => {
   const router = useRouter();
   React.useEffect(() => {
     if (isAxiosError(error)) {
-      console.log({ unauthorized: error });
       if (error.status === 401) {
         localStorage.removeItem(ACCESS_TOKEN_KEY);
         router.push(AppRoutes.AUTHENTICATION);

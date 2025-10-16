@@ -2,22 +2,24 @@ import { ACCESS_TOKEN_KEY } from "@/settings";
 import React from "react";
 
 export const useLoadToken = () => {
-  const [token_found, setTokenFound] = React.useState<boolean | undefined>(undefined);
+  const [AccessTokenFound, setAccessTokenFound] = React.useState<boolean | undefined>(undefined);
 
-  const loadToken = React.useCallback(() => {
+  const loadAccessToken = React.useCallback(() => {
     const access = localStorage.getItem(ACCESS_TOKEN_KEY);
 
     if (access) {
-      setTokenFound(true);
+      console.log("access token found");
+      setAccessTokenFound(true);
     } else {
-      setTokenFound(false);
+      console.log("access token not found");
+      setAccessTokenFound(false);
     }
   }, []);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
-    loadToken();
-  }, [loadToken]);
+    loadAccessToken();
+  }, [loadAccessToken]);
 
-  return { token_found, loadToken };
+  return { AccessTokenFound, loadAccessToken };
 };

@@ -1,45 +1,57 @@
 "use client";
 
-import { me, USER_ME_KEY } from "@/data/user/fetches";
-import React, { useEffect } from "react";
-import useSWR from "swr";
-import { AuthContextType } from "./type";
-import { AxiosError } from "axios";
-import { useNetworkError } from "../_side-effects/network-error";
-import { useLoadToken } from "../_side-effects/load_token";
-import { User } from "@/data/user/type";
-import { useUnAuthorized } from "../_side-effects/unauthorized";
-import { useAuthorized } from "../_side-effects/authorized";
+import React from "react";
+import { useMutation } from "@tanstack/react-query";
+import { AuthContextType, AuthenticationStatus } from "./type";
+import { useJwtToken } from "./useJwtToken";
+import { JwtCreateApiResponse } from "@/data/user/auth";
+import { jwt_verify, JWT_VERIFY_KEY } from "@/data/user/auth/jwt_verify";
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { token_found, loadToken } = useLoadToken();
-  const { data, error, isLoading } = useSWR<User, AxiosError>(
-    token_found ? USER_ME_KEY : null,
-    me,
-    {
-      shouldRetryOnError: false,
-      errorRetryCount: 0,
-    }
+  const [authStatus, setAuthenticationStatus ] = React.useState<AuthenticationStatus>(AuthenticationStatus.Loading);
+  const { access, unAuthenticateUser, storeAuthenticationTokens } = useJwtToken({ setAuthenticationStatus });
+
+  const isAuthenticated = React.useMemo(
+    () => authStatus === AuthenticationStatus.Authenticated,
+    [authStatus]
   );
 
-  useEffect(()=>{
-    console.log({token_found})
-  },[token_found])
+  const AuthenticateUser = React.useCallback((data: JwtCreateApiResponse) => {
+    storeAuthenticationTokens(data)
+    setAuthenticationStatus(AuthenticationStatus.Authenticated);
+  }, [storeAuthenticationTokens]);
 
-  // side effects
-  // if user is authorized, redirect to console
-  useAuthorized(data);
-  // if user is unauthorized, redirect to authentication
-  useUnAuthorized(error);
-  // if there is a network error, show a network error dialog
-  useNetworkError(error);
+  // if we have access we would validate the tokens by getting user
+  const { mutate: verifyAccessToken } = useMutation({
+    mutationKey: [JWT_VERIFY_KEY],
+    mutationFn: jwt_verify,
+    onSuccess: () => {
+      setAuthenticationStatus(AuthenticationStatus.Authenticated);
+    },
+    onError: (error) => {
+      console.error("Error in token validation mutation:", error);
+    },
+  });
+
+  React.useEffect(() => {
+    if (access) {
+      verifyAccessToken();
+    }
+  }, [access, verifyAccessToken]);
 
   return (
-    <AuthContext.Provider value={{ user: data, token_found, loadToken, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        authStatus,
+        unAuthenticateUser,
+        isAuthenticated,
+        AuthenticateUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
