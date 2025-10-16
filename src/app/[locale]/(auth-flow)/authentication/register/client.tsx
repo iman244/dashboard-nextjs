@@ -4,13 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import useSWRMutation from "swr/mutation";
-import Link from "next/link";
 import {
   user_create,
   USER_CREATE_KEY,
   UserCreateApiError,
-  UserCreateApiPayload,
 } from "@/data/user/mutations";
 import {
   Form,
@@ -23,6 +20,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOnRegister } from "./_side-effects/on-register";
+import { Link } from "@/i18n/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { useLocale, useTranslations } from "next-intl";
 
 // Define the form schema
 const registerSchema = z.object({
@@ -33,15 +33,13 @@ const registerSchema = z.object({
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
-// SWR mutation function
-async function registerUser(url: string, { arg }: { arg: UserCreateApiPayload }) {
-  return user_create({ payload: arg });
-}
-
 export default function Client() {
-  const [apiError, setApiError] = useState<UserCreateApiError | null>(null);
-
+  const [apiError, setApiError] = useState<string | null>(null);
+  const t = useTranslations("SignUpPage");
   const { onRegister } = useOnRegister();
+
+  const locale = useLocale();
+  const dir = locale === "fa" ? "rtl" : "ltr";
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -52,37 +50,35 @@ export default function Client() {
     },
   });
 
-  const { trigger, isMutating } = useSWRMutation(USER_CREATE_KEY, registerUser, {
+  const { mutate, isPending } = useMutation({
+    mutationKey: [USER_CREATE_KEY],
+    mutationFn: user_create,
     onSuccess: onRegister,
     onError: (error: UserCreateApiError) => {
       console.error("Registration failed:", error);
-      setApiError(error);
+      Object.entries(error.response?.data || {}).forEach(([field, message]) => {
+        if (["username", "email", "password"].includes(field)) {
+          form.setError(field as "username" | "email" | "password", {
+            message: message[0],
+          });
+        } else {
+          setApiError(JSON.stringify(error.response?.data));
+        }
+      });
     },
   });
 
   const onSubmit = async (data: RegisterFormData) => {
     setApiError(null);
-    
-    // Prepare payload for API (exclude confirmPassword)
-    const { ...payload } = data;
-    
-    // Convert empty email to undefined
-    const apiPayload: UserCreateApiPayload = {
-      ...payload,
-      email: payload.email || undefined,
-    };
-    
-    trigger(apiPayload);
+    mutate({ payload: data });
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-background">
+    <main className="min-h-screen flex items-center justify-center bg-background" dir={dir}>
       <div className="w-full max-w-md mx-auto p-6 space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold">Create Account</h1>
-          <p className="text-muted-foreground">
-            Enter your details to create a new account
-          </p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("description")}</p>
         </div>
 
         <Form {...form}>
@@ -92,12 +88,12 @@ export default function Client() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>{t("form.username.label")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter your username"
+                      placeholder={t("form.username.placeholder")}
                       {...field}
-                      disabled={isMutating}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -110,13 +106,13 @@ export default function Client() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email (Optional)</FormLabel>
+                  <FormLabel>{t("form.email.label")}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder={t("form.email.placeholder")}
                       {...field}
-                      disabled={isMutating}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -129,13 +125,13 @@ export default function Client() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("form.password.label")}</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Enter your password"
+                      placeholder={t("form.password.placeholder")}
                       {...field}
-                      disabled={isMutating}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -145,26 +141,25 @@ export default function Client() {
 
             {apiError && (
               <div className="text-destructive text-sm text-center">
-                {apiError.response?.data.username?.[0] ||
-                 apiError.response?.data.email?.[0] ||
-                 apiError.response?.data.password?.[0] ||
-                 "Registration failed. Please try again."}
+                {apiError}
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={isMutating}>
-              {isMutating ? "Creating Account..." : "Create Account"}
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? t("buttons.signingUp") : t("buttons.signUp")}
             </Button>
           </form>
         </Form>
 
-        <div className="text-center text-sm">
-          <span className="text-muted-foreground">Already have an account? </span>
-          <Link 
-            href="/authentication" 
-            className="text-primary hover:underline font-medium"
+        <div className="text-center text-sm" >
+          <span className="text-muted-foreground">
+            {t("form.signIn.label")}{" "}
+          </span>
+          <Link
+            href="/authentication"
+            className="ms-2 text-primary hover:underline font-medium"
           >
-            Sign in
+            {t("form.signIn.link")}
           </Link>
         </div>
       </div>

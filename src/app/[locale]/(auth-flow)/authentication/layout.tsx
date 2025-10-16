@@ -3,11 +3,11 @@
 import { useAuth } from "@/app/_auth";
 import Loading from "@/app/loading";
 import React, { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { AppRoutes } from "@/app/paths";
 import { AuthenticationStatus } from "@/app/_auth/type";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Link, useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { authStatus } = useAuth();

@@ -1,0 +1,66 @@
+{
+  "Metadata": {
+    "title": "داشبورد"
+  },
+  "HomePage": {
+    "title": "خوش آمدید",
+    "description": "داشبورد",
+    "buttons": {
+      "goToConsole": "به داشبورد بروید",
+      "signInRegister": "ورود / ثبت نام"
+    }
+  },
+  "SignInPage": {
+    "title": "ورود",
+    "description": "ورود به حساب کاربری",
+    "buttons": {
+      "signIn": "ورود",
+      "signingIn": "در حال ورود..."
+    },
+    "form": {
+      "username": {
+        "label": "نام کاربری",
+        "placeholder": "ورود به حساب کاربری"
+      },
+      "password": {
+        "label": "رمز عبور",
+        "placeholder": "ورود به حساب کاربری"
+      },
+      "register": {
+        "label": "حساب کاربری ندارید؟",
+        "link": "ثبت نام"
+      }
+    }
+  },
+  "SignUpPage": {
+    "title": "ثبت نام",
+    "description": "ایجاد حساب کاربری",
+    "buttons": {
+      "signUp": "ثبت نام",
+      "signingUp": "در حال ثبت نام..."
+    },
+    "form": {
+      "api": {
+        "username": {
+          "error": "نام کاربری در سیستم وجود دارد"
+        }
+      },
+      "username": {
+        "label": "نام کاربری",
+        "placeholder": "ایجاد حساب کاربری"
+      },
+      "email": {
+        "label": "ایمیل (اختیاری)",
+        "placeholder": "ایجاد حساب کاربری"
+      },
+      "password": {
+        "label": "رمز عبور",
+        "placeholder": "ایجاد حساب کاربری"
+      },
+      "signIn": {
+        "label": "حساب کاربری دارید؟",
+        "link": "ورود"
+      }
+    }
+  }
+}

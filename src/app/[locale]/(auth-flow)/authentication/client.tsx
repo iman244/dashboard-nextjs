@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Link from "next/link";
 import {
   jwt_create,
   JWT_CREATE_KEY,
@@ -22,6 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
+import { Link } from "@/i18n/navigation";
+import { useLocale, useTranslations } from "next-intl";
 
 // Define the form schema
 const loginSchema = z.object({
@@ -33,6 +34,10 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export function Client() {
   const [apiError, setApiError] = useState<JwtCreateApiError | null>(null);
+  const t = useTranslations("SignInPage");
+
+  const locale = useLocale();
+  const dir = locale === "fa" ? "rtl" : "ltr";
 
   const { onLogin } = useOnLogin();
 
@@ -63,12 +68,12 @@ export function Client() {
   );
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-background">
+    <main className="min-h-screen flex items-center justify-center bg-background" dir={dir}>
       <div className="w-full max-w-md mx-auto p-6 space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold">Welcome Back</h1>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="text-muted-foreground">
-            Enter your credentials to sign in
+            {t("description")}
           </p>
         </div>
 
@@ -79,10 +84,10 @@ export function Client() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>{t("form.username.label")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter your username"
+                      placeholder={t("form.username.placeholder")}
                       {...field}
                       disabled={isPending}
                     />
@@ -97,11 +102,11 @@ export function Client() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("form.password.label")}</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Enter your password"
+                      placeholder={t("form.password.placeholder")}
                       {...field}
                       disabled={isPending}
                     />
@@ -118,20 +123,20 @@ export function Client() {
             )}
 
             <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Signing in..." : "Sign In"}
+              {isPending ? t("buttons.signingIn") : t("buttons.signIn")}
             </Button>
           </form>
         </Form>
 
         <div className="text-center text-sm">
           <span className="text-muted-foreground">
-            Don&apos;t have an account?{" "}
+            {t("form.register.label")}
           </span>
           <Link
             href="/authentication/register"
-            className="text-primary hover:underline font-medium"
+            className="ms-2 text-primary hover:underline font-medium"
           >
-            Sign up
+            {t("form.register.link")}
           </Link>
         </div>
       </div>

@@ -22,7 +22,7 @@ graph TB
     GlobalState --> NetworkErrorDialog[Network Error Dialog<br/>- Global Error UI<br/>- Retry Mechanism]
     
     %% Authentication State Management
-    AuthProvider --> AuthState[Auth State<br/>- authStatus: Loading/Authenticated/Unauthenticated<br/>- isAuthenticated<br/>- AuthenticateUser<br/>- unAuthenticateUser]
+    AuthProvider --> AuthState[Auth State<br/>- authStatus: Loading/Authenticated/Unauthenticated<br/>- isAuthenticated<br/>- AuthenticateUser<br/>- unauthenticateUser]
     AuthState --> JwtTokenHook[useJwtToken Hook<br/>- Token Storage/Retrieval<br/>- Token Validation]
     AuthState --> TokenVerification[Token Verification<br/>- jwt_verify API<br/>- Automatic Token Validation]
     

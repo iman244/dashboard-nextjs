@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useAuth } from "../_auth";
-import Loading from "../loading";
-import { AuthenticationStatus } from "../_auth/type";
-import { getAuthRedirectUrl } from "../paths";
-import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "../../_auth";
+import Loading from "../../loading";
+import { AuthenticationStatus } from "../../_auth/type";
+import { getAuthRedirectUrl } from "../../paths";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { authStatus } = useAuth();
@@ -16,7 +15,10 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (authStatus === AuthenticationStatus.Unauthenticated) {
-      router.push(getAuthRedirectUrl(pathname));
+      const timeout = setTimeout(() => {
+        router.push(getAuthRedirectUrl(pathname));
+      }, 3000);
+      return () => clearTimeout(timeout);
     }
   }, [authStatus, router, pathname]);
 
@@ -26,7 +28,7 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   if (authStatus === AuthenticationStatus.Unauthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4">
+      <div className="flex flex-col items-center justify-center gap-4 h-screen max-w-lg mx-auto">
         <p className="text-center text-lg font-medium text-muted-foreground">
           You are not authenticated, you will be redirected to login in a few
           seconds. If you are not redirected, please click{" "}
@@ -39,7 +41,6 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
           .
         </p>
         <Button size="lg" asChild>
-          {" "}
           <Link href={getAuthRedirectUrl(pathname)}>Redirect to login</Link>
         </Button>
       </div>

@@ -26,19 +26,19 @@ const queryClient = new QueryClient({
 
 export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
-    <GlobalProvider>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </GlobalProvider>
+      <GlobalProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </GlobalProvider>
   );
 };

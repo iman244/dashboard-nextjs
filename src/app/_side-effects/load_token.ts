@@ -1,25 +1,27 @@
-import { ACCESS_TOKEN_KEY } from "@/settings";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/settings";
 import React from "react";
 
-export const useLoadToken = () => {
-  const [AccessTokenFound, setAccessTokenFound] = React.useState<boolean | undefined>(undefined);
+type Actions = {
+  saveAccessToken: (access: string) => void;
+  setUserUnauthenticate: () => void;
+  signalRefreshToken: () => void;
+};
 
-  const loadAccessToken = React.useCallback(() => {
-    const access = localStorage.getItem(ACCESS_TOKEN_KEY);
-
-    if (access) {
-      console.log("access token found");
-      setAccessTokenFound(true);
-    } else {
-      console.log("access token not found");
-      setAccessTokenFound(false);
-    }
-  }, []);
-
+export const useLoadToken = ({
+  actions,
+}: { actions: Actions }) => {
   React.useEffect(() => {
-    if (typeof window === "undefined") return;
-    loadAccessToken();
-  }, [loadAccessToken]);
-
-  return { AccessTokenFound, loadAccessToken };
+    // after adding subscribes we trigger token_validation_query so it would authenticate or unauthenticate user
+    const acc = localStorage.getItem(ACCESS_TOKEN_KEY);
+    const refresh = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (acc) {
+      // console.log("access token found, starting flow");
+      actions.saveAccessToken(acc);
+    } else if (!acc && refresh) {
+      actions.signalRefreshToken();
+    } else if (!acc && !refresh) {
+      // console.log("access token did not found, user is unauthenticate");
+      actions.setUserUnauthenticate();
+    }
+  }, [actions]);
 };

@@ -1,5 +1,5 @@
 import { UserCreateApiResponse } from "@/data/user/mutations";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import React from "react";
 
 export const useOnRegister = () => {

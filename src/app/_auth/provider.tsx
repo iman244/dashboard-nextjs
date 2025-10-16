@@ -13,7 +13,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const [authStatus, setAuthenticationStatus ] = React.useState<AuthenticationStatus>(AuthenticationStatus.Loading);
-  const { access, unAuthenticateUser, storeAuthenticationTokens } = useJwtToken({ setAuthenticationStatus });
+  const { access, unauthenticateUser, storeAuthenticationTokens } = useJwtToken({ setAuthenticationStatus });
 
   const isAuthenticated = React.useMemo(
     () => authStatus === AuthenticationStatus.Authenticated,
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
     <AuthContext.Provider
       value={{
         authStatus,
-        unAuthenticateUser,
+        unauthenticateUser,
         isAuthenticated,
         AuthenticateUser,
       }}

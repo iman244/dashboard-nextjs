@@ -2,9 +2,10 @@ import React from "react";
 import { AuthenticationStatus } from "./type";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/settings";
 import { Mutation, useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { jwt_refresh, JWT_REFRESH_KEY } from "@/data/user/auth/jwt_refresh";
 import { JwtCreateApiResponse } from "@/data/user/auth";
+import { useLoadToken } from "../_side-effects/load_token";
+import { useRefreshTokenSetup } from "../_side-effects/refresh_token_setup";
 
 export const useJwtToken = ({
   setAuthenticationStatus,
@@ -13,12 +14,28 @@ export const useJwtToken = ({
     React.SetStateAction<AuthenticationStatus>
   >;
 }) => {
+  const queryClient = useQueryClient();
+
   const [access, setAccess] = React.useState<string | null>(null);
 
   const [refreshSignal, setRefreshSignal] = React.useState<boolean>(false);
   const [refetchSignal, setRefetchSignal] = React.useState(false);
   const [failedQueries, setFailedQueries] = React.useState<string[]>([]);
   const [failedMutations, setFailedMutations] = React.useState<Mutation[]>([]);
+
+  const clearAuthenticationTokens = React.useCallback(() => {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+  }, []);
+
+  const unauthenticateUser = React.useCallback(() => {
+    console.log("unauthenticateUser called");
+    clearAuthenticationTokens();
+    setAccess(null);
+    setAuthenticationStatus(AuthenticationStatus.Unauthenticated);
+    queryClient.clear();
+    queryClient.getMutationCache().clear();
+  }, [clearAuthenticationTokens, queryClient, setAuthenticationStatus]);
 
   const storeAuthenticationTokens = React.useCallback(
     (data: JwtCreateApiResponse) => {
@@ -28,11 +45,6 @@ export const useJwtToken = ({
     },
     [setAccess]
   );
-
-  const clearAuthenticationTokens = React.useCallback(() => {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
-  }, []);
 
   const { mutate: refresh_mutate } = useMutation({
     mutationKey: [JWT_REFRESH_KEY],
@@ -45,86 +57,61 @@ export const useJwtToken = ({
     },
     onError(error) {
       console.log("refresh_m error", error);
-      unAuthenticateUser();
+      unauthenticateUser();
     },
   });
 
-  const queryClient = useQueryClient();
+  // actions to be passed to refresh token setup side effect
+  const addFailedMutations = React.useCallback(
+    (mutation: Mutation) => {
+      setFailedMutations((prev) => [...prev, mutation]);
+    },
+    [setFailedMutations]
+  );
 
-  const unAuthenticateUser = React.useCallback(() => {
-    console.log("unAuthenticateUser called");
-    clearAuthenticationTokens();
-    setAccess(null);
-    setAuthenticationStatus(AuthenticationStatus.Unauthenticated);
-    queryClient.clear();
-    queryClient.getMutationCache().clear();
-  }, [clearAuthenticationTokens, queryClient, setAuthenticationStatus]);
-
-  // subscribe to query errors and add to failed queries
-  React.useEffect(() => {
-    const unsubscribeQueries = queryClient
-      .getQueryCache()
-      .subscribe((event) => {
-        if (event?.type === "updated" && event.action.type == "error") {
-          console.group("query event for error");
-          const error = event.query.state.error;
-          console.log({ event, error });
-          if (error instanceof AxiosError && error.status === 401) {
-            console.log(
-              "error status is 401, query will be add to refresh queue",
-              event
-            );
-            setFailedQueries((pre) => {
-              const _key = event.query.queryKey[0];
-              if (!pre.includes(_key)) {
-                return [...pre, event.query.queryKey[0]];
-              }
-              return pre;
-            });
-          } else {
-            console.log("error is not 401 so it will not add to refresh queue");
-          }
-          console.groupEnd();
-        }
-      });
-
-    // Listen to mutation errors
-    const unsubscribeMutations = queryClient
-      .getMutationCache()
-      .subscribe((event) => {
-        if (event?.type === "updated" && event.action.type === "error") {
-          const error = event.mutation.state.error;
-          if (error instanceof AxiosError && error.status === 401) {
-            console.log("event mutation add to failed", event);
-            setFailedMutations((prev) => [...prev, event.mutation]);
-          }
-        }
-      });
-
-    return () => {
-      unsubscribeQueries();
-      unsubscribeMutations();
-    };
-  }, [queryClient, setAuthenticationStatus]);
-
-  React.useEffect(() => {
-    // after adding subscribes we trigger token_validation_query so it would authenticate or unauthenticate user
-    const acc = localStorage.getItem(ACCESS_TOKEN_KEY);
-    if (acc) {
-      // console.log("access token found, starting flow");
-      setAccess(acc);
-    } else {
-      // console.log("access token did not found, user is unauthenticate");
-      setAuthenticationStatus(AuthenticationStatus.Unauthenticated);
-    }
-  }, [setAuthenticationStatus]);
-
-    // signal the refresh token to be refreshed if there are failed queries or mutations
-    React.useEffect(() => {
-      if (failedQueries.length > 0 || failedMutations.length > 0) {
-        setRefreshSignal(true);
+  const addFailedQueries = React.useCallback((key: string) => {
+    setFailedQueries((pre) => {
+      if (!pre.includes(key)) {
+        return [...pre, key];
       }
-    }, [failedQueries, failedMutations]);
+      return pre;
+    });
+  }, []);
+
+  // refresh token setup side effect
+  useRefreshTokenSetup({ actions: { addFailedQueries, addFailedMutations } });
+
+  // actions to be passed to load token side effect
+  const saveAccessToken = React.useCallback(
+    (access: string) => {
+      setAccess(access);
+    },
+    [setAccess]
+  );
+
+  const setUserUnauthenticate = React.useCallback(() => {
+    unauthenticateUser();
+  }, [unauthenticateUser]);
+
+  const signalRefreshToken = React.useCallback(() => {
+    setRefreshSignal(true);
+  }, [setRefreshSignal]);
+
+  // load token side effect
+  useLoadToken({
+    actions: {
+      saveAccessToken,
+      setUserUnauthenticate,
+      signalRefreshToken,
+    },
+  });
+
+  // signal the refresh token to be refreshed if there are failed queries or mutations
+  React.useEffect(() => {
+    if (failedQueries.length > 0 || failedMutations.length > 0) {
+      setRefreshSignal(true);
+    }
+  }, [failedQueries, failedMutations]);
 
   // start the refresh token flow when refresh signal is true
   React.useEffect(() => {
@@ -135,10 +122,10 @@ export const useJwtToken = ({
         refresh_mutate({ payload: { refresh: refreshToken } });
       } else {
         // console.log("no refresh token, user will be disprove");
-        unAuthenticateUser();
+        unauthenticateUser();
       }
     }
-  }, [refreshSignal, refresh_mutate, unAuthenticateUser]);
+  }, [refreshSignal, refresh_mutate, unauthenticateUser]);
 
   // after getting refetch signal from refresh mutation, we would redo the failed queries or mutations
   React.useEffect(() => {
@@ -175,7 +162,5 @@ export const useJwtToken = ({
     }
   }, [refetchSignal, failedQueries, failedMutations, queryClient]);
 
-
-
-  return { access, unAuthenticateUser, storeAuthenticationTokens };
+  return { access, unauthenticateUser, storeAuthenticationTokens };
 };

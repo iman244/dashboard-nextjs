@@ -8,7 +8,7 @@ export enum AuthenticationStatus {
 
 export type AuthContextType = {
   authStatus: AuthenticationStatus;
-  unAuthenticateUser: () => void;
+  unauthenticateUser: () => void;
   isAuthenticated: boolean;
   AuthenticateUser: (data: JwtCreateApiResponse) => void;
 };

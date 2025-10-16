@@ -24,6 +24,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { useLocale } from "next-intl";
 
 // Menu items.
 const items = [
@@ -55,9 +56,12 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const locale = useLocale();
+  const side = locale === "fa" ? "right" : "left";
+  const dir = locale === "fa" ? "rtl" : "ltr";
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar side={side}>
+      <SidebarContent dir={dir}>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>

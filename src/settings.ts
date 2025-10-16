@@ -9,3 +9,5 @@ export const ACCESS_TOKEN_KEY =
   process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY || "access";
 export const REFRESH_TOKEN_KEY =
   process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY || "refresh";
+export const LOCALE_COOKIE_NAME =
+  process.env.NEXT_PUBLIC_LOCALE_COOKIE_NAME || "locale";
