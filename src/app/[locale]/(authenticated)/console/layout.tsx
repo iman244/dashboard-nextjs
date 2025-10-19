@@ -1,5 +1,5 @@
 import React, { use } from "react";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_sidebar/sidebar";
 
 const Layout: React.FC<React.PropsWithChildren<{ params: Promise<{ locale: string }> }>> = ({ children, params }) => {
@@ -8,8 +8,8 @@ const Layout: React.FC<React.PropsWithChildren<{ params: Promise<{ locale: strin
   return (
     <SidebarProvider dir={dir}>
       <AppSidebar />
-      <main>
-        {/* <SidebarTrigger  /> */}
+      <main className="flex flex-col flex-1 p-4 min-h-[100dvh]" dir={dir}>
+        <SidebarTrigger  />
         {children}
       </main>
     </SidebarProvider>

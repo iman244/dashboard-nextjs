@@ -3,6 +3,11 @@ export const DJANGO_ADDRESS =
 export const DJANGO_API_PATH =
   process.env.NEXT_PUBLIC_DJANGO_API_PATH || "/api";
 
+export const _5_160_115_210_ADDRESS =
+  process.env.NEXT_PUBLIC_5_160_115_210_ADDRESS || "http://5.160.115.210:8085";
+export const _5_160_115_210_API_PATH =
+  process.env.NEXT_PUBLIC_5_160_115_210_API_PATH || "/api/PDD";
+
 export const AUTHORIZATION_TOKEN_NAME =
   process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME || "JWT";
 export const ACCESS_TOKEN_KEY =

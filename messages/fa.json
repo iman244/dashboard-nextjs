@@ -62,5 +62,19 @@
         "link": "ورود"
       }
     }
+  },
+  "EHRTable": {
+    "title": "سوابق پزشکی الکترونیکی",
+    "pagination": {
+      "showing": "نمایش {start} تا {end} از {total} رکورد",
+      "rowsPerPage": "ردیف در صفحه:",
+      "page": "صفحه {current} از {total}",
+      "firstPage": "صفحه اول",
+      "previousPage": "صفحه قبلی",
+      "nextPage": "صفحه بعدی", 
+      "lastPage": "صفحه آخر",
+      "noData": "هیچ داده‌ای یافت نشد",
+      "loading": "در حال بارگذاری..."
+    }
   }
 }

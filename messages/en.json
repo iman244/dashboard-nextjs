@@ -57,5 +57,19 @@
         "link": "Sign in"
       }
     }
+  },
+  "EHRTable": {
+    "title": "Electronic Health Records",
+    "pagination": {
+      "showing": "Showing {start} to {end} of {total} records",
+      "rowsPerPage": "Rows per page:",
+      "page": "Page {current} of {total}",
+      "firstPage": "First page",
+      "previousPage": "Previous page", 
+      "nextPage": "Next page",
+      "lastPage": "Last page",
+      "noData": "No data found",
+      "loading": "Loading..."
+    }
   }
 }

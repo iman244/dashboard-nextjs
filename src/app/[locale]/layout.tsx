@@ -21,5 +21,9 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
 
-  return <NextIntlClientProvider>{children}</NextIntlClientProvider>;
+  return (
+    <div className={locale === 'fa' ? 'font-persian' : 'font-english'}>
+      <NextIntlClientProvider>{children}</NextIntlClientProvider>
+    </div>
+  );
 }

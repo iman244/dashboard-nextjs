@@ -8,7 +8,7 @@ const Loading = () => {
         <div className="w-8 h-8 border-2 border-muted rounded-full animate-spin border-t-foreground"></div>
         
         {/* Loading Text */}
-        <p className="text-muted-foreground text-sm">Loading...</p>
+        {/* <p className="text-muted-foreground text-sm">Loading...</p> */}
       </div>
     </div>
   )
