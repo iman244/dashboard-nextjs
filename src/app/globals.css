@@ -124,12 +124,12 @@
 
 /* Locale-specific font classes */
 .font-persian {
-  font-family: var(--font-vazirmatn), 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
+  font-family: var(--font-vazirmatn);
   direction: rtl;
 }
 
 .font-english {
-  font-family: var(--font-geist-sans), 'Geist', 'Inter', 'Arial', sans-serif;
+  font-family: var(--font-geist-sans);
   direction: ltr;
 }
 

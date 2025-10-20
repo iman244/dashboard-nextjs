@@ -6,7 +6,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react"
-import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
+import { DayPicker } from "react-day-picker/persian"
+import { DayButton, getDefaultClassNames } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -38,6 +39,9 @@ function Calendar({
       formatters={{
         formatMonthDropdown: (date) =>
           date.toLocaleString("default", { month: "short" }),
+        formatWeekdayName(weekday) {
+          return weekday.toLocaleString("fa", { weekday: "narrow" })
+        },
         ...formatters,
       }}
       classNames={{

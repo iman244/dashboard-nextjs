@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  ChevronDown,
-} from "lucide-react";
+import { ChevronDown, FileText } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -13,37 +11,39 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { useLocale } from "next-intl";
-import { items } from "./items";
-import { usePathname } from "@/i18n/navigation";
-
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 
 export function AppSidebar() {
   const pathname = usePathname();
-  
+
+  const t = useTranslations("ConsoleSidebar");
   const locale = useLocale();
   const side = locale === "fa" ? "right" : "left";
   const dir = locale === "fa" ? "rtl" : "ltr";
-  
+
+  const items = [
+    {
+      title: t("electronicHealthRecord"),
+      url: "/console/electronic-health-record",
+      icon: FileText,
+    },
+  ];
+
   return (
     <Sidebar side={side}>
       <SidebarContent dir={dir}>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("dashboard")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

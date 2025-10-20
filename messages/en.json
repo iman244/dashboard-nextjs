@@ -81,7 +81,8 @@
     "patientType": "Patient Type",
     "selectPatientType": "Select patient type",
     "search": "Search",
-    "clear": "Clear"
+    "clear": "Clear",
+    "description": "Filter electronic health records by various criteria"
   },
   "AuthenticatedGroupLayout": {
     "notAuthenticated": "You are not authenticated, you will be redirected to login in a few seconds. If you are not redirected, please click the login button.",
@@ -90,5 +91,9 @@
   "AuthAuthenticated": {
     "description": "You are authenticated, you will be redirected to the desired page in a few seconds. If you are not redirected, please click the button below.",
     "redirect": "Redirect"
+  },
+  "ConsoleSidebar": {
+    "dashboard": "Dashboard",
+    "electronicHealthRecord": "Electronic Health Record"
   }
 }

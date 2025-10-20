@@ -73,8 +73,12 @@ const Client = () => {
   return (
     <div className="space-y-4 h-full flex flex-col">
       {/* Header with title and refresh button */}
+      <h2 className="text-2xl font-bold">{t("title")}</h2>
+
+      {/* Filter Section */}
+
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">{t("title")}</h2>
+        <EHRFilter isLoading={ehrByNationalNumber_q.isFetching} />
         <Button
           onClick={() => ehrByNationalNumber_q.refetch()}
           variant="outline"
@@ -90,11 +94,6 @@ const Client = () => {
           <span>بروزرسانی</span>
         </Button>
       </div>
-
-      {/* Filter Section */}
-      <EHRFilter
-        isLoading={ehrByNationalNumber_q.isFetching}
-      />
 
       {/* Table with flex-1 to take remaining space */}
       <div className="flex-1">
