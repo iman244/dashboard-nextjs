@@ -19,7 +19,10 @@ import { RefreshCw } from "lucide-react";
 import { useEHRColumns } from "./_columns";
 import { EHRTable } from "./_components/ehr-table";
 import { EHRTablePagination } from "./_components/ehr-table-pagination";
+import { EHRFilter } from "./_components/ehr-filter";
 import { formatNumber } from "./_utils/format-numbers";
+import { useElectronicHealthRecord } from "./provider";
+import { EHRFilterState } from "./type";
 
 /**
  * Main EHR Client Component
@@ -29,19 +32,27 @@ const Client = () => {
   const t = useTranslations("EHRTable");
   const locale = useLocale();
 
-  // Data fetching
+  // Filter state
+  const { filters, setFilters } = useElectronicHealthRecord();
+
+  // Data fetching with dynamic filters
   const ehrByNationalNumber_q = useQuery({
-    queryKey: [EHR_BY_NATIONAL_NUMBER_KEY],
+    queryKey: [EHR_BY_NATIONAL_NUMBER_KEY, filters],
     queryFn: () =>
       ehr_by_national_number({
         params: {
-          nationalNumber: "",
-          fromDate: "1404/07/20",
-          toDate: "1404/07/20",
-          patientType: "25",
+          nationalNumber: filters.nationalNumber,
+          fromDate: filters.fromDate,
+          toDate: filters.toDate,
+          patientType: filters.patientType,
         },
       }),
   });
+
+  // Handle filter changes
+  const handleFilter = (newFilters: EHRFilterState) => {
+    setFilters(newFilters);
+  };
 
   // Column definitions with locale-aware formatting
   const columns = useEHRColumns(locale);
@@ -79,6 +90,11 @@ const Client = () => {
           <span>بروزرسانی</span>
         </Button>
       </div>
+
+      {/* Filter Section */}
+      <EHRFilter
+        isLoading={ehrByNationalNumber_q.isFetching}
+      />
 
       {/* Table with flex-1 to take remaining space */}
       <div className="flex-1">

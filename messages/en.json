@@ -71,5 +71,24 @@
       "noData": "No data found",
       "loading": "Loading..."
     }
+  },
+  "EHRFilter": {
+    "title": "Filters",
+    "nationalNumber": "National Number",
+    "nationalNumberPlaceholder": "Enter national number",
+    "dateRange": "Date Range",
+    "selectDateRange": "Select date range",
+    "patientType": "Patient Type",
+    "selectPatientType": "Select patient type",
+    "search": "Search",
+    "clear": "Clear"
+  },
+  "AuthenticatedGroupLayout": {
+    "notAuthenticated": "You are not authenticated, you will be redirected to login in a few seconds. If you are not redirected, please click the login button.",
+    "redirectToLogin": "Login"
+  },
+  "AuthAuthenticated": {
+    "description": "You are authenticated, you will be redirected to the desired page in a few seconds. If you are not redirected, please click the button below.",
+    "redirect": "Redirect"
   }
 }

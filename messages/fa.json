@@ -6,7 +6,7 @@
     "title": "خوش آمدید",
     "description": "داشبورد",
     "buttons": {
-      "goToConsole": "به داشبورد بروید",
+      "goToConsole": "ورود به داشبورد",
       "signInRegister": "ورود / ثبت نام"
     }
   },
@@ -71,10 +71,29 @@
       "page": "صفحه {current} از {total}",
       "firstPage": "صفحه اول",
       "previousPage": "صفحه قبلی",
-      "nextPage": "صفحه بعدی", 
+      "nextPage": "صفحه بعدی",
       "lastPage": "صفحه آخر",
       "noData": "هیچ داده‌ای یافت نشد",
       "loading": "در حال بارگذاری..."
     }
+  },
+  "EHRFilter": {
+    "title": "فیلترها",
+    "nationalNumber": "شماره ملی",
+    "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
+    "dateRange": "بازه تاریخ",
+    "selectDateRange": "انتخاب بازه تاریخ",
+    "patientType": "نوع بیمار",
+    "selectPatientType": "انتخاب نوع بیمار",
+    "search": "جستجو",
+    "clear": "پاک کردن"
+  },
+  "AuthenticatedGroupLayout": {
+    "notAuthenticated": "شما احراز هویت نشده اید، تا چند ثانیه دیگر به صفحه ورود منتقل خواهید شد. اگر منتقل نشدید، لطفاً بر روی دکمه ورود کلیک کنید.",
+    "redirectToLogin": "صفحه ورود"
+  },
+  "AuthAuthenticated": {
+    "description": "شما احراز هویت شده اید، تا چند ثانیه دیگر به صفحه مورد نظر منتقل خواهید شد. اگر منتقل نشدید، لطفاً بر روی دکمه زیر کلیک کنید.",
+    "redirect": "برو"
   }
 }

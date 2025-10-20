@@ -5,9 +5,9 @@ import Loading from "@/app/loading";
 import React, { useEffect } from "react";
 import { AppRoutes } from "@/app/paths";
 import { AuthenticationStatus } from "@/app/_auth/type";
-import { Button } from "@/components/ui/button";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
+import AuthAuthenticated from "@/app/[locale]/(public)/auth-authenticated/page";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { authStatus } = useAuth();
@@ -38,16 +38,7 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
       nextPath || AppRoutes.CONSOLE
     );
     return (
-      <div className="flex flex-col items-center justify-center gap-4 h-screen max-w-lg mx-auto">
-        <p className="text-center text-lg font-medium text-muted-foreground">
-          You are authenticated, you will be redirected to console in a few
-          seconds. If you are not redirected, please click{" "}
-          <Link href={AppRoutes.CONSOLE} className="text-primary hover:underline">here</Link>.
-        </p>
-        <Button asChild>
-          <Link href={AppRoutes.CONSOLE}>Redirect to console</Link>
-        </Button>
-      </div>
+      <AuthAuthenticated />
     );
   }
 

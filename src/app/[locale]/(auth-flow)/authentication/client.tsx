@@ -23,6 +23,14 @@ import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 // Define the form schema
 const loginSchema = z.object({
@@ -68,78 +76,85 @@ export function Client() {
   );
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-background" dir={dir}>
-      <div className="w-full max-w-md mx-auto p-6 space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p className="text-muted-foreground">
+    <main
+      className="min-h-screen flex items-center justify-center bg-background"
+      dir={dir}
+    >
+      <Card className="w-full max-w-md mx-auto text-center">
+        <CardHeader>
+          <CardTitle className="text-center! text-2xl font-bold">
+            {t("title")}
+          </CardTitle>
+          <CardDescription className="text-center! text-muted-foreground">
             {t("description")}
-          </p>
-        </div>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("form.username.label")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t("form.username.placeholder")}
+                        {...field}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("form.username.label")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={t("form.username.placeholder")}
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("form.password.label")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder={t("form.password.placeholder")}
+                        {...field}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {apiError && (
+                <div className="text-destructive text-sm text-center">
+                  {apiError.response?.data.detail}
+                </div>
               )}
-            />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("form.password.label")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder={t("form.password.placeholder")}
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? t("buttons.signingIn") : t("buttons.signIn")}
+              </Button>
+            </form>
+          </Form>
 
-            {apiError && (
-              <div className="text-destructive text-sm text-center">
-                {apiError.response?.data.detail}
-              </div>
-            )}
+          <div className="text-center! text-sm">
+            <span className="text-muted-foreground">
+              {t("form.register.label")}
+            </span>
+            <Link
+              href="/authentication/register"
+              className={cn("text-primary hover:underline font-medium", locale === "fa" ? "mr-2" : "ml-2")}
 
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? t("buttons.signingIn") : t("buttons.signIn")}
-            </Button>
-          </form>
-        </Form>
-
-        <div className="text-center text-sm">
-          <span className="text-muted-foreground">
-            {t("form.register.label")}
-          </span>
-          <Link
-            href="/authentication/register"
-            className="ms-2 text-primary hover:underline font-medium"
-          >
-            {t("form.register.link")}
-          </Link>
-        </div>
-      </div>
+            >
+              {t("form.register.link")}
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </main>
   );
 }
