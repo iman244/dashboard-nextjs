@@ -39,11 +39,7 @@ import {
 } from "@/components/ui/form";
 import { CalendarIcon, Search, Filter, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns-jalali";
-import { DayPicker } from "react-day-picker/persian";
-import { type DateRange } from "react-day-picker";
 import { useElectronicHealthRecord } from "../provider";
-import Calendar04 from "@/components/calendar-04";
 import { Calendar } from "@/components/ui/calendar";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { formatDate } from "../_utils/format-date";
@@ -54,7 +50,7 @@ interface EHRFilterProps {
 
 // Form schema using Zod
 const formSchema = z.object({
-  nationalNumber: z.string().optional(),
+  nationalNumber: z.string().default("").optional(),
   patientType: z.string().min(1, "Patient type is required"),
   dateRange: z
     .object({
@@ -65,7 +61,7 @@ const formSchema = z.object({
     .nullable(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
 
 /**
  * EHR Filter Component
@@ -74,47 +70,20 @@ type FormValues = z.infer<typeof formSchema>;
 export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
   const t = useTranslations("EHRFilter");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { setFilters } = useElectronicHealthRecord();
+  const { setFilters, filters } = useElectronicHealthRecord();
   const locale = useLocale();
   // Patient type options (you can customize these based on your requirements)
   const patientTypeOptions = [{ value: "2", label: "نوع بیمار 2" }];
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      nationalNumber: "",
-      patientType: "2",
-      dateRange: null,
-    },
+    defaultValues: filters,
   });
-  const { watch } = form;
-  const dateRange = watch("dateRange");
-  React.useEffect(() => {
-    console.log({ dateRange });
-  }, [dateRange]);
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Form submitted with data:", {
-      nationalNumber: data.nationalNumber,
-      fromDate: data.dateRange?.from
-        ? format(data.dateRange.from, "yyyy MMMM dd")
-        : "",
-      toDate: data.dateRange?.to
-        ? format(data.dateRange.to, "yyyy MMMM dd")
-        : "",
-      patientType: data.patientType,
-    });
-
-    // Uncomment when ready to use filters
-    // setFilters({
-    //   nationalNumber: data.nationalNumber || "",
-    //   fromDate: data.dateRange?.from ? format(data.dateRange.from, "yyyy MMMM dd") : "",
-    //   toDate: data.dateRange?.to ? format(data.dateRange.to, "yyyy MMMM dd") : "",
-    //   patientType: data.patientType,
-    // });
-
+  const onSubmit = React.useCallback((data: FormValues) => {
+    setFilters(data);
     setIsDialogOpen(false);
-  };
+  }, [setFilters]);
 
   const handleClear = () => {
     form.reset({

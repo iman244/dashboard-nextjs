@@ -4,7 +4,7 @@ import {
   ehr_by_national_number,
   EHR_BY_NATIONAL_NUMBER_KEY,
 } from "@/data/electronic health record/api/EHR-by-national-number";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
@@ -22,7 +22,7 @@ import { EHRTablePagination } from "./_components/ehr-table-pagination";
 import { EHRFilter } from "./_components/ehr-filter";
 import { formatNumber } from "./_utils/format-numbers";
 import { useElectronicHealthRecord } from "./provider";
-import { EHRFilterState } from "./type";
+import { format } from "date-fns-jalali";
 
 /**
  * Main EHR Client Component
@@ -31,35 +31,18 @@ import { EHRFilterState } from "./type";
 const Client = () => {
   const t = useTranslations("EHRTable");
   const locale = useLocale();
+  const [lastMutation, setLastMutation] = React.useState(null);
 
   // Filter state
-  const { filters, setFilters } = useElectronicHealthRecord();
+  const { filters, ehrByNationalNumber_m, callMutation } = useElectronicHealthRecord();
 
-  // Data fetching with dynamic filters
-  const ehrByNationalNumber_q = useQuery({
-    queryKey: [EHR_BY_NATIONAL_NUMBER_KEY, filters],
-    queryFn: () =>
-      ehr_by_national_number({
-        params: {
-          nationalNumber: filters.nationalNumber,
-          fromDate: filters.fromDate,
-          toDate: filters.toDate,
-          patientType: filters.patientType,
-        },
-      }),
-  });
-
-  // Handle filter changes
-  const handleFilter = (newFilters: EHRFilterState) => {
-    setFilters(newFilters);
-  };
 
   // Column definitions with locale-aware formatting
   const columns = useEHRColumns(locale);
 
   // Table instance
   const table = useReactTable({
-    data: ehrByNationalNumber_q.data || [],
+    data: ehrByNationalNumber_m.data || [],
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -78,17 +61,17 @@ const Client = () => {
       {/* Filter Section */}
 
       <div className="flex items-center justify-between">
-        <EHRFilter isLoading={ehrByNationalNumber_q.isFetching} />
+        <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
         <Button
-          onClick={() => ehrByNationalNumber_q.refetch()}
+          onClick={callMutation}
           variant="outline"
           size="sm"
-          disabled={ehrByNationalNumber_q.isFetching}
+          disabled={ehrByNationalNumber_m.isPending}
           className="flex items-center space-x-2 space-x-reverse"
         >
           <RefreshCw
             className={`h-4 w-4 ${
-              ehrByNationalNumber_q.isFetching ? "animate-spin" : ""
+              ehrByNationalNumber_m.isPending ? "animate-spin" : ""
             }`}
           />
           <span>بروزرسانی</span>
@@ -100,9 +83,9 @@ const Client = () => {
         <EHRTable
           table={table}
           columns={columns}
-          isLoading={ehrByNationalNumber_q.isFetching}
-          isError={ehrByNationalNumber_q.isError}
-          error={ehrByNationalNumber_q.error}
+          isLoading={ehrByNationalNumber_m.isPending}
+          isError={ehrByNationalNumber_m.isError}
+          error={ehrByNationalNumber_m.error}
         />
       </div>
 
