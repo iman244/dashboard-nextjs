@@ -140,3 +140,11 @@
 .font-english * {
   text-align: left;
 }
+
+.font-persian ol.toaster {
+  direction: rtl;
+}
+
+.font-english ol.toaster {
+  direction: ltr;
+}

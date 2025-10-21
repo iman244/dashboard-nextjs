@@ -5,6 +5,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { AuthProvider } from "./_auth";
 import { GlobalProvider } from "./_global";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "sonner";
 
 function ThemeProvider({
   children,
@@ -36,6 +37,7 @@ export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
               disableTransitionOnChange
             >
               {children}
+              <Toaster position="bottom-center" className="toaster" />
             </ThemeProvider>
           </AuthProvider>
         </QueryClientProvider>

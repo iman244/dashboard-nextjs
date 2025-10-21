@@ -1,7 +1,7 @@
 import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { formatCellValue } from "../_utils/format-numbers";
-import { MoreHorizontal, Eye } from "lucide-react";
+import { MoreHorizontal, Eye, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,9 +19,7 @@ const columnHelper = createColumnHelper<ElectronicHealthRecord>();
  * @returns Array of column definitions
  */
 export const useEHRColumns = (
-  locale: string,
-  onViewDetails?: (record: ElectronicHealthRecord) => void
-): ColumnDef<ElectronicHealthRecord>[] => {
+  {locale, onViewDetails}: {locale: string, onViewDetails?: (record: ElectronicHealthRecord) => void}) => {
   return [
     columnHelper.accessor("نام بيمار", {
       header: "نام و نام خانوادگی بیمار",

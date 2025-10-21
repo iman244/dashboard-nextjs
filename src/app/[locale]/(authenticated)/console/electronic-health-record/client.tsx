@@ -31,15 +31,15 @@ import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 const Client = () => {
   const t = useTranslations("EHRTable");
   const locale = useLocale();
-  const { 
-    filters, 
-    setFilters, 
-    ehrByNationalNumber_m, 
+  const {
+    filters,
+    setFilters,
+    ehrByNationalNumber_m,
     callMutation,
     selectedRecord,
     setSelectedRecord,
     isDetailModalOpen,
-    setIsDetailModalOpen
+    setIsDetailModalOpen,
   } = useElectronicHealthRecord();
 
   // Action handlers
@@ -49,7 +49,10 @@ const Client = () => {
   };
 
   // Column definitions with locale-aware formatting
-  const columns = useEHRColumns(locale, handleViewDetails);
+  const columns = useEHRColumns({
+    locale,
+    onViewDetails: handleViewDetails,
+  });
 
   // Table instance
   const table = useReactTable({
@@ -73,7 +76,7 @@ const Client = () => {
       {/* Filter Section */}
 
       <div className="flex items-center justify-between">
-          <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
+        <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
         <Button
           onClick={callMutation}
           variant="outline"
@@ -90,24 +93,46 @@ const Client = () => {
         </Button>
       </div>
 
-      {(filters.nationalNumber || filters.dateRange?.from || filters.dateRange?.to) && <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-foreground">
-          فیلترها
-        </span>
-        {filters.nationalNumber && (
-          <Badge variant={"secondary"} onClick={() => setFilters({ ...filters, nationalNumber: "" })} className="cursor-pointer">
-            <XIcon className="w-4 h-4" />
-            <span>شماره ملی: {filters.nationalNumber}</span>
-          </Badge>
-        )}
-        {filters.dateRange?.from && filters.dateRange.to && (
-          <Badge variant={"secondary"} onClick={() => setFilters({ ...filters, dateRange: { from: undefined, to: undefined } })} className="cursor-pointer">
-            <XIcon className="w-4 h-4" />
-            <span>بازه تاریخ:</span>
-            <span>{digitsEnToFa(`${formatDate(filters.dateRange?.from, locale)} - ${formatDate(filters.dateRange?.to, locale)}`)}</span>
-          </Badge>
-        )}
-      </div>}
+      {(filters.nationalNumber ||
+        filters.dateRange?.from ||
+        filters.dateRange?.to) && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-foreground">فیلترها</span>
+          {filters.nationalNumber && (
+            <Badge
+              variant={"secondary"}
+              onClick={() => setFilters({ ...filters, nationalNumber: "" })}
+              className="cursor-pointer"
+            >
+              <XIcon className="w-4 h-4" />
+              <span>شماره ملی: {filters.nationalNumber}</span>
+            </Badge>
+          )}
+          {filters.dateRange?.from && filters.dateRange.to && (
+            <Badge
+              variant={"secondary"}
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  dateRange: { from: undefined, to: undefined },
+                })
+              }
+              className="cursor-pointer"
+            >
+              <XIcon className="w-4 h-4" />
+              <span>بازه تاریخ:</span>
+              <span>
+                {digitsEnToFa(
+                  `${formatDate(
+                    filters.dateRange?.from,
+                    locale
+                  )} - ${formatDate(filters.dateRange?.to, locale)}`
+                )}
+              </span>
+            </Badge>
+          )}
+        </div>
+      )}
 
       {/* Table with flex-1 to take remaining space */}
       <div className="flex-1">

@@ -107,10 +107,15 @@
   },
   "EHRDetailModal": {
     "title": "جزئیات پرونده الکترونیک سلامت",
+    "downloadResult": "جواب آزمایش",
+    "downloadXRay": "عکس رادیولوژی",
+    "getMobileNumber": "مشاهده",
     "sections": {
       "patientInfo": "اطلاعات بیمار",
       "medicalInfo": "اطلاعات پزشکی",
-      "status": "وضعیت"
+      "answer": "جواب و نتایج",
+      "status": "وضعیت",
+      "laboratoryReport": "گزارش آزمایشگاه"
     },
     "fields": {
       "patientName": "نام بیمار",
@@ -129,11 +134,20 @@
       "physicianCode": "کد پزشک معالج",
       "physicianSystem": "نظام پزشکی معالج",
       "locationCode": "کد مکان",
-      "inquiryCode": "کد استعلام"
+      "inquiryCode": "کد استعلام",
+      "answer": "جواب",
+      "normalRange": "نرمال رنج",
+      "receptionServiceId": "شناسه سرویس پذیرش",
+      "mobileNumber": "شماره موبایل"
     },
     "patientTypes": {
       "inpatient": "بستری",
       "outpatient": "سرپایی"
+    },
+    "error": {
+      "mobileLaboratoryByNationalNumber": "خطا در دریافت گزارش آزمایشگاه",
+      "mobileXRayByNationalNumber": "خطا در دریافت عکس رادیولوژی",
+      "mobileNumberByNationalNumber": "خطا در دریافت شماره موبایل"
     }
   }
 }

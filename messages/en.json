@@ -102,10 +102,15 @@
   },
   "EHRDetailModal": {
     "title": "Electronic Health Record Details",
+    "downloadResult": "Result",
+    "downloadXRay": "X-Ray",
+    "getMobileNumber": "show",
     "sections": {
       "patientInfo": "Patient Information",
       "medicalInfo": "Medical Information",
-      "status": "Status"
+      "answer": "Answer & Results",
+      "status": "Status",
+      "laboratoryReport": "Laboratory Report"
     },
     "fields": {
       "patientName": "Patient Name",
@@ -124,11 +129,20 @@
       "physicianCode": "Physician Code",
       "physicianSystem": "Physician System",
       "locationCode": "Location Code",
-      "inquiryCode": "Inquiry Code"
+      "inquiryCode": "Inquiry Code",
+      "answer": "Answer",
+      "normalRange": "Normal Range",
+      "receptionServiceId": "Reception Service ID",
+      "mobileNumber": "Mobile Number"
     },
     "patientTypes": {
       "inpatient": "Inpatient",
       "outpatient": "Outpatient"
+    },
+    "error": {
+      "mobileLaboratoryByNationalNumber": "Error downloading laboratory report",
+      "mobileXRayByNationalNumber": "Error downloading X-Ray",
+      "mobileNumberByNationalNumber": "Error getting mobile number"
     }
   }
 }

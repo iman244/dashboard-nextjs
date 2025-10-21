@@ -19,6 +19,7 @@ export const formatNumber = (num: number, locale: string): string => {
  * @returns Formatted value string
  */
 export const formatCellValue = (value: string | number, locale: string): string => {
+  if(value === null || value === undefined) return "";
   return locale === "fa"
     ? digitsEnToFa(value.toString())
     : digitsFaToEn(value.toString());

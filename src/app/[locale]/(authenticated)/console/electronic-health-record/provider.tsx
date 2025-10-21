@@ -11,8 +11,42 @@ import {
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { digitsFaToEn } from "@persian-tools/persian-tools";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
+import { mobile_laboratory_by_national_number, MobileLaboratoryByNationalNumberApiResponse, PDD_MOBILE_LABORATORY_BY_NATIONAL_NUMBER_KEY } from "@/data/electronic health record/api/mobile-laboratory-by-national-number";
+import { mobile_xray_by_national_number, MobileXRayByNationalNumberApiResponse, PDD_MOBILE_XRAY_BY_NATIONAL_NUMBER_KEY } from "@/data/electronic health record/api/mobile-xray-by-national-number";
+import { mobile_number_by_national_number, MobileNumberByNationalNumberApiResponse, PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY } from "@/data/electronic health record/api/mobile-number-by-national-number";
+import { toast } from "sonner";
+import { useRouter } from "@/i18n/navigation";
 
 export type ElectronicHealthRecordContextProps = {
+  mobileLaboratoryByNationalNumber_m: UseMutationResult<
+    MobileLaboratoryByNationalNumberApiResponse,
+    Error,
+    {
+      params: {
+        nationalNumber: string;
+        receptionID: string;
+      };
+    }
+  >;
+  mobileXRayByNationalNumber_m: UseMutationResult<
+    MobileXRayByNationalNumberApiResponse,
+    Error,
+    {
+      params: {
+        nationalNumber: string;
+        receptionID: string;
+      };
+    }
+  >;
+  mobileNumberByNationalNumber_m: UseMutationResult<
+    MobileNumberByNationalNumberApiResponse,
+    Error,
+    {
+      params: {
+        nationalNumber: string;
+      };
+    }
+  >;
   ehrByNationalNumber_m: UseMutationResult<
     EHRByNationalNumberApiResponse,
     Error,
@@ -40,6 +74,7 @@ const ElectronicHealthRecordContext = React.createContext<
 >(undefined);
 
 const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const router = useRouter();
   const today = React.useMemo(() => new Date(), []);
   const [filters, setFilters] = useState<FormValues>({
     nationalNumber: "",
@@ -58,6 +93,26 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const ehrByNationalNumber_m = useMutation({
     mutationKey: [EHR_BY_NATIONAL_NUMBER_KEY],
     mutationFn: ehr_by_national_number,
+  });
+
+  const mobileLaboratoryByNationalNumber_m = useMutation({
+    mutationKey: [PDD_MOBILE_LABORATORY_BY_NATIONAL_NUMBER_KEY],
+    mutationFn: mobile_laboratory_by_national_number,
+
+  });
+
+  const mobileXRayByNationalNumber_m = useMutation({
+    mutationKey: [PDD_MOBILE_XRAY_BY_NATIONAL_NUMBER_KEY],
+    mutationFn: mobile_xray_by_national_number,
+  });
+
+  const mobileNumberByNationalNumber_m = useMutation({
+    mutationKey: [PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY],
+    mutationFn: mobile_number_by_national_number,
+    onError: (error) => {
+      console.error("error", error);
+      toast.error(error.message);
+    },
   });
 
   const { mutate } = ehrByNationalNumber_m;
@@ -90,6 +145,9 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
     <ElectronicHealthRecordContext.Provider
       value={{ 
         ehrByNationalNumber_m, 
+        mobileLaboratoryByNationalNumber_m,
+        mobileXRayByNationalNumber_m,
+        mobileNumberByNationalNumber_m,
         filters, 
         setFilters, 
         callMutation,
