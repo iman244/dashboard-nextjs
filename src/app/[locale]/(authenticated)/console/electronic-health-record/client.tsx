@@ -16,11 +16,13 @@ import { useEHRColumns } from "./_columns";
 import { EHRTable } from "./_components/ehr-table";
 import { EHRTablePagination } from "./_components/ehr-table-pagination";
 import { EHRFilter } from "./_components/ehr-filter";
+import { EHRDetailModal } from "./_components/ehr-detail-modal";
 import { formatNumber } from "./_utils/format-numbers";
 import { useElectronicHealthRecord } from "./provider";
 import { formatDate } from "./_utils/format-date";
 import { Badge } from "@/components/ui/badge";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
+import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 
 /**
  * Main EHR Client Component
@@ -29,10 +31,25 @@ import { digitsEnToFa } from "@persian-tools/persian-tools";
 const Client = () => {
   const t = useTranslations("EHRTable");
   const locale = useLocale();
-  const { filters, setFilters, ehrByNationalNumber_m, callMutation } = useElectronicHealthRecord();
+  const { 
+    filters, 
+    setFilters, 
+    ehrByNationalNumber_m, 
+    callMutation,
+    selectedRecord,
+    setSelectedRecord,
+    isDetailModalOpen,
+    setIsDetailModalOpen
+  } = useElectronicHealthRecord();
+
+  // Action handlers
+  const handleViewDetails = (record: ElectronicHealthRecord) => {
+    setSelectedRecord(record);
+    setIsDetailModalOpen(true);
+  };
 
   // Column definitions with locale-aware formatting
-  const columns = useEHRColumns(locale);
+  const columns = useEHRColumns(locale, handleViewDetails);
 
   // Table instance
   const table = useReactTable({
@@ -107,6 +124,16 @@ const Client = () => {
       <EHRTablePagination
         table={table}
         formatNumber={(num) => formatNumber(num, locale)}
+      />
+
+      {/* Detail Modal */}
+      <EHRDetailModal
+        record={selectedRecord}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedRecord(null);
+        }}
       />
     </div>
   );

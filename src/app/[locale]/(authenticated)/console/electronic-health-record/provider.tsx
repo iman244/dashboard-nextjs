@@ -9,7 +9,8 @@ import {
   EHRByNationalNumberApiResponse,
 } from "@/data/electronic health record/api/EHR-by-national-number";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import { digitsEnToFa, digitsFaToEn } from "@persian-tools/persian-tools";
+import { digitsFaToEn } from "@persian-tools/persian-tools";
+import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 
 export type ElectronicHealthRecordContextProps = {
   ehrByNationalNumber_m: UseMutationResult<
@@ -27,6 +28,11 @@ export type ElectronicHealthRecordContextProps = {
   filters: FormValues;
   setFilters: (filters: FormValues) => void;
   callMutation: () => void;
+  // Detail dialog state
+  selectedRecord: ElectronicHealthRecord | null;
+  setSelectedRecord: (record: ElectronicHealthRecord | null) => void;
+  isDetailModalOpen: boolean;
+  setIsDetailModalOpen: (open: boolean) => void;
 };
 
 const ElectronicHealthRecordContext = React.createContext<
@@ -43,6 +49,10 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
     },
     patientType: "2",
   });
+
+  // Detail dialog state
+  const [selectedRecord, setSelectedRecord] = useState<ElectronicHealthRecord | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   // Data fetching with dynamic filters
   const ehrByNationalNumber_m = useMutation({
@@ -78,7 +88,16 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   return (
     <ElectronicHealthRecordContext.Provider
-      value={{ ehrByNationalNumber_m, filters, setFilters, callMutation }}
+      value={{ 
+        ehrByNationalNumber_m, 
+        filters, 
+        setFilters, 
+        callMutation,
+        selectedRecord,
+        setSelectedRecord,
+        isDetailModalOpen,
+        setIsDetailModalOpen
+      }}
     >
       {children}
     </ElectronicHealthRecordContext.Provider>

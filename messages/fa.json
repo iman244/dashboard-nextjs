@@ -2,6 +2,10 @@
   "Metadata": {
     "title": "داشبورد"
   },
+  "Application": {
+    "copy": "کپی به کلیپبورد",
+    "copied": "کپی شد!"
+  },
   "HomePage": {
     "title": "خوش آمدید",
     "description": "داشبورد",
@@ -100,5 +104,36 @@
   "ConsoleSidebar": {
     "dashboard": "داشبورد",
     "electronicHealthRecord": "سوابق پزشکی الکترونیکی"
+  },
+  "EHRDetailModal": {
+    "title": "جزئیات پرونده الکترونیک سلامت",
+    "sections": {
+      "patientInfo": "اطلاعات بیمار",
+      "medicalInfo": "اطلاعات پزشکی",
+      "status": "وضعیت"
+    },
+    "fields": {
+      "patientName": "نام بیمار",
+      "nationalId": "کد ملی",
+      "date": "تاریخ",
+      "serviceName": "نام خدمت",
+      "treatingPhysician": "نام پزشک معالج",
+      "location": "مکان",
+      "patientType": "نوع بیمار",
+      "age": "سن",
+      "patientCode": "کد بیمار",
+      "recordNumber": "شماره پرونده",
+      "admissionCode": "کد پذیرش",
+      "serviceCode": "کد خدمت",
+      "nationalServiceCode": "کد ملی خدمت",
+      "physicianCode": "کد پزشک معالج",
+      "physicianSystem": "نظام پزشکی معالج",
+      "locationCode": "کد مکان",
+      "inquiryCode": "کد استعلام"
+    },
+    "patientTypes": {
+      "inpatient": "بستری",
+      "outpatient": "سرپایی"
+    }
   }
 }

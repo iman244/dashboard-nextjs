@@ -2,6 +2,10 @@
   "Metadata": {
     "title": "Dashboard"
   },
+  "Application": {
+    "copy": "Copy to clipboard",
+    "copied": "Copied!"
+  },
   "HomePage": {
     "title": "Welcome",
     "description": "Dashboard",
@@ -95,5 +99,36 @@
   "ConsoleSidebar": {
     "dashboard": "Dashboard",
     "electronicHealthRecord": "Electronic Health Record"
+  },
+  "EHRDetailModal": {
+    "title": "Electronic Health Record Details",
+    "sections": {
+      "patientInfo": "Patient Information",
+      "medicalInfo": "Medical Information",
+      "status": "Status"
+    },
+    "fields": {
+      "patientName": "Patient Name",
+      "nationalId": "National ID",
+      "date": "Date",
+      "serviceName": "Service Name",
+      "treatingPhysician": "Treating Physician",
+      "location": "Location",
+      "patientType": "Patient Type",
+      "age": "Age",
+      "patientCode": "Patient Code",
+      "recordNumber": "Record Number",
+      "admissionCode": "Admission Code",
+      "serviceCode": "Service Code",
+      "nationalServiceCode": "National Service Code",
+      "physicianCode": "Physician Code",
+      "physicianSystem": "Physician System",
+      "locationCode": "Location Code",
+      "inquiryCode": "Inquiry Code"
+    },
+    "patientTypes": {
+      "inpatient": "Inpatient",
+      "outpatient": "Outpatient"
+    }
   }
 }
