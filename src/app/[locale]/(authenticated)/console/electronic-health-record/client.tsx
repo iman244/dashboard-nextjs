@@ -65,6 +65,12 @@ const Client = () => {
       pagination: {
         pageSize: 10,
       },
+      sorting: [
+        {
+          id: "تاريخ",
+          desc: false, // Sort by date in descending order (most recent first)
+        },
+      ],
     },
   });
 

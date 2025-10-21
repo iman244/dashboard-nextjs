@@ -133,14 +133,6 @@
   direction: ltr;
 }
 
-.font-persian * {
-  text-align: right;
-}
-
-.font-english * {
-  text-align: left;
-}
-
 .font-persian ol.toaster {
   direction: rtl;
 }
