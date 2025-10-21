@@ -25,7 +25,7 @@ import { usePeriodicalReports } from "../provider";
 import { Calendar } from "@/components/ui/calendar";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { formatDate } from "../../electronic-health-record/_utils/format-date";
-import { format } from "date-fns-jalali";
+import { format, newDate } from "date-fns-jalali";
 
 // Form schema using Zod
 const formSchema = z.object({
@@ -41,17 +41,32 @@ export type PeriodicalReportsFormValues = z.infer<typeof formSchema>;
  * Periodical Reports Date Range Form Component
  * Provides date range selection for periodical reports
  */
-export const PeriodicalReportsForm = () => {
+export const PeriodicalReportsForm = (props: {
+  initialValues: { fromDate: string; toDate: string };
+}) => {
+  console.log({props})
   const t = useTranslations("PeriodicalReports");
-  const { setFilters, filters, ehrByNationalNumber_m } = usePeriodicalReports();
+  const { setFilters, ehrByNationalNumber_m } = usePeriodicalReports();
   const locale = useLocale();
 
   const form = useForm<PeriodicalReportsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      dateRange: filters.dateRange || undefined,
+      dateRange: props.initialValues
+        ? {
+            from: (() => {
+              const [year, month, day] = props.initialValues.fromDate.split('/').map(Number);
+              return newDate(year, month - 1, day);
+            })(),
+            to: (() => {
+              const [year, month, day] = props.initialValues.toDate.split('/').map(Number);
+              return newDate(year, month - 1, day);
+            })(),
+          }
+        : undefined,
     },
   });
+
 
   const { mutate } = ehrByNationalNumber_m;
 

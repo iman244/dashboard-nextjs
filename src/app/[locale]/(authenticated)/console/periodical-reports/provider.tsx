@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useContext, useState } from "react";
-import { format } from "date-fns-jalali";
+import React, { useContext, useState, useEffect } from "react";
+import { parseISO } from "date-fns-jalali";
 import {
   ehr_by_national_number,
   EHR_BY_NATIONAL_NUMBER_KEY,
@@ -60,7 +60,6 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
     },
   });
 
-
   React.useEffect(() => {
     console.log("ehrByNationalNumber_m.status", ehrByNationalNumber_m.status);
     console.log("ehrByNationalNumber_m.data", ehrByNationalNumber_m.data);
@@ -68,12 +67,12 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   return (
     <PeriodicalReportsContext.Provider
-      value={{ 
-        ehrByNationalNumber_m, 
-        filters, 
-        setFilters, 
+      value={{
+        ehrByNationalNumber_m,
+        filters,
+        setFilters,
         hasData,
-        setHasData
+        setHasData,
       }}
     >
       {children}

@@ -7,7 +7,7 @@ import { PeriodicalReportsForm } from "./_components/periodical-reports-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const Client = () => {
+const Client = (props: { initialValues: { fromDate: string; toDate: string } }) => {
   const t = useTranslations("PeriodicalReports");
   const { ehrByNationalNumber_m, hasData } = usePeriodicalReports();
   const { data, isPending, isError } = ehrByNationalNumber_m;
@@ -26,7 +26,7 @@ const Client = () => {
             <CardTitle className="text-center">{t("selectPeriod")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <PeriodicalReportsForm />
+            <PeriodicalReportsForm initialValues={props.initialValues} />
           </CardContent>
         </Card>
       </div>

@@ -26,7 +26,7 @@ import { usePatientReports } from "../provider";
 import { Calendar } from "@/components/ui/calendar";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { formatDate } from "../../electronic-health-record/_utils/format-date";
-import { format } from "date-fns-jalali";
+import { format, newDate } from "date-fns-jalali";
 
 // Form schema using Zod
 const formSchema = z.object({
@@ -48,16 +48,30 @@ export type PatientReportsFormValues = z.infer<typeof formSchema>;
  * Patient Reports Form Component
  * Provides national number and date range selection for patient reports
  */
-export const PatientReportsForm = () => {
+export const PatientReportsForm = (props: {
+  initialValues: { nationalNumber: string; fromDate: string; toDate: string };
+}) => {
+  console.log({props})
   const t = useTranslations("PatientReports");
-  const { setFilters, filters, ehrByNationalNumber_m } = usePatientReports();
+  const { setFilters, ehrByNationalNumber_m } = usePatientReports();
   const locale = useLocale();
 
   const form = useForm<PatientReportsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nationalNumber: filters.nationalNumber || "",
-      dateRange: filters.dateRange || undefined,
+      nationalNumber: props.initialValues.nationalNumber || "",
+      dateRange: props.initialValues.fromDate && props.initialValues.toDate
+        ? {
+            from: (() => {
+              const [year, month, day] = props.initialValues.fromDate.split('/').map(Number);
+              return newDate(year, month - 1, day);
+            })(),
+            to: (() => {
+              const [year, month, day] = props.initialValues.toDate.split('/').map(Number);
+              return newDate(year, month - 1, day);
+            })(),
+          }
+        : undefined,
     },
   });
   const { mutate } = ehrByNationalNumber_m;

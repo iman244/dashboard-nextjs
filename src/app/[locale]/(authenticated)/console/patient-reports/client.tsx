@@ -7,7 +7,7 @@ import { PatientReportsForm } from "./_components/patient-reports-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const Client = () => {
+const Client = (props: { initialValues: { nationalNumber: string; fromDate: string; toDate: string } }) => {
   const t = useTranslations("PatientReports");
   const { ehrByNationalNumber_m, hasData } = usePatientReports();
   const { data, isPending, isError } = ehrByNationalNumber_m;
@@ -26,7 +26,7 @@ const Client = () => {
             <CardTitle className="text-center">{t("selectPatientAndPeriod")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <PatientReportsForm />
+            <PatientReportsForm initialValues={props.initialValues} />
           </CardContent>
         </Card>
       </div>
