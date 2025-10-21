@@ -12,31 +12,32 @@ const columnHelper = createColumnHelper<ElectronicHealthRecord>();
 export const useEHRColumns = (locale: string): ColumnDef<ElectronicHealthRecord>[] => {
   return [
     columnHelper.accessor("نام بيمار", {
-      header: "نام بیمار",
-      cell: (info) => formatCellValue(info.getValue(), locale),
-    }) as ColumnDef<ElectronicHealthRecord>,
-    columnHelper.accessor("نام خانوادگي بيمار", {
-      header: "نام خانوادگی",
-      cell: (info) => formatCellValue(info.getValue(), locale),
+      header: "نام و نام خانوادگی بیمار",
+      cell: (info) => formatCellValue(`${info.getValue()} ${info.cell.row.original['نام خانوادگي بيمار']}`, locale),
     }) as ColumnDef<ElectronicHealthRecord>,
     columnHelper.accessor("كدملي", {
       header: "کد ملی",
       cell: (info) => formatCellValue(info.getValue(), locale),
     }) as ColumnDef<ElectronicHealthRecord>,
-    columnHelper.accessor("سن", {
-      header: "سن",
-      cell: (info) => formatCellValue(info.getValue(), locale),
-    }) as ColumnDef<ElectronicHealthRecord>,
     columnHelper.accessor("تاريخ", {
       header: "تاریخ",
       cell: (info) => formatCellValue(info.getValue(), locale),
+      enableSorting: true,
     }) as ColumnDef<ElectronicHealthRecord>,
     columnHelper.accessor("نام خدمت", {
       header: "نام خدمت",
       cell: (info) => formatCellValue(info.getValue(), locale),
     }) as ColumnDef<ElectronicHealthRecord>,
     columnHelper.accessor("نام پزشك معالج", {
-      header: "نام پزشک",
+      header: "نام پزشک معالج",
+      cell: (info) => formatCellValue(info.getValue(), locale),
+    }) as ColumnDef<ElectronicHealthRecord>,
+    columnHelper.accessor("مكان", {
+      header: "مکان",
+      cell: (info) => formatCellValue(info.getValue(), locale),
+    }) as ColumnDef<ElectronicHealthRecord>,
+    columnHelper.accessor("PatientType", {
+      header: "نوع بیمار",
       cell: (info) => formatCellValue(info.getValue(), locale),
     }) as ColumnDef<ElectronicHealthRecord>,
   ];

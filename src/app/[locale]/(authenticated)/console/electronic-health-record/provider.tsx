@@ -9,6 +9,7 @@ import {
   EHRByNationalNumberApiResponse,
 } from "@/data/electronic health record/api/EHR-by-national-number";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { digitsEnToFa, digitsFaToEn } from "@persian-tools/persian-tools";
 
 export type ElectronicHealthRecordContextProps = {
   ehrByNationalNumber_m: UseMutationResult<
@@ -54,7 +55,7 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const callMutation = React.useCallback(() => {
     mutate({
       params: {
-        nationalNumber: filters.nationalNumber || "",
+        nationalNumber: digitsFaToEn(filters.nationalNumber || ""),
         fromDate: filters.dateRange?.from
           ? format(filters.dateRange.from, "yyyy/MM/dd")
           : "",

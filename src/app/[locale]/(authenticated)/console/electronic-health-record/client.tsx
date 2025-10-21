@@ -1,19 +1,15 @@
 "use client";
 
-import {
-  ehr_by_national_number,
-  EHR_BY_NATIONAL_NUMBER_KEY,
-} from "@/data/electronic health record/api/EHR-by-national-number";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, XIcon } from "lucide-react";
 
 // Import extracted components and utilities
 import { useEHRColumns } from "./_columns";
@@ -22,7 +18,9 @@ import { EHRTablePagination } from "./_components/ehr-table-pagination";
 import { EHRFilter } from "./_components/ehr-filter";
 import { formatNumber } from "./_utils/format-numbers";
 import { useElectronicHealthRecord } from "./provider";
-import { format } from "date-fns-jalali";
+import { formatDate } from "./_utils/format-date";
+import { Badge } from "@/components/ui/badge";
+import { digitsEnToFa } from "@persian-tools/persian-tools";
 
 /**
  * Main EHR Client Component
@@ -31,11 +29,7 @@ import { format } from "date-fns-jalali";
 const Client = () => {
   const t = useTranslations("EHRTable");
   const locale = useLocale();
-  const [lastMutation, setLastMutation] = React.useState(null);
-
-  // Filter state
-  const { filters, ehrByNationalNumber_m, callMutation } = useElectronicHealthRecord();
-
+  const { filters, setFilters, ehrByNationalNumber_m, callMutation } = useElectronicHealthRecord();
 
   // Column definitions with locale-aware formatting
   const columns = useEHRColumns(locale);
@@ -46,6 +40,7 @@ const Client = () => {
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
         pageSize: 10,
@@ -61,7 +56,7 @@ const Client = () => {
       {/* Filter Section */}
 
       <div className="flex items-center justify-between">
-        <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
+          <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
         <Button
           onClick={callMutation}
           variant="outline"
@@ -77,6 +72,25 @@ const Client = () => {
           <span>بروزرسانی</span>
         </Button>
       </div>
+
+      {(filters.nationalNumber || filters.dateRange?.from || filters.dateRange?.to) && <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-foreground">
+          فیلترها
+        </span>
+        {filters.nationalNumber && (
+          <Badge variant={"secondary"} onClick={() => setFilters({ ...filters, nationalNumber: "" })} className="cursor-pointer">
+            <XIcon className="w-4 h-4" />
+            <span>شماره ملی: {filters.nationalNumber}</span>
+          </Badge>
+        )}
+        {filters.dateRange?.from && filters.dateRange.to && (
+          <Badge variant={"secondary"} onClick={() => setFilters({ ...filters, dateRange: { from: undefined, to: undefined } })} className="cursor-pointer">
+            <XIcon className="w-4 h-4" />
+            <span>بازه تاریخ:</span>
+            <span>{digitsEnToFa(`${formatDate(filters.dateRange?.from, locale)} - ${formatDate(filters.dateRange?.to, locale)}`)}</span>
+          </Badge>
+        )}
+      </div>}
 
       {/* Table with flex-1 to take remaining space */}
       <div className="flex-1">

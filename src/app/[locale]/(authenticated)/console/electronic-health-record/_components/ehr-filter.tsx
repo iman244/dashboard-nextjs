@@ -75,10 +75,16 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
   // Patient type options (you can customize these based on your requirements)
   const patientTypeOptions = [{ value: "2", label: "نوع بیمار 2" }];
 
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: filters,
   });
+
+  const { reset } = form;
+  React.useEffect(() => {
+    reset();
+  }, [reset]);
 
   const onSubmit = React.useCallback((data: FormValues) => {
     setFilters(data);
@@ -105,7 +111,7 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">
-          <Filter className="mr-2 h-4 w-4" />
+          <Filter />
           {t("title")}
         </Button>
       </DialogTrigger>
@@ -139,8 +145,9 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
                     <FormLabel>{t("nationalNumber")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={t("nationalNumberPlaceholder")}
                         {...field}
+                        placeholder={t("nationalNumberPlaceholder")}
+                        value={digitsEnToFa(field.value || "")}
                       />
                     </FormControl>
                     <FormMessage />
