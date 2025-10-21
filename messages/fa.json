@@ -103,7 +103,9 @@
   },
   "ConsoleSidebar": {
     "dashboard": "داشبورد",
-    "electronicHealthRecord": "سوابق پزشکی الکترونیکی"
+    "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
+    "periodicalReports": "گزارشات دوره‌ای",
+    "patientReports": "گزارشات بیمار"
   },
   "EHRDetailModal": {
     "title": "جزئیات پرونده الکترونیک سلامت",
@@ -149,5 +151,36 @@
       "mobileXRayByNationalNumber": "خطا در دریافت عکس رادیولوژی",
       "mobileNumberByNationalNumber": "خطا در دریافت شماره موبایل"
     }
+  },
+  "PeriodicalReports": {
+    "title": "گزارشات دوره‌ای",
+    "description": "تولید گزارشات جامع برای دوره‌های زمانی",
+    "selectPeriod": "انتخاب دوره زمانی",
+    "dateRange": "بازه تاریخ",
+    "selectDateRange": "انتخاب بازه تاریخ",
+    "generateReport": "تولید گزارش",
+    "reportResults": "نتایج گزارش",
+    "totalRecords": "تعداد کل رکوردها",
+    "selectedPeriod": "دوره انتخابی",
+    "chartPlaceholder": "نمودار",
+    "chartComingSoon": "نمودار به زودی",
+    "errorMessage": "خطا در بارگذاری داده‌های گزارش"
+  },
+  "PatientReports": {
+    "title": "گزارشات بیمار",
+    "description": "تولید گزارشات جامع برای بیماران",
+    "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
+    "nationalNumber": "شماره ملی",
+    "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
+    "dateRange": "بازه تاریخ",
+    "selectDateRange": "انتخاب بازه تاریخ",
+    "generateReport": "تولید گزارش",
+    "reportResults": "نتایج گزارش",
+    "totalRecords": "تعداد کل رکوردها",
+    "patientInfo": "اطلاعات بیمار",
+    "selectedPatientAndPeriod": "بیمار و دوره انتخابی",
+    "chartPlaceholder": "نمودار",
+    "chartComingSoon": "نمودار به زودی",
+    "errorMessage": "خطا در بارگذاری داده‌های گزارش"
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, FileText } from "lucide-react";
+import { BarChart, FileText, User } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -27,6 +27,16 @@ export function AppSidebar() {
       title: t("electronicHealthRecord"),
       url: "/console/electronic-health-record",
       icon: FileText,
+    },
+    {
+      title: t("periodicalReports"),
+      url: "/console/periodical-reports",
+      icon: BarChart,
+    },
+    {
+      title: t("patientReports"),
+      url: "/console/patient-reports",
+      icon: User,
     },
   ];
 

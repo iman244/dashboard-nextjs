@@ -98,7 +98,9 @@
   },
   "ConsoleSidebar": {
     "dashboard": "Dashboard",
-    "electronicHealthRecord": "Electronic Health Record"
+    "electronicHealthRecord": "Electronic Health Record",
+    "periodicalReports": "Periodical Reports",
+    "patientReports": "Patient Reports"
   },
   "EHRDetailModal": {
     "title": "Electronic Health Record Details",
@@ -144,5 +146,36 @@
       "mobileXRayByNationalNumber": "Error downloading X-Ray",
       "mobileNumberByNationalNumber": "Error getting mobile number"
     }
+  },
+  "PeriodicalReports": {
+    "title": "Periodical Reports",
+    "description": "Generate comprehensive reports for specific time periods",
+    "selectPeriod": "Select Time Period",
+    "dateRange": "Date Range",
+    "selectDateRange": "Select date range",
+    "generateReport": "Generate Report",
+    "reportResults": "Report Results",
+    "totalRecords": "Total Records",
+    "selectedPeriod": "Selected Period",
+    "chartPlaceholder": "Chart",
+    "chartComingSoon": "Chart coming soon",
+    "errorMessage": "Error loading report data"
+  },
+  "PatientReports": {
+    "title": "Patient Reports",
+    "description": "Generate comprehensive reports for specific patients",
+    "selectPatientAndPeriod": "Select Patient and Time Period",
+    "nationalNumber": "National Number",
+    "nationalNumberPlaceholder": "Enter national number",
+    "dateRange": "Date Range",
+    "selectDateRange": "Select date range",
+    "generateReport": "Generate Report",
+    "reportResults": "Report Results",
+    "totalRecords": "Total Records",
+    "patientInfo": "Patient Information",
+    "selectedPatientAndPeriod": "Selected Patient and Period",
+    "chartPlaceholder": "Chart",
+    "chartComingSoon": "Chart coming soon",
+    "errorMessage": "Error loading report data"
   }
 }
