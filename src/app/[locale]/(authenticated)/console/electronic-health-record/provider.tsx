@@ -130,19 +130,29 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
     });
   }, [mutate, filters.nationalNumber, filters.dateRange?.from, filters.dateRange?.to, filters.patientType]);
 
+  // Only call mutation when filters change, not on every render
   React.useEffect(() => {
-    callMutation();
-  }, [callMutation]);
+    mutate({
+      params: {
+        nationalNumber: digitsFaToEn(filters.nationalNumber || ""),
+        fromDate: filters.dateRange?.from
+          ? format(filters.dateRange.from, "yyyy/MM/dd")
+          : "",
+        toDate: filters.dateRange?.to
+          ? format(filters.dateRange.to, "yyyy/MM/dd")
+          : "",
+        patientType: filters.patientType,
+      },
+    });
+  }, [mutate, filters.nationalNumber, filters.dateRange?.from, filters.dateRange?.to, filters.patientType]);
 
   React.useEffect(() => {
     console.log("ehrByNationalNumber_q.status", ehrByNationalNumber_m.status);
     console.log("ehrByNationalNumber_q.data", ehrByNationalNumber_m.data);
   }, [ehrByNationalNumber_m]);
 
-  return (
-    <ElectronicHealthRecordContext.Provider
-      value={{ 
-        ehrByNationalNumber_m, 
+  const v = React.useMemo(() => ({
+    ehrByNationalNumber_m, 
         mobileLaboratoryByNationalNumber_m,
         mobileXRayByNationalNumber_m,
         mobileNumberByNationalNumber_m,
@@ -153,7 +163,11 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
         setSelectedRecord,
         isDetailModalOpen,
         setIsDetailModalOpen
-      }}
+  }),[ehrByNationalNumber_m, mobileLaboratoryByNationalNumber_m, mobileXRayByNationalNumber_m, mobileNumberByNationalNumber_m, filters, setFilters, callMutation, selectedRecord, setSelectedRecord, isDetailModalOpen, setIsDetailModalOpen])
+
+  return (
+    <ElectronicHealthRecordContext.Provider
+      value={v}
     >
       {children}
     </ElectronicHealthRecordContext.Provider>
