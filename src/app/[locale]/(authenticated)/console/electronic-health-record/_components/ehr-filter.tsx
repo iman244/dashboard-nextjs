@@ -83,15 +83,21 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
 
   const { reset } = form;
   React.useEffect(() => {
+    console.log("EHRFilter reset(filters)")
+
     reset(filters);
   }, [reset, filters]);
 
   const onSubmit = React.useCallback((data: FormValues) => {
+    console.log("EHRFilter onSubmit")
+
     setFilters(data);
     setIsDialogOpen(false);
   }, [setFilters]);
 
   const handleClear = React.useCallback(() => {
+    console.log("EHRFilter handleClear")
+
     const clearedFilters = {
       nationalNumber: "",
       patientType: "2",
