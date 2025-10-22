@@ -43,6 +43,7 @@ export type PeriodicalReportsFormValues = z.infer<typeof formSchema>;
  */
 export const PeriodicalReportsForm = (props: {
   initialValues: { fromDate?: string; toDate?: string };
+  compact?: boolean;
 }) => {
   console.log({props})
   const t = useTranslations("PeriodicalReports");
@@ -88,6 +89,87 @@ export const PeriodicalReportsForm = (props: {
     },
     [setFilters, mutate]
   );
+
+  if (props.compact) {
+    return (
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-4">
+          {/* Compact Date Range Picker */}
+          <FormField
+            control={form.control}
+            name="dateRange"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel className="text-sm">{t("dateRange")}</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value?.from ? (
+                          field.value.to ? (
+                            <>
+                              <span>
+                                {digitsEnToFa(
+                                  formatDate(field.value.from, locale)
+                                )}
+                              </span>
+                              {" - "}
+                              <span dir="rtl">
+                                {digitsEnToFa(
+                                  formatDate(field.value.to, locale)
+                                )}
+                              </span>
+                            </>
+                          ) : (
+                            <span>
+                              {digitsEnToFa(
+                                formatDate(field.value.from, locale)
+                              )}
+                            </span>
+                          )
+                        ) : (
+                          <span>{digitsEnToFa(t("selectDateRange"))}</span>
+                        )}
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="range"
+                      defaultMonth={field.value?.from}
+                      selected={{
+                        from: field.value?.from,
+                        to: field.value?.to,
+                      }}
+                      onSelect={(range) => field.onChange(range || undefined)}
+                      className="rounded-lg border shadow-sm"
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            type="submit"
+            disabled={ehrByNationalNumber_m.isPending}
+            className="flex items-center gap-2"
+          >
+            <Search className="h-4 w-4" />
+            {t("updateReport")}
+          </Button>
+        </form>
+      </Form>
+    );
+  }
 
   return (
     <div className="w-full max-w-md mx-auto">

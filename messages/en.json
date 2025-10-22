@@ -6,6 +6,11 @@
     "copy": "Copy to clipboard",
     "copied": "Copied!"
   },
+  "NetworkErrorDialog": {
+    "AlertDialogTitle": "Network Error",
+    "AlertDialogDescription": "Connection to the server is lost. Please reload the page.",
+    "AlertDialogAction": "Reload"
+  },
   "HomePage": {
     "title": "Welcome",
     "description": "Dashboard",

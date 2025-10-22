@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
 import { Geist, Geist_Mono, Vazirmatn } from "next/font/google";
-
+import { GlobalProvider } from "../_global";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +27,8 @@ type Props = {
 };
 
 export function generateStaticParams() {
-    return routing.locales.map((locale) => ({locale}));
-  }
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export default async function LocaleLayout({ children, params }: Props) {
   // Ensure that the incoming `locale` is valid
@@ -39,11 +39,11 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
 
-
   return (
-
-    <div className={locale === 'fa' ? 'font-persian' : 'font-english'}>
-      <NextIntlClientProvider>{children}</NextIntlClientProvider>
+    <div className={locale === "fa" ? "font-persian" : "font-english"}>
+      <NextIntlClientProvider>
+        <GlobalProvider>{children}</GlobalProvider>
+      </NextIntlClientProvider>
     </div>
   );
 }

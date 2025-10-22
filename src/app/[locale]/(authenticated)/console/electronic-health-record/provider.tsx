@@ -96,7 +96,6 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const mobileLaboratoryByNationalNumber_m = useMutation({
     mutationKey: [PDD_MOBILE_LABORATORY_BY_NATIONAL_NUMBER_KEY],
     mutationFn: mobile_laboratory_by_national_number,
-
   });
 
   const mobileXRayByNationalNumber_m = useMutation({

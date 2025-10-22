@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useContext, useState, useEffect } from "react";
-import { parseISO } from "date-fns-jalali";
+import React, { useContext, useState } from "react";
 import {
   ehr_by_national_number,
   EHR_BY_NATIONAL_NUMBER_KEY,
@@ -32,8 +31,6 @@ export type PeriodicalReportsContextProps = {
   >;
   filters: PeriodicalReportsFormValues;
   setFilters: (filters: PeriodicalReportsFormValues) => void;
-  hasData: boolean;
-  setHasData: (hasData: boolean) => void;
 };
 
 const PeriodicalReportsContext = React.createContext<
@@ -44,19 +41,14 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [filters, setFilters] = useState<PeriodicalReportsFormValues>({
     dateRange: null,
   });
-  const [hasData, setHasData] = useState(false);
 
   // Data fetching with dynamic filters
   const ehrByNationalNumber_m = useMutation({
     mutationKey: [EHR_BY_NATIONAL_NUMBER_KEY, "periodical"],
     mutationFn: ehr_by_national_number,
-    onSuccess: () => {
-      setHasData(true);
-    },
     onError: (error) => {
       console.error("Periodical reports error", error);
       toast.error(error.message);
-      setHasData(false);
     },
   });
 
@@ -71,8 +63,6 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
         ehrByNationalNumber_m,
         filters,
         setFilters,
-        hasData,
-        setHasData,
       }}
     >
       {children}

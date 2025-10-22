@@ -1,10 +1,3 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import React from "react";
 import { useGlobal } from "../_global";
 import {
@@ -16,21 +9,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useNetworkError } from "../_side-effects/network-error";
+import { useLocale, useTranslations } from "next-intl";
 
 const NetworkErrorDialog = () => {
+  const t = useTranslations("NetworkErrorDialog")
+  const locale = useLocale()
+  const isRtl = locale === 'fa'
   const { networkErrorOpen, setNetworkErrorOpen } = useGlobal();
+  
+  useNetworkError()
+
   return (
     <AlertDialog open={networkErrorOpen} onOpenChange={setNetworkErrorOpen}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Network Error</AlertDialogTitle>
+      <AlertDialogContent dir={isRtl ? "rtl" : "ltr"}>
+        <AlertDialogHeader className="items-start">
+          <AlertDialogTitle>{t("AlertDialogTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Connection to the server is lost. Please reload the page.
+          {t("AlertDialogDescription")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction onClick={() => window.location.reload()}>
-            Reload
+          <AlertDialogAction className="self-end" onClick={() => window.location.reload()}>
+          {t("AlertDialogAction")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

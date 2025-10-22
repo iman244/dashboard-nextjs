@@ -6,6 +6,11 @@
     "copy": "کپی به کلیپبورد",
     "copied": "کپی شد!"
   },
+  "NetworkErrorDialog": {
+    "AlertDialogTitle": "خطای شبکه",
+    "AlertDialogDescription": "ارتباط با شبکه اینترنت قطع شده است",
+    "AlertDialogAction": "بازیابی صفحه"
+  },
   "HomePage": {
     "title": "خوش آمدید",
     "description": "داشبورد",
