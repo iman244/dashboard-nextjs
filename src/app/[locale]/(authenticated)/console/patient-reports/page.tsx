@@ -5,7 +5,9 @@ const Page = async (
   props: PageProps<"/[locale]/console/patient-reports">
 ) => {
   const resolvedSearchParams = await props.searchParams;
+  
   console.log({ resolvedSearchParams });
+
   const nationalNumber = Array.isArray(resolvedSearchParams.nationalNumber)
     ? resolvedSearchParams.nationalNumber[0]
     : resolvedSearchParams.nationalNumber || "";
@@ -15,6 +17,7 @@ const Page = async (
   const toDate = Array.isArray(resolvedSearchParams.toDate)
     ? resolvedSearchParams.toDate[0]
     : resolvedSearchParams.toDate || "";
+
   return <Client initialValues={{ nationalNumber, fromDate, toDate }} />;
 };
 

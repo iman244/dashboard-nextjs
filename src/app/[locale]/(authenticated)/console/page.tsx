@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description: "Console",
 }
 
-const Page = () => {
+const Page = (props: PageProps<"/[locale]/console">) => {
     return <Client />;
 };
 

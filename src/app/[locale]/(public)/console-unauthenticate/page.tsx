@@ -10,10 +10,15 @@ const ConsoleUnauthenticate = () => {
   const t = useTranslations("AuthenticatedGroupLayout");
   const pathname = usePathname();
   return (
-    <div className="flex flex-col items-center justify-center gap-4 h-screen max-w-lg mx-auto">
-      <p className="text-center! text-lg font-medium text-muted-foreground">
-        {t("notAuthenticated")}
-      </p>
+    <div className="flex flex-col items-center justify-center gap-4 h-screen mx-auto">
+      <div className="space-y-2">
+        <p className="text-center! text-lg font-medium text-foreground">
+          {t("description1")}
+        </p>
+        <p className="text-center! text-sm text-muted-foreground">
+          {t("description2")}
+        </p>
+      </div>
       <Button size="lg" asChild>
         <Link href={getAuthRedirectUrl(pathname)}>{t("redirectToLogin")}</Link>
       </Button>

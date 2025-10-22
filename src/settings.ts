@@ -1,6 +1,5 @@
 export const DJANGO_ADDRESS =
-  process.env.NEXT_PUBLIC_DJANGO_ADDRESS || "https://medicdashboard-django.liara.run";
-  // process.env.NEXT_PUBLIC_DJANGO_ADDRESS || "http://127.0.0.1:8000";
+  process.env.NEXT_PUBLIC_DJANGO_ADDRESS || "http://127.0.0.1:8000";
 export const DJANGO_API_PATH =
   process.env.NEXT_PUBLIC_DJANGO_API_PATH || "/api";
 

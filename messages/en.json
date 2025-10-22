@@ -89,11 +89,13 @@
     "description": "Filter electronic health records by various criteria"
   },
   "AuthenticatedGroupLayout": {
-    "notAuthenticated": "You are not authenticated, you will be redirected to login in a few seconds. If you are not redirected, please click the login button.",
+    "description1": "You are not authenticated, you will be redirected to login in a few seconds.",
+    "description2": "If you are not redirected, please click the login button.",
     "redirectToLogin": "Login"
   },
   "AuthAuthenticated": {
-    "description": "You are authenticated, you will be redirected to the desired page in a few seconds. If you are not redirected, please click the button below.",
+    "description": "You are authenticated, you will be redirected to the desired page in a few seconds.",
+    "description2": "If you are not redirected, please click the button below.",
     "redirect": "Redirect"
   },
   "ConsoleSidebar": {
