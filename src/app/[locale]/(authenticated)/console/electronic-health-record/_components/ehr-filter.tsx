@@ -83,29 +83,27 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
 
   const { reset } = form;
   React.useEffect(() => {
-    reset();
-  }, [reset]);
+    reset(filters);
+  }, [reset, filters]);
 
   const onSubmit = React.useCallback((data: FormValues) => {
     setFilters(data);
     setIsDialogOpen(false);
   }, [setFilters]);
 
-  const handleClear = () => {
-    form.reset({
-      nationalNumber: "",
-      patientType: "2",
-      dateRange: null,
-    });
-
+  const handleClear = React.useCallback(() => {
     const clearedFilters = {
       nationalNumber: "",
-      fromDate: "",
-      toDate: "",
-      patientType: "25",
+      patientType: "2",
+      dateRange: {
+        from: new Date(),
+        to: new Date(),
+      },
     };
+    
+    reset(clearedFilters);
     setFilters(clearedFilters);
-  };
+  }, [reset, setFilters]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

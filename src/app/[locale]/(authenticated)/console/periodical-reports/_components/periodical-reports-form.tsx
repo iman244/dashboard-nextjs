@@ -42,7 +42,7 @@ export type PeriodicalReportsFormValues = z.infer<typeof formSchema>;
  * Provides date range selection for periodical reports
  */
 export const PeriodicalReportsForm = (props: {
-  initialValues: { fromDate: string; toDate: string };
+  initialValues: { fromDate?: string; toDate?: string };
 }) => {
   console.log({props})
   const t = useTranslations("PeriodicalReports");
@@ -52,14 +52,14 @@ export const PeriodicalReportsForm = (props: {
   const form = useForm<PeriodicalReportsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      dateRange: props.initialValues
+      dateRange: props.initialValues?.fromDate && props.initialValues?.toDate
         ? {
             from: (() => {
-              const [year, month, day] = props.initialValues.fromDate.split('/').map(Number);
+              const [year, month, day] = props.initialValues.fromDate!.split('/').map(Number);
               return newDate(year, month - 1, day);
             })(),
             to: (() => {
-              const [year, month, day] = props.initialValues.toDate.split('/').map(Number);
+              const [year, month, day] = props.initialValues.toDate!.split('/').map(Number);
               return newDate(year, month - 1, day);
             })(),
           }

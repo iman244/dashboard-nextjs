@@ -1,3 +1,4 @@
+import React from "react";
 import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { formatCellValue } from "../_utils/format-numbers";
@@ -20,7 +21,7 @@ const columnHelper = createColumnHelper<ElectronicHealthRecord>();
  */
 export const useEHRColumns = (
   {locale, onViewDetails}: {locale: string, onViewDetails?: (record: ElectronicHealthRecord) => void}) => {
-  return [
+  return React.useMemo(() => [
     columnHelper.accessor("نام بيمار", {
       header: "نام و نام خانوادگی بیمار",
       cell: (info) => formatCellValue(`${info.getValue()} ${info.cell.row.original['نام خانوادگي بيمار']}`, locale),
@@ -78,5 +79,5 @@ export const useEHRColumns = (
         );
       },
     }) as ColumnDef<ElectronicHealthRecord>,
-  ];
+  ], [locale, onViewDetails]);
 };

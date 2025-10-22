@@ -15,7 +15,6 @@ import { mobile_laboratory_by_national_number, MobileLaboratoryByNationalNumberA
 import { mobile_xray_by_national_number, MobileXRayByNationalNumberApiResponse, PDD_MOBILE_XRAY_BY_NATIONAL_NUMBER_KEY } from "@/data/electronic health record/api/mobile-xray-by-national-number";
 import { mobile_number_by_national_number, MobileNumberByNationalNumberApiResponse, PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY } from "@/data/electronic health record/api/mobile-number-by-national-number";
 import { toast } from "sonner";
-import { useRouter } from "@/i18n/navigation";
 
 export type ElectronicHealthRecordContextProps = {
   mobileLaboratoryByNationalNumber_m: UseMutationResult<
@@ -74,7 +73,6 @@ const ElectronicHealthRecordContext = React.createContext<
 >(undefined);
 
 const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const router = useRouter();
   const today = React.useMemo(() => new Date(), []);
   const [filters, setFilters] = useState<FormValues>({
     nationalNumber: "",
@@ -130,7 +128,7 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
         patientType: filters.patientType,
       },
     });
-  }, [mutate, filters]);
+  }, [mutate, filters.nationalNumber, filters.dateRange?.from, filters.dateRange?.to, filters.patientType]);
 
   React.useEffect(() => {
     callMutation();
