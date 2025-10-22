@@ -51,15 +51,15 @@
       },
       "username": {
         "label": "نام کاربری",
-        "placeholder": "ایجاد حساب کاربری"
+        "placeholder": "نام کاربری خود را وارد کنید"
       },
       "email": {
         "label": "ایمیل (اختیاری)",
-        "placeholder": "ایجاد حساب کاربری"
+        "placeholder": "ایمیل خود را وارد کنید"
       },
       "password": {
         "label": "رمز عبور",
-        "placeholder": "ایجاد حساب کاربری"
+        "placeholder": "رمز عبور خود را وارد کنید"
       },
       "signIn": {
         "label": "حساب کاربری دارید؟",

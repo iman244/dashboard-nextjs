@@ -1,5 +1,6 @@
 export const DJANGO_ADDRESS =
-  process.env.NEXT_PUBLIC_DJANGO_ADDRESS || "http://127.0.0.1:8000";
+  process.env.NEXT_PUBLIC_DJANGO_ADDRESS || "https://medicdashboard-django.liara.run";
+  // process.env.NEXT_PUBLIC_DJANGO_ADDRESS || "http://127.0.0.1:8000";
 export const DJANGO_API_PATH =
   process.env.NEXT_PUBLIC_DJANGO_API_PATH || "/api";
 
@@ -16,3 +17,14 @@ export const REFRESH_TOKEN_KEY =
   process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY || "refresh";
 export const LOCALE_COOKIE_NAME =
   process.env.NEXT_PUBLIC_LOCALE_COOKIE_NAME || "locale";
+
+console.log({
+  DJANGO_ADDRESS: process.env.NEXT_PUBLIC_DJANGO_ADDRESS,
+  DJANGO_API_PATH: process.env.NEXT_PUBLIC_DJANGO_API_PATH,
+  _5_160_115_210_ADDRESS: process.env.NEXT_PUBLIC_5_160_115_210_ADDRESS,
+  _5_160_115_210_API_PATH: process.env.NEXT_PUBLIC_5_160_115_210_API_PATH,
+  AUTHORIZATION_TOKEN_NAME: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,
+  ACCESS_TOKEN_KEY: process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY,
+  REFRESH_TOKEN_KEY: process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY,
+  LOCALE_COOKIE_NAME: process.env.NEXT_PUBLIC_LOCALE_COOKIE_NAME,
+});
