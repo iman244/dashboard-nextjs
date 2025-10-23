@@ -6,6 +6,7 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -27,8 +28,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { CalendarIcon, Search } from "lucide-react";
-import { usePeriodicalReports } from "../provider";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
+import { usePatientReports } from "../provider";
+import { digitsEnToFa, digitsFaToEn } from "@persian-tools/persian-tools";
 import { format, newDate } from "date-fns-jalali";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogDescription } from "@radix-ui/react-dialog";
@@ -36,57 +37,59 @@ import { DateRangePicker } from "@/components/app/date-range-picker";
 
 // Form schema using Zod
 const formSchema = z.object({
-  dateRange: z.object({
-    from: z.date(),
-    to: z.date(),
-  }),
+  nationalNumber: z.string().min(1, "National number is required"),
+  dateRange: z
+    .object({
+      from: z.date(),
+      to: z.date(),
+    })
+    .refine((data) => data.from <= data.to, {
+      message: "End date must be after start date",
+      path: ["to"],
+    }),
 });
 
-export type PeriodicalReportsFormValues = z.infer<typeof formSchema>;
+export type PatientReportsFormValues = z.infer<typeof formSchema>;
 
 /**
- * Periodical Reports Date Range Form Component
- * Provides date range selection for periodical reports
+ * Patient Reports Form Component
+ * Provides national number and date range selection for patient reports
  */
-export const PeriodicalReportsForm = (props: {
-  initialValues: { fromDate?: string; toDate?: string };
+export const PatientReportsForm = (props: {
+  initialValues: { nationalNumber: string; fromDate: string; toDate: string };
   compact?: boolean;
 }) => {
-  console.log({ props });
-  const t = useTranslations("PeriodicalReports");
-  const { setFilters, ehrByNationalNumber_m } = usePeriodicalReports();
+  console.log({props})
+  const t = useTranslations("PatientReports");
+  const { setFilters, ehrByNationalNumber_m } = usePatientReports();
+  const locale = useLocale();
 
-  const form = useForm<PeriodicalReportsFormValues>({
+  const form = useForm<PatientReportsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      dateRange:
-        props.initialValues?.fromDate && props.initialValues?.toDate
-          ? {
-              from: (() => {
-                const [year, month, day] = props.initialValues
-                  .fromDate!.split("/")
-                  .map(Number);
-                return newDate(year, month - 1, day);
-              })(),
-              to: (() => {
-                const [year, month, day] = props.initialValues
-                  .toDate!.split("/")
-                  .map(Number);
-                return newDate(year, month - 1, day);
-              })(),
-            }
-          : undefined,
+      nationalNumber: props.initialValues.nationalNumber || "",
+      dateRange: props.initialValues.fromDate && props.initialValues.toDate
+        ? {
+            from: (() => {
+              const [year, month, day] = props.initialValues.fromDate.split('/').map(Number);
+              return newDate(year, month - 1, day);
+            })(),
+            to: (() => {
+              const [year, month, day] = props.initialValues.toDate.split('/').map(Number);
+              return newDate(year, month - 1, day);
+            })(),
+          }
+        : undefined,
     },
   });
-
   const { mutate } = ehrByNationalNumber_m;
 
   const onSubmit = React.useCallback(
-    (data: PeriodicalReportsFormValues) => {
+    (data: PatientReportsFormValues) => {
       setFilters(data);
       mutate({
         params: {
-          nationalNumber: "",
+          nationalNumber: digitsFaToEn(data.nationalNumber),
           fromDate: data.dateRange?.from
             ? format(data.dateRange.from, "yyyy/MM/dd")
             : "",
@@ -106,7 +109,7 @@ export const PeriodicalReportsForm = (props: {
         <DialogTrigger asChild>
           <Button variant="outline" className="flex items-center gap-2">
             <CalendarIcon className="h-4 w-4" />
-            {t("dateRange")}
+            {t("selectPatientAndPeriod")}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
@@ -127,25 +130,43 @@ const MyForm = ({
   form,
   onSubmit,
 }: {
-  form: UseFormReturn<PeriodicalReportsFormValues>;
-  onSubmit: (data: PeriodicalReportsFormValues) => void;
+  form: UseFormReturn<PatientReportsFormValues>;
+  onSubmit: (data: PatientReportsFormValues) => void;
 }) => {
-  const { ehrByNationalNumber_m } = usePeriodicalReports();
-  const t = useTranslations("PeriodicalReports");
+  const { ehrByNationalNumber_m } = usePatientReports();
+  const t = useTranslations("PatientReports");
   const locale = useLocale();
+  
   return (
     <div className="flex-1 flex flex-col gap-6 justify-center items-center">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center">{t("selectPeriod")}</CardTitle>
+          <CardTitle className="text-center">{t("selectPatientAndPeriod")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="w-full max-w-md mx-auto">
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                {/* National Number Input */}
+                <FormField
+                  control={form.control}
+                  name="nationalNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("nationalNumber")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder={t("nationalNumberPlaceholder")}
+                          value={digitsEnToFa(field.value || "")}
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 {/* Date Range Picker */}
                 <FormField
                   control={form.control}

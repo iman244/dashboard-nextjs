@@ -195,9 +195,15 @@
     "count": "Count",
     "percentage": "Percentage"
   },
+  "ServiceCountChart": {
+    "noDataAvailable": "No data available",
+    "serviceName": "Service Name",
+    "serviceCount": "Service Count"
+  },
   "PatientReports": {
     "title": "Patient Reports",
     "description": "Generate comprehensive reports for specific patients",
+    "loadingMessage": "Report is getting ready...",
     "selectPatientAndPeriod": "Select Patient and Time Period",
     "nationalNumber": "National Number",
     "nationalNumberPlaceholder": "Enter national number",
@@ -210,6 +216,7 @@
     "selectedPatientAndPeriod": "Selected Patient and Period",
     "chartPlaceholder": "Chart",
     "chartComingSoon": "Chart coming soon",
-    "errorMessage": "Error loading report data"
+    "errorMessage": "Error loading report data",
+    "serviceChartTitle": "Service Count"
   }
 }

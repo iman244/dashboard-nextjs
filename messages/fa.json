@@ -200,9 +200,15 @@
     "count": "تعداد",
     "percentage": "درصد"
   },
+  "ServiceCountChart": {
+    "noDataAvailable": "هیچ داده‌ای موجود نیست",
+    "serviceName": "نام خدمت",
+    "serviceCount": "تعداد خدمت"
+  },
   "PatientReports": {
     "title": "گزارشات بیمار",
     "description": "تولید گزارشات جامع برای بیماران",
+    "loadingMessage": "گزارش در حال آماده‌سازی است...",
     "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
     "nationalNumber": "شماره ملی",
     "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
@@ -215,6 +221,7 @@
     "selectedPatientAndPeriod": "بیمار و دوره انتخابی",
     "chartPlaceholder": "نمودار",
     "chartComingSoon": "نمودار به زودی",
-    "errorMessage": "خطا در بارگذاری داده‌های گزارش"
+    "errorMessage": "خطا در بارگذاری داده‌های گزارش",
+    "serviceChartTitle": "تعداد خدمات"
   }
 }

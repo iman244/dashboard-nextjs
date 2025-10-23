@@ -80,7 +80,7 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
       from: today,
       to: today,
     },
-    patientType: "2",
+    patientType: "25",
   });
 
   // Detail dialog state

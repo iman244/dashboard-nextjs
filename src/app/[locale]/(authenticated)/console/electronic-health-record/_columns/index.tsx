@@ -2,7 +2,7 @@ import React from "react";
 import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { formatCellValue } from "../_utils/format-numbers";
-import { MoreHorizontal, Eye, Activity } from "lucide-react";
+import { MoreHorizontal, Eye, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,6 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "@/i18n/navigation";
+import { format, subYears } from "date-fns-jalali";
 
 const columnHelper = createColumnHelper<ElectronicHealthRecord>();
 
@@ -21,6 +23,25 @@ const columnHelper = createColumnHelper<ElectronicHealthRecord>();
  */
 export const useEHRColumns = (
   {locale, onViewDetails}: {locale: string, onViewDetails?: (record: ElectronicHealthRecord) => void}) => {
+  const router = useRouter();
+  
+  const handlePatientReport = React.useCallback((record: ElectronicHealthRecord) => {
+    const now = new Date();
+    const oneYearAgo = subYears(now, 1);
+    
+    const fromDate = format(oneYearAgo, "yyyy/MM/dd");
+    const toDate = format(now, "yyyy/MM/dd");
+    const nationalNumber = record["كدملي"];
+    
+    const searchParams = new URLSearchParams({
+      nationalNumber,
+      fromDate,
+      toDate,
+    });
+    
+    router.push(`/console/patient-reports?${searchParams.toString()}`);
+  }, [router]);
+  
   return React.useMemo(() => [
     columnHelper.accessor("نام بيمار", {
       header: "نام و نام خانوادگی بیمار",
@@ -37,7 +58,11 @@ export const useEHRColumns = (
     }) as ColumnDef<ElectronicHealthRecord>,
     columnHelper.accessor("نام خدمت", {
       header: "نام خدمت",
-      cell: (info) => formatCellValue(info.getValue(), locale),
+      cell: (info) => (
+        <div className="whitespace-normal break-words max-w-xs">
+          {formatCellValue(info.getValue(), locale)}
+        </div>
+      ),
     }) as ColumnDef<ElectronicHealthRecord>,
     columnHelper.accessor("نام پزشك معالج", {
       header: "نام پزشک معالج",
@@ -74,10 +99,17 @@ export const useEHRColumns = (
                 <Eye className="mr-2 h-4 w-4" />
                 مشاهده جزئیات
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handlePatientReport(record)}
+                className="cursor-pointer"
+              >
+                <BarChart3 className="mr-2 h-4 w-4" />
+                گزارش بیمار
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
       },
     }) as ColumnDef<ElectronicHealthRecord>,
-  ], [locale, onViewDetails]);
+  ], [locale, onViewDetails, handlePatientReport]);
 };

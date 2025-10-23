@@ -37,12 +37,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CalendarIcon, Search, Filter, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Search, Filter, X } from "lucide-react";
 import { useElectronicHealthRecord } from "../provider";
-import { Calendar } from "@/components/ui/calendar";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
-import { formatDate } from "../_utils/format-date";
+import { DateRangePicker } from "@/components/app/date-range-picker";
 
 interface EHRFilterProps {
   isLoading?: boolean;
@@ -195,58 +193,13 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("dateRange")}</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value?.from ? (
-                            field.value.to ? (
-                              <>
-                                <span>
-                                  {digitsEnToFa(
-                                    formatDate(field.value.from, locale)
-                                  )}
-                                </span>
-                                {" - "}
-                                <span dir="rtl">
-                                  {digitsEnToFa(
-                                    formatDate(field.value.to, locale)
-                                  )}
-                                </span>
-                              </>
-                            ) : (
-                              <span>
-                                {digitsEnToFa(
-                                  formatDate(field.value.from, locale)
-                                )}
-                              </span>
-                            )
-                          ) : (
-                            <span>{digitsEnToFa(t("selectDateRange"))}</span>
-                          )}
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="range"
-                        defaultMonth={field.value?.from}
-                        selected={{
-                          from: field.value?.from,
-                          to: field.value?.to,
-                        }}
-                        onSelect={(range) => field.onChange(range || null)}
-                        className="rounded-lg border shadow-sm"
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <FormControl>
+                    <DateRangePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={t("selectDateRange")}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

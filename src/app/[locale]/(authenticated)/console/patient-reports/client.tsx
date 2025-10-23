@@ -1,72 +1,80 @@
 "use client";
 
-import React from 'react';
-import { useTranslations } from "next-intl";
+import React from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { usePatientReports } from "./provider";
-import { PatientReportsForm } from "./_components/patient-reports-form";
+import { PatientReportsForm } from "./_form/patient-reports-form";
+import { ServiceCountChart } from "./_charts/service-count-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
+import { formatDate } from "../electronic-health-record/_utils/format-date";
+import { localeDigits } from "@/lib/utils";
 
-const Client = (props: { initialValues: { nationalNumber: string; fromDate: string; toDate: string } }) => {
+const Client = (props: {
+  initialValues: { nationalNumber: string; fromDate: string; toDate: string };
+}) => {
   const t = useTranslations("PatientReports");
-  const { ehrByNationalNumber_m, hasData } = usePatientReports();
-  const { data, isPending, isError } = ehrByNationalNumber_m;
+  const { ehrByNationalNumber_m, filters } = usePatientReports();
+  const { data, isPending } = ehrByNationalNumber_m;
+  const locale = useLocale();
+  console.log("ehrByNationalNumber_m", { ehrByNationalNumber_m });
+
+  if (isPending) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex items-center flex-col gap-2">
+          <Spinner />
+          <span className="text-muted-foreground">{t("loadingMessage")}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-2">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
+    <div className="mt-2 space-y-4">
+      {/* Header */}
+      <div className="flex items-center gap-2">
+        <PatientReportsForm
+          initialValues={props.initialValues}
+          compact={!!data}
+        />
       </div>
 
-      {/* Form Section - Always visible */}
-      <div className="flex justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-center">{t("selectPatientAndPeriod")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PatientReportsForm initialValues={props.initialValues} />
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Charts Section - Only visible after data is loaded */}
-      {hasData && (
-        <div className="space-y-6">
-          <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-4">{t("reportResults")}</h2>
+      {data && (
+        <div className="flex flex-col gap-2">
+          <div>
+            {filters.dateRange?.from && filters.dateRange.to && (
+              <div className="flex flex-col gap-2 items-center justify-center">
+                <h1 className="text-2xl font-bold">
+                  گزارش بیمار در بازه تاریخ
+                </h1>
+                {data.length > 0 && (
+                  <h2 className="text-xl font-semibold text-primary">
+                    {data[0]["نام بيمار"]} {data[0]["نام خانوادگي بيمار"]}
+                  </h2>
+                )}
+                <p className="text-muted-foreground">
+                  {localeDigits(
+                    formatDate(filters.dateRange?.from, locale),
+                    locale
+                  )}{" "}
+                  -{" "}
+                  {localeDigits(
+                    formatDate(filters.dateRange?.to, locale),
+                    locale
+                  )}
+                </p>
+                {filters.nationalNumber && (
+                  <p className="text-muted-foreground">
+                    شماره ملی: {localeDigits(filters.nationalNumber, locale)}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
-
-          {isPending && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Card key={i}>
-                  <CardHeader>
-                    <Skeleton className="h-6 w-3/4" />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className="h-32 w-full" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-
-          {isError && (
-            <Card className="border-destructive">
-              <CardContent className="pt-6">
-                <div className="text-center text-destructive">
-                  {t("errorMessage")}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {data && !isPending && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Chart Placeholders - Replace with actual chart components */}
-              <Card>
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="h-full">
                 <CardHeader>
                   <CardTitle>{t("totalRecords")}</CardTitle>
                 </CardHeader>
@@ -77,30 +85,28 @@ const Client = (props: { initialValues: { nationalNumber: string; fromDate: stri
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="h-full">
                 <CardHeader>
                   <CardTitle>{t("patientInfo")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-sm text-muted-foreground text-center">
-                    {/* Display the selected national number and date range */}
                     {t("selectedPatientAndPeriod")}
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="h-full">
                 <CardHeader>
-                  <CardTitle>{t("chartPlaceholder")}</CardTitle>
+                  <CardTitle>{t("serviceChartTitle")}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-32 bg-muted rounded flex items-center justify-center">
-                    <span className="text-muted-foreground">{t("chartComingSoon")}</span>
-                  </div>
+                  <ServiceCountChart data={data} />
                 </CardContent>
               </Card>
+              
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>

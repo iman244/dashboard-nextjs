@@ -1,9 +1,10 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { flexRender, Table as TanStackTable, ColumnDef } from "@tanstack/react-table";
+import { flexRender, Table as TanStackTable, ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
 import { LoadingSkeleton } from "./loading-skeleton";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import React from "react";
 
 interface EHRTableProps {
   table: TanStackTable<ElectronicHealthRecord>;
