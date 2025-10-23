@@ -163,15 +163,42 @@
     "title": "گزارشات دوره‌ای",
     "description": "تولید گزارشات جامع برای دوره‌های زمانی",
     "selectPeriod": "انتخاب دوره زمانی",
-    "dateRange": "بازه تاریخ",
+    "dateRange": "انتخاب بازه تاریخ",
     "selectDateRange": "انتخاب بازه تاریخ",
     "generateReport": "تولید گزارش",
     "reportResults": "نتایج گزارش",
     "totalRecords": "تعداد کل رکوردها",
     "selectedPeriod": "دوره انتخابی",
     "chartPlaceholder": "نمودار",
+    "loadingMessage": "گزارش در حال آماده‌سازی است...",
     "chartComingSoon": "نمودار به زودی",
-    "errorMessage": "خطا در بارگذاری داده‌های گزارش"
+    "errorMessage": "خطا در بارگذاری داده‌های گزارش",
+    "chartTitle": "تعداد رکوردها بر اساس تاریخ",
+    "patientChartTitle": "تعداد بیماران بر اساس تاریخ",
+    "serviceChartTitle": "توزیع خدمات",
+    "debugData": "داده‌های دیباگ",
+    "noDataAvailable": "هیچ داده‌ای موجود نیست",
+    "date": "تاریخ",
+    "recordCount": "تعداد رکورد",
+    "patientCount": "تعداد بیماران",
+    "service": "خدمت",
+    "count": "تعداد"
+  },
+  "RecordCountChart": {
+    "noDataAvailable": "هیچ داده‌ای موجود نیست",
+    "date": "تاریخ",
+    "recordCount": "تعداد رکورد"
+  },
+  "PatientCountChart": {
+    "noDataAvailable": "هیچ داده‌ای موجود نیست",
+    "date": "تاریخ",
+    "patientCount": "تعداد بیماران"
+  },
+  "ServicePieChart": {
+    "noDataAvailable": "هیچ داده‌ای موجود نیست",
+    "service": "خدمت",
+    "count": "تعداد",
+    "percentage": "درصد"
   },
   "PatientReports": {
     "title": "گزارشات بیمار",
@@ -179,7 +206,7 @@
     "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
     "nationalNumber": "شماره ملی",
     "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
-    "dateRange": "بازه تاریخ",
+    "dateRange": "انتخاب بازه تاریخ",
     "selectDateRange": "انتخاب بازه تاریخ",
     "generateReport": "تولید گزارش",
     "reportResults": "نتایج گزارش",

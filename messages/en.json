@@ -158,15 +158,42 @@
     "title": "Periodical Reports",
     "description": "Generate comprehensive reports for specific time periods",
     "selectPeriod": "Select Time Period",
-    "dateRange": "Date Range",
+    "dateRange": "Select date range",
     "selectDateRange": "Select date range",
     "generateReport": "Generate Report",
     "reportResults": "Report Results",
     "totalRecords": "Total Records",
     "selectedPeriod": "Selected Period",
     "chartPlaceholder": "Chart",
+    "loadingMessage": "Report is getting ready...",
     "chartComingSoon": "Chart coming soon",
-    "errorMessage": "Error loading report data"
+    "errorMessage": "Error loading report data",
+    "chartTitle": "Records Count by Date",
+    "patientChartTitle": "Patient Count by Date",
+    "serviceChartTitle": "Service Distribution",
+    "debugData": "Debug Data",
+    "noDataAvailable": "No data available",
+    "date": "Date",
+    "recordCount": "Record Count",
+    "patientCount": "Patient Count",
+    "service": "Service",
+    "count": "Count"
+  },
+  "RecordCountChart": {
+    "noDataAvailable": "No data available",
+    "date": "Date",
+    "recordCount": "Record Count"
+  },
+  "PatientCountChart": {
+    "noDataAvailable": "No data available",
+    "date": "Date",
+    "patientCount": "Patient Count"
+  },
+  "ServicePieChart": {
+    "noDataAvailable": "No data available",
+    "service": "Service",
+    "count": "Count",
+    "percentage": "Percentage"
   },
   "PatientReports": {
     "title": "Patient Reports",
@@ -174,7 +201,7 @@
     "selectPatientAndPeriod": "Select Patient and Time Period",
     "nationalNumber": "National Number",
     "nationalNumberPlaceholder": "Enter national number",
-    "dateRange": "Date Range",
+    "dateRange": "Select date range",
     "selectDateRange": "Select date range",
     "generateReport": "Generate Report",
     "reportResults": "Report Results",
