@@ -208,6 +208,8 @@
   "PatientReports": {
     "title": "گزارشات بیمار",
     "description": "تولید گزارشات جامع برای بیماران",
+    "patientType":"نوع بیمار",
+    "selectPatientType": "انتخاب نوع بیمار",
     "loadingMessage": "گزارش در حال آماده‌سازی است...",
     "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
     "nationalNumber": "شماره ملی",

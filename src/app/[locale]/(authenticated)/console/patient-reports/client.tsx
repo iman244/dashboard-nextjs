@@ -11,7 +11,12 @@ import { formatDate } from "../electronic-health-record/_utils/format-date";
 import { localeDigits } from "@/lib/utils";
 
 const Client = (props: {
-  initialValues: { nationalNumber: string; fromDate: string; toDate: string };
+  initialValues: {
+    nationalNumber: string;
+    fromDate: string;
+    toDate: string;
+    patientType: string;
+  };
 }) => {
   const t = useTranslations("PatientReports");
   const { ehrByNationalNumber_m, filters } = usePatientReports();
@@ -104,7 +109,6 @@ const Client = (props: {
                   <ServiceCountChart data={data} />
                 </CardContent>
               </Card>
-              
             </div>
           </div>
         </div>

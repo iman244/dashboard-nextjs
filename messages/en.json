@@ -218,5 +218,15 @@
     "chartComingSoon": "Chart coming soon",
     "errorMessage": "Error loading report data",
     "serviceChartTitle": "Service Count"
+  },
+  "PatientTypes": {
+    "1": "Inpatient Information",
+    "2": "Laboratory",
+    "3": "Imaging",
+    "4": "Pathology",
+    "5": "Clinic",
+    "6": "Emergency",
+    "7": "Prescription & Equipment",
+    "25": "Telemedicine Patients"
   }
 }

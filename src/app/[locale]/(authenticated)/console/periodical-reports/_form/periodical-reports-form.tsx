@@ -33,9 +33,11 @@ import { format, newDate } from "date-fns-jalali";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { DateRangePicker } from "@/components/app/date-range-picker";
+import { PatientTypeSelector } from "@/components/app/patient-type-selector";
 
 // Form schema using Zod
 const formSchema = z.object({
+  patientType: z.string().min(1, "Patient type is required"),
   dateRange: z.object({
     from: z.date(),
     to: z.date(),
@@ -59,6 +61,7 @@ export const PeriodicalReportsForm = (props: {
   const form = useForm<PeriodicalReportsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      patientType: "25", // Default to ژاراكلينيك
       dateRange:
         props.initialValues?.fromDate && props.initialValues?.toDate
           ? {
@@ -93,7 +96,7 @@ export const PeriodicalReportsForm = (props: {
           toDate: data.dateRange?.to
             ? format(data.dateRange.to, "yyyy/MM/dd")
             : "",
-          patientType: "25",
+          patientType: data.patientType,
         },
       });
     },
@@ -146,6 +149,14 @@ const MyForm = ({
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
               >
+                {/* Patient Type Selector */}
+                <PatientTypeSelector
+                  control={form.control}
+                  name="patientType"
+                  label={t("patientType")}
+                  placeholder={t("selectPatientType")}
+                />
+
                 {/* Date Range Picker */}
                 <FormField
                   control={form.control}

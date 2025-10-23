@@ -41,6 +41,7 @@ import { Search, Filter, X } from "lucide-react";
 import { useElectronicHealthRecord } from "../provider";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { DateRangePicker } from "@/components/app/date-range-picker";
+import { PatientTypeSelector } from "@/components/app/patient-type-selector";
 
 interface EHRFilterProps {
   isLoading?: boolean;
@@ -69,9 +70,6 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
   const t = useTranslations("EHRFilter");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { setFilters, filters } = useElectronicHealthRecord();
-  const locale = useLocale();
-  // Patient type options (you can customize these based on your requirements)
-  const patientTypeOptions = [{ value: "2", label: "نوع بیمار 2" }];
 
   
   const form = useForm<FormValues>({
@@ -98,7 +96,7 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
 
     const clearedFilters = {
       nationalNumber: "",
-      patientType: "2",
+      patientType: "25", // Default to ژاراكلينيك
       dateRange: {
         from: new Date(),
         to: new Date(),
@@ -158,32 +156,12 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
               />
 
               {/* Patient Type Selector */}
-              <FormField
+              <PatientTypeSelector
                 control={form.control}
                 name="patientType"
-                render={({ field }) => (
-                  <FormItem className="flex-1 w-full">
-                    <FormLabel>{t("patientType")}</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder={t("selectPatientType")} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {patientTypeOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label={t("patientType")}
+                placeholder={t("selectPatientType")}
+                className="flex-1 w-full"
               />
             </div>
             {/* Date Range Picker */}

@@ -8,11 +8,6 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -34,10 +29,12 @@ import { format, newDate } from "date-fns-jalali";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { DateRangePicker } from "@/components/app/date-range-picker";
+import { PatientTypeSelector } from "@/components/app/patient-type-selector";
 
 // Form schema using Zod
 const formSchema = z.object({
   nationalNumber: z.string().min(1, "National number is required"),
+  patientType: z.string().min(1, "Patient type is required"),
   dateRange: z
     .object({
       from: z.date(),
@@ -56,7 +53,7 @@ export type PatientReportsFormValues = z.infer<typeof formSchema>;
  * Provides national number and date range selection for patient reports
  */
 export const PatientReportsForm = (props: {
-  initialValues: { nationalNumber: string; fromDate: string; toDate: string };
+  initialValues: { nationalNumber: string; fromDate: string; toDate: string; patientType: string };
   compact?: boolean;
 }) => {
   console.log({props})
@@ -68,6 +65,7 @@ export const PatientReportsForm = (props: {
     resolver: zodResolver(formSchema),
     defaultValues: {
       nationalNumber: props.initialValues.nationalNumber || "",
+      patientType: props.initialValues.patientType || "25", // Default to ژاراكلينيك
       dateRange: props.initialValues.fromDate && props.initialValues.toDate
         ? {
             from: (() => {
@@ -96,7 +94,7 @@ export const PatientReportsForm = (props: {
           toDate: data.dateRange?.to
             ? format(data.dateRange.to, "yyyy/MM/dd")
             : "",
-          patientType: "25",
+          patientType: data.patientType,
         },
       });
     },
@@ -165,6 +163,14 @@ const MyForm = ({
                       <FormMessage />
                     </FormItem>
                   )}
+                />
+
+                {/* Patient Type Selector */}
+                <PatientTypeSelector
+                  control={form.control}
+                  name="patientType"
+                  label={t("patientType")}
+                  placeholder={t("selectPatientType")}
                 />
 
                 {/* Date Range Picker */}

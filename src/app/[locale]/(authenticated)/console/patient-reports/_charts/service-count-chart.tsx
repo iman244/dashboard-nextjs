@@ -39,7 +39,7 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({ data }) => {
     const serviceGroups = data.reduce((acc, record) => {
       const serviceName = record["نام خدمت"];
       if (!serviceName) return acc; // Skip records without service name
-      
+
       if (!acc[serviceName]) {
         acc[serviceName] = 0;
       }
@@ -49,10 +49,13 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({ data }) => {
 
     // Convert to chart data format and sort by count (descending)
     return Object.entries(serviceGroups)
-      .map(([serviceName, count]) => ({
-        serviceName,
-        count,
-      } as ChartDataPoint))
+      .map(
+        ([serviceName, count]) =>
+          ({
+            serviceName,
+            count,
+          } as ChartDataPoint)
+      )
       .sort((a, b) => b.count - a.count) // Sort by count descending
       .slice(0, 10); // Limit to top 10 services for better visualization
   }, [data]);

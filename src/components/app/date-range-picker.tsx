@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { formatDate } from "@/app/[locale]/(authenticated)/console/electronic-health-record/_utils/format-date";
-import { format, startOfMonth, startOfYear, subMonths, endOfMonth, endOfYear } from "date-fns-jalali";
+import { format, startOfMonth, startOfYear, subMonths, endOfMonth } from "date-fns-jalali";
 
 interface DateRangePickerProps {
   value?: { from?: Date; to?: Date } | null;
@@ -30,47 +30,43 @@ export function DateRangePicker({
 }: DateRangePickerProps) {
   const locale = useLocale();
 
-  const getUtilityButtons = () => {
+  const getUtilityButtons = React.useCallback(() => {
     const now = new Date();
     
     // Start of current Jalali year
     const startOfCurrentJalaliYear = startOfYear(now);
-    const endOfCurrentJalaliYear = endOfYear(now);
-    
+
     // Start of current month
     const startOfCurrentMonth = startOfMonth(now);
-    const endOfCurrentMonth = endOfMonth(now);
-    
+
     // Start of previous month
     const previousMonth = subMonths(now, 1);
     const startOfPreviousMonth = startOfMonth(previousMonth);
-    const endOfPreviousMonth = endOfMonth(previousMonth);
     
     // Start of previous Jalali year
     const previousJalaliYear = subMonths(now, 12);
     const startOfPreviousJalaliYear = startOfYear(previousJalaliYear);
-    const endOfPreviousJalaliYear = endOfYear(previousJalaliYear);
 
     return [
       {
         label: `از ابتدای سال ${digitsEnToFa(format(previousJalaliYear, "yyyy"))}`,
-        range: { from: startOfPreviousJalaliYear, to: endOfPreviousJalaliYear }
+        range: { from: startOfPreviousJalaliYear, to: now }
       },
       {
-        label: `از ابتدای سال ${digitsEnToFa(format(now, "yyyy"))}`,
-        range: { from: startOfCurrentJalaliYear, to: endOfCurrentJalaliYear }
+        label: `از ابتدای امسال`,
+        range: { from: startOfCurrentJalaliYear, to: now }
       },
       {
-        label: `از ابتدای ${digitsEnToFa(format(now, "MMMM yyyy"))}`,
-        range: { from: startOfCurrentMonth, to: endOfCurrentMonth }
+        label: `از ابتدای ${digitsEnToFa(format(previousMonth, "MMMM"))}`,
+        range: { from: startOfPreviousMonth, to: now }
       },
       {
-        label: `از ابتدای ${digitsEnToFa(format(previousMonth, "MMMM yyyy"))}`,
-        range: { from: startOfPreviousMonth, to: endOfPreviousMonth }
+        label: `از ابتدای ${digitsEnToFa(format(now, "MMMM"))}`,
+        range: { from: startOfCurrentMonth, to: now }
       },
 
     ];
-  };
+  }, [])
 
   const utilityButtons = getUtilityButtons();
 
@@ -128,7 +124,7 @@ export function DateRangePicker({
             key={index}
             variant="ghost"
             size="sm"
-            className="justify-start text-right"
+            className="text-xs justify-start text-right"
             onClick={() => onChange(button.range)}
             type="button"
           >

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "@/i18n/navigation";
 import { format, subYears } from "date-fns-jalali";
+import { useElectronicHealthRecord } from "../provider";
 
 const columnHelper = createColumnHelper<ElectronicHealthRecord>();
 
@@ -24,23 +25,26 @@ const columnHelper = createColumnHelper<ElectronicHealthRecord>();
 export const useEHRColumns = (
   {locale, onViewDetails}: {locale: string, onViewDetails?: (record: ElectronicHealthRecord) => void}) => {
   const router = useRouter();
+  const { filters } = useElectronicHealthRecord();
   
   const handlePatientReport = React.useCallback((record: ElectronicHealthRecord) => {
     const now = new Date();
     const oneYearAgo = subYears(now, 1);
     
-    const fromDate = format(oneYearAgo, "yyyy/MM/dd");
-    const toDate = format(now, "yyyy/MM/dd");
+    const fromDate = format(filters.dateRange?.from || oneYearAgo, "yyyy/MM/dd");
+    const toDate = format(filters.dateRange?.to || now, "yyyy/MM/dd");
     const nationalNumber = record["كدملي"];
+    const patientType = filters.patientType; // Use the current patientType from EHR filters
     
     const searchParams = new URLSearchParams({
       nationalNumber,
       fromDate,
       toDate,
+      patientType,
     });
     
     router.push(`/console/patient-reports?${searchParams.toString()}`);
-  }, [router]);
+  }, [router, filters.patientType]);
   
   return React.useMemo(() => [
     columnHelper.accessor("نام بيمار", {
