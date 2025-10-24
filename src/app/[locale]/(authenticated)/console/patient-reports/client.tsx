@@ -50,9 +50,6 @@ const Client = (props: {
           <div>
             {filters.dateRange?.from && filters.dateRange.to && (
               <div className="flex flex-col gap-2 items-center justify-center">
-                <h1 className="text-2xl font-bold">
-                  گزارش بیمار در بازه تاریخ
-                </h1>
                 {data.length > 0 && (
                   <h2 className="text-xl font-semibold text-primary">
                     {data[0]["نام بيمار"]} {data[0]["نام خانوادگي بيمار"]}

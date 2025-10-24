@@ -57,7 +57,6 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({ data }) => {
           } as ChartDataPoint)
       )
       .sort((a, b) => b.count - a.count) // Sort by count descending
-      .slice(0, 10); // Limit to top 10 services for better visualization
   }, [data]);
 
   if (chartData.length === 0) {
