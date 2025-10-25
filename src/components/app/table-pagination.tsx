@@ -14,72 +14,108 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { Table as TanStackTable } from "@tanstack/react-table";
 
 interface TablePaginationProps<TData> {
   table: TanStackTable<TData>;
   formatNumber: (num: number) => string;
-  translationKey?: string;
+  pageIncrement?: number;
+  showPageSizeSelector?: boolean;
+  translations?: {
+    showing?: string;
+    rowsPerPage?: string;
+    firstPage?: string;
+    previousPage?: string;
+    nextPage?: string;
+    lastPage?: string;
+    page?: string;
+  };
 }
 
 /**
  * Generic table pagination component with RTL support
+ * Based on EHRTablePagination but made generic for any data type
  */
-export const TablePagination = <TData,>({ 
-  table, 
+export const TablePagination = <TData,>({
+  table,
   formatNumber,
-  translationKey = "EHRTable"
+  pageIncrement = 10,
+  showPageSizeSelector = true,
+  translations = {},
 }: TablePaginationProps<TData>) => {
-  const t = useTranslations(translationKey);
+  const defaultTranslations = {
+    showing: "نمایش {start} تا {end} از {total} رکورد",
+    rowsPerPage: "تعداد رکورد در صفحه",
+    firstPage: "صفحه اول",
+    previousPage: "صفحه قبلی",
+    nextPage: "صفحه بعدی",
+    lastPage: "صفحه آخر",
+    page: "صفحه {current} از {total}",
+  };
+
+  const t = { ...defaultTranslations, ...translations };
+
+  const formatShowingText = (start: number, end: number, total: number) => {
+    return t.showing
+      .replace("{start}", formatNumber(start))
+      .replace("{end}", formatNumber(end))
+      .replace("{total}", formatNumber(total));
+  };
+
+  const formatPageText = (current: number, total: number) => {
+    return t.page
+      .replace("{current}", formatNumber(current))
+      .replace("{total}", formatNumber(total));
+  };
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center space-x-2 space-x-reverse">
         <p className="text-sm text-muted-foreground">
-          {t("pagination.showing", {
-            start: formatNumber(
-              table.getState().pagination.pageIndex *
-                table.getState().pagination.pageSize +
-                1
+          {formatShowingText(
+            table.getState().pagination.pageIndex *
+              table.getState().pagination.pageSize +
+              1,
+            Math.min(
+              (table.getState().pagination.pageIndex + 1) *
+                table.getState().pagination.pageSize,
+              table.getFilteredRowModel().rows.length
             ),
-            end: formatNumber(
-              Math.min(
-                (table.getState().pagination.pageIndex + 1) *
-                  table.getState().pagination.pageSize,
-                table.getFilteredRowModel().rows.length
-              )
-            ),
-            total: formatNumber(table.getFilteredRowModel().rows.length),
-          })}
+            table.getFilteredRowModel().rows.length
+          )}
         </p>
       </div>
 
       <div className="flex items-center space-x-4 space-x-reverse">
-        <div className="flex items-center space-x-2 space-x-reverse">
-          <p className="text-sm font-medium">{t("pagination.rowsPerPage")}</p>
-          <Select
-            value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => {
-              table.setPageSize(Number(value));
-            }}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue
-                placeholder={formatNumber(
-                  table.getState().pagination.pageSize
-                )}
-              />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {formatNumber(pageSize)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {showPageSizeSelector && (
+          <div className="flex items-center space-x-2 space-x-reverse">
+            <p className="text-sm font-medium">{t.rowsPerPage}</p>
+            <Select
+              value={`${table.getState().pagination.pageSize}`}
+              onValueChange={(value) => {
+                table.setPageSize(Number(value));
+              }}
+            >
+              <SelectTrigger className="h-8 w-[70px]">
+                <SelectValue
+                  placeholder={formatNumber(
+                    table.getState().pagination.pageSize
+                  )}
+                />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {Array.from(
+                  { length: 5 },
+                  (_, i) => (i + 1) * pageIncrement
+                ).map((pageSize) => (
+                  <SelectItem key={pageSize} value={`${pageSize}`}>
+                    {formatNumber(pageSize)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {/* Custom RTL Pagination */}
         <div className="flex items-center space-x-1 space-x-reverse">
@@ -91,7 +127,7 @@ export const TablePagination = <TData,>({
             disabled={!table.getCanPreviousPage()}
             className="h-8 w-8 p-0"
           >
-            <span className="sr-only">{t("pagination.firstPage")}</span>
+            <span className="sr-only">{t.firstPage}</span>
             <ChevronsRight className="h-4 w-4" />
           </Button>
 
@@ -103,7 +139,7 @@ export const TablePagination = <TData,>({
             disabled={!table.getCanPreviousPage()}
             className="h-8 w-8 p-0"
           >
-            <span className="sr-only">{t("pagination.previousPage")}</span>
+            <span className="sr-only">{t.previousPage}</span>
             <ChevronRight className="h-4 w-4" />
           </Button>
 
@@ -157,7 +193,7 @@ export const TablePagination = <TData,>({
             disabled={!table.getCanNextPage()}
             className="h-8 w-8 p-0"
           >
-            <span className="sr-only">{t("pagination.nextPage")}</span>
+            <span className="sr-only">{t.nextPage}</span>
             <ChevronLeft className="h-4 w-4" />
           </Button>
 
@@ -169,19 +205,17 @@ export const TablePagination = <TData,>({
             disabled={!table.getCanNextPage()}
             className="h-8 w-8 p-0"
           >
-            <span className="sr-only">{t("pagination.lastPage")}</span>
+            <span className="sr-only">{t.lastPage}</span>
             <ChevronsLeft className="h-4 w-4" />
           </Button>
         </div>
 
         <div className="flex items-center space-x-2 space-x-reverse">
           <p className="text-sm font-medium">
-            {t("pagination.page", {
-              current: formatNumber(
-                table.getState().pagination.pageIndex + 1
-              ),
-              total: formatNumber(table.getPageCount()),
-            })}
+            {formatPageText(
+              table.getState().pagination.pageIndex + 1,
+              table.getPageCount()
+            )}
           </p>
         </div>
       </div>

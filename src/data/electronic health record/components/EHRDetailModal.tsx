@@ -11,14 +11,50 @@ import { Button } from "@/components/ui/button";
 import { formatCellValue } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
 import { Copy, Check, XIcon, DownloadIcon } from "lucide-react";
-import { useElectronicHealthRecord } from "../provider";
 import { _5_160_115_210_ADDRESS } from "@/settings";
 import { toast } from "sonner";
+import { UseMutationResult } from "@tanstack/react-query";
+import { 
+  MobileLaboratoryByNationalNumberApiResponse,
+} from "@/data/electronic health record/api/mobile-laboratory-by-national-number";
+import { MobileNumberByNationalNumberApiResponse } from "../api/mobile-number-by-national-number";
+import { MobileXRayByNationalNumberApiResponse } from "../api/mobile-xray-by-national-number";
 
 interface EHRDetailModalProps {
   record: ElectronicHealthRecord | null;
   isOpen: boolean;
   onClose: () => void;
+  actions: {
+    mobileLaboratoryByNationalNumber_m: UseMutationResult<
+      MobileLaboratoryByNationalNumberApiResponse,
+      Error,
+      {
+        params: {
+          nationalNumber: string;
+          receptionID: string;
+        };
+      }
+    >;
+    mobileXRayByNationalNumber_m: UseMutationResult<
+      MobileXRayByNationalNumberApiResponse,
+      Error,
+      {
+        params: {
+          nationalNumber: string;
+          receptionID: string;
+        };
+      }
+    >;
+    mobileNumberByNationalNumber_m: UseMutationResult<
+      MobileNumberByNationalNumberApiResponse,
+      Error,
+      {
+        params: {
+          nationalNumber: string;
+        };
+      }
+    >;
+  };
 }
 
 interface CopyButtonProps {
@@ -56,6 +92,7 @@ export const EHRDetailModal = ({
   record,
   isOpen,
   onClose,
+  actions,
 }: EHRDetailModalProps) => {
   const locale = useLocale();
   const t = useTranslations("EHRDetailModal");
@@ -63,7 +100,7 @@ export const EHRDetailModal = ({
     mobileLaboratoryByNationalNumber_m,
     mobileXRayByNationalNumber_m,
     mobileNumberByNationalNumber_m,
-  } = useElectronicHealthRecord();
+  } = actions;
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [downloadXRayUrl, setDownloadXRayUrl] = useState<string | null>(null);
   const [mobileNumber, setMobileNumber] = useState<string | null>(null);
@@ -323,7 +360,7 @@ export const EHRDetailModal = ({
                   </label>
                   <div className="flex items-center gap-2">
                     <div className="text-sm flex-1">
-                      {formatCellValue(field.value, locale)}
+                      {formatCellValue(field.value?.toString() || "", locale)}
                     </div>
                     <CopyButton value={String(field.value)} />
                   </div>

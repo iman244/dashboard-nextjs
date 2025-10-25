@@ -51,17 +51,17 @@ export type PeriodicalReportsFormValues = z.infer<typeof formSchema>;
  * Provides date range selection for periodical reports
  */
 export const PeriodicalReportsForm = (props: {
-  initialValues: { fromDate?: string; toDate?: string };
+  initialValues?: { patientType?: string; fromDate?: string; toDate?: string };
   compact?: boolean;
 }) => {
   console.log({ props });
   const t = useTranslations("PeriodicalReports");
-  const { setFilters, ehrByNationalNumber_m } = usePeriodicalReports();
+  const { setFilters, ehrByNationalNumber_m, filters } = usePeriodicalReports();
 
   const form = useForm<PeriodicalReportsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      patientType: "25", // Default to ژاراكلينيك
+      patientType: props.initialValues?.patientType || filters.patientType,
       dateRange:
         props.initialValues?.fromDate && props.initialValues?.toDate
           ? {
@@ -78,7 +78,7 @@ export const PeriodicalReportsForm = (props: {
                 return newDate(year, month - 1, day);
               })(),
             }
-          : undefined,
+          : filters.dateRange || undefined,
     },
   });
 

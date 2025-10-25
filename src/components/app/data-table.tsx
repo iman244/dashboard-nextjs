@@ -5,9 +5,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { flexRender, Table as TanStackTable, ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
-interface DataTableProps<TData> {
+interface DataTableProps<TData, TValue> {
   table: TanStackTable<TData>;
-  columns: ColumnDef<TData, string>[];
+  columns: ColumnDef<TData, TValue>[];
   noDataMessage?: string;
   className?: string;
 }
@@ -16,12 +16,12 @@ interface DataTableProps<TData> {
  * Generic data table component with sorting capabilities
  * Similar to EHRTable but without loading/error states
  */
-export const DataTable = <TData,>({ 
+export const DataTable = <TData, TValue = unknown>({ 
   table, 
   columns, 
   noDataMessage = "هیچ داده‌ای موجود نیست",
   className = ""
-}: DataTableProps<TData>) => {
+}: DataTableProps<TData, TValue>) => {
 
   return (
     <div className={`rounded-md border overflow-hidden ${className}`}>

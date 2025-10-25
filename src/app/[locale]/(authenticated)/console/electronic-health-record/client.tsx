@@ -15,7 +15,7 @@ import { useEHRColumns } from "./_columns";
 import { EHRTable } from "./_components/ehr-table";
 import { EHRTablePagination } from "./_components/ehr-table-pagination";
 import { EHRFilter } from "./_components/ehr-filter";
-import { EHRDetailModal } from "./_components/ehr-detail-modal";
+import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { formatNumber, formatDate } from "@/lib/utils";
 import { useElectronicHealthRecord } from "./provider";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,9 @@ const Client = () => {
     setSelectedRecord,
     isDetailModalOpen,
     setIsDetailModalOpen,
+    mobileLaboratoryByNationalNumber_m,
+    mobileXRayByNationalNumber_m,
+    mobileNumberByNationalNumber_m,
   } = useElectronicHealthRecord();
 
   // Action handlers
@@ -169,6 +172,11 @@ const Client = () => {
         onClose={() => {
           setIsDetailModalOpen(false);
           setSelectedRecord(null);
+        }}
+        actions={{
+          mobileLaboratoryByNationalNumber_m,
+          mobileXRayByNationalNumber_m,
+          mobileNumberByNationalNumber_m,
         }}
       />
     </div>

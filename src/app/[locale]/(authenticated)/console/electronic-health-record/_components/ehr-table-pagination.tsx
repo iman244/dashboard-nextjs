@@ -19,12 +19,19 @@ import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 interface EHRTablePaginationProps {
   table: TanStackTable<ElectronicHealthRecord>;
   formatNumber: (num: number) => string;
+  pageIncrement?: number;
+  showPageSizeSelector?: boolean;
 }
 
 /**
  * EHR Table pagination component with RTL support
  */
-export const EHRTablePagination = ({ table, formatNumber }: EHRTablePaginationProps) => {
+export const EHRTablePagination = ({
+  table,
+  formatNumber,
+  pageIncrement = 10,
+  showPageSizeSelector = true,
+}: EHRTablePaginationProps) => {
   const t = useTranslations("EHRTable");
 
   return (
@@ -50,30 +57,35 @@ export const EHRTablePagination = ({ table, formatNumber }: EHRTablePaginationPr
       </div>
 
       <div className="flex items-center space-x-4 space-x-reverse">
-        <div className="flex items-center space-x-2 space-x-reverse">
-          <p className="text-sm font-medium">{t("pagination.rowsPerPage")}</p>
-          <Select
-            value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => {
-              table.setPageSize(Number(value));
-            }}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue
-                placeholder={formatNumber(
-                  table.getState().pagination.pageSize
-                )}
-              />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {formatNumber(pageSize)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {showPageSizeSelector && (
+          <div className="flex items-center space-x-2 space-x-reverse">
+            <p className="text-sm font-medium">{t("pagination.rowsPerPage")}</p>
+            <Select
+              value={`${table.getState().pagination.pageSize}`}
+              onValueChange={(value) => {
+                table.setPageSize(Number(value));
+              }}
+            >
+              <SelectTrigger className="h-8 w-[70px]">
+                <SelectValue
+                  placeholder={formatNumber(
+                    table.getState().pagination.pageSize
+                  )}
+                />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {Array.from(
+                  { length: 5 },
+                  (_, i) => (i + 1) * pageIncrement
+                ).map((pageSize) => (
+                  <SelectItem key={pageSize} value={`${pageSize}`}>
+                    {formatNumber(pageSize)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {/* Custom RTL Pagination */}
         <div className="flex items-center space-x-1 space-x-reverse">
@@ -171,9 +183,7 @@ export const EHRTablePagination = ({ table, formatNumber }: EHRTablePaginationPr
         <div className="flex items-center space-x-2 space-x-reverse">
           <p className="text-sm font-medium">
             {t("pagination.page", {
-              current: formatNumber(
-                table.getState().pagination.pageIndex + 1
-              ),
+              current: formatNumber(table.getState().pagination.pageIndex + 1),
               total: formatNumber(table.getPageCount()),
             })}
           </p>

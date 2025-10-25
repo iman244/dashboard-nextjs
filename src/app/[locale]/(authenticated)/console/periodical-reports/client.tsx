@@ -6,26 +6,23 @@ import { usePeriodicalReports } from "./provider";
 import { PeriodicalReportsForm } from "./_form/periodical-reports-form";
 import { RecordCountChart } from "./_charts/record-count-chart";
 import { PatientCountChart } from "./_charts/patient-count-chart";
-import { ServiceCountChart } from "./_charts/service-count-chart";
-import { FullyAbnormalServicesChart } from "./_charts/fully-abnormal-services-chart";
-import { ServiceRecordsTable } from "./_charts/service-records-table";
+import { ServiceCountTable } from "./_charts/service-count-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { formatDate } from "@/lib/utils";
 import { localeDigits } from "@/lib/utils";
 
 const Client = (props: {
-  initialValues: { fromDate: string; toDate: string };
+  initialValues: { patientType?: string; fromDate?: string; toDate?: string };
 }) => {
   const t = useTranslations("PeriodicalReports");
-  const { ehrByNationalNumber_m, filters } = usePeriodicalReports();
+  const {
+    ehrByNationalNumber_m,
+    filters,
+  } = usePeriodicalReports();
+  
   const { data, isPending } = ehrByNationalNumber_m;
   const locale = useLocale();
-  const [selectedService, setSelectedService] = React.useState<string | null>(null);
-
-  const handleServiceClick = React.useCallback((serviceName: string) => {
-    setSelectedService(serviceName);
-  }, []);
 
   if (isPending) {
     return (
@@ -94,46 +91,16 @@ const Client = (props: {
 
             {/* Service Charts Section */}
             <div className="space-y-6">
-              {/* Mixed Results Chart */}
+              {/* Mixed Results Table */}
               <Card className="h-full">
                 <CardHeader>
-                  <CardTitle>نمودار خدمات با نتایج مختلط</CardTitle>
+                  <CardTitle>جدول خدمات با نتایج مختلط</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ServiceCountChart 
-                    data={data} 
-                    onServiceClick={handleServiceClick}
-                    selectedService={selectedService}
-                  />
+                  <ServiceCountTable data={data} />
                 </CardContent>
               </Card>
 
-              {/* Fully Abnormal Services Chart */}
-              {/* <Card className="h-full">
-                <CardHeader>
-                  <CardTitle>خدمات با نتایج کاملاً غیرطبیعی</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <FullyAbnormalServicesChart 
-                    data={data} 
-                    onServiceClick={handleServiceClick}
-                    selectedService={selectedService}
-                  />
-                </CardContent>
-              </Card> */}
-
-              {/* Interactive Records Table */}
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle>رکوردهای خدمت انتخابی</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ServiceRecordsTable 
-                    data={data} 
-                    selectedService={selectedService}
-                  />
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>

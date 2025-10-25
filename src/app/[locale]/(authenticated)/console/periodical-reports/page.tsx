@@ -15,8 +15,11 @@ const Page = async (
   const toDate = Array.isArray(resolvedSearchParams.toDate)
     ? resolvedSearchParams.toDate[0]
     : resolvedSearchParams.toDate || "";
+  const patientType = Array.isArray(resolvedSearchParams.patientType)
+    ? resolvedSearchParams.patientType[0]
+    : resolvedSearchParams.patientType || "25";
 
-  return <Client initialValues={{ fromDate, toDate }} />;
+  return <Client initialValues={{ patientType, fromDate, toDate }} />;
 };
 
 export default Page;
