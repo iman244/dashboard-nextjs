@@ -243,5 +243,12 @@
     "normal": "Normal",
     "abnormal": "Abnormal",
     "actions": "Actions"
+  },
+  "dictionary": {
+    "date": "Date",
+    "serviceName": "Service Name",
+    "treatingPhysician": "Treating Physician",
+    "answer": "Answer",
+    "normalRange": "Normal Range"
   }
 }

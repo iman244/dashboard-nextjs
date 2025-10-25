@@ -251,5 +251,12 @@
     "abnormal": "غیرطبیعی",
     "answerStatus": "وضعیت جواب",
     "actions": "عملیات"
+  },
+  "dictionary": {
+    "date": "تاریخ",
+    "serviceName": "نام خدمت",
+    "treatingPhysician": "نام پزشک معالج",
+    "answer": "جواب",
+    "normalRange": "نرمال رنج"
   }
 }
