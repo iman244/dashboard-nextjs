@@ -7,8 +7,7 @@ import { PatientReportsForm } from "./_form/patient-reports-form";
 import { ServiceCountChart } from "./_charts/service-count-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { formatDate } from "../electronic-health-record/_utils/format-date";
-import { localeDigits } from "@/lib/utils";
+import { formatDate, localeDigits } from "@/lib/utils";
 
 const Client = (props: {
   initialValues: {
@@ -22,7 +21,6 @@ const Client = (props: {
   const { ehrByNationalNumber_m, filters } = usePatientReports();
   const { data, isPending } = ehrByNationalNumber_m;
   const locale = useLocale();
-  console.log("ehrByNationalNumber_m", { ehrByNationalNumber_m });
 
   if (isPending) {
     return (

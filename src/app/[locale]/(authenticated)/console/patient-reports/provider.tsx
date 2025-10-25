@@ -63,11 +63,6 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
     },
   });
 
-  React.useEffect(() => {
-    console.log("ehrByNationalNumber_m.status", ehrByNationalNumber_m.status);
-    console.log("ehrByNationalNumber_m.data", ehrByNationalNumber_m.data);
-  }, [ehrByNationalNumber_m]);
-
   return (
     <PatientReportsContext.Provider
       value={{

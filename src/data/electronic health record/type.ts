@@ -14,8 +14,8 @@ export interface ElectronicHealthRecord {
     "نوع سن": string
     "كد خدمت": string
     "نام خدمت": string
-    "جواب": string
-    "نرمال رنج": string
+    "جواب"?: string
+    "نرمال رنج"?: string
     "كد ملي خدمت": string
     "كد پزشك معالج": string
     "نام پزشك معالج": string

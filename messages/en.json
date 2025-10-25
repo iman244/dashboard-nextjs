@@ -177,7 +177,8 @@
     "recordCount": "Record Count",
     "patientCount": "Patient Count",
     "service": "Service",
-    "count": "Count"
+    "count": "Count",
+    "patientType": "Patient Type"
   },
   "RecordCountChart": {
     "noDataAvailable": "No data available",
@@ -228,5 +229,19 @@
     "6": "Emergency",
     "7": "Prescription & Equipment",
     "25": "Telemedicine Patients"
+  },
+  "data": {
+    "patientName": "Patient Name",
+    "lastName": "Last Name",
+    "answer": "Answer",
+    "normalRange": "Normal Range",
+    "serviceName": "Service Name",
+    "treatingPhysician": "Treating Physician"
+  },
+  "ServiceRecordsTable": {
+    "answerStatus": "Answer Status",
+    "normal": "Normal",
+    "abnormal": "Abnormal",
+    "actions": "Actions"
   }
 }

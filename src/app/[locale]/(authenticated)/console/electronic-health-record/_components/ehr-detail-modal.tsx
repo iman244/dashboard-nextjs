@@ -8,9 +8,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { formatCellValue } from "../_utils/format-numbers";
+import { formatCellValue } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
-import { Copy, Check, XIcon, DownloadIcon, EyeIcon } from "lucide-react";
+import { Copy, Check, XIcon, DownloadIcon } from "lucide-react";
 import { useElectronicHealthRecord } from "../provider";
 import { _5_160_115_210_ADDRESS } from "@/settings";
 import { toast } from "sonner";

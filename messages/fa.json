@@ -182,7 +182,9 @@
     "recordCount": "تعداد رکورد",
     "patientCount": "تعداد بیماران",
     "service": "خدمت",
-    "count": "تعداد"
+    "count": "تعداد",
+    "patientType": "نوع بیمار",
+    "selectPatientType": "انتخاب نوع بیمار"
   },
   "RecordCountChart": {
     "noDataAvailable": "هیچ داده‌ای موجود نیست",
@@ -225,5 +227,29 @@
     "chartComingSoon": "نمودار به زودی",
     "errorMessage": "خطا در بارگذاری داده‌های گزارش",
     "serviceChartTitle": "تعداد خدمات"
+  },
+  "PatientTypes": {
+    "1": "اطلاعات بستري",
+    "2": "آزمايشگاه",
+    "3": "تصويربرداري",
+    "4": "پاتولوژي",
+    "5": "درمانگاه",
+    "6": "اورژانس",
+    "7": "نسخ دارو و تجهيزات",
+    "25": "بيماران ژاراكلينيك"
+  },
+  "data": {
+    "patientName": "نام بيمار",
+    "lastName": "نام خانوادگي بيمار",
+    "answer": "جواب",
+    "normalRange": "نرمال رنج",
+    "serviceName": "نام خدمت",
+    "treatingPhysician": "نام پزشک معالج"
+  },
+  "ServiceRecordsTable": {
+    "normal": "طبیعی",
+    "abnormal": "غیرطبیعی",
+    "answerStatus": "وضعیت جواب",
+    "actions": "عملیات"
   }
 }

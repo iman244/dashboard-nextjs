@@ -12,8 +12,8 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
-import { formatDate } from "@/app/[locale]/(authenticated)/console/electronic-health-record/_utils/format-date";
-import { format, startOfMonth, startOfYear, subMonths, endOfMonth } from "date-fns-jalali";
+import { formatDate } from "@/lib/utils";
+import { format, startOfMonth, startOfYear, subMonths } from "date-fns-jalali";
 
 interface DateRangePickerProps {
   value?: { from?: Date; to?: Date } | null;

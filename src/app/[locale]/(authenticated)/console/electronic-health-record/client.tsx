@@ -11,25 +11,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { RefreshCw, XIcon } from "lucide-react";
 
-// Import extracted components and utilities
 import { useEHRColumns } from "./_columns";
 import { EHRTable } from "./_components/ehr-table";
 import { EHRTablePagination } from "./_components/ehr-table-pagination";
 import { EHRFilter } from "./_components/ehr-filter";
 import { EHRDetailModal } from "./_components/ehr-detail-modal";
-import { formatNumber } from "./_utils/format-numbers";
+import { formatNumber, formatDate } from "@/lib/utils";
 import { useElectronicHealthRecord } from "./provider";
-import { formatDate } from "./_utils/format-date";
 import { Badge } from "@/components/ui/badge";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 
-/**
- * Main EHR Client Component
- * Handles data fetching and composes sub-components
- */
 const Client = () => {
   const t = useTranslations("EHRTable");
+  const tPatientTypes = useTranslations("PatientTypes");
   const locale = useLocale();
   const {
     filters,
@@ -135,6 +130,16 @@ const Client = () => {
                   )} - ${formatDate(filters.dateRange?.to, locale)}`
                 )}
               </span>
+            </Badge>
+          )}
+          {filters.patientType && (
+            <Badge
+              variant={"secondary"}
+              onClick={() => setFilters({ ...filters, patientType: "" })}
+              className="cursor-pointer"
+            >
+              <XIcon className="w-4 h-4" />
+              <span>نوع بیمار: {tPatientTypes(filters.patientType)}</span>
             </Badge>
           )}
         </div>

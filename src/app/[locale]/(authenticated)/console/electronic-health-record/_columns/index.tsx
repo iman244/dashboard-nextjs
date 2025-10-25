@@ -1,7 +1,7 @@
 import React from "react";
 import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
-import { formatCellValue } from "../_utils/format-numbers";
+import { formatCellValue } from "@/lib/utils";
 import { MoreHorizontal, Eye, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,7 +44,7 @@ export const useEHRColumns = (
     });
     
     router.push(`/console/patient-reports?${searchParams.toString()}`);
-  }, [router, filters.patientType]);
+  }, [router, filters.patientType, filters.dateRange?.from, filters.dateRange?.to]);
   
   return React.useMemo(() => [
     columnHelper.accessor("نام بيمار", {
