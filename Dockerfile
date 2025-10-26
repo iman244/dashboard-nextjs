@@ -1,5 +1,5 @@
 # 1. Use official Node.js image as the build environment
-FROM node:18-alpine AS builder
+FROM node:20.9-alpine AS builder
 
 # 2. Set working directory
 WORKDIR /app
@@ -21,7 +21,7 @@ ENV NODE_ENV=production
 RUN npm run build
 
 # 7. Production image, copy built assets and install only production dependencies
-FROM node:18-alpine AS runner
+FROM node:20.9-alpine AS runner
 
 WORKDIR /app
 
