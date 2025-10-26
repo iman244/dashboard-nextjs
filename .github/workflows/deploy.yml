@@ -52,16 +52,16 @@ jobs:
           
           # Build and start containers with environment variables
           echo "🔨 Building and starting containers..."
-          NEXT_PUBLIC_DJANGO_ADDRESS="${{ secrets.NEXT_PUBLIC_DJANGO_ADDRESS }}" \
-          NEXT_PUBLIC_DJANGO_API_PATH="${{ secrets.NEXT_PUBLIC_DJANGO_API_PATH }}" \
-          NEXT_PUBLIC_5_160_115_210_ADDRESS="${{ secrets.NEXT_PUBLIC_5_160_115_210_ADDRESS }}" \
-          NEXT_PUBLIC_5_160_115_210_API_PATH="${{ secrets.NEXT_PUBLIC_5_160_115_210_API_PATH }}" \
-          NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME="${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME }}" \
-          NEXT_PUBLIC_ACCESS_TOKEN_KEY="${{ secrets.NEXT_PUBLIC_ACCESS_TOKEN_KEY }}" \
-          NEXT_PUBLIC_REFRESH_TOKEN_KEY="${{ secrets.NEXT_PUBLIC_REFRESH_TOKEN_KEY }}" \
-          NEXT_PUBLIC_LOCALE_COOKIE_NAME="${{ secrets.NEXT_PUBLIC_LOCALE_COOKIE_NAME }}" \
-          NODE_ENV=production \
-          docker compose up -d --build --quiet-pull
+          docker compose build --build-arg NEXT_PUBLIC_DJANGO_ADDRESS="${{ secrets.NEXT_PUBLIC_DJANGO_ADDRESS }}" \
+          --build-arg NEXT_PUBLIC_DJANGO_API_PATH="${{ secrets.NEXT_PUBLIC_DJANGO_API_PATH }}" \
+          --build-arg NEXT_PUBLIC_5_160_115_210_ADDRESS="${{ secrets.NEXT_PUBLIC_5_160_115_210_ADDRESS }}" \
+          --build-arg NEXT_PUBLIC_5_160_115_210_API_PATH="${{ secrets.NEXT_PUBLIC_5_160_115_210_API_PATH }}" \
+          --build-arg NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME="${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME }}" \
+          --build-arg NEXT_PUBLIC_ACCESS_TOKEN_KEY="${{ secrets.NEXT_PUBLIC_ACCESS_TOKEN_KEY }}" \
+          --build-arg NEXT_PUBLIC_REFRESH_TOKEN_KEY="${{ secrets.NEXT_PUBLIC_REFRESH_TOKEN_KEY }}" \
+          --build-arg NEXT_PUBLIC_LOCALE_COOKIE_NAME="${{ secrets.NEXT_PUBLIC_LOCALE_COOKIE_NAME }}"
+          
+          docker compose up -d --quiet-pull
           
           # Wait for application to be ready
           echo "⏳ Waiting for application to be ready..."
