@@ -14,17 +14,10 @@ RUN npm install
 # 5. Copy the rest of the application code
 COPY . .
 
+# 6. Set production environment
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_DJANGO_ADDRESS=http://194.60.231.201:8001
-ENV NEXT_PUBLIC_DJANGO_API_PATH=/api
-ENV NEXT_PUBLIC_5_160_115_210_ADDRESS=http://5.160.115.210:8085
-ENV NEXT_PUBLIC_5_160_115_210_API_PATH=/api/PDD
-ENV NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME=JWT
-ENV NEXT_PUBLIC_ACCESS_TOKEN_KEY=access
-ENV NEXT_PUBLIC_REFRESH_TOKEN_KEY=refresh
-ENV NEXT_PUBLIC_LOCALE_COOKIE_NAME=locale
 
-# 6. Build the Next.js app
+# 7. Build the Next.js app
 RUN npm run build
 
 # 7. Production image, copy built assets and install only production dependencies

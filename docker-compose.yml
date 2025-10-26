@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  djoser-nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # Django API Configuration
+      - NEXT_PUBLIC_DJANGO_ADDRESS=${NEXT_PUBLIC_DJANGO_ADDRESS}
+      - NEXT_PUBLIC_DJANGO_API_PATH=${NEXT_PUBLIC_DJANGO_API_PATH}
+      
+      # 5.160.115.210 API Configuration
+      - NEXT_PUBLIC_5_160_115_210_ADDRESS=${NEXT_PUBLIC_5_160_115_210_ADDRESS}
+      - NEXT_PUBLIC_5_160_115_210_API_PATH=${NEXT_PUBLIC_5_160_115_210_API_PATH}
+      
+      # Authentication Configuration
+      - NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME=${NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME}
+      - NEXT_PUBLIC_ACCESS_TOKEN_KEY=${NEXT_PUBLIC_ACCESS_TOKEN_KEY}
+      - NEXT_PUBLIC_REFRESH_TOKEN_KEY=${NEXT_PUBLIC_REFRESH_TOKEN_KEY}
+      
+      # Locale Configuration
+      - NEXT_PUBLIC_LOCALE_COOKIE_NAME=${NEXT_PUBLIC_LOCALE_COOKIE_NAME}
+      
+      # Server Configuration (for deployment)
+      - SERVER_HOST=${SERVER_HOST}
+      - SERVER_KEY=${SERVER_KEY}
+      - SERVER_USER=${SERVER_USER}
+      
+      # Node Environment
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - djoser-network
+
+networks:
+  djoser-network:
+    driver: bridge
