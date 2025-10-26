@@ -1,4 +1,4 @@
-name: Deploy djoser-nextjs App
+name: Deploy medical-dashboard-nextjs App
 
 on:
   push:
