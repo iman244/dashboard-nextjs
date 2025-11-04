@@ -6,6 +6,13 @@
     "copy": "Copy to clipboard",
     "copied": "Copied!"
   },
+  "Theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "current": "{theme} theme"
+  },
   "NetworkErrorDialog": {
     "AlertDialogTitle": "Network Error",
     "AlertDialogDescription": "Connection to the server is lost. Please reload the page.",
@@ -13,10 +20,25 @@
   },
   "HomePage": {
     "title": "Welcome",
-    "description": "Dashboard",
+    "description": "Clinical data console to explore EHRs, run periodical analytics, and build patient-specific reports.",
     "buttons": {
       "goToConsole": "Go to Console",
       "signInRegister": "Sign In / Register"
+    },
+    "features": {
+      "ehr": {
+        "title": "Electronic Health Records",
+        "description": "Search and filter clinical records with sortable tables and detail views."
+      },
+      "periodical": {
+        "title": "Periodical Reports",
+        "description": "Visualize trends with charts for records and patients over time."
+      },
+      "patient": {
+        "title": "Patient Reports",
+        "description": "Aggregate services per patient and drill down into result trends."
+      },
+      "cta": "Get started"
     }
   },
   "SignInPage": {

@@ -17,8 +17,8 @@ const ButtonsSection = () => {
       : getAuthRedirectUrl(AppRoutes.CONSOLE);
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-      <Button asChild size="lg" className="flex-1 sm:flex-none">
+    <div className="flex justify-center">
+      <Button asChild size="lg" className="min-w-[200px] px-8 py-6 text-base">
         <Link href={href}>{t("buttons.goToConsole")}</Link>
       </Button>
     </div>
