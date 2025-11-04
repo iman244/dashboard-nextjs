@@ -41,7 +41,7 @@ const PATIENT_TYPE_OPTIONS: PatientTypeOption[] = [
   { value: "5", label: "درمانگاه" },
   { value: "6", label: "اورژانس" },
   { value: "7", label: "نسخ دارو و تجهيزات" },
-  { value: "25", label: "بيماران ژاراكلينيك" },
+  { value: "25", label: "بيماران پاراكلينيك" },
 ];
 
 export function PatientTypeSelector<

@@ -141,6 +141,6 @@ export const useEHRColumns = ({
         },
       }) as ColumnDef<ElectronicHealthRecord>,
     ],
-    [locale, onViewDetails, handlePatientReport]
+    [locale, onViewDetails, handlePatientReport, isRtl]
   );
 };

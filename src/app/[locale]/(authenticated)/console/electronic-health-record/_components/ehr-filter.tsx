@@ -96,7 +96,7 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
 
     const clearedFilters = {
       nationalNumber: "",
-      patientType: "25", // Default to ژاراكلينيك
+      patientType: "25", // Default to پاراكلينيك
       dateRange: {
         from: new Date(),
         to: new Date(),

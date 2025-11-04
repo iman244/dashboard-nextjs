@@ -65,7 +65,7 @@ export const PatientReportsForm = (props: {
     resolver: zodResolver(formSchema),
     defaultValues: {
       nationalNumber: props.initialValues.nationalNumber || "",
-      patientType: props.initialValues.patientType || "25", // Default to ژاراكلينيك
+      patientType: props.initialValues.patientType || "25", // Default to پاراكلينيك
       dateRange: props.initialValues.fromDate && props.initialValues.toDate
         ? {
             from: (() => {
