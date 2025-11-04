@@ -30,7 +30,7 @@ export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
         <AuthProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
