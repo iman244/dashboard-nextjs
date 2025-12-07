@@ -23,8 +23,7 @@ import { TablePagination } from "./table-pagination";
 import { useMonitoringIdRouteContext } from "./route-context";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FileSearchCorner, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { FileSearchCorner } from "lucide-react";
 
 const columnHelper =
   createColumnHelper<SBHM_RetrieveSerializer["json"][number]>();
@@ -36,7 +35,6 @@ const MonitoringPage = (
   const locale = useLocale();
   const isRtl = locale === "fa";
   const { monitoring_query } = useMonitoringIdRouteContext();
-  const [searchTerm, setSearchTerm] = React.useState("");
 
   const { data, isPending, error } = monitoring_query;
 
@@ -73,27 +71,14 @@ const MonitoringPage = (
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    globalFilterFn: (row, columnId, value) => {
-      const firstName = String(row.getValue("نام") || "").toLowerCase();
-      const lastName = String(row.getValue("نام خانوادگی") || "").toLowerCase();
-      const nationalId = String(row.original["personel.کد ملی"] || "").toLowerCase();
-      const searchValue = value.toLowerCase();
-      
-      return (
-        firstName.includes(searchValue) ||
-        lastName.includes(searchValue) ||
-        nationalId.includes(searchValue)
-      );
-    },
-    state: {
-      globalFilter: searchTerm,
-    },
-    onGlobalFilterChange: setSearchTerm,
     initialState: {
       pagination: {
         pageSize: 10,
       },
     },
+    // state: {
+    //     columnFilters,
+    //   },
   });
 
   if (isPending) return <div>Loading...</div>;
@@ -102,28 +87,6 @@ const MonitoringPage = (
 
   return (
     <div className="space-y-4">
-      {/* Search Input */}
-      <div className="flex items-center gap-2 space-x-reverse">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="جستجو در نام، نام خانوادگی یا کد ملی..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pr-10"
-          />
-        </div>
-        {searchTerm && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setSearchTerm("")}
-          >
-            پاک کردن
-          </Button>
-        )}
-      </div>
-
       <div className="border rounded-md overflow-hidden">
         <Table>
           <TableHeader>

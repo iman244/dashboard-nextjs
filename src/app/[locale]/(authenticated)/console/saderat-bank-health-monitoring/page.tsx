@@ -55,18 +55,18 @@ const SaderatBankHealthMonitoringPage = (
         header: tDictionary("Actions"),
         cell: ({ row }) => (
           <div className="flex gap-2 items-center">
-            <Button
-              variant={"ghost"}
-              onClick={() => setDeleteRow(row.original)}
-            >
-              <Trash />
-            </Button>
             <Button variant={"ghost"} asChild>
               <Link
                 href={`/console/saderat-bank-health-monitoring/${row.original.id}`}
               >
                 <Table2 />
               </Link>
+            </Button>
+            <Button
+              variant={"ghost"}
+              onClick={() => setDeleteRow(row.original)}
+            >
+              <Trash />
             </Button>
           </div>
         ),
