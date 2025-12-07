@@ -33,7 +33,7 @@ const PersonMonitoringPage = (
 
   const person_data = React.useMemo(() => {
     return data?.json.find(
-      (item) => item["personel.کد ملی"] === parseInt(national_id)
+      (item) => item["personel.کد ملی"] === national_id
     );
   }, [data, national_id]);
 
