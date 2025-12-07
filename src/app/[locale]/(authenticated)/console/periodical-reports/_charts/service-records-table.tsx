@@ -282,7 +282,6 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
       />
       <TablePagination
         table={table}
-        formatNumber={(num) => formatNumber(num, locale)}
         showPageSizeSelector={false}
       />
 

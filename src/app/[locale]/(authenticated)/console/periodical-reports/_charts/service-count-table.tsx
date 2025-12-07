@@ -227,7 +227,6 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
         <DataTable<ServiceCountData, any> table={table} columns={columns} />
         <TablePagination
           table={table}
-          formatNumber={(num: number) => formatNumber(num, locale)}
         />
       </div>
 

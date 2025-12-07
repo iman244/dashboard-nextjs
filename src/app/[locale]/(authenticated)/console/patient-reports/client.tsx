@@ -266,7 +266,6 @@ const ServiceDetailsTable: React.FC<{
         />
         <TablePagination
           table={table}
-          formatNumber={(num) => formatNumber(num, locale)}
           showPageSizeSelector={false}
         />
       </div>
@@ -519,7 +518,6 @@ const Client = (props: {
                   />
                   <TablePagination
                     table={table}
-                    formatNumber={(num: number) => formatNumber(num, locale)}
                   />
                 </CardContent>
               </Card>
