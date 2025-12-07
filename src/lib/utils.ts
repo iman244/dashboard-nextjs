@@ -7,8 +7,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const localeDigits = (value: string, locale: string) => {
-  return locale === "fa" ? digitsEnToFa(value) : digitsFaToEn(value);
+export const localeDigits = (value: string | number, locale: string) => {
+  return locale === "fa" ? digitsEnToFa(value.toString()) : digitsFaToEn(value.toString());
 };
 
 export const formatNumber = (num: number, locale: string): string => {

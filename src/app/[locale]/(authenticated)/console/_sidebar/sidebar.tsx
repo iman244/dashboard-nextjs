@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart, FileText, User } from "lucide-react";
+import { BarChart, FileText, SquareActivity, User } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -37,6 +37,11 @@ export function AppSidebar() {
       title: t("patientReports"),
       url: "/console/patient-reports",
       icon: User,
+    },
+    {
+      title: t("saderatBankHealthMonitoring"),
+      url: "/console/saderat-bank-health-monitoring",
+      icon: SquareActivity,
     },
   ];
 

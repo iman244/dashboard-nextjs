@@ -33,15 +33,26 @@ interface PatientTypeSelectorProps<
   className?: string;
 }
 
+export enum PatientType {
+  INFORMATION = "1",
+  LAB = "2",
+  IMAGE = "3",
+  PATHOLOGY = "4",  
+  HOSPITAL = "5",
+  ORTHOPEDIC = "6",
+  DRUG = "7",  
+  PARACLINICAL = "25",
+}
+
 const PATIENT_TYPE_OPTIONS: PatientTypeOption[] = [
-  { value: "1", label: "اطلاعات بستري" },
-  { value: "2", label: "آزمايشگاه" },
-  { value: "3", label: "تصويربرداري" },
-  { value: "4", label: "پاتولوژي" },
-  { value: "5", label: "درمانگاه" },
-  { value: "6", label: "اورژانس" },
-  { value: "7", label: "نسخ دارو و تجهيزات" },
-  { value: "25", label: "بيماران پاراكلينيك" },
+  { value: PatientType.INFORMATION, label: "اطلاعات بستري" },
+  { value: PatientType.LAB, label: "آزمايشگاه" },
+  { value: PatientType.IMAGE, label: "تصويربرداري" },
+  { value: PatientType.PATHOLOGY, label: "پاتولوژي" },
+  { value: PatientType.HOSPITAL, label: "درمانگاه" },
+  { value: PatientType.ORTHOPEDIC, label: "اورژانس" },
+  { value: PatientType.DRUG, label: "نسخ دارو و تجهيزات" },
+  { value: PatientType.PARACLINICAL, label: "بيماران پاراكلينيك" },
 ];
 
 export function PatientTypeSelector<
