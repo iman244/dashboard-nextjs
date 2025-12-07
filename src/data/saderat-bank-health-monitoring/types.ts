@@ -84,7 +84,7 @@ type SBHM_Record = {
   هماتولوژی: string
   "مشاوره قلب": string
   "Alkaline Phosphatase": string
-  "personel.کد ملی": number
+  "personel.کد ملی": string
   روماتولوژی: string
   "سیستم تنفسی": string
   "علائم عمومی": string
@@ -94,7 +94,7 @@ type SBHM_Record = {
   "توصیه های عمومی": string
   "معاینه بالینی ENT": string
   "دهان و حلق و دندان": string | number | null
-  "تجمیع نتایج.کد ملی": number
+  "تجمیع نتایج.کد ملی": string
   "تاریخچه قبلی پزشکی": string
   "عوامل زیان آورشغلی": string
   "سونوگرافی شکم و لگن": string

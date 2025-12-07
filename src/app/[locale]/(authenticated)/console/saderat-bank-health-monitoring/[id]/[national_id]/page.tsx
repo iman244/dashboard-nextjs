@@ -42,6 +42,7 @@ import {
   FileText,
   Brain,
 } from "lucide-react";
+import { toast } from "sonner";
 
 type LabRecord = {
   PatientType: string;
@@ -119,10 +120,17 @@ const PersonMonitoringPage = (
       },
     },
   });
+  const { error: ehr_error } = ehr_query;
+
+  React.useEffect(() => {
+    if (ehr_error) {
+      toast.error("خطا در دریافت جزییات آزمایش‌ها: " + ehr_error.message);
+    }
+  }, [ehr_error]);
 
   const person_data = React.useMemo(() => {
     return data?.json.find(
-      (item) => item["personel.کد ملی"] === parseInt(national_id)
+      (item) => item["personel.کد ملی"] === national_id
     ) as MonitoringData | undefined;
   }, [data, national_id]);
 
@@ -218,12 +226,8 @@ const PersonMonitoringPage = (
     );
   }
 
-  if (error || ehr_query.error) {
-    return (
-      <div className="text-destructive">
-        Error: {error?.message || ehr_query.error?.message}
-      </div>
-    );
+  if (error) {
+    return <div className="text-destructive">Error: {error?.message}</div>;
   }
 
   if (!person_data) {
@@ -337,7 +341,12 @@ const PersonMonitoringPage = (
           <CardContent>
             <div className="text-2xl font-bold">
               {person_data["BMI"] != null
-                ? formatCellValue(person_data["BMI"], locale)
+                ? formatCellValue(
+                    person_data["BMI"].toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                    }),
+                    locale
+                  )
                 : "-"}
             </div>
             <Badge
@@ -410,14 +419,19 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <div className="text-lg font-bold">
-              {person_data["وزن"] != null
-                ? formatCellValue(person_data["وزن"], locale)
-                : "-"}{" "}
-              kg /{" "}
-              {person_data["قد"] != null
-                ? formatCellValue(person_data["قد"], locale)
-                : "-"}{" "}
-              cm
+              <span dir="ltr">
+                {person_data["وزن"] != null
+                  ? formatCellValue(person_data["وزن"], locale)
+                  : "-"}{" "}
+                kg 
+              </span>
+              {" "}/{" "}
+              <span dir="ltr">
+                {person_data["قد"] != null
+                  ? formatCellValue(person_data["قد"], locale)
+                  : "-"}{" "}
+                cm
+              </span>
             </div>
           </CardContent>
         </Card>
