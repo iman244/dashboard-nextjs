@@ -41,6 +41,8 @@ interface SearchPersonnelSheetProps {
   onOpenChange: (open: boolean) => void;
   data: SBHM_RetrieveSerializer["json"];
   monitoringId: string;
+  filterFn?: (record: SBHM_RetrieveSerializer["json"][number]) => boolean;
+  filterDescription?: string;
 }
 
 export function SearchPersonnelSheet({
@@ -48,11 +50,22 @@ export function SearchPersonnelSheet({
   onOpenChange,
   data,
   monitoringId,
+  filterFn,
+  filterDescription,
 }: SearchPersonnelSheetProps) {
   const locale = useLocale();
   const isRtl = locale === "fa";
   const [searchTerm, setSearchTerm] = React.useState("");
   const t = useTranslations("SaderatBankHealthMonitoringPage");
+
+  // Apply filter if provided
+  const filteredData = React.useMemo(() => {
+    let result = data || [];
+    if (filterFn) {
+      result = result.filter(filterFn);
+    }
+    return result;
+  }, [data, filterFn]);
 
   const table = useReactTable({
     columns: [
@@ -86,7 +99,7 @@ export function SearchPersonnelSheet({
         ),
       }),
     ],
-    data: data || [],
+    data: filteredData,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -121,7 +134,7 @@ export function SearchPersonnelSheet({
         <SheetHeader>
           <SheetTitle>{t("SearchPersonnel") || "جستجوی پرسنل"}</SheetTitle>
           <SheetDescription>
-            {t("SearchPersonnelDescription") ||
+            {filterDescription || t("SearchPersonnelDescription") ||
               "جستجو و مشاهده جزئیات پرسنل"}
           </SheetDescription>
         </SheetHeader>

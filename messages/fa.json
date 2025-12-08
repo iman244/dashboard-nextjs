@@ -304,9 +304,13 @@
     "EmptyStateTitle": "هیچ داده‌ای موجود نیست",
     "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
     "EmptyStateDescriptionDetail": "هیچ رکوردی برای نمایش وجود ندارد",
+    "ReportTitle": "گزارش آماری",
+    "SearchPersonnel": "جستجوی پرسنل",
+    "SearchPersonnelDescription": "جستجو و مشاهده جزئیات پرسنل",
     "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی...",
     "ClearSearch": "پاک کردن",
-    "NoSearchResults": "نتیجه‌ای یافت نشد"
+    "NoSearchResults": "نتیجه‌ای یافت نشد",
+    "NoResults": "نتیجه‌ای یافت نشد"
   },
   "Dictionary": {
     "Name": "نام",

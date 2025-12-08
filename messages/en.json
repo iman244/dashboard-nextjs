@@ -296,9 +296,13 @@
     "EmptyStateTitle": "No data available",
     "EmptyStateDescription": "Please upload an Excel file",
     "EmptyStateDescriptionDetail": "No records available to display",
+    "ReportTitle": "Statistical Report",
+    "SearchPersonnel": "Search Personnel",
+    "SearchPersonnelDescription": "Search and view personnel details",
     "SearchPlaceholder": "Search by name, last name or national ID...",
     "ClearSearch": "Clear",
-    "NoSearchResults": "No results found"
+    "NoSearchResults": "No results found",
+    "NoResults": "No results found"
   },
   "Dictionary": {
     "Name": "Name",
