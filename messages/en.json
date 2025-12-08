@@ -290,7 +290,15 @@
     "SuccessMessage": "Excel deleted successfully"
   },
   "SaderatBankHealthMonitoringPage": {
-    "UploadExcel": "Upload Excel"
+    "UploadExcel": "Upload Excel",
+    "Loading": "Loading...",
+    "ErrorTitle": "Error loading data",
+    "EmptyStateTitle": "No data available",
+    "EmptyStateDescription": "Please upload an Excel file",
+    "EmptyStateDescriptionDetail": "No records available to display",
+    "SearchPlaceholder": "Search by name, last name or national ID...",
+    "ClearSearch": "Clear",
+    "NoSearchResults": "No results found"
   },
   "Dictionary": {
     "Name": "Name",

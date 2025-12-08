@@ -19,7 +19,8 @@ import {
 } from "@/components/ui/table";
 import { useLocale, useTranslations } from "next-intl";
 import { cn, formatDate, localeDigits } from "@/lib/utils";
-import { Table2, Trash } from "lucide-react";
+import { Table2, Trash, AlertCircle, Inbox } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import DeleteSaderatBankHealthMonitoringExcelDialog from "./_delete-excel-dialog/dialog";
 import Link from "next/link";
 import { useList_SBHM_API } from "@/data/saderat-bank-health-monitoring/api";
@@ -77,15 +78,38 @@ const SaderatBankHealthMonitoringPage = (
   });
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-[400px]">
+        <div className="flex items-center flex-col gap-3">
+          <Spinner className="h-8 w-8" />
+          <span className="text-muted-foreground">{t("Loading")}</span>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
+        <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+        <div className="flex flex-col gap-1">
+          <p className="font-semibold text-destructive">{t("ErrorTitle")}</p>
+          <p className="text-sm text-muted-foreground">{error.message}</p>
+        </div>
+      </div>
+    );
   }
 
-  if (!data) {
-    return <div>No data</div>;
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 gap-3">
+        <Inbox className="h-12 w-12 text-muted-foreground" />
+        <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("EmptyStateDescription")}
+        </p>
+      </div>
+    );
   }
 
   return (

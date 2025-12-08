@@ -298,7 +298,15 @@
     "SuccessMessage": "حذف اکسل با موفقیت انجام شد"
   },  
   "SaderatBankHealthMonitoringPage": {
-    "UploadExcel": "بارگذاری اکسل"
+    "UploadExcel": "بارگذاری اکسل",
+    "Loading": "در حال بارگذاری...",
+    "ErrorTitle": "خطا در بارگذاری داده‌ها",
+    "EmptyStateTitle": "هیچ داده‌ای موجود نیست",
+    "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
+    "EmptyStateDescriptionDetail": "هیچ رکوردی برای نمایش وجود ندارد",
+    "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی...",
+    "ClearSearch": "پاک کردن",
+    "NoSearchResults": "نتیجه‌ای یافت نشد"
   },
   "Dictionary": {
     "Name": "نام",

@@ -17,14 +17,15 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { TablePagination } from "./table-pagination";
 import { useMonitoringIdRouteContext } from "./route-context";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FileSearchCorner, Search } from "lucide-react";
+import { FileSearchCorner, Search, AlertCircle, Inbox } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 
 const columnHelper =
   createColumnHelper<SBHM_RetrieveSerializer["json"][number]>();
@@ -37,6 +38,7 @@ const MonitoringPage = (
   const isRtl = locale === "fa";
   const { monitoring_query } = useMonitoringIdRouteContext();
   const [searchTerm, setSearchTerm] = React.useState("");
+  const t = useTranslations("SaderatBankHealthMonitoringPage");
 
   const { data, isPending, error } = monitoring_query;
 
@@ -96,9 +98,40 @@ const MonitoringPage = (
     },
   });
 
-  if (isPending) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  if (!data) return <div>No Data</div>;
+  if (isPending) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[400px]">
+        <div className="flex items-center flex-col gap-3">
+          <Spinner className="h-8 w-8" />
+          <span className="text-muted-foreground">{t("Loading")}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
+        <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+        <div className="flex flex-col gap-1">
+          <p className="font-semibold text-destructive">{t("ErrorTitle")}</p>
+          <p className="text-sm text-muted-foreground">{error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data || !data.json || data.json.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 gap-3">
+        <Inbox className="h-12 w-12 text-muted-foreground" />
+        <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("EmptyStateDescriptionDetail")}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -107,7 +140,7 @@ const MonitoringPage = (
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="جستجو در نام، نام خانوادگی یا کد ملی..."
+            placeholder={t("SearchPlaceholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pr-10"
@@ -119,7 +152,7 @@ const MonitoringPage = (
             size="sm"
             onClick={() => setSearchTerm("")}
           >
-            پاک کردن
+            {t("ClearSearch")}
           </Button>
         )}
       </div>
@@ -158,7 +191,6 @@ const MonitoringPage = (
           </TableBody>
         </Table>
       </div>
-      <TablePagination table={table} />
     </div>
   );
 };
