@@ -26,8 +26,7 @@ import Link from "next/link";
 import { useList_SBHM_API } from "@/data/saderat-bank-health-monitoring/api";
 import { SBHM_ListSerializer } from "@/data/saderat-bank-health-monitoring/types";
 
-const columnHelper =
-  createColumnHelper<SBHM_ListSerializer[number]>();
+const columnHelper = createColumnHelper<SBHM_ListSerializer[number]>();
 
 const SaderatBankHealthMonitoringPage = (
   props: PageProps<"/[locale]/console/saderat-bank-health-monitoring">
@@ -100,7 +99,7 @@ const SaderatBankHealthMonitoringPage = (
     );
   }
 
-  if (!data || data.length === 0) {
+  if (data === undefined) {
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-3">
         <Inbox className="h-12 w-12 text-muted-foreground" />
