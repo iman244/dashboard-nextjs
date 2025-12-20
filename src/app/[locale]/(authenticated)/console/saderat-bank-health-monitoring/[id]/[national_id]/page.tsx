@@ -42,6 +42,8 @@ import {
   FileText,
   Brain,
   EyeIcon,
+  XIcon,
+  ChartArea,
 } from "lucide-react";
 import { toast } from "sonner";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
@@ -50,6 +52,14 @@ import { useMobileLaboratoryByNationalNumberApi } from "@/data/electronic health
 import { useMobileXRayByNationalNumberApi } from "@/data/electronic health record/api/mobile-xray-by-national-number";
 import { useMobileNumberByNationalNumberApi } from "@/data/electronic health record/api/mobile-number-by-national-number";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { ServiceDetailsTable } from "../../../patient-reports/client";
 
 type MonitoringData = {
   [key: string]: string | number | null;
@@ -85,6 +95,13 @@ const PersonMonitoringPage = (
   const [selectedRecord, setSelectedRecord] =
     React.useState<ElectronicHealthRecord | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  const [selectedService, setSelectedService] = React.useState<string | null>(
+    null
+  );
+  const [serviceData, setServiceData] = React.useState<
+    ElectronicHealthRecord[] | null
+  >(null);
   const { national_id } = React.use(props.params);
   const { monitoring_query } = useMonitoringIdRouteContext();
   const { data, isPending, error } = monitoring_query;
@@ -577,6 +594,25 @@ const PersonMonitoringPage = (
             </div>
           )} */}
 
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <SheetContent side="bottom" className="max-h-[100dvh]">
+              <SheetHeader className="flex flex-row items-center justify-between">
+                <SheetTitle>گزارش رکوردهای خدمت: {selectedService}</SheetTitle>
+                <SheetClose>
+                  <XIcon className="h-4 w-4" />
+                </SheetClose>
+              </SheetHeader>
+              {selectedService && serviceData && (
+                <div className="p-4">
+                  <ServiceDetailsTable
+                    data={serviceData}
+                    selectedService={selectedService}
+                  />
+                </div>
+              )}
+            </SheetContent>
+          </Sheet>
+
           <EHRDetailModal
             record={selectedRecord}
             isOpen={isDetailModalOpen}
@@ -626,16 +662,34 @@ const PersonMonitoringPage = (
                           تاریخ: {formatCellValue(latest["تاريخ"], locale)} |
                           پزشک: {latest["نام پزشك معالج"]}
                         </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedRecord(latest);
-                            setIsDetailModalOpen(true);
-                          }}
-                        >
-                          جزییات
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedRecord(latest);
+                              setIsDetailModalOpen(true);
+                            }}
+                          >
+                            جزییات
+                          </Button>
+                          <Button
+                            disabled={latest["جواب"] === null}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedService(testName);
+                              setServiceData(
+                                labData.filter(
+                                  (item) => item["نام خدمت"] === testName
+                                )
+                              );
+                              setIsSheetOpen(true);
+                            }}
+                          >
+                            <ChartArea className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   );

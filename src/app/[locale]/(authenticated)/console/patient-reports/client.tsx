@@ -20,7 +20,7 @@ import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { DataTable } from "@/components/app";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, FileText, XIcon } from "lucide-react";
+import { Search, FileText, XIcon, ChartArea } from "lucide-react";
 import { TablePagination } from "@/components/app/table-pagination";
 import {
   Sheet,
@@ -73,7 +73,7 @@ const serviceTrendChartConfig: ChartConfig = {
 };
 
 // Service Details Table Component for the sheet
-const ServiceDetailsTable: React.FC<{
+export const ServiceDetailsTable: React.FC<{
   data: ElectronicHealthRecord[];
   selectedService: string;
 }> = ({ data, selectedService }) => {
@@ -403,7 +403,7 @@ const Client = (props: {
               }}
               title="مشاهده گزارش"
             >
-              <FileText className="h-4 w-4" />
+              <ChartArea className="h-4 w-4" />
             </Button>
           </div>
         ),
