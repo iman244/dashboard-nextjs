@@ -1,4 +1,5 @@
 import { _5_160_115_210_apiInstance } from "@/lib/api/5.160.115.210/5apiInstance";
+import { useMutation } from "@tanstack/react-query";
 
 export const PDD_MOBILE_LABORATORY_BY_NATIONAL_NUMBER_KEY =
   "pdd_mobile_laboratory_by_national_number" as const;
@@ -24,4 +25,11 @@ export const mobile_laboratory_by_national_number = async ({
       }
     );
   return response.data;
+};
+
+export const useMobileLaboratoryByNationalNumberApi = () => {
+  return useMutation({
+    mutationKey: [PDD_MOBILE_LABORATORY_BY_NATIONAL_NUMBER_KEY],
+    mutationFn: mobile_laboratory_by_national_number,
+  });
 };

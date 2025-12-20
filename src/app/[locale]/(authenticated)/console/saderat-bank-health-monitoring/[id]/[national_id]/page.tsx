@@ -29,7 +29,7 @@ import {
   ReferenceArea,
 } from "recharts";
 import { format, newDate } from "date-fns-jalali";
-import { formatCellValue } from "@/lib/utils";
+import { formatCellValue, localeDigits } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import {
   Activity,
@@ -41,33 +41,15 @@ import {
   Stethoscope,
   FileText,
   Brain,
+  EyeIcon,
 } from "lucide-react";
 import { toast } from "sonner";
-
-type LabRecord = {
-  PatientType: string;
-  "كد مكان": number;
-  مكان: string;
-  "كد استعلام": number;
-  "شماره پرونده": string;
-  "كد پذيرش": string;
-  "كد بيمار": number;
-  تاريخ: string;
-  "نام بيمار": string;
-  "نام خانوادگي بيمار": string;
-  كدملي: string;
-  سن: number;
-  "نوع سن": string;
-  "كد خدمت": string;
-  "نام خدمت": string;
-  جواب: string;
-  "نرمال رنج": string | null;
-  "كد ملي خدمت": string;
-  "كد پزشك معالج": string;
-  "نام پزشك معالج": string;
-  "نظام پزشكي معالج": string;
-  ReceptionServiceID: number;
-};
+import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
+import { ElectronicHealthRecord } from "@/data/electronic health record/type";
+import { useMobileLaboratoryByNationalNumberApi } from "@/data/electronic health record/api/mobile-laboratory-by-national-number";
+import { useMobileXRayByNationalNumberApi } from "@/data/electronic health record/api/mobile-xray-by-national-number";
+import { useMobileNumberByNationalNumberApi } from "@/data/electronic health record/api/mobile-number-by-national-number";
+import { Button } from "@/components/ui/button";
 
 type MonitoringData = {
   [key: string]: string | number | null;
@@ -100,9 +82,18 @@ const getStatusIcon = (value: string | number | null) => {
 const PersonMonitoringPage = (
   props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/[id]/[national_id]">
 ) => {
+  const [selectedRecord, setSelectedRecord] =
+    React.useState<ElectronicHealthRecord | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
   const { national_id } = React.use(props.params);
   const { monitoring_query } = useMonitoringIdRouteContext();
   const { data, isPending, error } = monitoring_query;
+
+  const mobileLaboratoryByNationalNumber_m =
+    useMobileLaboratoryByNationalNumberApi();
+  const mobileXRayByNationalNumber_m = useMobileXRayByNationalNumberApi();
+  const mobileNumberByNationalNumber_m = useMobileNumberByNationalNumberApi();
+
   const locale = useLocale();
   const today = new Date().toLocaleDateString("fa-IR", {
     year: "numeric",
@@ -135,12 +126,12 @@ const PersonMonitoringPage = (
   }, [data, national_id]);
 
   const labData = React.useMemo(() => {
-    return (ehr_query.data as LabRecord[]) || [];
+    return ehr_query.data || [];
   }, [ehr_query.data]);
 
   // Group lab data by test name and prepare for charts
   const groupedLabData = React.useMemo(() => {
-    const grouped: Record<string, LabRecord[]> = {};
+    const grouped: Record<string, ElectronicHealthRecord[]> = {};
     labData.forEach((record) => {
       const testName = record["نام خدمت"];
       if (!grouped[testName]) {
@@ -175,7 +166,7 @@ const PersonMonitoringPage = (
           return !isNaN(value) && value > 0 && range;
         })
         .map((r) => {
-          const value = parseFloat(r["جواب"]);
+          const value = parseFloat(r["جواب"] || "0");
           const range = r["نرمال رنج"] || "";
           const date = r["تاريخ"] || "";
 
@@ -207,7 +198,7 @@ const PersonMonitoringPage = (
 
   // Get latest lab values
   const latestLabValues = React.useMemo(() => {
-    const latest: Record<string, LabRecord> = {};
+    const latest: Record<string, ElectronicHealthRecord> = {};
     labData.forEach((record) => {
       const testName = record["نام خدمت"];
       const existing = latest[testName];
@@ -454,9 +445,9 @@ const PersonMonitoringPage = (
                 {person_data["وزن"] != null
                   ? formatCellValue(person_data["وزن"], locale)
                   : "-"}{" "}
-                kg 
-              </span>
-              {" "}/{" "}
+                kg
+              </span>{" "}
+              /{" "}
               <span dir="ltr">
                 {person_data["قد"] != null
                   ? formatCellValue(person_data["قد"], locale)
@@ -503,87 +494,108 @@ const PersonMonitoringPage = (
           </div>
 
           {/* Lab Trends Charts */}
-          {Object.keys(chartData).length > 0 && (
+          {/* {Object.keys(chartData).length > 0 && (
             <div className="space-y-6 mt-6">
               <h3 className="text-lg font-semibold">
                 روند تغییرات آزمایشات کلیدی
               </h3>
-              {Object.entries(chartData).map(([testName, data]) => {
-                if (data.length === 0) return null;
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Object.entries(chartData).map(([testName, data]) => {
+                  if (data.length === 0) return null;
 
-                const chartConfig: ChartConfig = {
-                  value: {
-                    label: testName,
-                    color: "hsl(var(--chart-1))",
-                  },
-                  min: {
-                    label: "حداقل نرمال",
-                    color: "hsl(var(--chart-2))",
-                  },
-                  max: {
-                    label: "حداکثر نرمال",
-                    color: "hsl(var(--chart-3))",
-                  },
-                };
+                  const chartConfig: ChartConfig = {
+                    value: {
+                      label: testName,
+                      color: "var(--chart-1)",
+                    },
+                    min: {
+                      label: "حداقل نرمال",
+                      color: "var(--chart-2)",
+                    },
+                    max: {
+                      label: "حداکثر نرمال",
+                      color: "var(--chart-3)",
+                    },
+                  };
 
-                return (
-                  <Card key={testName} className="p-4">
-                    <CardTitle className="text-base mb-4">{testName}</CardTitle>
-                    <ChartContainer config={chartConfig} className="h-[200px]">
-                      <ComposedChart data={data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis
-                          dataKey="formattedDate"
-                          tick={{ fontSize: 12 }}
-                          angle={-45}
-                          textAnchor="end"
-                          height={60}
-                        />
-                        <YAxis tick={{ fontSize: 12 }} />
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <ReferenceArea
-                          y1={data[0]?.min}
-                          y2={data[0]?.max}
-                          fill="rgba(22, 163, 74, 0.1)"
-                          stroke="none"
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="value"
-                          stroke="var(--color-value)"
-                          strokeWidth={2}
-                          dot={{ r: 4 }}
-                          activeDot={{ r: 6 }}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="min"
-                          stroke="var(--color-min)"
-                          strokeWidth={1}
-                          strokeDasharray="5 5"
-                          dot={false}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="max"
-                          stroke="var(--color-max)"
-                          strokeWidth={1}
-                          strokeDasharray="5 5"
-                          dot={false}
-                        />
-                      </ComposedChart>
-                    </ChartContainer>
-                  </Card>
-                );
-              })}
+                  return (
+                    <Card key={testName} className="p-4">
+                      <CardTitle className="text-base mb-4">
+                        {testName}
+                      </CardTitle>
+                      <ChartContainer
+                        config={chartConfig}
+                        className="h-[200px]"
+                      >
+                        <ComposedChart data={data}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis
+                            dataKey="formattedDate"
+                            tick={{ fontSize: 12 }}
+                            angle={-45}
+                            textAnchor="end"
+                            height={60}
+                          />
+                          <YAxis tick={{ fontSize: 12 }} />
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <ReferenceArea
+                            y1={data[0]?.min}
+                            y2={data[0]?.max}
+                            fill="rgba(22, 163, 74, 0.1)"
+                            stroke="none"
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="value"
+                            stroke="var(--color-value)"
+                            strokeWidth={2}
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 6 }}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="min"
+                            stroke="var(--color-min)"
+                            strokeWidth={1}
+                            strokeDasharray="5 5"
+                            dot={false}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="max"
+                            stroke="var(--color-max)"
+                            strokeWidth={1}
+                            strokeDasharray="5 5"
+                            dot={false}
+                          />
+                        </ComposedChart>
+                      </ChartContainer>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
-          )}
+          )} */}
+
+          <EHRDetailModal
+            record={selectedRecord}
+            isOpen={isDetailModalOpen}
+            onClose={() => {
+              setIsDetailModalOpen(false);
+              setSelectedRecord(null);
+            }}
+            actions={{
+              mobileLaboratoryByNationalNumber_m,
+              mobileXRayByNationalNumber_m,
+              mobileNumberByNationalNumber_m,
+            }}
+          />
 
           {/* Detailed Lab Results Table */}
           {labData.length > 0 && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold mb-4">جزئیات آزمایشات</h3>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Object.entries(groupedLabData).map(([testName]) => {
                   const latest = latestLabValues[testName];
                   if (!latest) return null;
@@ -599,16 +611,31 @@ const PersonMonitoringPage = (
                     >
                       <div className="flex items-center justify-between">
                         <div className="font-medium">{testName}</div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm">
-                            {latest["جواب"]} {range && `(${range})`}
-                          </span>
-                          {isNormal && getStatusIcon("طبیعی")}
-                        </div>
+                        {latest["جواب"] && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">
+                              {localeDigits(latest["جواب"], locale)}{" "}
+                              {range && `(${localeDigits(range, locale)})`}
+                            </span>
+                            {isNormal && getStatusIcon("طبیعی")}
+                          </div>
+                        )}
                       </div>
-                      <div className="text-xs text-muted-foreground">
-                        تاریخ: {latest["تاريخ"]} | پزشک:{" "}
-                        {latest["نام پزشك معالج"]}
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-muted-foreground">
+                          تاریخ: {formatCellValue(latest["تاريخ"], locale)} |
+                          پزشک: {latest["نام پزشك معالج"]}
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedRecord(latest);
+                            setIsDetailModalOpen(true);
+                          }}
+                        >
+                          جزییات
+                        </Button>
                       </div>
                     </div>
                   );
@@ -748,7 +775,10 @@ const PersonMonitoringPage = (
                   className="text-xs"
                 >
                   {person_data["سونوگرافی شکم و لگن"] != null
-                    ? formatCellValue(person_data["سونوگرافی شکم و لگن"], locale)
+                    ? formatCellValue(
+                        person_data["سونوگرافی شکم و لگن"],
+                        locale
+                      )
                     : "-"}
                 </Badge>
               </div>
@@ -759,9 +789,7 @@ const PersonMonitoringPage = (
                   رادیوگرافی قفسه سینه
                 </div>
                 <Badge
-                  variant={getStatusColor(
-                    person_data["رادیوگرافی قفسه سینه"]
-                  )}
+                  variant={getStatusColor(person_data["رادیوگرافی قفسه سینه"])}
                   className="text-xs"
                 >
                   {person_data["رادیوگرافی قفسه سینه"] != null
@@ -898,7 +926,10 @@ const PersonMonitoringPage = (
                     className="text-xs"
                   >
                     {person_data["معاینه بالینی ENT"] != null
-                      ? formatCellValue(person_data["معاینه بالینی ENT"], locale)
+                      ? formatCellValue(
+                          person_data["معاینه بالینی ENT"],
+                          locale
+                        )
                       : "-"}
                   </Badge>
                 </div>
@@ -909,9 +940,7 @@ const PersonMonitoringPage = (
                     دهان و حلق و دندان
                   </div>
                   <Badge
-                    variant={getStatusColor(
-                      person_data["دهان و حلق و دندان"]
-                    )}
+                    variant={getStatusColor(person_data["دهان و حلق و دندان"])}
                     className="text-xs"
                   >
                     {person_data["دهان و حلق و دندان"] != null
@@ -968,8 +997,7 @@ const PersonMonitoringPage = (
       )}
 
       {/* Cardiac-Specific */}
-      {(person_data["مشاوره قلب"] ||
-        person_data["بیماریهای عضلانی قلب"]) && (
+      {(person_data["مشاوره قلب"] || person_data["بیماریهای عضلانی قلب"]) && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
