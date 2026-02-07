@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   medical-dashboard-nextjs:
     build:
@@ -31,10 +29,25 @@ services:
       
       # Node Environment
       - NODE_ENV=production
+
+    labels:
+      - "traefik.enable=true"
+
+      # Router
+      - "traefik.http.routers.mainreport.rule=Host(`mainreport.ir`)"
+      - "traefik.http.routers.mainreport.entrypoints=websecure"
+      - "traefik.http.routers.mainreport.tls.certresolver=le"
+      
+      # Service
+      - "traefik.http.services.mainreport.loadbalancer.server.port=3000"
+
     restart: unless-stopped
     networks:
       - djoser-network
+      - traefik-public
 
 networks:
   djoser-network:
     driver: bridge
+  traefik-public:
+    external: true
