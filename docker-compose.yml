@@ -36,8 +36,9 @@ services:
       # Router
       - "traefik.http.routers.mainreport.rule=Host(`mainreport.ir`)"
       - "traefik.http.routers.mainreport.entrypoints=websecure"
+      - "traefik.http.routers.mainreport.tls=true"
       - "traefik.http.routers.mainreport.tls.certresolver=le"
-      
+
       # Service
       - "traefik.http.services.mainreport.loadbalancer.server.port=3000"
 
