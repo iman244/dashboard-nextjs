@@ -1,20 +1,33 @@
-"use client";
+'use client';
 
-import React from "react";
-import Script from "next/script";
+import { useEffect, useRef } from 'react';
 
-const FormPage = () => {
-  return (
-    <div>
-      <Script
-        src="https://formafzar.com/pages/formbuilder/ravesh-formbuilder.js"
-        strategy="afterInteractive"
-        data-form-url="https://formafzar.com/form/saderat04"
-        data-form-style="inline"
-        data-form-theme=""
-      />
-    </div>
-  );
-};
+export default function FormAfzar() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-export default FormPage;
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Prevent double-loading (important in React Strict Mode)
+    if (containerRef.current.querySelector('script')) return;
+
+    const script = document.createElement('script');
+    script.src = 'https://formafzar.com/pages/formbuilder/ravesh-formbuilder.js';
+    script.async = true;
+
+    script.setAttribute('form-url', 'https://formafzar.com/form/saderat04');
+    script.setAttribute('form-style', 'inline');
+    script.setAttribute('form-theme', '');
+
+    containerRef.current.appendChild(script);
+
+    return () => {
+      // Cleanup on unmount
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+    };
+  }, []);
+
+  return <div ref={containerRef} />;
+}
