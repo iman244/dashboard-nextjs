@@ -43,6 +43,11 @@ export function AppSidebar() {
       url: "/console/saderat-bank-health-monitoring",
       icon: SquareActivity,
     },
+    {
+      title: t("formSabtPayesh"),
+      url: "/console/form-sabt-payesh",
+      icon: SquareActivity,
+    },
   ];
 
   return (

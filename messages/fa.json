@@ -135,7 +135,8 @@
     "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
     "periodicalReports": "گزارشات دوره‌ای",
     "patientReports": "گزارشات بیمار",
-    "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات"
+    "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
+    "formSabtPayesh": "فرم ثبت پایش"
   },
   "EHRDetailModal": {
     "title": "جزئیات پرونده الکترونیک سلامت",

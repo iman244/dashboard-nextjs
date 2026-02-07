@@ -130,7 +130,8 @@
     "electronicHealthRecord": "Electronic Health Record",
     "periodicalReports": "Periodical Reports",
     "patientReports": "Patient Reports",
-    "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring"
+    "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
+    "formSabtPayesh": "Form Sabt Payesh"
   },
   "EHRDetailModal": {
     "title": "Electronic Health Record Details",
