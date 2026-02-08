@@ -1,17 +1,17 @@
 "use client";
-
+import Script from 'next/script';
 import { useEffect, useRef } from "react";
 
 export default function FormAfzar() {
   return (
     <div>
-      <script
-        type="text/javascript"
+      <Script
         src="https://formafzar.com/pages/formbuilder/ravesh-formbuilder.js"
-        form-url="https://formafzar.com/form/saderat04"
-        form-style="inline"
-        form-theme=""
-      ></script>
+        strategy="afterInteractive"
+        data-form-url="https://formafzar.com/form/saderat04"
+        data-form-style="inline"
+        data-form-theme=""
+      />
     </div>
   );
 }
