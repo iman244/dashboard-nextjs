@@ -45,7 +45,7 @@ export function AppSidebar() {
     },
     {
       title: t("formSabtPayesh"),
-      url: "/console/form-sabt-payesh",
+      url: "/form-sabt-payesh",
       icon: SquareActivity,
     },
   ];
