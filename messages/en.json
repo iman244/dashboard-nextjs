@@ -412,7 +412,8 @@
       "openPatientReport": "Full Patient Report",
       "viewDetails": "View details",
       "viewTrend": "Trend chart",
-      "noRecords": "No electronic records found for this person."
+      "noRecords": "No electronic records found for this person.",
+      "tableActions": "Actions"
     },
     "Detail": {
       "notFound": "No record with this national ID in this monitoring.",

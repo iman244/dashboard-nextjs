@@ -24,8 +24,9 @@ import type { LabSeries, PersonEhr } from "./use-person-ehr";
  * This replaced a dot plot on the same data. The plot showed only roughly
  * when things happened — dots shared one axis and a busy day collapsed into a
  * single mark — while the reading, its range and the service name all had to
- * live in a tooltip. The table states each of them, and says per row which
- * side of the screening a result falls on.
+ * live in a tooltip. The table states each of them outright.
+ *
+ * Every column is a field the response carries; nothing here is derived.
  *
  * Owns the pending and error states because it is the only thing left in the
  * card: without them a failed fetch would render an empty card, which reads
@@ -84,14 +85,22 @@ export const EhrRecordsTable = ({
     <div className="overflow-x-auto">
       <Table>
         <TableHeader>
+          {/* TableHead hardcodes `text-left`, a physical property, so in
+              Persian every header sits opposite the cells beneath it.
+              `text-start` follows the writing direction the cells already
+              use. */}
           <TableRow>
-            <TableHead>{tDictionary("date")}</TableHead>
-            <TableHead>{tDictionary("serviceName")}</TableHead>
-            <TableHead>{tDictionary("answer")}</TableHead>
-            <TableHead>{tDictionary("normalRange")}</TableHead>
-            <TableHead>
-              <span className="sr-only">{t("viewDetails")}</span>
+            <TableHead className="text-start">{tDictionary("date")}</TableHead>
+            <TableHead className="text-start">
+              {tDictionary("serviceName")}
             </TableHead>
+            <TableHead className="text-start">
+              {tDictionary("answer")}
+            </TableHead>
+            <TableHead className="text-start">
+              {tDictionary("normalRange")}
+            </TableHead>
+            <TableHead className="text-start">{t("tableActions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
