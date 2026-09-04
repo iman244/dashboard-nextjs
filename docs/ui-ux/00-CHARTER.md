@@ -97,8 +97,32 @@ Always: `npm install` → `npm run build` → `npx tsc --noEmit`.
 |---|---|---|
 | 1. Audit | ✅ done (2026-09-04) — 12 findings, health score 16/40 | `01-AUDIT.md` |
 | 2. Plan | ✅ done (2026-09-04) — 10 tasks, Wave 1 | `docs/superpowers/plans/2026-09-04-ui-ux-pass.md` |
-| 3. Execute | not started | checkboxes in the plan |
-| 4. Verify | not started | tsc + lint + build + browser check, both directions |
+| 3. Execute | ✅ done (2026-09-04) — 9 of 10 tasks; Task 6 dropped by user | plan checkboxes |
+| 4. Verify | ⚠️ **partial** — static checks green, no browser check | see below |
+
+### Verification status
+
+Green and independently re-run by the orchestrator, not just reported by agents:
+
+| Check | Result |
+|---|---|
+| `npm run build` | ✅ exit 0, 27 pages |
+| `npx tsc --noEmit` | ✅ exit 0 |
+| `npm run lint` | ✅ 33 errors / 48 warnings — exactly baseline, never regressed |
+| message parity | ✅ 251 / 251, zero untranslated values (was 229 at branch point) |
+
+**Not verified: anything in a browser.** Every authenticated console route sits behind a
+Django login nobody in this session had credentials for. The public pages were checked
+during the audit; the console was not. Specifically unconfirmed:
+
+- the abnormal-first ordering, findings summary and toggle on the patient record (Task 7)
+- the delete/upload error surfaces actually rendering on failure (Task 5)
+- the empty state on the monitoring list (Task 8)
+- Persian validation messages firing under `<FormMessage/>` (Task 9)
+- icon-only buttons announcing their names to a screen reader (Task 10)
+- the unrotated axis labels reading correctly in `/fa` (Task 10)
+
+**To close this out:** log in and walk the console in both `/fa` and `/en`.
 
 ## Decisions Log
 

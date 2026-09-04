@@ -247,6 +247,30 @@ are wrong.
 
 ---
 
+## Follow-ups found during execution (not in Wave 1)
+
+Discovered while fixing other things. Each was deliberately left alone rather than
+silently widening a task's diff.
+
+- **UX-13 · Hardcoded English Zod messages in the auth flow.** The same defect as UX-12,
+  but outside the console: `(auth-flow)/authentication/client.tsx` and
+  `.../register/client.tsx` carry `"Username is required"`, `"Password is required"`,
+  `"Invalid email address"`, `"Password must be at least 8 characters"`. Persian-facing,
+  and on the **first screen every user sees**. ~5 keys, 2 files.
+- **UX-14 · Latent RTL anchor bug on three more chart axes.** `text-anchor` in SVG
+  resolves against inline-base direction, so `textAnchor="end"` anchors the *left* edge
+  of a Persian string now that `<html dir="rtl">` is set (Task 1). Task 10 fixed the two
+  worst axes; three `angle={-45}`/`angle={-90}` axes elsewhere carry the same latent
+  issue, currently less visible.
+- **UX-15 · `title="Toggle Sidebar"`** hardcoded English in `components/ui/sidebar.tsx`.
+  Not an accessibility defect (it has an `aria-label`), so it belongs to UX-01 / Wave 2.
+- **UX-16 · Commented-out lab trend charts** in `[national_id]/page.tsx` still carry dead
+  `tick={{ fontSize: 12 }}` and dead `chartData` computation. Either restore the charts
+  (they answer "is this getting worse?", the one comparative view on the record) or
+  delete the block.
+
+---
+
 ## Method notes worth keeping
 
 - **The deterministic detector found 0 findings across all 138 source files.** Assessment B
