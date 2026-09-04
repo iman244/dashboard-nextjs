@@ -95,7 +95,7 @@ Always: `npm install` → `npm run build` → `npx tsc --noEmit`.
 
 | Phase | State | Artifact |
 |---|---|---|
-| 1. Audit | not started | `01-AUDIT.md` |
+| 1. Audit | **in progress** (2026-09-04) | `01-AUDIT.md` |
 | 2. Plan | not started | `docs/superpowers/plans/` |
 | 3. Execute | not started | checkboxes in the plan |
 | 4. Verify | not started | tsc + lint + build + browser check, both directions |
@@ -108,5 +108,8 @@ Append one line per decision that a future reader could not infer from the code.
 - 2026-09-04 — Worktree is a sibling dir, not `.claude/worktrees/`, because
   `mainreport/` is not itself a git repo and `.claude` is not gitignored.
 - 2026-09-04 — Lint is red at baseline (33 errors). Decided not to gate the
-  UI/UX work behind fixing it; the rule is "don't make it worse." Whether to
-  clean it up is a separate, open question for the user.
+  UI/UX work behind fixing it; the rule is "don't make it worse."
+- 2026-09-04 — User ruled the pre-existing lint errors **out of scope**: they are
+  unrelated to UX. Do not reopen this.
+- 2026-09-04 — Phase 1 runs Impeccable `critique` (UX heuristics) **and** `audit`
+  (a11y / responsive / RTL), in that order. Surface mode is **Operate**.
