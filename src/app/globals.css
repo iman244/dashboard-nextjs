@@ -17,6 +17,19 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-chart-div-5: var(--chart-div-5);
+  --color-chart-div-4: var(--chart-div-4);
+  --color-chart-div-3: var(--chart-div-3);
+  --color-chart-div-2: var(--chart-div-2);
+  --color-chart-div-1: var(--chart-div-1);
+  --color-chart-seq-5: var(--chart-seq-5);
+  --color-chart-seq-4: var(--chart-seq-4);
+  --color-chart-seq-3: var(--chart-seq-3);
+  --color-chart-seq-2: var(--chart-seq-2);
+  --color-chart-seq-1: var(--chart-seq-1);
+  --color-chart-8: var(--chart-8);
+  --color-chart-7: var(--chart-7);
+  --color-chart-6: var(--chart-6);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -25,6 +38,13 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+  --color-info-foreground: var(--info-foreground);
+  --color-info: var(--info);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning: var(--warning);
+  --color-success-foreground: var(--success-foreground);
+  --color-success: var(--success);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -44,96 +64,194 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ---------------------------------------------------------------------------
+ * Colour system — see docs/ui-ux/03-TOKEN-CONTRACT.md
+ *
+ * Neutral spine  — hue 285, chroma <= 0.02. Surfaces, text, borders and the
+ *                  sidebar are near-grey so that data colour carries meaning.
+ * Brand          — hue 252, a deep blue. Actions, focus and identity only;
+ *                  it should cover roughly 5% of any screen.
+ * Semantics      — conventional: green success, amber warning, red danger,
+ *                  blue info. Clinically opposite findings no longer have to
+ *                  share the destructive red.
+ * Charts         — three scales chosen by data shape, never interchangeable:
+ *                  categorical (chart-1..8)   unordered categories
+ *                  sequential  (chart-seq-1..5) ordered magnitude
+ *                  diverging   (chart-div-1..5) signed distance from a middle
+ *
+ * Light and dark are the same hue family with re-tuned lightness and chroma,
+ * not an inversion. Every pair in the contract is measured, not eyeballed;
+ * the categorical scale is verified under deuteranopia and protanopia. All
+ * values are oklch() and in sRGB gamut, and must be referenced bare —
+ * var(--chart-1), never hsl(var(--chart-1)).
+ * ------------------------------------------------------------------------- */
+
 :root {
   --radius: 0.625rem;
 
-  /* Base */
-  --background: oklch(0.99 0.01 210);      /* sky-50 */
-  --foreground: oklch(0.21 0.05 235);      /* sky-950-ish */
+  /* Surfaces — near-neutral cool grey, hue held at 285 */
+  --background: oklch(0.968 0.004 285);
+  --foreground: oklch(0.215 0.016 285);
 
-  --card: oklch(0.985 0.01 210);            /* sky-50 */
-  --card-foreground: oklch(0.21 0.05 235);
+  --card: oklch(0.995 0.002 285);
+  --card-foreground: oklch(0.215 0.016 285);
 
-  --popover: oklch(0.985 0.01 210);
-  --popover-foreground: oklch(0.21 0.05 235);
+  --popover: oklch(0.995 0.002 285);
+  --popover-foreground: oklch(0.215 0.016 285);
 
-  /* Primary */
-  --primary: oklch(0.62 0.17 230);          /* sky-500 */
-  --primary-foreground: oklch(0.98 0.01 210); /* sky-50 */
+  --muted: oklch(0.945 0.005 285);
+  --muted-foreground: oklch(0.5 0.016 285);
 
-  /* Secondary */
-  --secondary: oklch(0.93 0.04 215);        /* sky-100 */
-  --secondary-foreground: oklch(0.26 0.07 230); /* sky-900 */
+  --secondary: oklch(0.93 0.006 285);
+  --secondary-foreground: oklch(0.3 0.016 285);
 
-  /* Muted */
-  --muted: oklch(0.95 0.02 215);            /* sky-100/50 */
-  --muted-foreground: oklch(0.55 0.06 230); /* sky-600 */
+  /* Brand — deep blue, hue 252 */
+  --primary: oklch(0.47 0.14 252);
+  --primary-foreground: oklch(0.985 0.005 252);
 
-  /* Accent */
-  --accent: oklch(0.88 0.07 215);           /* sky-200 */
-  --accent-foreground: oklch(0.26 0.07 230);
+  --accent: oklch(0.93 0.028 252);
+  --accent-foreground: oklch(0.33 0.085 252);
 
-  /* Destructive */
-  --destructive: oklch(0.58 0.24 27);       /* red-500 */
+  --ring: oklch(0.55 0.14 252);
+
+  /* Semantics */
+  --destructive: oklch(0.505 0.195 27);
+  --destructive-foreground: oklch(0.985 0.007 27);
+
+  --success: oklch(0.505 0.115 152);
+  --success-foreground: oklch(0.985 0.01 152);
+
+  --warning: oklch(0.72 0.155 68);
+  --warning-foreground: oklch(0.24 0.045 68);
+
+  --info: oklch(0.52 0.105 232);
+  --info-foreground: oklch(0.985 0.006 232);
 
   /* UI chrome */
-  --border: oklch(0.9 0.03 215);             /* sky-200 */
-  --input: oklch(0.9 0.03 215);
-  --ring: oklch(0.7 0.12 230);               /* sky-400 */
+  --border: oklch(0.64 0.012 285);
+  --input: oklch(0.64 0.012 285);
 
-  /* Charts — sky spectrum */
-  --chart-1: oklch(0.62 0.17 230); /* sky-500 */
-  --chart-2: oklch(0.68 0.14 215); /* sky-400 */
-  --chart-3: oklch(0.55 0.12 240); /* sky-600 */
-  --chart-4: oklch(0.75 0.1 205);  /* sky-300 */
-  --chart-5: oklch(0.45 0.1 255);  /* sky-700 */
+  /* Charts — categorical: 8 hues round the wheel, lightness deliberately
+   * alternated so the set survives red/green confusion. */
+  --chart-1: oklch(0.52 0.155 252);
+  --chart-2: oklch(0.48 0.11 62);
+  --chart-3: oklch(0.55 0.09 152);
+  --chart-4: oklch(0.625 0.09 340);
+  --chart-5: oklch(0.4 0.1 296);
+  --chart-6: oklch(0.615 0.125 92);
+  --chart-7: oklch(0.475 0.08 196);
+  --chart-8: oklch(0.41 0.105 20);
 
-  /* Sidebar */
-  --sidebar: oklch(0.97 0.015 210);           /* sky-50 */
-  --sidebar-foreground: oklch(0.21 0.05 235);
+  /* Charts — sequential: brand hue only, light to dark */
+  --chart-seq-1: oklch(0.93 0.034 252);
+  --chart-seq-2: oklch(0.805 0.09 252);
+  --chart-seq-3: oklch(0.675 0.135 252);
+  --chart-seq-4: oklch(0.54 0.16 252);
+  --chart-seq-5: oklch(0.4 0.12 252);
 
-  --sidebar-primary: oklch(0.62 0.17 230);    /* sky-500 */
-  --sidebar-primary-foreground: oklch(0.98 0.01 210);
+  /* Charts — diverging: cool to neutral to warm, symmetric about the middle.
+   * This is the scale for lab results: low <- normal -> high. */
+  --chart-div-1: oklch(0.47 0.095 232);
+  --chart-div-2: oklch(0.7 0.08 232);
+  --chart-div-3: oklch(0.9 0.008 285);
+  --chart-div-4: oklch(0.7 0.1 32);
+  --chart-div-5: oklch(0.47 0.17 28);
 
-  --sidebar-accent: oklch(0.9 0.05 215);      /* sky-200 */
-  --sidebar-accent-foreground: oklch(0.26 0.07 230);
+  /* Sidebar — one step off the page ground, same neutral spine */
+  --sidebar: oklch(0.945 0.005 285);
+  --sidebar-foreground: oklch(0.235 0.016 285);
 
-  --sidebar-border: oklch(0.9 0.03 215);
-  --sidebar-ring: oklch(0.7 0.12 230);
+  --sidebar-primary: oklch(0.47 0.14 252);
+  --sidebar-primary-foreground: oklch(0.985 0.005 252);
+
+  --sidebar-accent: oklch(0.895 0.03 252);
+  --sidebar-accent-foreground: oklch(0.33 0.085 252);
+
+  --sidebar-border: oklch(0.8 0.008 285);
+  --sidebar-ring: oklch(0.55 0.14 252);
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  /* Same hue family, re-tuned lightness and chroma — not an inversion. */
+  --background: oklch(0.16 0.008 285);
+  --foreground: oklch(0.965 0.004 285);
+
+  --card: oklch(0.208 0.01 285);
+  --card-foreground: oklch(0.965 0.004 285);
+
+  --popover: oklch(0.23 0.011 285);
+  --popover-foreground: oklch(0.965 0.004 285);
+
+  --muted: oklch(0.265 0.011 285);
+  --muted-foreground: oklch(0.715 0.016 285);
+
+  --secondary: oklch(0.275 0.012 285);
+  --secondary-foreground: oklch(0.95 0.004 285);
+
+  /* Brand — lifted so it carries on a dark ground, same hue 252 */
+  --primary: oklch(0.68 0.15 252);
+  --primary-foreground: oklch(0.17 0.02 252);
+
+  --accent: oklch(0.315 0.04 252);
+  --accent-foreground: oklch(0.93 0.03 252);
+
+  --ring: oklch(0.64 0.13 252);
+
+  /* Semantics */
+  --destructive: oklch(0.58 0.205 27);
+  --destructive-foreground: oklch(0.99 0.004 27);
+
+  --success: oklch(0.535 0.13 152);
+  --success-foreground: oklch(0.99 0.01 152);
+
+  --warning: oklch(0.76 0.155 68);
+  --warning-foreground: oklch(0.23 0.045 68);
+
+  --info: oklch(0.54 0.11 232);
+  --info-foreground: oklch(0.99 0.005 232);
+
+  /* UI chrome */
+  --border: oklch(0.49 0.012 285);
+  --input: oklch(0.49 0.012 285);
+
+  /* Charts — categorical: same eight hues, same order, re-tuned for a dark
+   * ground so a series keeps its identity when the theme is toggled. */
+  --chart-1: oklch(0.7 0.16 252);
+  --chart-2: oklch(0.61 0.14 62);
+  --chart-3: oklch(0.71 0.09 152);
+  --chart-4: oklch(0.625 0.09 340);
+  --chart-5: oklch(0.55 0.16 296);
+  --chart-6: oklch(0.8 0.155 92);
+  --chart-7: oklch(0.8 0.135 196);
+  --chart-8: oklch(0.55 0.11 20);
+
+  /* Charts — sequential: same direction as light, compressed so the dark end
+   * still separates from the page ground. */
+  --chart-seq-1: oklch(0.895 0.052 252);
+  --chart-seq-2: oklch(0.785 0.095 252);
+  --chart-seq-3: oklch(0.67 0.14 252);
+  --chart-seq-4: oklch(0.555 0.165 252);
+  --chart-seq-5: oklch(0.44 0.13 252);
+
+  /* Charts — diverging: the midpoint recedes into the ground, the ends lift */
+  --chart-div-1: oklch(0.66 0.13 232);
+  --chart-div-2: oklch(0.505 0.075 232);
+  --chart-div-3: oklch(0.36 0.008 285);
+  --chart-div-4: oklch(0.505 0.09 32);
+  --chart-div-5: oklch(0.66 0.165 28);
+
+  /* Sidebar */
+  --sidebar: oklch(0.185 0.009 285);
+  --sidebar-foreground: oklch(0.95 0.004 285);
+
+  --sidebar-primary: oklch(0.68 0.15 252);
+  --sidebar-primary-foreground: oklch(0.17 0.02 252);
+
+  --sidebar-accent: oklch(0.32 0.045 252);
+  --sidebar-accent-foreground: oklch(0.93 0.03 252);
+
+  --sidebar-border: oklch(0.355 0.012 285);
+  --sidebar-ring: oklch(0.64 0.13 252);
 }
 
 @layer base {
