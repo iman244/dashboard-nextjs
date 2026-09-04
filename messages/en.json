@@ -429,7 +429,7 @@
       "noLabsButReports": "No lab results recorded; {count} report(s) listed under Electronic Reports below.",
       "loadError": "Could not load electronic health records.",
       "timelineTitle": "Timeline",
-      "timelineHint": "The red marker is the screening date ({date}). Results before it are history; results after it are follow-up.",
+      "timelineHint": "Results before the red line are history; results after it are follow-up.",
       "examMarker": "Screening",
       "chartValue": "Value",
       "chartMin": "Lower bound",
@@ -439,7 +439,9 @@
       "unknownCount": "{count} unreadable",
       "reportsTitle": "Electronic Reports",
       "afterScreening": "After screening",
-      "openPatientReport": "Full Patient Report"
+      "openPatientReport": "Full Patient Report",
+      "legendResult": "Each dot is a day with a recorded result (a larger dot means more than one)",
+      "legendExam": "Screening date ({date})"
     }
   }
 }
