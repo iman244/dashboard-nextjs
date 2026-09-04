@@ -426,12 +426,6 @@
         "showLess": "نمایش کمتر",
         "noLabs": "آزمایشی برای این فرد ثبت نشده است.",
         "loadError": "دریافت سوابق الکترونیک ناموفق بود.",
-        "evidenceLabel": "از سوابق الکترونیک",
-        "otherReports": "سایر گزارش‌های الکترونیک",
-        "followUpLabel": "وضعیت انجام",
-        "followUpProgress": "{done} از {total}",
-        "followUpDone": "انجام شد",
-        "followUpPending": "انجام نشده",
         "timelineTitle": "خط زمانی",
         "timelineHint": "خط قرمز تاریخ پایش است ({date}). نتایج پیش از آن سابقه و پس از آن پیگیری محسوب می‌شوند.",
         "examMarker": "پایش",
@@ -440,7 +434,9 @@
         "chartMax": "حد بالا",
         "measurementCount": "{count} اندازه‌گیری",
         "notEnoughPoints": "برای رسم نمودار به بیش از یک اندازه‌گیری نیاز است.",
-        "unknownCount": "{count} نامشخص"
+        "unknownCount": "{count} نامشخص",
+        "reportsTitle": "گزارش‌های الکترونیک",
+        "afterScreening": "پس از پایش"
       }
     }
   }

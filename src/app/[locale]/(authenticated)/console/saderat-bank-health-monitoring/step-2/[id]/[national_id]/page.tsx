@@ -19,33 +19,21 @@ import { usePersonEhr, type LabSeries } from "../_ehr/use-person-ehr";
 import { EhrSummaryBand } from "../_ehr/summary-band";
 import { EhrTrendDialog } from "../_ehr/trend-dialog";
 import { EhrTimeline } from "../_ehr/timeline";
-import { EhrOtherReports } from "../_ehr/other-reports";
-import { FieldEvidence } from "../_ehr/field-evidence";
-import { FollowUpCheck } from "../_ehr/follow-up-check";
+import { EhrReports } from "../_ehr/reports";
 
 const isEmpty = (v: unknown) => v === null || v === undefined || v === "";
 
-/** The excel field whose free text lists the tests the physician ordered. */
-const REQUESTED_TESTS_FIELD = "آزمایشات تکمیلی مورد نیاز" as const;
-
-/**
- * One field, its paired `توضیحات` note, and any electronic evidence for it.
- *
- * The evidence sits inside the row rather than in a section of its own so the
- * verdict and the report it rests on are read together.
- */
+/** One field and, when present, its paired `توضیحات` note. */
 const FieldRow = ({
   label,
   value,
   note,
   locale,
-  children,
 }: {
   label: string;
   value: unknown;
   note?: unknown;
   locale: string;
-  children?: React.ReactNode;
 }) => (
   <div className="flex flex-col gap-0.5 py-2 border-b last:border-b-0">
     <span className="text-xs text-muted-foreground">{label}</span>
@@ -55,7 +43,6 @@ const FieldRow = ({
         {localeDigits(String(note), locale)}
       </span>
     )}
-    {children}
   </div>
 );
 
@@ -94,21 +81,6 @@ const Step2PersonPage = (
 
   const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(
     null
-  );
-
-  // Which excel fields this person actually has a value for. Evidence only
-  // renders next to a field that is on screen, so a report whose field is
-  // blank here has nowhere to appear and belongs in the "other reports" card.
-  const shownFields = React.useMemo(
-    () =>
-      new Set(
-        matches.flatMap((record) =>
-          STEP2_FIELD_GROUPS.flatMap((group) =>
-            group.fields.filter((f) => !isEmpty(record[f]))
-          )
-        )
-      ),
-    [matches]
   );
 
   if (isPending) {
@@ -232,16 +204,7 @@ const Step2PersonPage = (
                           value={record[field]}
                           note={noteKey ? record[noteKey] : undefined}
                           locale={locale}
-                        >
-                          {field === REQUESTED_TESTS_FIELD ? (
-                            <FollowUpCheck
-                              requestedRaw={record[field]}
-                              ehr={ehr}
-                            />
-                          ) : (
-                            <FieldEvidence field={field} ehr={ehr} />
-                          )}
-                        </FieldRow>
+                        />
                       );
                     })}
                   </CardContent>
@@ -252,7 +215,7 @@ const Step2PersonPage = (
         </div>
       ))}
 
-      <EhrOtherReports ehr={ehr} shownFields={shownFields} />
+      <EhrReports ehr={ehr} />
 
       <EhrTrendDialog
         series={selectedSeries}

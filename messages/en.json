@@ -426,12 +426,6 @@
         "showLess": "Show less",
         "noLabs": "No lab results on record for this person.",
         "loadError": "Could not load electronic health records.",
-        "evidenceLabel": "From electronic records",
-        "otherReports": "Other Electronic Reports",
-        "followUpLabel": "Completion status",
-        "followUpProgress": "{done} of {total}",
-        "followUpDone": "Done",
-        "followUpPending": "Not done",
         "timelineTitle": "Timeline",
         "timelineHint": "The red marker is the screening date ({date}). Results before it are history; results after it are follow-up.",
         "examMarker": "Screening",
@@ -440,7 +434,9 @@
         "chartMax": "Upper bound",
         "measurementCount": "{count} measurements",
         "notEnoughPoints": "A trend needs more than one measurement.",
-        "unknownCount": "{count} unreadable"
+        "unknownCount": "{count} unreadable",
+        "reportsTitle": "Electronic Reports",
+        "afterScreening": "After screening"
       }
     }
   }
