@@ -42,7 +42,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export function Client() {
   const [apiError, setApiError] = useState<JwtCreateApiError | null>(null);
-  const t = useTranslations("SignInPage");
+  const t = useTranslations("/authentication.SignInPage");
 
   const locale = useLocale();
   const dir = locale === "fa" ? "rtl" : "ltr";

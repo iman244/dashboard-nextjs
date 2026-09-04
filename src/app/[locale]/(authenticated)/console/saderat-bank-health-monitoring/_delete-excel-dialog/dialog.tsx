@@ -28,7 +28,7 @@ const DeleteSaderatBankHealthMonitoringExcelDialog = ({
   onOpenChange: (open: boolean) => void;
 }) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("DeleteSaderatBankHealthMonitoringExcelDialog");
+  const t = useTranslations("/console/saderat-bank-health-monitoring.DeleteSaderatBankHealthMonitoringExcelDialog");
   const { mutate, isPending } =
    useDestroy_SBHM_API({
     onSuccess: () => {
@@ -39,7 +39,7 @@ const DeleteSaderatBankHealthMonitoringExcelDialog = ({
       onOpenChange(false);
     },
   });
-  const tDictionary = useTranslations("Dictionary");
+  const tDictionary = useTranslations("common.Dictionary");
   const locale = useLocale();
 
   return (

@@ -17,7 +17,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 export function AppSidebar() {
   const pathname = usePathname();
 
-  const t = useTranslations("ConsoleSidebar");
+  const t = useTranslations("/console.ConsoleSidebar");
   const locale = useLocale();
   const side = locale === "fa" ? "right" : "left";
   const dir = locale === "fa" ? "rtl" : "ltr";

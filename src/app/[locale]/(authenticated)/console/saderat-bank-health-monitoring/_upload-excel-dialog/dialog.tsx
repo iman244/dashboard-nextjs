@@ -42,7 +42,7 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const queryClient = useQueryClient();
-  const t = useTranslations("UploadSaderatBankHealthMonitoringExcelDialog");
+  const t = useTranslations("/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog");
 
   const { mutate: uploadExcel, isPending } = useUploadExcelApi();
   const form = useForm<FormValues>({

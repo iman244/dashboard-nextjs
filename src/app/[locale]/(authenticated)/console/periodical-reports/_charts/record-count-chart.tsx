@@ -32,7 +32,7 @@ const chartConfig: ChartConfig = {
 };
 
 export const RecordCountChart: React.FC<RecordCountChart> = ({ data }) => {
-  const t = useTranslations("RecordCountChart");
+  const t = useTranslations("/console/periodical-reports.RecordCountChart");
 
   // Process data to group by date and count records
   const chartData: ChartDataPoint[] = React.useMemo(() => {

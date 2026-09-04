@@ -57,7 +57,7 @@ export const PatientReportsForm = (props: {
   compact?: boolean;
 }) => {
   console.log({props})
-  const t = useTranslations("PatientReports");
+  const t = useTranslations("/console/patient-reports.PatientReports");
   const { setFilters, ehrByNationalNumber_m } = usePatientReports();
   const locale = useLocale();
 
@@ -132,7 +132,7 @@ const MyForm = ({
   onSubmit: (data: PatientReportsFormValues) => void;
 }) => {
   const { ehrByNationalNumber_m } = usePatientReports();
-  const t = useTranslations("PatientReports");
+  const t = useTranslations("/console/patient-reports.PatientReports");
   const locale = useLocale();
   
   return (

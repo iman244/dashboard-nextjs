@@ -32,7 +32,7 @@ const patientChartConfig: ChartConfig = {
 };
 
 export const PatientCountChart: React.FC<PatientCountChart> = ({ data }) => {
-  const t = useTranslations("PatientCountChart");
+  const t = useTranslations("/console/periodical-reports.PatientCountChart");
 
   // Process data to group by date and count unique patients
   const chartData: ChartDataPoint[] = React.useMemo(() => {

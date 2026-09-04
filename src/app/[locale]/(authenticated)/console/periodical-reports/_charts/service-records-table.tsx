@@ -27,8 +27,8 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
   data,
   selectedService,
 }) => {
-  const t = useTranslations("data");
-  const tSRT = useTranslations("ServiceRecordsTable");
+  const t = useTranslations("common.data");
+  const tSRT = useTranslations("/console/periodical-reports.ServiceRecordsTable");
   const locale = useLocale();
   const router = useRouter();
 

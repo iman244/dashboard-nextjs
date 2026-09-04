@@ -13,7 +13,7 @@ import { useNetworkError } from "../_side-effects/network-error";
 import { useLocale, useTranslations } from "next-intl";
 
 const NetworkErrorDialog = () => {
-  const t = useTranslations("NetworkErrorDialog")
+  const t = useTranslations("common.NetworkErrorDialog")
   const locale = useLocale()
   const isRtl = locale === 'fa'
   const { networkErrorOpen, setNetworkErrorOpen } = useGlobal();

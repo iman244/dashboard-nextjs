@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import React from "react";
 
 const ButtonsSection = () => {
-  const t = useTranslations("HomePage");
+  const t = useTranslations("/.HomePage");
   const { authStatus } = useAuth();
   const href =
     authStatus === AuthenticationStatus.Authenticated

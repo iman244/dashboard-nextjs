@@ -19,8 +19,8 @@ import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 
 const Client = () => {
-  const t = useTranslations("EHRTable");
-  const tPatientTypes = useTranslations("PatientTypes");
+  const t = useTranslations("/console/electronic-health-record.EHRTable");
+  const tPatientTypes = useTranslations("/console/electronic-health-record.PatientTypes");
   const locale = useLocale();
   const {
     filters,

@@ -19,7 +19,7 @@ interface EHRTableProps {
  * EHR Table component with loading, error, and data states
  */
 export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTableProps) => {
-  const t = useTranslations("EHRTable");
+  const t = useTranslations("/console/electronic-health-record.EHRTable");
 
   return (
     <div className="rounded-md border overflow-hidden">

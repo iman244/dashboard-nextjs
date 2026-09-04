@@ -64,7 +64,7 @@ interface CopyButtonProps {
 
 const CopyButton = ({ value, className }: CopyButtonProps) => {
   const [copied, setCopied] = useState(false);
-  const t = useTranslations("Application");
+  const t = useTranslations("common.Application");
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(value);
@@ -95,7 +95,7 @@ export const EHRDetailModal = ({
   actions,
 }: EHRDetailModalProps) => {
   const locale = useLocale();
-  const t = useTranslations("EHRDetailModal");
+  const t = useTranslations("common.EHRDetailModal");
   const {
     mobileLaboratoryByNationalNumber_m,
     mobileXRayByNationalNumber_m,

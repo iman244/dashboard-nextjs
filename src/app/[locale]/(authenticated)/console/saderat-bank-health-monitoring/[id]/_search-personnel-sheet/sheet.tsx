@@ -50,7 +50,7 @@ export function SearchPersonnelSheet({
   const locale = useLocale();
   const isRtl = locale === "fa";
   const [searchTerm, setSearchTerm] = React.useState("");
-  const t = useTranslations("SaderatBankHealthMonitoringPage");
+  const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
 
   // Apply filter if provided
   const filteredData = React.useMemo(() => {
