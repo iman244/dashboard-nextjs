@@ -113,3 +113,10 @@ Append one line per decision that a future reader could not infer from the code.
   unrelated to UX. Do not reopen this.
 - 2026-09-04 — Phase 1 runs Impeccable `critique` (UX heuristics) **and** `audit`
   (a11y / responsive / RTL), in that order. Surface mode is **Operate**.
+- 2026-09-04 — **Persian is the priority; English is the second concern.** `en` is
+  NOT dropped — the catalogue stays maintained and the routing keeps both locales —
+  but English-only defects are deferred to a later wave. Do not propose deleting
+  `messages/en.json`.
+- 2026-09-04 — Corollary, and easy to get wrong: **RTL correctness is Persian-facing
+  work, not bilingual polish.** Physical CSS classes and the missing `dir`/`lang` on
+  `<html>` break the *Persian* experience. They stay in the priority wave.

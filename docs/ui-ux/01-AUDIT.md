@@ -16,6 +16,22 @@ taken on an agent's word.
 
 ---
 
+## Priority split (user ruling, 2026-09-04)
+
+**Persian is the priority. English is the second concern.** `en` is not dropped, but
+English-only defects wait. Note the distinction that is easy to get wrong: **RTL work is
+Persian-facing**, so it stays in Wave 1 despite looking like an i18n concern.
+
+| Wave | Findings | Rationale |
+|---|---|---|
+| **1 — Now** | UX-02, UX-03, UX-04, UX-05, UX-06, UX-07, UX-08, UX-09, UX-10, UX-11, UX-12 | Affects Persian users directly, or is locale-independent |
+| **2 — Later** | UX-01 | English-only: Jalali dates in `/en`, unconditional Persian numerals, hardcoded EHR headers |
+
+Parts of UX-12 are Persian-facing (Zod messages hardcoded in English are shown to Persian
+users; the unreachable empty state; the skeleton column mismatch) and stay in Wave 1.
+
+---
+
 ## Severity key
 
 | Tag | Meaning |
@@ -29,7 +45,7 @@ taken on an agent's word.
 
 ## Findings
 
-### UX-01 · P0 · The `en` locale build is unusable
+### UX-01 · P0 · The `en` locale build is unusable — **DEFERRED to Wave 2**
 Three compounding failures:
 - ✅ `src/lib/utils.ts:3` imports `format` from **`date-fns-jalali`**; line 29 uses it for
   the `en` branch too. English users read Jalali dates as if Gregorian.
