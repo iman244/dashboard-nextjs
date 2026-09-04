@@ -28,6 +28,16 @@ That is a deliberate, accepted trade-off for this feature, not an oversight.
 Making it real would require the records call to move behind Django with a
 per-patient credential — out of scope here.
 
+Consequences that follow from it, all accepted:
+
+- `password === national ID` is not authentication.
+- The route guards are client-side only.
+- The national ID lives in `sessionStorage` and doubles as the credential.
+- Reporting "no records for this ID" separately from "the service failed"
+  discloses which IDs exist. Kept anyway: collapsing the two would tell a
+  patient their ID is wrong whenever the upstream is down, and the open
+  upstream already answers the same question to anyone who asks it directly.
+
 Also out of scope: Django changes, rate limiting, account recovery, audit
 logging, and the phone-number lookup.
 
