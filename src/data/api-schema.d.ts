@@ -410,6 +410,11 @@ export interface components {
             readonly id: number;
             /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
             readonly username: string;
+            /**
+             * Staff status
+             * @description Designates whether the user can log into this admin site.
+             */
+            readonly is_staff: boolean;
         };
         UserCreate: {
             /** Email address */
