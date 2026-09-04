@@ -82,7 +82,7 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} variant="destructive">
-              <LogOut />
+              <LogOut className="rtl:-scale-x-100" />
               {t("logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Check, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,8 +17,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 export function DarkModeToggle() {
   const { setTheme, resolvedTheme, theme } = useTheme()
   const t = useTranslations("common.Theme")
-  const locale = useLocale()
-  const isRTL = locale === "fa"
 
   const themeLabel = React.useMemo(() => {
     const current = theme === "system" ? "system" : resolvedTheme
@@ -28,7 +26,7 @@ export function DarkModeToggle() {
   }, [resolvedTheme, theme, t])
 
   return (
-    <DropdownMenu dir={isRTL ? "rtl" : "ltr"}>
+    <DropdownMenu>
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
@@ -41,7 +39,7 @@ export function DarkModeToggle() {
         </TooltipTrigger>
         <TooltipContent sideOffset={6}>{t("current", { theme: themeLabel })}</TooltipContent>
       </Tooltip>
-      <DropdownMenuContent align={isRTL ? "start" : "end"}>
+      <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}
           className="flex items-center gap-2">
           <span className="inline-flex size-3 items-center justify-center">
