@@ -3,6 +3,9 @@
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
+import type { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { localeDigits } from "@/lib/utils";
 import type { PersonEhr } from "./use-person-ehr";
@@ -17,7 +20,13 @@ import type { PersonEhr } from "./use-person-ehr";
  * The only claim made about a report is when it arrived relative to the
  * screening, which is arithmetic on `تاريخ` and the campaign's `created_at`.
  */
-export const EhrReports = ({ ehr }: { ehr: PersonEhr }) => {
+export const EhrReports = ({
+  ehr,
+  onViewRecord,
+}: {
+  ehr: PersonEhr;
+  onViewRecord: (record: ElectronicHealthRecord) => void;
+}) => {
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.Ehr"
   );
@@ -47,6 +56,14 @@ export const EhrReports = ({ ehr }: { ehr: PersonEhr }) => {
                 <span className="text-xs text-muted-foreground tabular-nums">
                   {localeDigits(report.date, locale)}
                 </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={`${t("viewDetails")} — ${report.service}`}
+                  onClick={() => onViewRecord(report.raw)}
+                >
+                  <Eye aria-hidden="true" className="h-4 w-4" />
+                </Button>
               </span>
             </div>
             {report.result && (

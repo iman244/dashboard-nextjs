@@ -11,6 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
+import type { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { cn, localeDigits } from "@/lib/utils";
 import { STATUS_STYLES, StatusIcon } from "./status-icon";
 import type { PersonEhr } from "./use-person-ehr";
@@ -23,7 +26,13 @@ import type { PersonEhr } from "./use-person-ehr";
  * newest first, matching the reports card, with the before/after split the
  * red rule shows spatially stated per row.
  */
-export const EhrTimelineTable = ({ ehr }: { ehr: PersonEhr }) => {
+export const EhrTimelineTable = ({
+  ehr,
+  onViewRecord,
+}: {
+  ehr: PersonEhr;
+  onViewRecord: (record: ElectronicHealthRecord) => void;
+}) => {
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.Ehr"
   );
@@ -50,6 +59,9 @@ export const EhrTimelineTable = ({ ehr }: { ehr: PersonEhr }) => {
             <TableHead>{t("tableService")}</TableHead>
             <TableHead>{t("tableResult")}</TableHead>
             <TableHead>{t("tableWhen")}</TableHead>
+            <TableHead>
+              <span className="sr-only">{t("viewDetails")}</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -87,6 +99,16 @@ export const EhrTimelineTable = ({ ehr }: { ehr: PersonEhr }) => {
                     {t("beforeScreening")}
                   </span>
                 )}
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={`${t("viewDetails")} — ${row.service}`}
+                  onClick={() => onViewRecord(row.raw)}
+                >
+                  <Eye aria-hidden="true" className="h-4 w-4" />
+                </Button>
               </TableCell>
             </TableRow>
           ))}

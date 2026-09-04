@@ -29,6 +29,8 @@ export type LabPoint = {
   numeric: number | null;
   bounds: NormalRange | null;
   status: EhrStatus;
+  /** The untouched row, for the detail modal which renders every field. */
+  raw: ElectronicHealthRecord;
 };
 
 /** One test across every time it was run, oldest first. */
@@ -45,6 +47,7 @@ export type ReportItem = {
   result: string;
   date: string;
   sortKey: number;
+  raw: ElectronicHealthRecord;
 };
 
 /** One result on a timeline date, lab or report. */
@@ -55,6 +58,7 @@ export type EhrEventItem = {
   range: string;
   /** Labs only; reports carry no reference range. */
   status?: EhrStatus;
+  raw: ElectronicHealthRecord;
 };
 
 export type EhrEvent = {
@@ -103,6 +107,7 @@ const toPoint = (record: ElectronicHealthRecord): LabPoint => {
     numeric: parseNumeric(value),
     bounds: parseRange(range),
     status: classify(value, range),
+    raw: record,
   };
 };
 
@@ -156,6 +161,7 @@ const buildPersonEhr = (
       result: r["جواب"] ?? "",
       date: r["تاريخ"] ?? "",
       sortKey: jalaliSortKey(r["تاريخ"]),
+      raw: r,
     }))
     .sort((a, b) => b.sortKey - a.sortKey);
 
@@ -177,6 +183,7 @@ const buildPersonEhr = (
       value: p.value,
       range: p.range,
       status: p.status,
+      raw: p.raw,
     })
   );
   reports.forEach((r) =>
@@ -185,6 +192,7 @@ const buildPersonEhr = (
       kind: "report",
       value: r.result,
       range: "",
+      raw: r.raw,
     })
   );
   const events = Array.from(dates.values()).sort((a, b) => a.sortKey - b.sortKey);

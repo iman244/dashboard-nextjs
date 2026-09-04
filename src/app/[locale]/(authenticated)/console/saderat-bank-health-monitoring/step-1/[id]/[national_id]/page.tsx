@@ -30,17 +30,14 @@ import {
   ChartArea,
 } from "lucide-react";
 import { toast } from "sonner";
-import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrSummaryBand } from "../../../_ehr/summary-band";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrTimeline } from "../../../_ehr/timeline";
 import { EhrTimelineTable } from "../../../_ehr/timeline-table";
 import { EhrReports } from "../../../_ehr/reports";
+import { useRecordDetail } from "../../../_ehr/use-record-detail";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
-import { useMobileLaboratoryByNationalNumberApi } from "@/data/electronic health record/api/mobile-laboratory-by-national-number";
-import { useMobileXRayByNationalNumberApi } from "@/data/electronic health record/api/mobile-xray-by-national-number";
-import { useMobileNumberByNationalNumberApi } from "@/data/electronic health record/api/mobile-number-by-national-number";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -82,9 +79,6 @@ const getStatusIcon = (value: string | number | null) => {
 const PersonMonitoringPage = (
   props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-1/[id]/[national_id]">
 ) => {
-  const [selectedRecord, setSelectedRecord] =
-    React.useState<ElectronicHealthRecord | null>(null);
-  const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const [selectedService, setSelectedService] = React.useState<string | null>(
     null
@@ -96,10 +90,7 @@ const PersonMonitoringPage = (
   const { monitoring_query } = useMonitoringIdRouteContext();
   const { data, isPending, error } = monitoring_query;
 
-  const mobileLaboratoryByNationalNumber_m =
-    useMobileLaboratoryByNationalNumberApi();
-  const mobileXRayByNationalNumber_m = useMobileXRayByNationalNumberApi();
-  const mobileNumberByNationalNumber_m = useMobileNumberByNationalNumberApi();
+  const recordDetail = useRecordDetail();
 
   const locale = useLocale();
   const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
@@ -330,7 +321,7 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent className="space-y-6">
             <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
-            <EhrTimelineTable ehr={ehr} />
+            <EhrTimelineTable ehr={ehr} onViewRecord={recordDetail.open} />
           </CardContent>
         </Card>
       )}
@@ -497,19 +488,7 @@ const PersonMonitoringPage = (
             </SheetContent>
           </Sheet>
 
-          <EHRDetailModal
-            record={selectedRecord}
-            isOpen={isDetailModalOpen}
-            onClose={() => {
-              setIsDetailModalOpen(false);
-              setSelectedRecord(null);
-            }}
-            actions={{
-              mobileLaboratoryByNationalNumber_m,
-              mobileXRayByNationalNumber_m,
-              mobileNumberByNationalNumber_m,
-            }}
-          />
+          {recordDetail.modal}
 
           {/* Detailed Lab Results Table */}
           {labData.length > 0 && (
@@ -548,8 +527,7 @@ const PersonMonitoringPage = (
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              setSelectedRecord(latest);
-                              setIsDetailModalOpen(true);
+                              recordDetail.open(latest);
                             }}
                           >
                             جزییات
@@ -1149,7 +1127,7 @@ const PersonMonitoringPage = (
         </div>
       )}
 
-      <EhrReports ehr={ehr} />
+      <EhrReports ehr={ehr} onViewRecord={recordDetail.open} />
 
       <EhrTrendDialog
         series={selectedSeries}

@@ -447,7 +447,8 @@
       "tableResult": "نتیجه",
       "tableWhen": "نسبت به پایش",
       "beforeScreening": "پیش از پایش",
-      "andMore": "و {count} مورد دیگر"
+      "andMore": "و {count} مورد دیگر",
+      "viewDetails": "مشاهده جزئیات"
     }
   }
 }

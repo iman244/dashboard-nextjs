@@ -21,6 +21,7 @@ import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrTimeline } from "../../../_ehr/timeline";
 import { EhrTimelineTable } from "../../../_ehr/timeline-table";
 import { EhrReports } from "../../../_ehr/reports";
+import { useRecordDetail } from "../../../_ehr/use-record-detail";
 
 const isEmpty = (v: unknown) => v === null || v === undefined || v === "";
 
@@ -84,6 +85,7 @@ const Step2PersonPage = (
   const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(
     null
   );
+  const recordDetail = useRecordDetail();
 
   if (isPending) {
     return (
@@ -179,7 +181,7 @@ const Step2PersonPage = (
           </CardHeader>
           <CardContent className="space-y-6">
             <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
-            <EhrTimelineTable ehr={ehr} />
+            <EhrTimelineTable ehr={ehr} onViewRecord={recordDetail.open} />
           </CardContent>
         </Card>
       )}
@@ -222,7 +224,9 @@ const Step2PersonPage = (
         </div>
       ))}
 
-      <EhrReports ehr={ehr} />
+      <EhrReports ehr={ehr} onViewRecord={recordDetail.open} />
+
+      {recordDetail.modal}
 
       <EhrTrendDialog
         series={selectedSeries}

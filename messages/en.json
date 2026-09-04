@@ -447,7 +447,8 @@
       "tableResult": "Result",
       "tableWhen": "Relative to Screening",
       "beforeScreening": "Before screening",
-      "andMore": "and {count} more"
+      "andMore": "and {count} more",
+      "viewDetails": "View details"
     }
   }
 }
