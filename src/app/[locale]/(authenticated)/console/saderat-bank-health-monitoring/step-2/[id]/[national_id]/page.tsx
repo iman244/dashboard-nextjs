@@ -15,20 +15,37 @@ import {
   type SBHM_Step2Record,
 } from "@/data/saderat-bank-health-monitoring/types";
 import { STEP2_FIELD_GROUPS, noteKeyFor } from "../_detail/field-groups";
+import { usePersonEhr, type LabSeries } from "../_ehr/use-person-ehr";
+import { EhrSummaryBand } from "../_ehr/summary-band";
+import { EhrTrendDialog } from "../_ehr/trend-dialog";
+import { EhrTimeline } from "../_ehr/timeline";
+import { EhrOtherReports } from "../_ehr/other-reports";
+import { FieldEvidence } from "../_ehr/field-evidence";
+import { FollowUpCheck } from "../_ehr/follow-up-check";
 
 const isEmpty = (v: unknown) => v === null || v === undefined || v === "";
 
-/** One field and, when present, its paired `توضیحات` note. */
+/** The excel field whose free text lists the tests the physician ordered. */
+const REQUESTED_TESTS_FIELD = "آزمایشات تکمیلی مورد نیاز" as const;
+
+/**
+ * One field, its paired `توضیحات` note, and any electronic evidence for it.
+ *
+ * The evidence sits inside the row rather than in a section of its own so the
+ * verdict and the report it rests on are read together.
+ */
 const FieldRow = ({
   label,
   value,
   note,
   locale,
+  children,
 }: {
   label: string;
   value: unknown;
   note?: unknown;
   locale: string;
+  children?: React.ReactNode;
 }) => (
   <div className="flex flex-col gap-0.5 py-2 border-b last:border-b-0">
     <span className="text-xs text-muted-foreground">{label}</span>
@@ -38,6 +55,7 @@ const FieldRow = ({
         {localeDigits(String(note), locale)}
       </span>
     )}
+    {children}
   </div>
 );
 
@@ -64,6 +82,34 @@ const Step2PersonPage = (
     const records = data.json as unknown as SBHM_Step2Record[];
     return records.filter((r) => String(r["کد ملی"] ?? "") === national_id);
   }, [data, national_id]);
+
+  // Fetched once for the person, not once per matched record: EHR is keyed by
+  // national id, and 5 of 537 ids appear on two rows. Fetching inside the
+  // matches loop would fire duplicate requests and print the same labs twice.
+  const ehr = usePersonEhr({
+    nationalId: national_id,
+    campaignDate: data?.created_at ?? "",
+    enabled: data?.type === "step_2",
+  });
+
+  const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(
+    null
+  );
+
+  // Which excel fields this person actually has a value for. Evidence only
+  // renders next to a field that is on screen, so a report whose field is
+  // blank here has nowhere to appear and belongs in the "other reports" card.
+  const shownFields = React.useMemo(
+    () =>
+      new Set(
+        matches.flatMap((record) =>
+          STEP2_FIELD_GROUPS.flatMap((group) =>
+            group.fields.filter((f) => !isEmpty(record[f]))
+          )
+        )
+      ),
+    [matches]
+  );
 
   if (isPending) {
     return (
@@ -146,6 +192,19 @@ const Step2PersonPage = (
         </div>
       )}
 
+      <EhrSummaryBand ehr={ehr} onSelectSeries={setSelectedSeries} />
+
+      {ehr.hasAny && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{tDetail("ehr.timelineTitle")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
+          </CardContent>
+        </Card>
+      )}
+
       {matches.map((record, i) => (
         <div key={i} className="space-y-4">
           {matches.length > 1 && (
@@ -173,7 +232,16 @@ const Step2PersonPage = (
                           value={record[field]}
                           note={noteKey ? record[noteKey] : undefined}
                           locale={locale}
-                        />
+                        >
+                          {field === REQUESTED_TESTS_FIELD ? (
+                            <FollowUpCheck
+                              requestedRaw={record[field]}
+                              ehr={ehr}
+                            />
+                          ) : (
+                            <FieldEvidence field={field} ehr={ehr} />
+                          )}
+                        </FieldRow>
                       );
                     })}
                   </CardContent>
@@ -183,6 +251,15 @@ const Step2PersonPage = (
           </div>
         </div>
       ))}
+
+      <EhrOtherReports ehr={ehr} shownFields={shownFields} />
+
+      <EhrTrendDialog
+        series={selectedSeries}
+        onOpenChange={(open) => {
+          if (!open) setSelectedSeries(null);
+        }}
+      />
     </div>
   );
 };

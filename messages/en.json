@@ -413,6 +413,34 @@
         "medicalHistory": "Medical History",
         "occupationalRisk": "Occupational Risk Factors",
         "followUp": "Follow-up"
+      },
+      "ehr": {
+        "title": "Electronic Health Records",
+        "resultCount": "{count} results",
+        "latest": "latest {date}",
+        "abnormalCount": "{count} abnormal",
+        "normalCount": "{count} normal",
+        "rangeLabel": "Normal range",
+        "noRange": "No reference range",
+        "showAll": "Show {count} more",
+        "showLess": "Show less",
+        "noLabs": "No lab results on record for this person.",
+        "loadError": "Could not load electronic health records.",
+        "evidenceLabel": "From electronic records",
+        "otherReports": "Other Electronic Reports",
+        "followUpLabel": "Completion status",
+        "followUpProgress": "{done} of {total}",
+        "followUpDone": "Done",
+        "followUpPending": "Not done",
+        "timelineTitle": "Timeline",
+        "timelineHint": "The red marker is the screening date ({date}). Results before it are history; results after it are follow-up.",
+        "examMarker": "Screening",
+        "chartValue": "Value",
+        "chartMin": "Lower bound",
+        "chartMax": "Upper bound",
+        "measurementCount": "{count} measurements",
+        "notEnoughPoints": "A trend needs more than one measurement.",
+        "unknownCount": "{count} unreadable"
       }
     }
   }
