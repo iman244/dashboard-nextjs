@@ -67,7 +67,14 @@ imported in most call sites); move EHR headers into the
 
 ---
 
-### UX-02 · P0 · No Iranian national-ID validation before a medical-record lookup
+### UX-02 · ~~P0~~ · No national-ID validation — **DROPPED by user, 2026-09-04. Do not reopen.**
+
+> Ruled out of the UI/UX pass. A hard checksum could block lookups for IDs already
+> present in the database (legacy imports, test data, non-standard formats), and the
+> frontend cannot verify that. Note also that the severity below overstates the risk:
+> the caller is already authenticated and authorized, so this is a data-*accuracy*
+> problem (reading the wrong patient), not a data-leak one.
+
 `patient-reports/_form/patient-reports-form.tsx:36` validates as
 `z.string().min(1)`. `electronic-health-record/_components/ehr-filter.tsx:52` has no
 format constraint. `@persian-tools/persian-tools` — already a dependency, already
