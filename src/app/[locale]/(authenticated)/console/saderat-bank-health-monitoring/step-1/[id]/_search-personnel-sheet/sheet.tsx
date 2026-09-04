@@ -85,7 +85,7 @@ export function SearchPersonnelSheet({
         cell: ({ row }) => (
           <Button variant={"ghost"} asChild size="sm">
             <Link
-              href={`/console/saderat-bank-health-monitoring/${monitoringId}/${row.original["personel.کد ملی"]}`}
+              href={`/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${row.original["personel.کد ملی"]}`}
               onClick={() => onOpenChange(false)}
             >
               <FileSearchCorner className="h-4 w-4" />

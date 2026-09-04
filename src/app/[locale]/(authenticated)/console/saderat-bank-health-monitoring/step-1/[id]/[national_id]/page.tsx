@@ -59,7 +59,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ServiceDetailsTable } from "../../../patient-reports/client";
+import { ServiceDetailsTable } from "../../../../patient-reports/client";
 
 type MonitoringData = {
   [key: string]: string | number | null;
@@ -90,7 +90,7 @@ const getStatusIcon = (value: string | number | null) => {
 };
 
 const PersonMonitoringPage = (
-  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/[id]/[national_id]">
+  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-1/[id]/[national_id]">
 ) => {
   const [selectedRecord, setSelectedRecord] =
     React.useState<ElectronicHealthRecord | null>(null);
