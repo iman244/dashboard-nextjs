@@ -34,9 +34,10 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const fontClass = locale === "fa" ? "font-persian" : "font-english";
+  const dir = locale === "fa" ? "rtl" : "ltr";
 
   return (
-    <html suppressHydrationWarning>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${vazirmatn.variable} ${fontClass} antialiased`}
       >

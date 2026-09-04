@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Spinner } from "@/components/ui/spinner";
 import {
   ChartContainer,
@@ -30,13 +31,15 @@ import {
 } from "recharts";
 import { format, newDate } from "date-fns-jalali";
 import { formatCellValue, localeDigits } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Activity,
   Heart,
   Droplet,
   TrendingUp,
   AlertCircle,
+  ArrowUp,
+  ArrowDown,
   CheckCircle2,
   Stethoscope,
   FileText,
@@ -65,28 +68,64 @@ type MonitoringData = {
   [key: string]: string | number | null;
 };
 
+type ResultStatus = "high" | "low" | "normal" | "unknown";
+
+/**
+ * Single source of truth for how a result value is classified. The page used to
+ * derive this inline for badge colour only; ordering and filtering now read the
+ * same classification so they cannot drift apart.
+ */
+const getResultStatus = (value: string | number | null): ResultStatus => {
+  if (value === null || value === undefined) return "unknown";
+  const str = String(value).toLowerCase();
+  if (str === "طبیعی" || str === "normal") return "normal";
+  if (str === "بالا" || str === "high" || str.includes("abnormal")) return "high";
+  if (str === "پایین" || str === "low") return "low";
+  return "unknown";
+};
+
+const isAbnormal = (value: string | number | null) => {
+  const status = getResultStatus(value);
+  return status === "high" || status === "low";
+};
+
+/** Abnormal first, unknown next, normal last. Array.sort is stable, so the
+ *  clinically meaningful ordering within each group is preserved. */
+const SEVERITY_RANK: Record<ResultStatus, number> = {
+  high: 0,
+  low: 1,
+  unknown: 2,
+  normal: 3,
+};
+
 const getStatusColor = (
   value: string | number | null
 ): "default" | "secondary" | "destructive" | "outline" => {
-  if (value === null || value === undefined) return "secondary";
-  const str = String(value).toLowerCase();
-  if (str === "طبیعی" || str === "normal") return "default";
-  if (str === "بالا" || str === "high" || str.includes("abnormal"))
-    return "destructive";
-  if (str === "پایین" || str === "low") return "destructive";
-  return "secondary";
+  switch (getResultStatus(value)) {
+    case "normal":
+      return "default";
+    // Both directions are abnormal and both stay visually loud; the arrow icon
+    // below is what distinguishes them. Previously "low" was indistinguishable
+    // from "high", though clinically they are opposite findings.
+    case "high":
+    case "low":
+      return "destructive";
+    default:
+      return "secondary";
+  }
 };
 
 const getStatusIcon = (value: string | number | null) => {
-  if (value === null || value === undefined) return null;
-  const str = String(value).toLowerCase();
-  if (str === "طبیعی" || str === "normal") {
-    return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+  switch (getResultStatus(value)) {
+    case "normal":
+      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+    case "high":
+      return <ArrowUp className="h-4 w-4 text-red-500" />;
+    case "low":
+      return <ArrowDown className="h-4 w-4 text-amber-500" />;
+    default:
+      return null;
   }
-  if (str === "بالا" || str === "high" || str.includes("abnormal")) {
-    return <AlertCircle className="h-4 w-4 text-red-500" />;
-  }
-  return null;
 };
 
 const PersonMonitoringPage = (
@@ -112,6 +151,12 @@ const PersonMonitoringPage = (
   const mobileNumberByNationalNumber_m = useMobileNumberByNationalNumberApi();
 
   const locale = useLocale();
+  const t = useTranslations(
+    "/console/saderat-bank-health-monitoring.PersonRecord"
+  );
+  const tDictionary = useTranslations("common.Dictionary");
+  // Defaults to off: nothing is hidden from a clinician unless they ask.
+  const [abnormalOnly, setAbnormalOnly] = React.useState(false);
   const today = new Date().toLocaleDateString("fa-IR", {
     year: "numeric",
     month: "2-digit",
@@ -318,6 +363,25 @@ const PersonMonitoringPage = (
     { key: "علائم عمومی", label: "علائم عمومی", icon: Activity },
   ];
 
+  // Order abnormal results first within a group. Reads person_data through the
+  // same classifier the badges use, so ordering can never disagree with colour.
+  const bySeverity = <T extends { key: string }>(a: T, b: T) =>
+    SEVERITY_RANK[getResultStatus(person_data[a.key])] -
+    SEVERITY_RANK[getResultStatus(person_data[b.key])];
+
+  const visible = <T extends { key: string }>(tests: T[]) =>
+    [...tests]
+      .sort(bySeverity)
+      .filter((test) => !abnormalOnly || isAbnormal(person_data[test.key]));
+
+  // Every abnormal finding on the record, for the summary at the top.
+  const abnormalFindings = [
+    ...keyLabTests,
+    ...urineTests,
+    ...liverTests,
+    ...clinicalSections,
+  ].filter((test) => isAbnormal(person_data[test.key]));
+
   return (
     <div className="space-y-6 p-6">
       {/* Patient Header */}
@@ -365,6 +429,54 @@ const PersonMonitoringPage = (
                 : "-"}
             </Badge>
           </div>
+        </CardHeader>
+      </Card>
+
+      {/* Abnormal findings summary. The classification already existed and drove
+          only badge colour; this is the question a clinician opens the record to
+          ask, so it leads rather than being buried among ~50 equal-weight tiles. */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              {abnormalFindings.length > 0 ? (
+                <AlertCircle className="h-5 w-5 text-red-500" />
+              ) : (
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
+              )}
+              <CardTitle>
+                {t("AbnormalFindings", {
+                  count: localeDigits(abnormalFindings.length, locale),
+                })}
+              </CardTitle>
+            </div>
+            <label className="flex items-center gap-2 text-sm">
+              <Switch
+                checked={abnormalOnly}
+                onCheckedChange={setAbnormalOnly}
+                aria-label={t("ShowAbnormalOnly")}
+              />
+              {t("ShowAbnormalOnly")}
+            </label>
+          </div>
+          {abnormalFindings.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-2">
+              {abnormalFindings.map((finding) => (
+                <Badge
+                  key={finding.key}
+                  variant="destructive"
+                  className="text-xs"
+                >
+                  {finding.label}
+                  <span className="ps-1">
+                    {getResultStatus(person_data[finding.key]) === "high"
+                      ? "↑"
+                      : "↓"}
+                  </span>
+                </Badge>
+              ))}
+            </div>
+          )}
         </CardHeader>
       </Card>
 
@@ -487,7 +599,7 @@ const PersonMonitoringPage = (
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            {keyLabTests.map((test) => {
+            {visible(keyLabTests).map((test) => {
               const value = person_data[test.key];
               const status = getStatusColor(value);
               const icon = getStatusIcon(value);
@@ -598,7 +710,7 @@ const PersonMonitoringPage = (
             <SheetContent side="bottom" className="max-h-[100dvh]">
               <SheetHeader className="flex flex-row items-center justify-between">
                 <SheetTitle>گزارش رکوردهای خدمت: {selectedService}</SheetTitle>
-                <SheetClose>
+                <SheetClose aria-label={tDictionary("Close")}>
                   <XIcon className="h-4 w-4" />
                 </SheetClose>
               </SheetHeader>
@@ -686,6 +798,7 @@ const PersonMonitoringPage = (
                               );
                               setIsSheetOpen(true);
                             }}
+                            aria-label={t("ViewTestChart")}
                           >
                             <ChartArea className="w-4 h-4" />
                           </Button>
@@ -710,7 +823,7 @@ const PersonMonitoringPage = (
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {clinicalSections.map((section) => {
+            {visible(clinicalSections).map((section) => {
               const value = person_data[section.key];
               const Icon = section.icon;
               if (!value || value === "انجام نشده") return null;
@@ -747,7 +860,7 @@ const PersonMonitoringPage = (
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {urineTests.map((test) => {
+            {visible(urineTests).map((test) => {
               const value = person_data[test.key];
               const status = getStatusColor(value);
               const icon = getStatusIcon(value);
@@ -783,7 +896,7 @@ const PersonMonitoringPage = (
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {liverTests.map((test) => {
+            {visible(liverTests).map((test) => {
               const value = person_data[test.key];
               const status = getStatusColor(value);
               const icon = getStatusIcon(value);

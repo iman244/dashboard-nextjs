@@ -1,14 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogHeader,
-  DialogContent,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
-  DialogClose,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import { Spinner } from "@/components/ui/spinner";
 import { LIST_SBHM_QUERY_KEY } from "@/data/saderat-bank-health-monitoring/api";
 import { useDestroy_SBHM_API } from "@/data/saderat-bank-health-monitoring/api/destroy";
@@ -38,25 +38,30 @@ const DeleteSaderatBankHealthMonitoringExcelDialog = ({
       });
       onOpenChange(false);
     },
+    onError: (error) => {
+      // Without this the dialog stays open and unchanged on failure, which
+      // reads as "nothing happened" and invites a second delete attempt.
+      toast.error(t("ErrorMessage", { message: error.message }));
+    },
   });
   const tDictionary = useTranslations("common.Dictionary");
   const locale = useLocale();
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("DialogTitle")}</DialogTitle>
-        </DialogHeader>
-        <DialogDescription>
-          {t("DialogDescription", {
-            name: localeDigits(data?.name ?? "", locale),
-          })}
-        </DialogDescription>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">{tDictionary("Cancel")}</Button>
-          </DialogClose>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("DialogTitle")}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t("DialogDescription", {
+              name: localeDigits(data?.name ?? "", locale),
+            })}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isPending}>
+            {tDictionary("Cancel")}
+          </AlertDialogCancel>
           <Button
             variant="destructive"
             onClick={() =>
@@ -69,9 +74,9 @@ const DeleteSaderatBankHealthMonitoringExcelDialog = ({
             {isPending && <Spinner />}
             {tDictionary("Delete")}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

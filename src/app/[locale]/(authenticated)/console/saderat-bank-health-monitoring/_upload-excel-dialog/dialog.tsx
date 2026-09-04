@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -61,8 +62,13 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
+  // Server errors that do not map onto a form field (500s, timeouts, `detail`,
+  // `non_field_errors`, malformed-sheet messages) have no FormMessage to land
+  // in, so they are surfaced here instead of being swallowed.
+  const [generalErrors, setGeneralErrors] = React.useState<string[]>([]);
 
   const onSubmit = React.useCallback((data: FormValues) => {
+    setGeneralErrors([]);
     uploadExcel(
       {
         payload: data,
@@ -77,21 +83,31 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
           setOpen(false);
         },
         onError: (error) => {
-          console.log({ error });
           // Get the list of valid form fields from the schema
           const validFields = Object.keys(formSchema.shape);
-          
-          Object.entries(error.response?.data || {}).forEach(
-            ([field, message]) => {
-              // Only set error if the field exists in the form schema
-              if (validFields.includes(field)) {
-                form.setError(field as keyof FormValues, {
-                  type: "server",
-                  message: Array.isArray(message) ? message[0] : message,
-                });
-              }
+          const unmatched: string[] = [];
+
+          const entries = Object.entries(error.response?.data || {});
+          entries.forEach(([field, message]) => {
+            const text = Array.isArray(message) ? message[0] : message;
+            // Only set error if the field exists in the form schema
+            if (validFields.includes(field)) {
+              form.setError(field as keyof FormValues, {
+                type: "server",
+                message: text,
+              });
+            } else {
+              unmatched.push(String(text));
             }
-          );
+          });
+
+          // A transport-level failure (500, timeout, network) carries no
+          // response body at all, so it would otherwise produce silence.
+          if (entries.length === 0) {
+            unmatched.push(error.message || t("ErrorMessage"));
+          }
+
+          setGeneralErrors(unmatched);
         },
       }
     );
@@ -104,6 +120,23 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
         <DialogHeader>
           <DialogTitle>{t("DialogTitle")}</DialogTitle>
         </DialogHeader>
+
+        {generalErrors.length > 0 && (
+          <Alert variant="destructive">
+            <AlertTitle>{t("ErrorTitle")}</AlertTitle>
+            <AlertDescription>
+              {generalErrors.length === 1 ? (
+                generalErrors[0]
+              ) : (
+                <ul className="list-disc ps-4">
+                  {generalErrors.map((message, i) => (
+                    <li key={i}>{message}</li>
+                  ))}
+                </ul>
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

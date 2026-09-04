@@ -210,6 +210,7 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
                 setSelectedRecord(info.row.original);
                 console.log("info.row.original", info.row.original);
               }}
+              aria-label={tSRT("viewRecordDetails")}
             >
               <Eye className="h-4 w-4" />
             </Button>
@@ -218,7 +219,7 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
               variant="ghost"
               size="icon"
               onClick={() => handlePatientReport(info.row.original)}
-              title="گزارش بیمار"
+              aria-label={tSRT("viewPatientReport")}
             >
               <FileText className="h-4 w-4" />
             </Button>

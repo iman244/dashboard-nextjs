@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useLocale, useTranslations } from "next-intl";
-import { cn, formatDate, localeDigits } from "@/lib/utils";
+import { formatDate, localeDigits } from "@/lib/utils";
 import { Table2, Trash, AlertCircle, Inbox } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import DeleteSaderatBankHealthMonitoringExcelDialog from "./_delete-excel-dialog/dialog";
@@ -38,7 +38,6 @@ const SaderatBankHealthMonitoringPage = (
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
   const tStep = useTranslations("common.SBHM_Step");
   const locale = useLocale();
-  const isRtl = locale === "fa";
 
   const table = useTable({
     features: appTableFeatures,
@@ -64,6 +63,7 @@ const SaderatBankHealthMonitoringPage = (
             <Button variant={"ghost"} asChild>
               <Link
                 href={`/console/saderat-bank-health-monitoring/${row.original.id}`}
+                aria-label={t("ViewDataset")}
               >
                 <Table2 />
               </Link>
@@ -71,6 +71,7 @@ const SaderatBankHealthMonitoringPage = (
             <Button
               variant={"ghost"}
               onClick={() => setDeleteRow(row.original)}
+              aria-label={tDictionary("Delete")}
             >
               <Trash />
             </Button>
@@ -104,7 +105,9 @@ const SaderatBankHealthMonitoringPage = (
     );
   }
 
-  if (data === undefined) {
+  // `isPending` above already covers `data === undefined`, so this branch has
+  // to test the genuinely-empty list or it can never render.
+  if (!data || data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-3">
         <Inbox className="h-12 w-12 text-muted-foreground" />
@@ -112,6 +115,9 @@ const SaderatBankHealthMonitoringPage = (
         <p className="text-sm text-muted-foreground">
           {t("EmptyStateDescription")}
         </p>
+        <UploadSaderatBankHealthMonitoringExcelDialog
+          trigger={<Button>{t("UploadExcel")}</Button>}
+        />
       </div>
     );
   }
@@ -134,7 +140,7 @@ const SaderatBankHealthMonitoringPage = (
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={cn(isRtl ? "text-right" : "text-left")}
+                    className={"text-start"}
                   >
                     {header.isPlaceholder
                       ? null

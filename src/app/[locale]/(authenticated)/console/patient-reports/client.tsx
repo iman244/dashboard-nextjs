@@ -31,6 +31,7 @@ import {
 import { Line, XAxis, YAxis, CartesianGrid, ReferenceArea, ComposedChart } from "recharts";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { format, newDate } from "date-fns-jalali";
+import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 interface ServiceCountData {
   serviceName: string;
@@ -176,12 +177,12 @@ export const ServiceDetailsTable: React.FC<{
                 dataKey="formattedDate"
                 tickFormatter={(value) => digitsEnToFa(value)}
                 textAnchor="middle"
-                fontSize={12}
+                fontSize={CHART_TICK_FONT_SIZE}
                 tickMargin={12}
               />
               <YAxis
                 tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                fontSize={12}
+                fontSize={CHART_TICK_FONT_SIZE}
                 tickMargin={24}
               />
               <ChartTooltip
@@ -274,6 +275,7 @@ const Client = (props: {
 }) => {
   const t = useTranslations("/console/patient-reports.PatientReports");
   const tData = useTranslations("common.data");
+  const tDictionary = useTranslations("common.Dictionary");
   const { ehrByNationalNumber_m, filters } = usePatientReports();
   const { data, isPending } = ehrByNationalNumber_m;
   const locale = useLocale();
@@ -392,7 +394,7 @@ const Client = (props: {
                 setSelectedService(info.row.original.serviceName);
                 setIsSheetOpen(true);
               }}
-              title="مشاهده گزارش"
+              aria-label={t("viewServiceChart")}
             >
               <ChartArea className="h-4 w-4" />
             </Button>
@@ -400,7 +402,7 @@ const Client = (props: {
         ),
       }),
     ]),
-    [tData, locale]
+    [t, tData, locale]
   );
 
   const table = useTable({
@@ -477,16 +479,16 @@ const Client = (props: {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="col-span-2">
                 <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-2 space-x-reverse">
+                  <div className="flex items-center gap-2">
                     <div className="relative flex-1 max-w-sm">
-                      <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         placeholder="جستجو در نام خدمت..."
                         value={searchTerm}
                         onChange={(e) => {
                           setSearchTerm(e.target.value);
                         }}
-                        className="pr-10"
+                        className="pe-10"
                       />
                     </div>
                     {searchTerm && (
@@ -519,7 +521,7 @@ const Client = (props: {
         <SheetContent side="bottom" className="max-h-[100dvh]">
           <SheetHeader className="flex flex-row items-center justify-between">
             <SheetTitle>گزارش رکوردهای خدمت: {selectedService}</SheetTitle>
-            <SheetClose>
+            <SheetClose aria-label={tDictionary("Close")}>
               <XIcon className="h-4 w-4" />
             </SheetClose>
           </SheetHeader>

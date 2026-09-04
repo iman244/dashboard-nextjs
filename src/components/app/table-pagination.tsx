@@ -32,9 +32,16 @@ export const TablePagination = <T extends RowData,>({
 }: TablePaginationProps<T>) => {
   const t = useTranslations("common.Dictionary");
   const locale = useLocale();
+  // Pagination arrows must follow reading direction: "first page" points
+  // toward the start of the text flow, which is right in RTL and left in LTR.
+  const isRtl = locale === "fa";
+  const FirstIcon = isRtl ? ChevronsRight : ChevronsLeft;
+  const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
+  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
+  const LastIcon = isRtl ? ChevronsLeft : ChevronsRight;
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center space-x-2 space-x-reverse">
+      <div className="flex items-center gap-2">
         <p className="text-sm text-muted-foreground">
           {t("Showing", {
             start: localeDigits(
@@ -59,9 +66,9 @@ export const TablePagination = <T extends RowData,>({
         </p>
       </div>
 
-      <div className="flex items-center space-x-4 space-x-reverse">
+      <div className="flex items-center gap-4">
         {showPageSizeSelector && (
-          <div className="flex items-center space-x-2 space-x-reverse">
+          <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{t("Rows per page")}</p>
             <Select
               value={`${table.state.pagination.pageSize}`}
@@ -92,7 +99,7 @@ export const TablePagination = <T extends RowData,>({
         )}
 
         {/* Custom RTL Pagination */}
-        <div className="flex items-center space-x-1 space-x-reverse">
+        <div className="flex items-center gap-1">
           {/* First Page Button */}
           <Button
             variant="outline"
@@ -102,7 +109,7 @@ export const TablePagination = <T extends RowData,>({
             className="h-8 w-8 p-0"
           >
             <span className="sr-only">{t("First page")}</span>
-            <ChevronsRight className="h-4 w-4" />
+            <FirstIcon className="h-4 w-4" />
           </Button>
 
           {/* Previous Page Button */}
@@ -114,7 +121,7 @@ export const TablePagination = <T extends RowData,>({
             className="h-8 w-8 p-0"
           >
             <span className="sr-only">{t("Previous page")}</span>
-            <ChevronRight className="h-4 w-4" />
+            <PrevIcon className="h-4 w-4" />
           </Button>
 
           {/* Page Numbers */}
@@ -168,7 +175,7 @@ export const TablePagination = <T extends RowData,>({
             className="h-8 w-8 p-0"
           >
             <span className="sr-only">{t("Next page")}</span>
-            <ChevronLeft className="h-4 w-4" />
+            <NextIcon className="h-4 w-4" />
           </Button>
 
           {/* Last Page Button */}
@@ -180,11 +187,11 @@ export const TablePagination = <T extends RowData,>({
             className="h-8 w-8 p-0"
           >
             <span className="sr-only">{t("Last page")}</span>
-            <ChevronsLeft className="h-4 w-4" />
+            <LastIcon className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="flex items-center space-x-2 space-x-reverse">
+        <div className="flex items-center gap-2">
           <p className="text-sm font-medium">
             {t("Page", {
               current: localeDigits(

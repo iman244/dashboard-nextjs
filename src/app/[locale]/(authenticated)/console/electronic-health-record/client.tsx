@@ -81,7 +81,7 @@ const Client = () => {
           variant="outline"
           size="sm"
           disabled={ehrByNationalNumber_m.isPending}
-          className="flex items-center space-x-2 space-x-reverse"
+          className="flex items-center gap-2"
         >
           <RefreshCw
             className={`h-4 w-4 ${

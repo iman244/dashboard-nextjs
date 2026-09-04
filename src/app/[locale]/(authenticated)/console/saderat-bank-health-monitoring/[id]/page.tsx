@@ -13,6 +13,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
   ChartConfig,
 } from "@/components/ui/chart";
 import {
@@ -26,6 +28,7 @@ import {
   Cell,
 } from "recharts";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
+import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 const MonitoringPage = (
   props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/[id]">
@@ -247,7 +250,16 @@ const MonitoringPage = (
     value: { label: "تعداد" },
   };
 
-  const COLORS = ["black", "gray", "brown", "red", "orange"];
+  // Theme ramp rather than raw CSS keywords: the previous palette
+  // ("black", "gray", "brown", "red", "orange") was invisible against the dark
+  // background and collapsed to a single hue under deuteranopia.
+  const COLORS = [
+    "var(--chart-1)",
+    "var(--chart-2)",
+    "var(--chart-3)",
+    "var(--chart-4)",
+    "var(--chart-5)",
+  ];
 
   // Custom tooltip that formats numbers with localeDigits
   const LocaleChartTooltip = (props: React.ComponentProps<typeof ChartTooltipContent>) => {
@@ -314,8 +326,8 @@ const MonitoringPage = (
             setIsSearchSheetOpen(true);
           }}
         >
-          <Users className="h-4 w-4 ml-2" />
-          {t("SearchPersonnel") || "جستجوی پرسنل"}
+          <Users className="h-4 w-4 ms-2" />
+          {t("SearchPersonnel")}
         </Button>
       </div>
 
@@ -414,6 +426,7 @@ const MonitoringPage = (
                     ))}
                   </Pie>
                   <ChartTooltip content={<LocaleChartTooltip />} />
+                  <ChartLegend content={<ChartLegendContent nameKey="name" />} />
                 </PieChart>
               </ChartContainer>
             </CardContent>
@@ -436,12 +449,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -481,15 +494,18 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
-                    angle={45}
-                    textAnchor="end"
-                    height={80}
+                    fontSize={CHART_TICK_FONT_SIZE}
+                    // Unrotated with the default centred anchor. `textAnchor="end"`
+                    // resolves against the inline-base direction, so under the
+                    // document's dir="rtl" it anchored the wrong edge and the
+                    // rotated Persian label drifted off its tick.
+                    textAnchor="middle"
+                    height={48}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -529,12 +545,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -583,12 +599,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -628,12 +644,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -673,12 +689,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -718,12 +734,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -763,12 +779,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -808,12 +824,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -853,12 +869,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -898,17 +914,17 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="hsl(var(--chart-1))"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.tgDistribution[index]) {
@@ -943,12 +959,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -988,12 +1004,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1033,12 +1049,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1078,12 +1094,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1123,12 +1139,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1168,12 +1184,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1213,12 +1229,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1258,12 +1274,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1303,12 +1319,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1348,12 +1364,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1393,12 +1409,12 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
@@ -1438,17 +1454,17 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="hsl(var(--chart-5))"
+                    fill="var(--chart-5)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.uaGluDistribution[index]) {
@@ -1483,15 +1499,16 @@ const MonitoringPage = (
                   <XAxis
                     dataKey="name"
                     tickFormatter={(value) => digitsEnToFa(value)}
-                    fontSize={12}
-                    angle={45}
-                    textAnchor="end"
-                    height={100}
+                    fontSize={CHART_TICK_FONT_SIZE}
+                    // See the BMI chart above: rotated Persian ticks anchored to
+                    // the wrong edge under RTL. Centred and unrotated instead.
+                    textAnchor="middle"
+                    height={48}
                   />
                   <YAxis
                     tickMargin={24}
                     tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-                    fontSize={12}
+                    fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar

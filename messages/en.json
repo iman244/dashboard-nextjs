@@ -94,7 +94,8 @@
       "First page": "First page",
       "Previous page": "Previous page",
       "Next page": "Next page",
-      "Last page": "Last page"
+      "Last page": "Last page",
+      "Close": "Close"
     },
     "SBHM_Step": {
       "Label": "Step",
@@ -147,44 +148,11 @@
         "password": {
           "label": "Password",
           "placeholder": "Enter your password"
-        },
-        "register": {
-          "label": "Don't have an account?",
-          "link": "Sign up"
         }
-      }
-    }
-  },
-  "/authentication/register": {
-    "SignUpPage": {
-      "title": "Sign Up",
-      "description": "Create a new account",
-      "buttons": {
-        "signUp": "Sign Up",
-        "signingUp": "Signing up..."
       },
-      "form": {
-        "api": {
-          "username": {
-            "error": "Username already exists."
-          }
-        },
-        "username": {
-          "label": "Username",
-          "placeholder": "Enter your username"
-        },
-        "email": {
-          "label": "Email (Optional)",
-          "placeholder": "Enter your email"
-        },
-        "password": {
-          "label": "Password",
-          "placeholder": "Enter your password"
-        },
-        "signIn": {
-          "label": "Already have an account?",
-          "link": "Sign in"
-        }
+      "validation": {
+        "usernameRequired": "Username is required",
+        "passwordRequired": "Password is required"
       }
     }
   },
@@ -240,7 +208,10 @@
       "selectPatientType": "Select patient type",
       "search": "Search",
       "clear": "Clear",
-      "description": "Filter electronic health records by various criteria"
+      "description": "Filter electronic health records by various criteria",
+      "validation": {
+        "patientTypeRequired": "Patient type is required"
+      }
     },
     "PatientTypes": {
       "1": "Inpatient Information",
@@ -274,7 +245,13 @@
       "chartPlaceholder": "Chart",
       "chartComingSoon": "Chart coming soon",
       "errorMessage": "Error loading report data",
-      "serviceChartTitle": "Service Count"
+      "serviceChartTitle": "Service Count",
+      "validation": {
+        "nationalNumberRequired": "National number is required",
+        "patientTypeRequired": "Patient type is required",
+        "dateRangeInvalid": "End date must be after start date"
+      },
+      "viewServiceChart": "View service chart"
     }
   },
   "/console/periodical-reports": {
@@ -303,7 +280,10 @@
       "service": "Service",
       "count": "Count",
       "patientType": "Patient Type",
-      "selectPatientType": "Select Patient Type"
+      "selectPatientType": "Select Patient Type",
+      "validation": {
+        "patientTypeRequired": "Patient type is required"
+      }
     },
     "RecordCountChart": {
       "noDataAvailable": "No data available",
@@ -325,7 +305,12 @@
       "answerStatus": "Answer Status",
       "normal": "Normal",
       "abnormal": "Abnormal",
-      "actions": "Actions"
+      "actions": "Actions",
+      "viewRecordDetails": "View record details",
+      "viewPatientReport": "View patient report"
+    },
+    "ServiceCountTable": {
+      "viewServiceRecords": "View service records"
     }
   },
   "/console/saderat-bank-health-monitoring": {
@@ -337,12 +322,15 @@
         "UploadButton": "Upload",
         "FileLabel": "File"
       },
-      "SuccessMessage": "Excel uploaded successfully"
+      "SuccessMessage": "Excel uploaded successfully",
+      "ErrorTitle": "Upload failed",
+      "ErrorMessage": "The file could not be uploaded. Please try again."
     },
     "DeleteSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "Delete Excel",
       "DialogDescription": "Are you sure you want to delete this excel?",
-      "SuccessMessage": "Excel deleted successfully"
+      "SuccessMessage": "Excel deleted successfully",
+      "ErrorMessage": "Could not delete the Excel file: {message}"
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "Upload Excel",
@@ -357,7 +345,14 @@
       "SearchPlaceholder": "Search by name, last name or national ID...",
       "ClearSearch": "Clear",
       "NoSearchResults": "No results found",
-      "NoResults": "No results found"
+      "NoResults": "No results found",
+      "ViewDataset": "View dataset",
+      "ViewPersonRecord": "View health record"
+    },
+    "PersonRecord": {
+      "AbnormalFindings": "{count} abnormal findings",
+      "ShowAbnormalOnly": "Abnormal only",
+      "ViewTestChart": "View test trend chart"
     }
   }
 }

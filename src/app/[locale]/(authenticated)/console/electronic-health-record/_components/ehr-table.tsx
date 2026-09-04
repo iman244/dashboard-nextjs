@@ -33,12 +33,12 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
                   className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
                   onClick={header.column.getToggleSortingHandler()}
                 >
-                  <div className="flex items-center gap-2 space-x-reverse">
+                  <div className="flex items-center gap-2">
                     {header.isPlaceholder
                       ? null
                       : <table.FlexRender header={header} />}
                     {header.column.getCanSort() && (
-                      <span className="ml-2 text-muted-foreground">
+                      <span className="ms-2 text-muted-foreground">
                         {{
                           asc: <ArrowUp className="h-3 w-3" />,
                           desc: <ArrowDown className="h-3 w-3" />,
@@ -55,7 +55,7 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
         </TableHeader>
         <TableBody>
           {isLoading ? (
-            <LoadingSkeleton />
+            <LoadingSkeleton columnCount={columns.length} />
           ) : isError ? (
             <TableRow>
               <TableCell
