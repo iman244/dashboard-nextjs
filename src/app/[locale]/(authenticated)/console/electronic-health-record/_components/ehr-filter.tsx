@@ -117,7 +117,6 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-[600px]"
-        dir="rtl"
         showCloseButton={false}
       >
         <DialogHeader className="flex flex-row items-center justify-between">

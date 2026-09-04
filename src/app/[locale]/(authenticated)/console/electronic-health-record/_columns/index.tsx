@@ -126,14 +126,14 @@ export const useEHRColumns = ({
                   onClick={() => onViewDetails?.(record)}
                   className="cursor-pointer"
                 >
-                  <Eye className="mr-2 h-4 w-4" />
+                  <Eye className="me-2 h-4 w-4" />
                   مشاهده جزئیات
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handlePatientReport(record)}
                   className="cursor-pointer"
                 >
-                  <BarChart3 className="mr-2 h-4 w-4" />
+                  <BarChart3 className="me-2 h-4 w-4" />
                   گزارش بیمار
                 </DropdownMenuItem>
               </DropdownMenuContent>

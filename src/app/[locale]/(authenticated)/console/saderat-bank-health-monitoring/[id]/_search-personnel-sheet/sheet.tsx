@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { SBHM_RetrieveSerializer } from "@/data/saderat-bank-health-monitoring/types";
-import { cn, localeDigits } from "@/lib/utils";
+import { localeDigits } from "@/lib/utils";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { useLocale, useTranslations } from "next-intl";
@@ -48,7 +48,6 @@ export function SearchPersonnelSheet({
   filterDescription,
 }: SearchPersonnelSheetProps) {
   const locale = useLocale();
-  const isRtl = locale === "fa";
   const [searchTerm, setSearchTerm] = React.useState("");
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
 
@@ -134,14 +133,14 @@ export function SearchPersonnelSheet({
 
         <div className="flex-1 overflow-auto space-y-4 mt-4">
           {/* Search Input */}
-          <div className="flex items-center gap-2 space-x-reverse">
+          <div className="flex items-center gap-2">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={t("SearchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pr-10"
+                className="pe-10"
               />
             </div>
             {searchTerm && (
@@ -163,7 +162,7 @@ export function SearchPersonnelSheet({
                     {headerGroup.headers.map((header) => (
                       <TableHead
                         key={header.id}
-                        className={cn(isRtl ? "text-right" : "text-left")}
+                        className={"text-start"}
                       >
                         {header.isPlaceholder
                           ? null

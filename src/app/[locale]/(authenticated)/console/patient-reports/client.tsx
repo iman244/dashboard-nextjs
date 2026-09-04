@@ -477,16 +477,16 @@ const Client = (props: {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="col-span-2">
                 <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-2 space-x-reverse">
+                  <div className="flex items-center gap-2">
                     <div className="relative flex-1 max-w-sm">
-                      <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         placeholder="جستجو در نام خدمت..."
                         value={searchTerm}
                         onChange={(e) => {
                           setSearchTerm(e.target.value);
                         }}
-                        className="pr-10"
+                        className="pe-10"
                       />
                     </div>
                     {searchTerm && (

@@ -314,7 +314,7 @@ const MonitoringPage = (
             setIsSearchSheetOpen(true);
           }}
         >
-          <Users className="h-4 w-4 ml-2" />
+          <Users className="h-4 w-4 ms-2" />
           {t("SearchPersonnel") || "جستجوی پرسنل"}
         </Button>
       </div>

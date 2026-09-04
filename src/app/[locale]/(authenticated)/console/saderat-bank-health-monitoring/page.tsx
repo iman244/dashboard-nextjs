@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useLocale, useTranslations } from "next-intl";
-import { cn, formatDate, localeDigits } from "@/lib/utils";
+import { formatDate, localeDigits } from "@/lib/utils";
 import { Table2, Trash, AlertCircle, Inbox } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import DeleteSaderatBankHealthMonitoringExcelDialog from "./_delete-excel-dialog/dialog";
@@ -38,7 +38,6 @@ const SaderatBankHealthMonitoringPage = (
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
   const tStep = useTranslations("common.SBHM_Step");
   const locale = useLocale();
-  const isRtl = locale === "fa";
 
   const table = useTable({
     features: appTableFeatures,
@@ -134,7 +133,7 @@ const SaderatBankHealthMonitoringPage = (
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={cn(isRtl ? "text-right" : "text-left")}
+                    className={"text-start"}
                   >
                     {header.isPlaceholder
                       ? null
