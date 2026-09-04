@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { digitsEnToFa, digitsFaToEn } from "@persian-tools/persian-tools";
+import { useLocale, useTranslations } from "next-intl";
+import { digitsFaToEn } from "@persian-tools/persian-tools";
+import { localeDigits } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -35,6 +36,7 @@ import { signInProbeParams } from "../../_data/ehr-params";
 
 export function Client() {
   const t = useTranslations("/patient/sign-in.SignInPage");
+  const locale = useLocale();
   const router = useRouter();
   const { signIn } = usePatientSession();
   const [formError, setFormError] = React.useState<string | null>(null);
@@ -123,7 +125,7 @@ export function Client() {
                         autoComplete="username"
                         placeholder={t("form.nationalId.placeholder")}
                         disabled={isPending}
-                        value={digitsEnToFa(field.value)}
+                        value={localeDigits(field.value, locale)}
                       />
                     </FormControl>
                     <FormMessage />
