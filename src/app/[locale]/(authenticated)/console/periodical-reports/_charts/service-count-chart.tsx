@@ -145,7 +145,7 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({
             height={80}
           />
           <YAxis
-            tickFormatter={(value) => digitsEnToFa(value.toString())}
+            tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
             fontSize={12}
             tickMargin={24}
           />
@@ -160,7 +160,7 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({
                 formatter={(value, name) => {
                   const label = name === "normalCount" ? "نتایج طبیعی" : "نتایج غیرطبیعی";
                   return [
-                    digitsEnToFa(value.toString()),
+                    digitsEnToFa(String(value ?? "")),
                     " ",
                     label,
                   ];
@@ -209,7 +209,7 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({
 //           cx="50%"
 //           cy="50%"
 //           labelLine={false}
-//           label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+//           label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
 //           outerRadius={80}
 //           fill="#8884d8"
 //           dataKey="value"
@@ -222,7 +222,7 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({
 //           content={
 //             <ChartTooltipContent
 //               formatter={(value) => [
-//                 digitsEnToFa(value.toString()),
+//                 digitsEnToFa(String(value ?? "")),
 //                 " رکورد"
 //               ]}
 //             />

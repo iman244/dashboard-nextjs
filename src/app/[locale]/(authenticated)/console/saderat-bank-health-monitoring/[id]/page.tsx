@@ -255,7 +255,7 @@ const MonitoringPage = (
       <ChartTooltipContent
         {...props}
         formatter={(value) => {
-         return localeDigits(value.toString(), locale);
+         return localeDigits(String(value ?? ""), locale);
         }}
       />
     );
@@ -390,7 +390,7 @@ const MonitoringPage = (
                     cy="50%"
                     labelLine={false}
                     label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
+                      `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`
                     }
                     outerRadius={80}
                     dataKey="value"
@@ -440,7 +440,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -488,7 +488,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -533,7 +533,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -587,7 +587,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -632,7 +632,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -677,7 +677,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -722,7 +722,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -767,7 +767,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -812,7 +812,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -857,7 +857,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -902,7 +902,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -947,7 +947,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -992,7 +992,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1037,7 +1037,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1082,7 +1082,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1127,7 +1127,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1172,7 +1172,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1217,7 +1217,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1262,7 +1262,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1307,7 +1307,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1352,7 +1352,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1397,7 +1397,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1442,7 +1442,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1490,7 +1490,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(value.toString())}
+                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                     fontSize={12}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
