@@ -11,9 +11,10 @@ import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { DataTable } from "@/components/app";
+import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, FileText, XIcon, ChartArea } from "lucide-react";
+import { Search, FileText, XIcon, ChartArea, Eye } from "lucide-react";
 import { TablePagination } from "@/components/app/table-pagination";
 import {
   Sheet,
@@ -45,6 +46,12 @@ interface ServiceCountData {
    * still belong in the report, they just have nothing to classify.
    */
   resultCount: number;
+  /**
+   * The first record behind this row. A row is an aggregated service, but the
+   * detail modal takes one record — for a service delivered several times this
+   * opens the earliest of them.
+   */
+  record: ElectronicHealthRecord;
 }
 
 /**
@@ -302,7 +309,17 @@ const Client = (props: {
   const t = useTranslations("/console/patient-reports.PatientReports");
   const tData = useTranslations("common.data");
   const tDictionary = useTranslations("common.Dictionary");
-  const { ehrByNationalNumber_m, filters } = usePatientReports();
+  const {
+    ehrByNationalNumber_m,
+    mobileLaboratoryByNationalNumber_m,
+    mobileXRayByNationalNumber_m,
+    mobileNumberByNationalNumber_m,
+    filters,
+    selectedRecord,
+    setSelectedRecord,
+    isDetailModalOpen,
+    setIsDetailModalOpen,
+  } = usePatientReports();
   const { data, isPending } = ehrByNationalNumber_m;
   const locale = useLocale();
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -362,6 +379,7 @@ const Client = (props: {
           abnormalCount: 0,
           resultCount: 0,
           totalCount: 0,
+          record,
         };
       }
 
@@ -378,7 +396,7 @@ const Client = (props: {
       }
 
       return acc;
-    }, {} as Record<string, { normalCount: number; abnormalCount: number; resultCount: number; totalCount: number }>);
+    }, {} as Record<string, { normalCount: number; abnormalCount: number; resultCount: number; totalCount: number; record: ElectronicHealthRecord }>);
 
     // Convert to array format for table
     return Object.entries(serviceGroups).map(([serviceName, counts]) => ({
@@ -387,6 +405,7 @@ const Client = (props: {
       normalResults: counts.normalCount,
       abnormalResults: counts.abnormalCount,
       resultCount: counts.resultCount,
+      record: counts.record,
     }));
   }, [data]);
 
@@ -428,11 +447,23 @@ const Client = (props: {
       columnHelper.display({
         id: "actions",
         header: t("columnActions"),
-        // Nothing to plot for a service with no measured results, so the row
-        // gets no button rather than one that opens an empty chart.
-        cell: (info) =>
-          info.row.original.resultCount > 0 ? (
-            <div className="flex items-center gap-2">
+        cell: (info) => (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setSelectedRecord(info.row.original.record);
+                setIsDetailModalOpen(true);
+              }}
+              aria-label={t("viewRecordDetails")}
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+            {/* Nothing to plot for a service with no measured results, so that
+                row gets no chart button rather than one that opens an empty
+                chart. The detail button above stays on every row. */}
+            {info.row.original.resultCount > 0 && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -444,11 +475,12 @@ const Client = (props: {
               >
                 <ChartArea className="h-4 w-4" />
               </Button>
-            </div>
-          ) : null,
+            )}
+          </div>
+        ),
       }),
     ]),
-    [t, tData, locale]
+    [t, tData, locale, setSelectedRecord, setIsDetailModalOpen]
   );
 
   const table = useTable({
@@ -581,6 +613,20 @@ const Client = (props: {
           )}
         </SheetContent>
       </Sheet>
+
+      <EHRDetailModal
+        record={selectedRecord}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedRecord(null);
+        }}
+        actions={{
+          mobileLaboratoryByNationalNumber_m,
+          mobileXRayByNationalNumber_m,
+          mobileNumberByNationalNumber_m,
+        }}
+      />
     </div>
   );
 };

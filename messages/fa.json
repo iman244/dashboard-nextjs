@@ -256,7 +256,8 @@
       "columnNormalResults": "تعداد جواب‌های طبیعی",
       "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
       "columnActions": "عملیات",
-      "noLabResult": "بدون نتیجه آزمایشگاهی"
+      "noLabResult": "بدون نتیجه آزمایشگاهی",
+      "viewRecordDetails": "مشاهده جزئیات"
     }
   },
   "/console/periodical-reports": {

@@ -256,7 +256,8 @@
       "columnNormalResults": "Normal results",
       "columnAbnormalResults": "Abnormal results",
       "columnActions": "Actions",
-      "noLabResult": "No lab result"
+      "noLabResult": "No lab result",
+      "viewRecordDetails": "View details"
     }
   },
   "/console/periodical-reports": {
