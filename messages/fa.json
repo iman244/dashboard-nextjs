@@ -361,6 +361,10 @@
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
       "NoResults": "نتیجه‌ای یافت نشد"
+    },
+    "PersonRecord": {
+      "AbnormalFindings": "{count} یافته غیرطبیعی",
+      "ShowAbnormalOnly": "فقط موارد غیرطبیعی"
     }
   }
 }

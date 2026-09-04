@@ -361,6 +361,10 @@
       "ClearSearch": "Clear",
       "NoSearchResults": "No results found",
       "NoResults": "No results found"
+    },
+    "PersonRecord": {
+      "AbnormalFindings": "{count} abnormal findings",
+      "ShowAbnormalOnly": "Abnormal only"
     }
   }
 }
