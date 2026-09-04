@@ -11,8 +11,8 @@ import { newDate } from "date-fns-jalali";
  */
 export type EhrStatus = "low" | "high" | "normal" | "unknown";
 
-/** An open-ended bound is null: `<200` is `{ min: null, max: 200 }`. */
-export type NormalRange = { min: number | null; max: number | null };
+/** Both bounds are always present — the only parsed form is `min-max`. */
+export type NormalRange = { min: number; max: number };
 
 /** Persian and Arabic digits normalised to ASCII, decimal separator unified. */
 const toAscii = (raw: string) =>
@@ -29,33 +29,35 @@ export const parseNumeric = (raw: string | null | undefined): number | null => {
 };
 
 /**
- * Reference range from the shapes the payload actually uses:
- * `0.2-1.2`, `12.0 - 16.0`, `<200`, `>= 40`, `up to 5`.
+ * Reference range, from the one shape the payload is known to use: two
+ * numbers separated by a dash, `0.2-1.2` or `12.0 - 16.0`.
+ *
+ * Only this form is read. Open-ended shapes such as `<200` or `>=40` are
+ * plausible and were drafted here, then removed: nothing in the codebase or
+ * in a sampled response shows the EHR writes them, and this file must not
+ * guess at a format it has not seen. The dash form is not a guess — it is the
+ * pattern the existing patient-reports and step-1 pages already parse, written
+ * by someone with access to real data.
+ *
+ * Anything unrecognised returns null and the result reads `unknown`, which the
+ * page counts and displays separately. So an unhandled format shows up as a
+ * visible tally of unread results, never as a silent pass. Adding a form later
+ * is one branch here.
  */
 export const parseRange = (
   raw: string | null | undefined
 ): NormalRange | null => {
   if (!raw) return null;
-  const text = toAscii(raw);
 
-  const between = text.match(
+  const between = toAscii(raw).match(
     new RegExp(`(${NUMBER.source})\\s*[-–—]\\s*(${NUMBER.source})`)
   );
-  if (between) {
-    const min = Number(between[1]);
-    const max = Number(between[2]);
-    if (Number.isFinite(min) && Number.isFinite(max) && min <= max) {
-      return { min, max };
-    }
-  }
+  if (!between) return null;
 
-  const upper = text.match(new RegExp(`(?:<=?|up to)\\s*(${NUMBER.source})`, "i"));
-  if (upper) return { min: null, max: Number(upper[1]) };
-
-  const lower = text.match(new RegExp(`>=?\\s*(${NUMBER.source})`));
-  if (lower) return { min: Number(lower[1]), max: null };
-
-  return null;
+  const min = Number(between[1]);
+  const max = Number(between[2]);
+  if (!Number.isFinite(min) || !Number.isFinite(max) || min > max) return null;
+  return { min, max };
 };
 
 export const classify = (
@@ -65,8 +67,8 @@ export const classify = (
   const numeric = parseNumeric(value);
   const bounds = parseRange(range);
   if (numeric === null || !bounds) return "unknown";
-  if (bounds.min !== null && numeric < bounds.min) return "low";
-  if (bounds.max !== null && numeric > bounds.max) return "high";
+  if (numeric < bounds.min) return "low";
+  if (numeric > bounds.max) return "high";
   return "normal";
 };
 
