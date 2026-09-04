@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
@@ -89,9 +90,12 @@ export function Client() {
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
+          // Both orbs stay in the brand hue family. An earlier version used
+          // --chart-7, which is a saturated cyan in dark mode and cast the whole
+          // lower corner green.
           background:
             "radial-gradient(60rem 40rem at 18% 8%, color-mix(in oklab, var(--primary) 9%, transparent), transparent 65%)," +
-            "radial-gradient(48rem 34rem at 84% 92%, color-mix(in oklab, var(--chart-7) 7%, transparent), transparent 62%)",
+            "radial-gradient(48rem 34rem at 84% 92%, color-mix(in oklab, var(--chart-5) 6%, transparent), transparent 62%)",
         }}
       />
 
@@ -168,6 +172,7 @@ export function Client() {
                 className="group mt-7 h-12 w-full rounded-full text-[15px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.10),0_8px_20px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_1px_2px_rgba(0,0,0,0.12),0_12px_28px_-8px_color-mix(in_oklab,var(--primary)_65%,transparent)] active:scale-[0.985]"
               >
                 <span className="flex w-full items-center justify-center gap-3">
+                  {isPending && <Spinner className="size-4" />}
                   {isPending ? t("buttons.signingIn") : t("buttons.signIn")}
                   {!isPending && (
                     <span
