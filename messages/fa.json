@@ -251,7 +251,12 @@
         "patientTypeRequired": "انتخاب نوع بیمار الزامی است",
         "dateRangeInvalid": "تاریخ پایان باید پس از تاریخ شروع باشد"
       },
-      "viewServiceChart": "مشاهده نمودار خدمت"
+      "viewServiceChart": "مشاهده نمودار خدمت",
+      "columnServiceCount": "تعداد دفعات",
+      "columnNormalResults": "تعداد جواب‌های طبیعی",
+      "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
+      "columnActions": "عملیات",
+      "noLabResult": "بدون نتیجه آزمایشگاهی"
     }
   },
   "/console/periodical-reports": {
