@@ -1,16 +1,48 @@
-export type SaderatBankHealthMonitoring = {
-  id: number;
-  name: string;
-  created_at: string;
-  json: SBHM_Record[]
+import type { components } from "@/data/api-schema";
+
+type Schemas = components["schemas"];
+
+/**
+ * `step_1` | `step_2`, generated from the Django model's TextChoices.
+ * Adding a step on the backend and regenerating makes SBHM_TYPES below
+ * fail to compile until the new value is handled here too.
+ */
+export type SBHM_Type = Schemas["TypeEnum"];
+
+const SBHM_TYPE_LABEL_KEYS = {
+  step_1: "Step1",
+  step_2: "Step2",
+} as const satisfies Record<SBHM_Type, string>;
+
+export const SBHM_TYPES = Object.keys(SBHM_TYPE_LABEL_KEYS) as SBHM_Type[];
+
+export const SBHM_TYPE_LABEL_KEY = (type: SBHM_Type) =>
+  SBHM_TYPE_LABEL_KEYS[type];
+
+/**
+ * The generated schema types `json` as `unknown`, since a Django JSONField
+ * carries no shape. SBHM_Record below is the hand-maintained shape of the
+ * rows the Excel import produces.
+ */
+export type SaderatBankHealthMonitoring = Omit<
+  Schemas["SaderatBankHealthMonitoringRetrieve"],
+  "json"
+> & {
+  json: SBHM_Record[];
 };
 
-export type SBHM_ListSerializer = Pick<SaderatBankHealthMonitoring, "id" | "name" | "created_at">[];
-export type SBHM_RetrieveSerializer = Pick<SaderatBankHealthMonitoring, "id" | "name" | "created_at" | "json">;
-export type SBHM_CreateSerializer = Pick<SaderatBankHealthMonitoring, "name">;
-export type  SBHM_UploadExcelSerializer = SBHM_CreateSerializer & {
+export type SBHM_ListSerializer = Schemas["SaderatBankHealthMonitoringList"][];
+export type SBHM_RetrieveSerializer = SaderatBankHealthMonitoring;
+export type SBHM_CreateSerializer =
+  Schemas["SaderatBankHealthMonitoringListRequest"];
+
+/** `file` is `string` (binary) in the schema; in the browser it is a File. */
+export type SBHM_UploadExcelSerializer = Omit<
+  Schemas["SaderatBankHealthMonitoringUploadExcelRequest"],
+  "file"
+> & {
   file: File;
-}
+};
 
 type SBHM_Record = {
   K: string

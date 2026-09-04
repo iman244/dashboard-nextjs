@@ -95,6 +95,12 @@
       "Previous page": "Previous page",
       "Next page": "Next page",
       "Last page": "Last page"
+    },
+    "SBHM_Step": {
+      "Label": "Step",
+      "Placeholder": "Select step",
+      "Step1": "Step 1",
+      "Step2": "Step 2"
     }
   },
   "/": {

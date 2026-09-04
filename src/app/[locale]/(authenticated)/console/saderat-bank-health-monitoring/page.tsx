@@ -20,7 +20,10 @@ import { Spinner } from "@/components/ui/spinner";
 import DeleteSaderatBankHealthMonitoringExcelDialog from "./_delete-excel-dialog/dialog";
 import Link from "next/link";
 import { useList_SBHM_API } from "@/data/saderat-bank-health-monitoring/api";
-import { SBHM_ListSerializer } from "@/data/saderat-bank-health-monitoring/types";
+import {
+  SBHM_ListSerializer,
+  SBHM_TYPE_LABEL_KEY,
+} from "@/data/saderat-bank-health-monitoring/types";
 
 const columnHelper = createColumnHelper<AppTableFeatures, SBHM_ListSerializer[number]>();
 
@@ -33,6 +36,7 @@ const SaderatBankHealthMonitoringPage = (
   const { data, isPending, error } = useList_SBHM_API();
   const tDictionary = useTranslations("common.Dictionary");
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
+  const tStep = useTranslations("common.SBHM_Step");
   const locale = useLocale();
   const isRtl = locale === "fa";
 
@@ -42,6 +46,11 @@ const SaderatBankHealthMonitoringPage = (
       columnHelper.accessor("name", {
         header: tDictionary("Name"),
         cell: (info) => localeDigits(info.getValue(), locale),
+      }),
+      // a name is only unique per step now, so the step has to be visible
+      columnHelper.accessor("type", {
+        header: tStep("Label"),
+        cell: (info) => tStep(SBHM_TYPE_LABEL_KEY(info.getValue())),
       }),
       columnHelper.accessor("created_at", {
         header: tDictionary("CreatedAt"),
