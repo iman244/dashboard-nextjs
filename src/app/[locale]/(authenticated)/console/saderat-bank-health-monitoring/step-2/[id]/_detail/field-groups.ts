@@ -51,6 +51,8 @@ export const STEP2_FIELD_GROUPS: FieldGroup[] = [
   {
     titleKey: "groups.ecg",
     fields: [
+      // orphan note: step_2 has no تفسير الكتروكارديوگرام field to attach to
+      "توضیحات تفسير الكتروكارديوگرام", // 15/546
       "ECG Diagnisis:", // 22/546
       "P wave:", // 24/546
       "PR: Interval", // 24/546
@@ -65,6 +67,12 @@ export const STEP2_FIELD_GROUPS: FieldGroup[] = [
   {
     titleKey: "groups.clinicalExam",
     fields: [
+      // orphan notes: no base field exists, so they stand on their own rather
+      // than annotating something. Without these, 103 values never render.
+      "توضیحات نتيجه نمونه پاپ اسمير*", // 84/546
+      "توضیحات در مورد پستان", // 10/546
+      "توضیحات  ارزيابي تنفسي", // 8/546
+      "توضیحات سایکولوژی", // 1/546
       "اندوكرينولوژي", // 519/546
       "بیمه", // 3/546
       "بینی و سینوس‌ها", // 26/546
@@ -181,6 +189,12 @@ const NOTE_OVERRIDES: Partial<Record<keyof SBHM_Step2Record, keyof SBHM_Step2Rec
   "سونگرافي شكم و لگن": "توضیحاتسونگرافي شكم و لگن",
   "سونوگرافي شكم و لگن": "توضیخات سونوگرافي شكم و لگن",
   "راديوگرافي قفسه سينه.1": "توضیخات راديوگرافي قفسه سينه",
+  // note carries a double space after توضیحات
+  "بيماري هاي عضلاني قلبي": "توضیحات  بيماري هاي عضلاني قلبي",
+  // note drops the "؟ذكرنمائيد." the field ends with
+  "آيا سابقه بيماري ديگري داريد؟ذكرنمائيد.": "توضیحات آيا سابقه بيماري ديگري داريد",
+  // note adds "ساير يافته ها" the field does not have
+  "راديوگرافي قفسه سينه": "توضیحات ساير يافته ها راديوگرافي قفسه سينه",
 };
 
 export const noteKeyFor = (
