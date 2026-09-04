@@ -154,6 +154,7 @@ const PersonMonitoringPage = (
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.PersonRecord"
   );
+  const tDictionary = useTranslations("common.Dictionary");
   // Defaults to off: nothing is hidden from a clinician unless they ask.
   const [abnormalOnly, setAbnormalOnly] = React.useState(false);
   const today = new Date().toLocaleDateString("fa-IR", {
@@ -709,7 +710,7 @@ const PersonMonitoringPage = (
             <SheetContent side="bottom" className="max-h-[100dvh]">
               <SheetHeader className="flex flex-row items-center justify-between">
                 <SheetTitle>گزارش رکوردهای خدمت: {selectedService}</SheetTitle>
-                <SheetClose>
+                <SheetClose aria-label={tDictionary("Close")}>
                   <XIcon className="h-4 w-4" />
                 </SheetClose>
               </SheetHeader>
@@ -797,6 +798,7 @@ const PersonMonitoringPage = (
                               );
                               setIsSheetOpen(true);
                             }}
+                            aria-label={t("ViewTestChart")}
                           >
                             <ChartArea className="w-4 h-4" />
                           </Button>

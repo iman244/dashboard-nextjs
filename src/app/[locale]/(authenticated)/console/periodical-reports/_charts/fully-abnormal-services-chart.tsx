@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
+import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 interface FullyAbnormalServicesChart {
   data: ElectronicHealthRecord[];
@@ -131,14 +132,14 @@ export const FullyAbnormalServicesChart: React.FC<FullyAbnormalServicesChart> = 
             dataKey="serviceName"
             tickFormatter={(value) => digitsEnToFa(value)}
             textAnchor="middle"
-            fontSize={12}
+            fontSize={CHART_TICK_FONT_SIZE}
             tickMargin={12}
             angle={-45}
             height={80}
           />
           <YAxis
             tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-            fontSize={12}
+            fontSize={CHART_TICK_FONT_SIZE}
             tickMargin={24}
           />
           <ChartTooltip

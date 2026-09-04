@@ -94,7 +94,8 @@
       "First page": "First page",
       "Previous page": "Previous page",
       "Next page": "Next page",
-      "Last page": "Last page"
+      "Last page": "Last page",
+      "Close": "Close"
     },
     "SBHM_Step": {
       "Label": "Step",
@@ -282,7 +283,8 @@
         "nationalNumberRequired": "National number is required",
         "patientTypeRequired": "Patient type is required",
         "dateRangeInvalid": "End date must be after start date"
-      }
+      },
+      "viewServiceChart": "View service chart"
     }
   },
   "/console/periodical-reports": {
@@ -336,7 +338,12 @@
       "answerStatus": "Answer Status",
       "normal": "Normal",
       "abnormal": "Abnormal",
-      "actions": "Actions"
+      "actions": "Actions",
+      "viewRecordDetails": "View record details",
+      "viewPatientReport": "View patient report"
+    },
+    "ServiceCountTable": {
+      "viewServiceRecords": "View service records"
     }
   },
   "/console/saderat-bank-health-monitoring": {
@@ -371,11 +378,14 @@
       "SearchPlaceholder": "Search by name, last name or national ID...",
       "ClearSearch": "Clear",
       "NoSearchResults": "No results found",
-      "NoResults": "No results found"
+      "NoResults": "No results found",
+      "ViewDataset": "View dataset",
+      "ViewPersonRecord": "View health record"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} abnormal findings",
-      "ShowAbnormalOnly": "Abnormal only"
+      "ShowAbnormalOnly": "Abnormal only",
+      "ViewTestChart": "View test trend chart"
     }
   }
 }

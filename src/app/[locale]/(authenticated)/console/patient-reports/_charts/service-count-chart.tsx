@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
+import { CHART_TICK_FONT_SIZE, CHART_TICK_FONT_SIZE_SM } from "@/lib/chart";
 
 interface ServiceCountChart {
   data: ElectronicHealthRecord[];
@@ -81,12 +82,12 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({ data }) => {
           dataKey="serviceName"
           tickFormatter={(value) => digitsEnToFa(value)}
           textAnchor="middle"
-          fontSize={10}
+          fontSize={CHART_TICK_FONT_SIZE_SM}
           tickMargin={12}
         />
         <YAxis
           tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-          fontSize={12}
+          fontSize={CHART_TICK_FONT_SIZE}
           tickMargin={24}
         />
         <ChartTooltip

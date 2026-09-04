@@ -69,6 +69,7 @@ export type FormValues = z.infer<ReturnType<typeof makeFormSchema>>;
  */
 export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
   const t = useTranslations("/console/electronic-health-record.EHRFilter");
+  const tDictionary = useTranslations("common.Dictionary");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { setFilters, filters } = useElectronicHealthRecord();
   const formSchema = React.useMemo(() => makeFormSchema(t), [t]);
@@ -127,7 +128,11 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
           </div>
 
           <DialogClose asChild>
-            <Button variant="outline" size={"icon"}>
+            <Button
+              variant="outline"
+              size={"icon"}
+              aria-label={tDictionary("Close")}
+            >
               <X />
             </Button>
           </DialogClose>

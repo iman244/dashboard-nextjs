@@ -94,7 +94,8 @@
       "First page": "صفحه اول",
       "Previous page": "صفحه قبلی",
       "Next page": "صفحه بعدی",
-      "Last page": "صفحه آخر"
+      "Last page": "صفحه آخر",
+      "Close": "بستن"
     },
     "SBHM_Step": {
       "Label": "مرحله",
@@ -282,7 +283,8 @@
         "nationalNumberRequired": "وارد کردن شماره ملی الزامی است",
         "patientTypeRequired": "انتخاب نوع بیمار الزامی است",
         "dateRangeInvalid": "تاریخ پایان باید پس از تاریخ شروع باشد"
-      }
+      },
+      "viewServiceChart": "مشاهده نمودار خدمت"
     }
   },
   "/console/periodical-reports": {
@@ -336,7 +338,12 @@
       "normal": "طبیعی",
       "abnormal": "غیرطبیعی",
       "answerStatus": "وضعیت جواب",
-      "actions": "عملیات"
+      "actions": "عملیات",
+      "viewRecordDetails": "مشاهده جزئیات پرونده",
+      "viewPatientReport": "مشاهده گزارش بیمار"
+    },
+    "ServiceCountTable": {
+      "viewServiceRecords": "مشاهده پرونده‌های خدمت"
     }
   },
   "/console/saderat-bank-health-monitoring": {
@@ -371,11 +378,14 @@
       "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی...",
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
-      "NoResults": "نتیجه‌ای یافت نشد"
+      "NoResults": "نتیجه‌ای یافت نشد",
+      "ViewDataset": "مشاهده مجموعه داده",
+      "ViewPersonRecord": "مشاهده پرونده سلامت"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} یافته غیرطبیعی",
-      "ShowAbnormalOnly": "فقط موارد غیرطبیعی"
+      "ShowAbnormalOnly": "فقط موارد غیرطبیعی",
+      "ViewTestChart": "مشاهده نمودار روند آزمایش"
     }
   }
 }

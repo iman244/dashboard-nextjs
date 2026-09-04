@@ -63,6 +63,7 @@ const SaderatBankHealthMonitoringPage = (
             <Button variant={"ghost"} asChild>
               <Link
                 href={`/console/saderat-bank-health-monitoring/${row.original.id}`}
+                aria-label={t("ViewDataset")}
               >
                 <Table2 />
               </Link>
@@ -70,6 +71,7 @@ const SaderatBankHealthMonitoringPage = (
             <Button
               variant={"ghost"}
               onClick={() => setDeleteRow(row.original)}
+              aria-label={tDictionary("Delete")}
             >
               <Trash />
             </Button>

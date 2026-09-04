@@ -82,6 +82,7 @@ const CopyButton = ({ value, className }: CopyButtonProps) => {
       onClick={handleCopy}
       className={`h-6 w-6 p-0 ${className}`}
       title={copied ? t("copied") : t("copy")}
+      aria-label={copied ? t("copied") : t("copy")}
     >
       {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
     </Button>
@@ -96,6 +97,7 @@ export const EHRDetailModal = ({
 }: EHRDetailModalProps) => {
   const locale = useLocale();
   const t = useTranslations("common.EHRDetailModal");
+  const tDictionary = useTranslations("common.Dictionary");
   const {
     mobileLaboratoryByNationalNumber_m,
     mobileXRayByNationalNumber_m,
@@ -234,6 +236,7 @@ export const EHRDetailModal = ({
                 variant={"ghost"}
                 size="icon"
                 className="absolute top-6 start-4 size-2"
+                aria-label={tDictionary("Close")}
               >
                 <XIcon className="h-2 w-2" />
               </Button>

@@ -86,6 +86,7 @@ export function SearchPersonnelSheet({
             <Link
               href={`/console/saderat-bank-health-monitoring/${monitoringId}/${row.original["personel.کد ملی"]}`}
               onClick={() => onOpenChange(false)}
+              aria-label={t("ViewPersonRecord")}
             >
               <FileSearchCorner className="h-4 w-4" />
             </Link>

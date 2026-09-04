@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sheet";
 import { ServiceRecordsTable } from "./service-records-table";
 import { formatNumber, localeDigits } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ServiceCountTableProps {
   data: ElectronicHealthRecord[];
@@ -40,6 +40,8 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const locale = useLocale();
+  const tSCT = useTranslations("/console/periodical-reports.ServiceCountTable");
+  const tDictionary = useTranslations("common.Dictionary");
 
   // Process data to create aggregated service counts
   const aggregatedData = useMemo(() => {
@@ -150,7 +152,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
                 setSelectedService(info.row.original.serviceName);
                 setIsSheetOpen(true);
               }}
-              title="مشاهده گزارش"
+              aria-label={tSCT("viewServiceRecords")}
             >
               <FileText className="h-4 w-4" />
             </Button>
@@ -158,7 +160,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
         ),
       }),
     ]),
-    []
+    [tSCT]
   );
 
   console.log({ aggregatedData });
@@ -226,7 +228,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
         <SheetContent side="bottom" className="max-h-[100dvh]">
           <SheetHeader className="flex flex-row items-center justify-between">
             <SheetTitle>گزارش رکوردهای خدمت: {selectedService}</SheetTitle>
-            <SheetClose>
+            <SheetClose aria-label={tDictionary("Close")}>
               <XIcon className="h-4 w-4" />
             </SheetClose>
           </SheetHeader>
