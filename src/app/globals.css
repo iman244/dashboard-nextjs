@@ -111,25 +111,28 @@
 
   /* Brand. Note the black foreground: #0284C7 reaches 4.92:1 against black but
      only 4.27:1 against white, so black is the accessible choice here. */
-  --primary: oklch(0.588 0.139 242); /* #0284C7 */
-  --primary-foreground: oklch(0 0 0); /* #000000 */
+  /* Row 41 (Insurance Platform) rather than row 182's #0284C7/black pair:
+     that blue sits at lightness 0.588, so black on it passes 4.92:1 numerically
+     while still reading as dark-on-dark. Guideline 76. */
+  --primary: oklch(0.5 0.119 242.7); /* #0369A1 */
+  --primary-foreground: oklch(1 0 0); /* #FFFFFF */
   /* shadcn uses --secondary for muted chips and quiet buttons, not as a brand
      accent. The source row's Secondary (#0891B2) lives in --info instead. */
   --secondary: oklch(0.93 0.02 238.7); /* #DCEAF4 */
   --secondary-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
   --accent: oklch(0.925 0.033 238.1); /* #D3EAFA */
   --accent-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
-  --ring: oklch(0.588 0.139 242); /* #0284C7 */
+  --ring: oklch(0.5 0.119 242.7); /* #0369A1 */
 
   /* Semantics — success is the row's own Accent ("health green"), info its Secondary */
   --destructive: oklch(0.577 0.215 27.3); /* #DC2626 */
   --destructive-foreground: oklch(1 0 0); /* #FFFFFF */
-  --success: oklch(0.627 0.17 149.2); /* #16A34A */
-  --success-foreground: oklch(0.266 0.065 151.2); /* #052E14 */
+  --success: oklch(0.527 0.137 150.1); /* #15803D */
+  --success-foreground: oklch(1 0 0); /* #FFFFFF */
   --warning: oklch(0.681 0.142 75.8); /* #CA8A04 */
   --warning-foreground: oklch(0.239 0.049 80.6); /* #2B1C00 */
-  --info: oklch(0.609 0.111 221.7); /* #0891B2 */
-  --info-foreground: oklch(0.202 0.037 220.6); /* #001A22 */
+  --info: oklch(0.52 0.094 223.1); /* #0E7490 */
+  --info-foreground: oklch(1 0 0); /* #FFFFFF */
 
   /* Edges. A pale tint, per the source row — not a mid-grey. */
   --border: oklch(0.901 0.055 230.9); /* #BAE6FD */
@@ -162,12 +165,12 @@
   /* Sidebar */
   --sidebar: oklch(0.955 0.013 233.7); /* #E8F2F8 */
   --sidebar-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
-  --sidebar-primary: oklch(0.588 0.139 242); /* #0284C7 */
+  --sidebar-primary: oklch(0.5 0.119 242.7); /* #0369A1 */
   --sidebar-primary-foreground: oklch(1 0 0); /* #FFFFFF */
   --sidebar-accent: oklch(0.925 0.033 238.1); /* #D3EAFA */
   --sidebar-accent-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
   --sidebar-border: oklch(0.901 0.055 230.9); /* #BAE6FD */
-  --sidebar-ring: oklch(0.588 0.139 242); /* #0284C7 */
+  --sidebar-ring: oklch(0.5 0.119 242.7); /* #0369A1 */
 }
 
 .dark {

@@ -79,9 +79,12 @@ function PageHeader({
 }
 
 function StatusBadge({ status }: { status: string }) {
+  // On a tinted chip the text takes the *semantic* colour, not its -foreground
+  // pair. `--success-foreground` is white, meant for text on a solid success
+  // fill; using it here put white on a pale green tint.
   if (status === "normal")
     return (
-      <Badge className="border-0 bg-success/15 text-success-foreground dark:text-success">
+      <Badge className="border-0 bg-success/12 text-success dark:bg-success/15">
         طبیعی
       </Badge>
     );
