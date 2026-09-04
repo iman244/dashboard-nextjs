@@ -41,9 +41,12 @@ export const EhrRecordsTable = ({
   onViewRecord: (record: ElectronicHealthRecord) => void;
   onSelectSeries: (series: LabSeries) => void;
 }) => {
-  const t = useTranslations(
-    "/console/saderat-bank-health-monitoring.Ehr"
-  );
+  const t = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
+  // `جواب`, `نرمال رنج` and `نام خدمت` are the payload's own column names, and
+  // common.dictionary is where this repo already renders them — the
+  // patient-reports service table reads the same keys. Naming them anything
+  // else here would invent a second vocabulary for one set of fields.
+  const tDictionary = useTranslations("common.dictionary");
   const locale = useLocale();
 
   const rows = React.useMemo(
@@ -83,9 +86,11 @@ export const EhrRecordsTable = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t("tableDate")}</TableHead>
-            <TableHead>{t("tableService")}</TableHead>
-            <TableHead>{t("tableResult")}</TableHead>
+            <TableHead>{tDictionary("date")}</TableHead>
+            <TableHead>{tDictionary("serviceName")}</TableHead>
+            <TableHead>{tDictionary("answer")}</TableHead>
+            <TableHead>{tDictionary("normalRange")}</TableHead>
+            {/* derived here, not a payload column */}
             <TableHead>{t("tableWhen")}</TableHead>
             <TableHead>
               <span className="sr-only">{t("viewDetails")}</span>
@@ -112,12 +117,10 @@ export const EhrRecordsTable = ({
                   >
                     {localeDigits(row.value, locale) || "—"}
                   </span>
-                  {row.range && (
-                    <span className="text-xs text-muted-foreground tabular-nums">
-                      ({localeDigits(row.range, locale)})
-                    </span>
-                  )}
                 </span>
+              </TableCell>
+              <TableCell className="whitespace-nowrap tabular-nums text-muted-foreground">
+                {row.range ? localeDigits(row.range, locale) : "—"}
               </TableCell>
               <TableCell className="whitespace-nowrap">
                 {row.sortKey > ehr.examSortKey ? (
