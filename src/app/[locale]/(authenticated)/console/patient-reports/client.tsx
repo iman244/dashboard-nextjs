@@ -33,6 +33,7 @@ import { Line, XAxis, YAxis, CartesianGrid, ReferenceArea, ComposedChart } from 
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { format, newDate } from "date-fns-jalali";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
+import { PageHeader } from "@/components/app/page-header";
 
 interface ServiceCountData {
   serviceName: string;
@@ -516,7 +517,7 @@ const Client = (props: {
 
   return (
     <div className="mt-2 space-y-4">
-      {/* Header */}
+      <PageHeader title={t("title")} />
       <div className="flex items-center gap-2">
         <PatientReportsForm
           initialValues={props.initialValues}

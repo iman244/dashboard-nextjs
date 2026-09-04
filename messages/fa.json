@@ -367,7 +367,8 @@
       "ViewDataset": "مشاهده مجموعه داده",
       "ViewPersonRecord": "مشاهده پرونده سلامت",
       "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
-      "WrongStepAction": "مشاهده در نمای درست"
+      "WrongStepAction": "مشاهده در نمای درست",
+      "PageTitle": "پایش سلامت بانک صادرات"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} یافته غیرطبیعی",

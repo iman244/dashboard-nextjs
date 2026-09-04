@@ -367,7 +367,8 @@
       "ViewDataset": "View dataset",
       "ViewPersonRecord": "View health record",
       "WrongStepTitle": "This record belongs to a different step.",
-      "WrongStepAction": "Open it in the right view"
+      "WrongStepAction": "Open it in the right view",
+      "PageTitle": "Saderat Bank Health Monitoring"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} abnormal findings",
