@@ -315,7 +315,13 @@
       "viewPatientReport": "مشاهده گزارش بیمار"
     },
     "ServiceCountTable": {
-      "viewServiceRecords": "مشاهده پرونده‌های خدمت"
+      "viewServiceRecords": "مشاهده پرونده‌های خدمت",
+      "columnServiceName": "نام خدمت",
+      "columnServiceCount": "تعداد دفعات",
+      "columnNormalResults": "تعداد جواب‌های طبیعی",
+      "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
+      "columnActions": "عملیات",
+      "noLabResult": "بدون نتیجه آزمایشگاهی"
     }
   },
   "/console/saderat-bank-health-monitoring": {

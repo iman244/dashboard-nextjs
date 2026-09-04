@@ -315,7 +315,13 @@
       "viewPatientReport": "View patient report"
     },
     "ServiceCountTable": {
-      "viewServiceRecords": "View service records"
+      "viewServiceRecords": "View service records",
+      "columnServiceName": "Service Name",
+      "columnServiceCount": "Times recorded",
+      "columnNormalResults": "Normal results",
+      "columnAbnormalResults": "Abnormal results",
+      "columnActions": "Actions",
+      "noLabResult": "No lab result"
     }
   },
   "/console/saderat-bank-health-monitoring": {
