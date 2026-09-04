@@ -33,10 +33,12 @@ Consequences that follow from it, all accepted:
 - `password === national ID` is not authentication.
 - The route guards are client-side only.
 - The national ID lives in `sessionStorage` and doubles as the credential.
-- Reporting "no records for this ID" separately from "the service failed"
-  discloses which IDs exist. Kept anyway: collapsing the two would tell a
-  patient their ID is wrong whenever the upstream is down, and the open
-  upstream already answers the same question to anyone who asks it directly.
+The sign-in page does not disclose which IDs exist: a wrong password and an
+unknown ID share one generic rejection, while a failed request keeps its own
+message. (An earlier draft reported "no records for this ID" separately; that
+was removed along with the rest of the copy that advertised how the login
+works.) The open upstream still answers the existence question directly to
+anyone who asks it — that is the API's property, not this page's.
 
 Also out of scope: Django changes, rate limiting, account recovery, audit
 logging, and the phone-number lookup.
@@ -118,16 +120,19 @@ On valid submit, one `ehr_by_national_number` mutation:
 `digitsFaToEn` is required: a Persian keyboard produces `۰۱۲` and the upstream
 expects `012`.
 
-Outcomes, kept distinct:
+Outcomes:
 
 | outcome | UI |
 |---|---|
+| password ≠ national ID | "incorrect national ID or password", no request sent |
 | `data.length > 0` | `signIn(id)`, `router.push("/patient/records")` |
-| `data.length === 0` | "no records found for this national ID" |
+| `data.length === 0` | "incorrect national ID or password" |
 | mutation error | "could not reach the records service, try again" |
 
-The empty-vs-error distinction matters and is currently collapsed in the console
-provider; we do not repeat that.
+A rejected login and an unknown ID are indistinguishable, as on any sign-in
+page. A failed *request* stays separate, because blaming the upstream being down
+on the person typing would send them round in circles — this is the distinction
+the console provider collapses, and the one worth keeping.
 
 ### Records page
 

@@ -39,10 +39,11 @@ ID against it directly, regardless of this UI. Concretely, and by design:
 - The route guards are client-side only; nothing is enforced on a server.
 - The national ID is held in `sessionStorage`, and here it doubles as the
   credential.
-- Distinguishing "no records for this ID" from "the service failed" reveals
-  which IDs exist. This is deliberate — the alternative is telling a patient
-  their ID is wrong when the upstream is merely down — and it discloses nothing
-  that a direct query to the open upstream would not.
+The sign-in page itself gives nothing away: a wrong password and an unknown
+national ID produce the same generic rejection, and a failed request produces a
+separate service-error message so a dead upstream is not blamed on the person
+typing. That keeps the page from confirming which IDs exist — though the open
+upstream still answers that question directly to anyone who asks it.
 
 Do not treat these pages as protecting patient data. Making them do so means
 moving the records call behind Django with a real per-patient credential.
