@@ -359,7 +359,6 @@
     "SignInPage": {
       "title": "Patient sign in",
       "description": "Enter your national ID to see your own health records.",
-      "notice": "Your password is your national ID.",
       "form": {
         "nationalId": {
           "label": "National ID",
@@ -367,14 +366,13 @@
         },
         "password": {
           "label": "Password",
-          "placeholder": "Enter your national ID again"
+          "placeholder": "Enter your password"
         }
       },
       "errors": {
         "nationalIdRequired": "National ID is required",
         "passwordRequired": "Password is required",
-        "passwordMismatch": "Your password must be the same as your national ID",
-        "noRecords": "No records were found for this national ID",
+        "invalidCredentials": "Incorrect national ID or password",
         "requestFailed": "Could not reach the records service. Please try again."
       },
       "buttons": {

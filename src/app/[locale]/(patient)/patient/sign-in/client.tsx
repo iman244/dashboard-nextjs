@@ -43,21 +43,16 @@ export function Client() {
 
   // Built inside the component so the validation messages are the translated
   // ones rather than a module-level English default.
+  //
+  // Only presence is validated here. Whether the password matches is checked in
+  // onSubmit and reported as one generic form-level failure, because a
+  // field-level "this must equal your national id" would just be the hint again.
   const schema = React.useMemo(
     () =>
-      z
-        .object({
-          nationalId: z.string().min(1, t("errors.nationalIdRequired")),
-          password: z.string().min(1, t("errors.passwordRequired")),
-        })
-        .refine(
-          (data) =>
-            digitsFaToEn(data.nationalId) === digitsFaToEn(data.password),
-          {
-            message: t("errors.passwordMismatch"),
-            path: ["password"],
-          }
-        ),
+      z.object({
+        nationalId: z.string().min(1, t("errors.nationalIdRequired")),
+        password: z.string().min(1, t("errors.passwordRequired")),
+      }),
     [t]
   );
 
@@ -78,15 +73,24 @@ export function Client() {
       setFormError(null);
       const nationalId = digitsFaToEn(data.nationalId);
 
+      // Wrong password and unknown id give the same answer, as on any sign-in
+      // page. Checked here rather than in the schema so it reads as a rejected
+      // login instead of a form-validation hint, and still sends no request.
+      if (nationalId !== digitsFaToEn(data.password)) {
+        setFormError(t("errors.invalidCredentials"));
+        return;
+      }
+
       mutate(
         { params: signInProbeParams(nationalId) },
         {
           onSuccess: (records) => {
-            // An empty array is a real answer ("no such patient"), not a
-            // failure. Collapsing the two would tell someone their id was
-            // wrong when the service was simply down.
+            // Nothing found reads as bad credentials, not as "no such patient" —
+            // a normal sign-in does not confirm which accounts exist. A failed
+            // request stays distinct, so a dead upstream is not blamed on the
+            // person typing.
             if (records.length === 0) {
-              setFormError(t("errors.noRecords"));
+              setFormError(t("errors.invalidCredentials"));
               return;
             }
             signIn(nationalId);
@@ -152,8 +156,6 @@ export function Client() {
                   </FormItem>
                 )}
               />
-
-              <p className="text-xs text-muted-foreground">{t("notice")}</p>
 
               {formError && (
                 <p role="alert" className="text-destructive text-sm text-center">
