@@ -103,7 +103,14 @@ Checked programmatically, not by eye. WCAG 2.1, both themes.
 | `info-foreground` on `info` | 4.5 : 1 |
 | `sidebar-foreground` on `sidebar` | 7.0 : 1 |
 | `sidebar-accent-foreground` on `sidebar-accent` | 4.5 : 1 |
-| `border` on `background` | 3.0 : 1 (non-text UI component) |
+| `input` on `background` | 3.0 : 1 — an **interactive** control boundary, which is what WCAG 1.4.11 actually covers |
+| `border` on `background` | 1.4 : 1 minimum — a decorative divider. It must be *visible*, not prominent. |
+
+> **Corrected 2026-09-05.** This originally required `border` ≥ 3:1, which was a misreading
+> of WCAG 1.4.11: the 3:1 non-text rule applies to interactive component boundaries and
+> meaningful graphics, not to dividers and card outlines. Meeting 3:1 against a near-white
+> ground forces a mid-grey, which is why every border in the first build looked heavy.
+> Inputs keep the real requirement; dividers become hairlines.
 | each `chart-1..8` on `background` | 3.0 : 1 |
 | each `chart-1..8` on `card` | 3.0 : 1 |
 

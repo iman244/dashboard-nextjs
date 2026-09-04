@@ -136,7 +136,7 @@
   --info-foreground: oklch(0.985 0.006 232);
 
   /* UI chrome */
-  --border: oklch(0.64 0.012 285);
+  --border: oklch(0.855 0.006 285);
   --input: oklch(0.64 0.012 285);
 
   /* Charts — categorical: 8 hues round the wheel, lightness deliberately
@@ -175,7 +175,7 @@
   --sidebar-accent: oklch(0.895 0.03 252);
   --sidebar-accent-foreground: oklch(0.33 0.085 252);
 
-  --sidebar-border: oklch(0.8 0.008 285);
+  --sidebar-border: oklch(0.875 0.006 285);
   --sidebar-ring: oklch(0.55 0.14 252);
 }
 
@@ -220,7 +220,7 @@
   --info-foreground: oklch(0.99 0.005 232);
 
   /* UI chrome */
-  --border: oklch(0.49 0.012 285);
+  --border: oklch(0.315 0.010 285);
   --input: oklch(0.49 0.012 285);
 
   /* Charts — categorical: same eight hues, same order, re-tuned for a dark
@@ -259,7 +259,7 @@
   --sidebar-accent: oklch(0.32 0.045 252);
   --sidebar-accent-foreground: oklch(0.93 0.03 252);
 
-  --sidebar-border: oklch(0.355 0.012 285);
+  --sidebar-border: oklch(0.275 0.010 285);
   --sidebar-ring: oklch(0.64 0.13 252);
 }
 
