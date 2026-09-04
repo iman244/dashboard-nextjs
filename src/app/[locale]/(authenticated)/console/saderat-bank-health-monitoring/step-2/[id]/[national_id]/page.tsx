@@ -6,16 +6,29 @@ import { AlertCircle, ArrowRight, Inbox } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
-import { localeDigits } from "@/lib/utils";
+import { formatCellValue, localeDigits } from "@/lib/utils";
 import { useRetrieve_SBHM_API } from "@/data/saderat-bank-health-monitoring/api/retrieve";
 import {
   SBHM_DETAIL_PATH,
   type SBHM_Step2Record,
 } from "@/data/saderat-bank-health-monitoring/types";
-import { STEP2_FIELD_GROUPS, noteKeyFor } from "../_detail/field-groups";
-import { RecordCards } from "../../../_detail/record-cards";
+import {
+  BadgeItem,
+  SectionCard,
+  StatCard,
+  TextCard,
+  isBlank,
+} from "../../../_detail/blocks";
+import { STEP2_SECTIONS, STEP2_VITALS } from "../_detail/sections";
+import { noteKeyFor } from "../_detail/notes";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrTimeline } from "../../../_ehr/timeline";
@@ -23,15 +36,96 @@ import { EhrTimelineTable } from "../../../_ehr/timeline-table";
 import { PatientReportLink } from "../../../_ehr/patient-report-link";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 
+/** One step_2 record, laid out the way the step-1 person page lays out its own. */
+const RecordSections = ({ record }: { record: SBHM_Step2Record }) => {
+  const t = useTranslations("/console/saderat-bank-health-monitoring.Detail");
+  const locale = useLocale();
+
+  const vitals = STEP2_VITALS.filter((v) => !isBlank(record[v.field]));
+
+  return (
+    <>
+      {vitals.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {vitals.map((vital) => (
+            <StatCard
+              key={vital.field}
+              icon={vital.icon}
+              label={vital.field}
+              unit={vital.unit}
+              value={formatCellValue(record[vital.field] as string, locale)}
+              group={
+                vital.groupField
+                  ? (record[vital.groupField] as string | null)
+                  : undefined
+              }
+            />
+          ))}
+        </div>
+      )}
+
+      {STEP2_SECTIONS.map((section) => {
+        // a note belongs under the field it annotates, never as a row of its own
+        const notes = new Set(
+          section.fields
+            .map((f) => noteKeyFor(f))
+            .filter((n): n is NonNullable<typeof n> => Boolean(n))
+        );
+        const fields = section.fields.filter(
+          (f) => !notes.has(f) && !isBlank(record[f])
+        );
+        if (fields.length === 0) return null;
+
+        if (section.kind === "texts") {
+          return (
+            <div key={section.titleKey} className="grid gap-4 md:grid-cols-2">
+              {fields.map((field) => (
+                <TextCard
+                  key={field}
+                  icon={section.icon}
+                  title={field}
+                  value={record[field]}
+                />
+              ))}
+            </div>
+          );
+        }
+
+        return (
+          <SectionCard
+            key={section.titleKey}
+            icon={section.icon}
+            title={t(section.titleKey)}
+          >
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {fields.map((field) => {
+                const noteKey = noteKeyFor(field);
+                return (
+                  <BadgeItem
+                    key={field}
+                    label={field}
+                    value={record[field] as string | number | null}
+                    note={noteKey ? record[noteKey] : undefined}
+                  />
+                );
+              })}
+            </div>
+          </SectionCard>
+        );
+      })}
+    </>
+  );
+};
+
 const Step2PersonPage = (
-  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-2/[id]/[national_id]">,
+  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-2/[id]/[national_id]">
 ) => {
   const { id, national_id } = React.use(props.params);
   const t = useTranslations(
-    "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage",
+    "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage"
   );
   const tDetail = useTranslations(
-    "/console/saderat-bank-health-monitoring.Detail",
+    "/console/saderat-bank-health-monitoring.Detail"
   );
   const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
   const locale = useLocale();
@@ -58,7 +152,7 @@ const Step2PersonPage = (
   });
 
   const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(
-    null,
+    null
   );
   const recordDetail = useRecordDetail();
 
@@ -85,6 +179,8 @@ const Step2PersonPage = (
     );
   }
 
+  // The retrieve endpoint is shared between steps, so a step_1 id resolves here
+  // happily and would render nothing recognisable. Point it at the right view.
   if (data.type !== "step_2") {
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-3">
@@ -113,25 +209,51 @@ const Step2PersonPage = (
     );
   }
 
+  const person = matches[0];
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-bold">
-            {`${matches[0]["نام"] ?? ""} ${matches[0]["نام خانوادگی"] ?? ""}`.trim()}
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            {localeDigits(national_id, locale)} ·{" "}
-            {localeDigits(data.name, locale)}
-          </p>
-        </div>
-        <Button asChild variant="outline" size="sm">
-          <Link href={SBHM_DETAIL_PATH("step_2", data.id)}>
-            <ArrowRight className="h-4 w-4 rtl:rotate-180" />
-            {tDetail("backToReport")}
-          </Link>
-        </Button>
-      </div>
+    <div className="space-y-6 p-6">
+      {/* Patient Header — the card step-1 opens with */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl">
+                {`${person["نام"] ?? ""} ${person["نام خانوادگی"] ?? ""}`.trim()}
+              </CardTitle>
+              <CardDescription className="mt-2">
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <span>
+                    <strong>کد ملی:</strong>{" "}
+                    {formatCellValue(national_id, locale)}
+                  </span>
+                  <span>
+                    <strong>سن:</strong>{" "}
+                    {!isBlank(person["سن"])
+                      ? formatCellValue(person["سن"] as string, locale)
+                      : "-"}
+                  </span>
+                  <span>
+                    <strong>جنسیت:</strong>{" "}
+                    {!isBlank(person["جنسیت"])
+                      ? formatCellValue(person["جنسیت"] as string, locale)
+                      : "-"}
+                  </span>
+                  <span>
+                    <strong>پایش:</strong> {localeDigits(data.name, locale)}
+                  </span>
+                </div>
+              </CardDescription>
+            </div>
+            <Button asChild variant="outline" size="sm">
+              <Link href={SBHM_DETAIL_PATH("step_2", data.id)}>
+                <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+                {tDetail("backToReport")}
+              </Link>
+            </Button>
+          </div>
+        </CardHeader>
+      </Card>
 
       {matches.length > 1 && (
         <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/40">
@@ -160,17 +282,13 @@ const Step2PersonPage = (
       </Card>
 
       {matches.map((record, i) => (
-        <div key={i} className="space-y-4">
+        <div key={i} className="space-y-6">
           {matches.length > 1 && (
             <Badge variant="secondary">
               {tDetail("recordIndex", { index: localeDigits(i + 1, locale) })}
             </Badge>
           )}
-          <RecordCards
-            groups={STEP2_FIELD_GROUPS}
-            record={record}
-            noteKeyFor={noteKeyFor}
-          />
+          <RecordSections record={record} />
         </div>
       ))}
 

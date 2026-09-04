@@ -399,27 +399,6 @@
         "additionalTests": "آزمایشات تکمیلی مورد نیاز"
       }
     },
-    "Detail": {
-      "notFound": "رکوردی با این کد ملی در این پایش یافت نشد.",
-      "backToReport": "بازگشت به گزارش",
-      "duplicateNationalId": "این کد ملی در {count} رکورد وجود دارد. همه در ادامه نمایش داده شده‌اند.",
-      "recordIndex": "رکورد {index}",
-      "groups": {
-        "identity": "مشخصات",
-        "vitals": "علائم حیاتی",
-        "labs": "آزمایشات",
-        "urinalysis": "آزمایش ادرار",
-        "ecg": "نوار قلب",
-        "clinicalExam": "معاینات بالینی",
-        "musculoskeletal": "سیستم عضلانی اسکلتی",
-        "dental": "دهان و دندان",
-        "imaging": "تصویربرداری",
-        "medicalHistory": "سوابق پزشکی",
-        "occupationalRisk": "عوامل زیان‌آور شغلی",
-        "followUp": "پیگیری",
-        "administrative": "اطلاعات اداری"
-      }
-    },
     "Ehr": {
       "resultCount": "{count} نتیجه",
       "rangeLabel": "محدوده طبیعی",
@@ -446,6 +425,25 @@
       "viewDetails": "مشاهده جزئیات",
       "viewTrend": "نمودار روند",
       "noRecords": "سابقه الکترونیکی برای این فرد یافت نشد."
+    },
+    "Detail": {
+      "notFound": "رکوردی با این کد ملی در این پایش یافت نشد.",
+      "backToReport": "بازگشت به گزارش",
+      "duplicateNationalId": "این کد ملی در {count} رکورد وجود دارد. همه در ادامه نمایش داده شده‌اند.",
+      "recordIndex": "رکورد {index}",
+      "sections": {
+        "ecg": "نوار قلب",
+        "clinicalExam": "معاینات بالینی",
+        "dental": "دهان و حلق و دندان",
+        "womensHealth": "معاینات زنان و پستان",
+        "imaging": "تصویربرداری و تست‌های تشخیصی",
+        "musculoskeletal": "سیستم عضلانی اسکلتی",
+        "medicalHistory": "سوابق پزشکی",
+        "occupationalRisk": "عوامل زیان‌آور شغلی",
+        "smoking": "مصرف دخانیات",
+        "administrative": "اطلاعات اداری",
+        "followUp": "پیگیری"
+      }
     }
   }
 }

@@ -399,27 +399,6 @@
         "additionalTests": "Additional Tests Required"
       }
     },
-    "Detail": {
-      "notFound": "No record with this national ID in this monitoring.",
-      "backToReport": "Back to report",
-      "duplicateNationalId": "This national ID appears on {count} records. All are shown below.",
-      "recordIndex": "Record {index}",
-      "groups": {
-        "identity": "Identity",
-        "vitals": "Vital Signs",
-        "labs": "Laboratory",
-        "urinalysis": "Urinalysis",
-        "ecg": "ECG",
-        "clinicalExam": "Clinical Examination",
-        "musculoskeletal": "Musculoskeletal",
-        "dental": "Oral & Dental",
-        "imaging": "Imaging",
-        "medicalHistory": "Medical History",
-        "occupationalRisk": "Occupational Risk Factors",
-        "followUp": "Follow-up",
-        "administrative": "Administrative"
-      }
-    },
     "Ehr": {
       "resultCount": "{count} results",
       "rangeLabel": "Normal range",
@@ -446,6 +425,25 @@
       "viewDetails": "View details",
       "viewTrend": "Trend chart",
       "noRecords": "No electronic records found for this person."
+    },
+    "Detail": {
+      "notFound": "No record with this national ID in this monitoring.",
+      "backToReport": "Back to report",
+      "duplicateNationalId": "This national ID appears on {count} records. All are shown below.",
+      "recordIndex": "Record {index}",
+      "sections": {
+        "ecg": "Electrocardiogram",
+        "clinicalExam": "Clinical Examination",
+        "dental": "Oral, Throat & Dental",
+        "womensHealth": "Breast & Gynaecological Examination",
+        "imaging": "Imaging & Diagnostic Tests",
+        "musculoskeletal": "Musculoskeletal System",
+        "medicalHistory": "Medical History",
+        "occupationalRisk": "Occupational Hazards",
+        "smoking": "Tobacco Use",
+        "administrative": "Administrative",
+        "followUp": "Follow-up"
+      }
     }
   }
 }
