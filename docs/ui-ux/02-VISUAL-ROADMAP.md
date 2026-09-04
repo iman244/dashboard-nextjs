@@ -131,15 +131,34 @@ Ordered by dependency. Each has an ID so we can refer to it without re-explainin
 
 ---
 
-## Status
+## Status (updated 2026-09-05)
 
-| Phase | State |
-|---|---|
-| A — Tokens | not started |
-| B — Typography | not started |
-| C — Layout | not started |
-| D — Components | not started |
-| E — Charts | not started |
+| ID | Item | State |
+|---|---|---|
+| **VIS-01** | Colour token layer | ✅ Rebuilt from `ui-ux-pro-max` `colors.csv` row 182 |
+| **VIS-02** | Light/dark same family | ✅ |
+| **VIS-03** | Three chart scales | ✅ categorical / sequential / diverging |
+| **VIS-04** | Contrast + CVD validation | ✅ `scripts/check-tokens.mjs`, exits non-zero |
+| **VIS-05** | Type scale | 🟡 partial — `PageHeader` on Tailwind steps; no project-wide scale |
+| **VIS-06** | Persian typography (leading, tracking) | ❌ not started |
+| **VIS-07** | `tabular-nums` | ✅ on both table components |
+| **VIS-08** | Vazirmatn / Geist optical harmony | ❌ not started |
+| **VIS-09** | Page shell with header slot | ✅ `PageHeader` on all four routes, with breadcrumbs |
+| **VIS-10** | Spacing scale, card density | 🟡 partial — done on sign-in and tables only |
+| **VIS-11** | Break up the 24-chart wall into panels | ❌ **not started — biggest remaining item** |
+| **VIS-12** | Elevation / shadow system | ❌ not started |
+| **VIS-13** | Status badge vocabulary | ✅ on semantic tokens, no hardcoded colours left |
+| **VIS-14** | Table polish | ✅ headers, hover, `overflow-x-auto`, `aria-busy` |
+| **VIS-15** | Focus / hover states | 🟡 partial — verified on sign-in only |
+| **VIS-16** | Empty / loading / error consistency | 🟡 partial |
+| **VIS-17** | Right scale per chart | ✅ stopped cycling hues on 24 single-series charts |
+| **VIS-18** | Axis, gridline, tooltip styling | ❌ not started |
+| **VIS-19** | Reconsider the gender pie | ❌ not started |
+| — | Theme toggle in console + sign-in (UX-08) | ✅ |
+
+**The gap that matters most: none of the console work has been seen in a browser.**
+Every authenticated route is behind a Django login that has not been available, so
+VIS-09, 13, 14, 17 are typechecked and built but visually unverified.
 
 ## Decisions log
 
