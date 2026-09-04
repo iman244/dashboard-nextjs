@@ -148,48 +148,11 @@
         "password": {
           "label": "رمز عبور",
           "placeholder": "رمز عبور خود را وارد کنید"
-        },
-        "register": {
-          "label": "حساب کاربری ندارید؟",
-          "link": "ثبت نام"
         }
       },
       "validation": {
         "usernameRequired": "وارد کردن نام کاربری الزامی است",
         "passwordRequired": "وارد کردن رمز عبور الزامی است"
-      }
-    }
-  },
-  "/authentication/register": {
-    "SignUpPage": {
-      "title": "ثبت نام",
-      "description": "ایجاد حساب کاربری",
-      "buttons": {
-        "signUp": "ثبت نام",
-        "signingUp": "در حال ثبت نام..."
-      },
-      "form": {
-        "api": {
-          "username": {
-            "error": "نام کاربری در سیستم وجود دارد"
-          }
-        },
-        "username": {
-          "label": "نام کاربری",
-          "placeholder": "نام کاربری خود را وارد کنید"
-        },
-        "email": {
-          "label": "ایمیل (اختیاری)",
-          "placeholder": "ایمیل خود را وارد کنید"
-        },
-        "password": {
-          "label": "رمز عبور",
-          "placeholder": "رمز عبور خود را وارد کنید"
-        },
-        "signIn": {
-          "label": "حساب کاربری دارید؟",
-          "link": "ورود"
-        }
       }
     }
   },

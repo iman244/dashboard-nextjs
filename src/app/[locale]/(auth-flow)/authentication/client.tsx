@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
-// import { Link } from "@/i18n/navigation"; // only used by the disabled signup link below
 import { useLocale, useTranslations } from "next-intl";
 import {
   Card,
@@ -30,7 +29,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-// import { cn } from "@/lib/utils"; // only used by the disabled signup link below
 
 // Define the form schema. Built from `t` rather than at module scope so the
 // validation messages reach the user in their own language; these render through
@@ -146,21 +144,6 @@ export function Client() {
             </form>
           </Form>
 
-          {/* Signup is disabled: this is the only UI entry point to
-              /authentication/register, and that route now returns 404.
-              Uncomment both to re-enable signup. */}
-          {/* <div className="text-center! text-sm">
-            <span className="text-muted-foreground">
-              {t("form.register.label")}
-            </span>
-            <Link
-              href="/authentication/register"
-              className={cn("text-primary hover:underline font-medium", locale === "fa" ? "mr-2" : "ml-2")}
-
-            >
-              {t("form.register.link")}
-            </Link>
-          </div> */}
         </CardContent>
       </Card>
     </main>
