@@ -95,6 +95,12 @@
       "Previous page": "صفحه قبلی",
       "Next page": "صفحه بعدی",
       "Last page": "صفحه آخر"
+    },
+    "SBHM_Step": {
+      "Label": "مرحله",
+      "Placeholder": "مرحله را انتخاب کنید",
+      "Step1": "مرحله ۱",
+      "Step2": "مرحله ۲"
     }
   },
   "/": {

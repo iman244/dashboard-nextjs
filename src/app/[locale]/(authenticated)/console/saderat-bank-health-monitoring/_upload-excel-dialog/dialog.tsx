@@ -17,9 +17,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { LIST_SBHM_QUERY_KEY } from "@/data/saderat-bank-health-monitoring/api";
 import { useUploadExcelApi } from "@/data/saderat-bank-health-monitoring/api/upload-excel";
+import {
+  SBHM_TYPES,
+  SBHM_TYPE_LABEL_KEY,
+} from "@/data/saderat-bank-health-monitoring/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -30,6 +41,7 @@ import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string(),
+  type: z.enum(SBHM_TYPES),
   file: z.instanceof(File),
 });
 
@@ -43,6 +55,7 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
   const [open, setOpen] = React.useState(false);
   const queryClient = useQueryClient();
   const t = useTranslations("/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog");
+  const tStep = useTranslations("common.SBHM_Step");
 
   const { mutate: uploadExcel, isPending } = useUploadExcelApi();
   const form = useForm<FormValues>({
@@ -103,6 +116,34 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                   <FormControl>
                     <Input {...field} placeholder={t("Form.NamePlaceholder")} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{tStep("Label")}</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={tStep("Placeholder")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {SBHM_TYPES.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {tStep(SBHM_TYPE_LABEL_KEY(type))}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
