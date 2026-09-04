@@ -158,6 +158,11 @@
         "signingUp": "Signing up..."
       },
       "form": {
+        "api": {
+          "username": {
+            "error": "Username already exists."
+          }
+        },
         "username": {
           "label": "Username",
           "placeholder": "Enter your username"
@@ -179,7 +184,7 @@
   },
   "/auth-authenticated": {
     "AuthAuthenticated": {
-      "description": "You are authenticated, you will be redirected to the desired page in a few seconds.",
+      "description1": "You are authenticated, you will be redirected to the desired page in a few seconds.",
       "description2": "If you are not redirected, please click the button below.",
       "redirect": "Redirect"
     }
@@ -251,6 +256,8 @@
       "nationalNumberPlaceholder": "Enter national number",
       "dateRange": "Select date range",
       "selectDateRange": "Select date range",
+      "patientType": "Patient Type",
+      "selectPatientType": "Select Patient Type",
       "generateReport": "Generate Report",
       "reportResults": "Report Results",
       "totalRecords": "Total Records",
@@ -287,7 +294,8 @@
       "patientCount": "Patient Count",
       "service": "Service",
       "count": "Count",
-      "patientType": "Patient Type"
+      "patientType": "Patient Type",
+      "selectPatientType": "Select Patient Type"
     },
     "RecordCountChart": {
       "noDataAvailable": "No data available",
