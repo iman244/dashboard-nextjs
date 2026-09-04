@@ -25,7 +25,7 @@ type ChartDataPoint = {
 const chartConfig: ChartConfig = {
   count: {
     label: "تعداد خدمات",
-    color: "var(--chart-3)",
+    color: "var(--chart-1)",
   },
 };
 

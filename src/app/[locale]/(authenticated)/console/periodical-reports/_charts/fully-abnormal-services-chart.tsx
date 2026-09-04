@@ -29,7 +29,7 @@ type ChartDataPoint = {
 const fullyAbnormalChartConfig: ChartConfig = {
   abnormalCount: {
     label: "نتایج غیرطبیعی",
-    color: "#ff8c00",
+    color: "var(--chart-2)",
   },
 };
 

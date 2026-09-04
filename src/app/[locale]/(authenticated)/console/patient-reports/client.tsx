@@ -80,23 +80,23 @@ const columnHelper = createColumnHelper<AppTableFeatures, ServiceCountData>();
 const serviceTrendChartConfig: ChartConfig = {
   testValue: {
     label: "مقدار آزمایش",
-    color: "#2563eb", // Blue for test values
+    color: "var(--chart-1)", // the measured series
   },
   normalRangeMin: {
     label: "حد پایین نرمال",
-    color: "#16a34a", // Green for normal range
+    color: "var(--success)", // reference range bound
   },
   normalRangeMax: {
     label: "حد بالای نرمال",
-    color: "#16a34a", // Green for normal range
+    color: "var(--success)", // reference range bound
   },
   normalArea: {
     label: "محدوده طبیعی",
-    color: "#16a34a", // Green for normal area
+    color: "var(--success)", // the in-range band
   },
   abnormalArea: {
     label: "محدوده غیرطبیعی",
-    color: "#dc2626", // Red for abnormal area
+    color: "var(--destructive)", // out-of-range band
   },
 };
 

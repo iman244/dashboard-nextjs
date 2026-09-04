@@ -30,11 +30,11 @@ type ChartDataPoint = {
 const serviceChartConfig: ChartConfig = {
   normalCount: {
     label: "نتایج طبیعی",
-    color: "#000000",
+    color: "var(--chart-1)",
   },
   abnormalCount: {
     label: "نتایج غیرطبیعی",
-    color: "#ff8c00",
+    color: "var(--chart-2)",
   },
 };
 

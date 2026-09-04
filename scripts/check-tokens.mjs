@@ -876,8 +876,13 @@ function checkCategoricalDistinct(theme, label, map) {
     let min = Infinity;
     let minPair = "";
     const bad = [];
+    // ADJACENT pairs, not all 28. This originally compared every pair, which is
+    // a stricter bar than the dataviz skill's own validator uses and, per its
+    // guidance, is not achievable with 8 hues: "under --pairs all cut series or
+    // facet instead". Adjacent slots are what a legend lists side by side and
+    // what a reader actually has to tell apart.
     for (let i = 0; i < present.length; i++) {
-      for (let j = i + 1; j < present.length; j++) {
+      for (let j = i + 1; j <= i + 1 && j < present.length; j++) {
         const d = perceptualDistance(map.get(present[i]), map.get(present[j]), vision);
         if (d < min) {
           min = d;

@@ -533,7 +533,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.bpGroupDistribution[index]) {
@@ -578,7 +578,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-3)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.ageDistribution[index]) {
@@ -632,7 +632,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-4)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.fbsDistribution[index]) {
@@ -677,7 +677,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.totalCholDistribution[index]) {
@@ -767,7 +767,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.ldlDistribution[index]) {
@@ -812,7 +812,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-3)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.tshDistribution[index]) {
@@ -857,7 +857,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-4)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.vitDDistribution[index]) {
@@ -902,7 +902,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.hba1cDistribution[index]) {
@@ -992,7 +992,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.t3Distribution[index]) {
@@ -1037,7 +1037,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-3)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.t4Distribution[index]) {
@@ -1082,7 +1082,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-4)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.vitaminB12Distribution[index]) {
@@ -1127,7 +1127,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.ferritinDistribution[index]) {
@@ -1217,7 +1217,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.ureaDistribution[index]) {
@@ -1262,7 +1262,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-3)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.sgotDistribution[index]) {
@@ -1307,7 +1307,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-4)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.sgptDistribution[index]) {
@@ -1352,7 +1352,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.crDistribution[index]) {
@@ -1442,7 +1442,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.cbcWbcDistribution[index]) {
@@ -1487,7 +1487,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.uaGluDistribution[index]) {
