@@ -28,15 +28,20 @@ export const DataTable = <TData extends RowData, TValue = unknown>({
   const emptyMessage = noDataMessage ?? t("NoResults");
 
   return (
-    <div className={`rounded-md border overflow-hidden ${className}`}>
+    // overflow-x-auto per ux-guidelines #71: a wide table must scroll inside its
+    // own container rather than break the page layout on narrow viewports.
+    <div className={`rounded-xl border border-border bg-card ${className}`}>
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="hover:bg-transparent">
               {headerGroup.headers.map((header) => (
-                <TableHead 
+                <TableHead
                   key={header.id}
-                  className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                  className={`h-10 text-xs font-medium tracking-wide text-muted-foreground ${
+                    header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                  }`}
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   <div className="flex items-center gap-2">
@@ -62,19 +67,22 @@ export const DataTable = <TData extends RowData, TValue = unknown>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
+              <TableRow key={row.id} className="border-border">
                 {row.getAllCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  // tabular-nums so Persian digits align vertically down a
+                  // column; proportional figures make a column of lab values
+                  // impossible to scan for outliers.
+                  <TableCell key={cell.id} className="py-3 tabular-nums">
                     <table.FlexRender cell={cell} />
                   </TableCell>
                 ))}
               </TableRow>
             ))
           ) : (
-            <TableRow>
+            <TableRow className="hover:bg-transparent">
               <TableCell
                 colSpan={columns.length}
-                className="h-24 text-center"
+                className="h-24 text-center text-muted-foreground"
               >
                 {emptyMessage}
               </TableCell>
@@ -82,6 +90,7 @@ export const DataTable = <TData extends RowData, TValue = unknown>({
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 };

@@ -102,11 +102,11 @@ const getStatusColor = (
 const getStatusIcon = (value: string | number | null) => {
   switch (getResultStatus(value)) {
     case "normal":
-      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+      return <CheckCircle2 className="size-4 text-success" />;
     case "high":
-      return <ArrowUp className="h-4 w-4 text-red-500" />;
+      return <ArrowUp className="size-4 text-destructive" />;
     case "low":
-      return <ArrowDown className="h-4 w-4 text-amber-500" />;
+      return <ArrowDown className="size-4 text-warning" />;
     default:
       return null;
   }
@@ -393,9 +393,9 @@ const PersonMonitoringPage = (
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               {abnormalFindings.length > 0 ? (
-                <AlertCircle className="h-5 w-5 text-red-500" />
+                <AlertCircle className="size-5 text-destructive" />
               ) : (
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <CheckCircle2 className="size-5 text-success" />
               )}
               <CardTitle>
                 {t("AbnormalFindings", {

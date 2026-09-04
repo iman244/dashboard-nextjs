@@ -96,7 +96,9 @@ const Client = () => {
       {(filters.nationalNumber ||
         filters.dateRange?.from ||
         filters.dateRange?.to) && (
-        <div className="flex items-center gap-2">
+        // flex-wrap per ux-guidelines #115: a chip collection must reflow,
+        // not clip, when space or text size changes.
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm font-medium text-foreground">فیلترها</span>
           {filters.nationalNumber && (
             <Badge
