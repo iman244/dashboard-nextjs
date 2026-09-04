@@ -71,9 +71,13 @@
  *                  sidebar are near-grey so that data colour carries meaning.
  * Brand          — hue 252, a deep blue. Actions, focus and identity only;
  *                  it should cover roughly 5% of any screen.
- * Semantics      — conventional: green success, amber warning, red danger,
- *                  blue info. Clinically opposite findings no longer have to
- *                  share the destructive red.
+ * Semantics      — conventional hues: green success, amber warning, red
+ *                  danger, blue info. Clinically opposite findings no longer
+ *                  have to share the destructive red. success and destructive
+ *                  are separated in LIGHTNESS as well as hue (success is the
+ *                  lighter of the two in both themes) because hue alone does
+ *                  not survive red/green deficiency, and that pair is how a
+ *                  clinician sees a lab value is out of range.
  * Charts         — three scales chosen by data shape, never interchangeable:
  *                  categorical (chart-1..8)   unordered categories
  *                  sequential  (chart-seq-1..5) ordered magnitude
@@ -118,8 +122,12 @@
   --destructive: oklch(0.505 0.195 27);
   --destructive-foreground: oklch(0.985 0.007 27);
 
-  --success: oklch(0.505 0.115 152);
-  --success-foreground: oklch(0.985 0.01 152);
+  /* success sits deliberately LIGHTER than destructive, not just a different
+   * hue. Both dichromacies drain luminance from red faster than from green,
+   * so ordering the two this way reinforces the confusion axis instead of
+   * fighting it — see the note above the semantics block. */
+  --success: oklch(0.7 0.12 152);
+  --success-foreground: oklch(0.24 0.045 152);
 
   --warning: oklch(0.72 0.155 68);
   --warning-foreground: oklch(0.24 0.045 68);
@@ -147,7 +155,7 @@
   --chart-seq-2: oklch(0.805 0.09 252);
   --chart-seq-3: oklch(0.675 0.135 252);
   --chart-seq-4: oklch(0.54 0.16 252);
-  --chart-seq-5: oklch(0.4 0.12 252);
+  --chart-seq-5: oklch(0.4 0.117 252);
 
   /* Charts — diverging: cool to neutral to warm, symmetric about the middle.
    * This is the scale for lab results: low <- normal -> high. */
@@ -198,11 +206,12 @@
   --ring: oklch(0.64 0.13 252);
 
   /* Semantics */
-  --destructive: oklch(0.58 0.205 27);
+  --destructive: oklch(0.555 0.205 27);
   --destructive-foreground: oklch(0.99 0.004 27);
 
-  --success: oklch(0.535 0.13 152);
-  --success-foreground: oklch(0.99 0.01 152);
+  /* Same lightness ordering as light: success above destructive. */
+  --success: oklch(0.76 0.13 152);
+  --success-foreground: oklch(0.23 0.045 152);
 
   --warning: oklch(0.76 0.155 68);
   --warning-foreground: oklch(0.23 0.045 68);
