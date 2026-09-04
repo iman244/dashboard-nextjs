@@ -27,7 +27,7 @@ type ChartDataPoint = {
 const patientChartConfig: ChartConfig = {
   patientCount: {
     label: "تعداد بیماران",
-    color: "hsl(var(--chart-2))",
+    color: "var(--chart-2)",
   },
 };
 

@@ -27,7 +27,7 @@ type ChartDataPoint = {
 const chartConfig: ChartConfig = {
   count: {
     label: "تعداد رکوردها",
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-1)",
   },
 };
 

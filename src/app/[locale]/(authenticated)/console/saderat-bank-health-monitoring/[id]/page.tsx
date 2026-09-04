@@ -13,6 +13,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
   ChartConfig,
 } from "@/components/ui/chart";
 import {
@@ -247,7 +249,16 @@ const MonitoringPage = (
     value: { label: "تعداد" },
   };
 
-  const COLORS = ["black", "gray", "brown", "red", "orange"];
+  // Theme ramp rather than raw CSS keywords: the previous palette
+  // ("black", "gray", "brown", "red", "orange") was invisible against the dark
+  // background and collapsed to a single hue under deuteranopia.
+  const COLORS = [
+    "var(--chart-1)",
+    "var(--chart-2)",
+    "var(--chart-3)",
+    "var(--chart-4)",
+    "var(--chart-5)",
+  ];
 
   // Custom tooltip that formats numbers with localeDigits
   const LocaleChartTooltip = (props: React.ComponentProps<typeof ChartTooltipContent>) => {
@@ -414,6 +425,7 @@ const MonitoringPage = (
                     ))}
                   </Pie>
                   <ChartTooltip content={<LocaleChartTooltip />} />
+                  <ChartLegend content={<ChartLegendContent nameKey="name" />} />
                 </PieChart>
               </ChartContainer>
             </CardContent>
@@ -908,7 +920,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="hsl(var(--chart-1))"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.tgDistribution[index]) {
@@ -1448,7 +1460,7 @@ const MonitoringPage = (
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="hsl(var(--chart-5))"
+                    fill="var(--chart-5)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.uaGluDistribution[index]) {
