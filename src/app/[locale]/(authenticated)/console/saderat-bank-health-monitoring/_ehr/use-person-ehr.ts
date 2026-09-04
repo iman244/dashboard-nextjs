@@ -83,9 +83,6 @@ export type PersonEhr = {
   /** Lab measurements only — what the band actually lists. */
   labResultCount: number;
   latestLabDate?: string;
-  /** Labs plus reports, for the timeline which plots both. */
-  totalResults: number;
-  latestDate?: string;
   /** Jalali sort key of the screening, for before/after comparisons. */
   examSortKey: number;
   /** The window these results were fetched over, so a link out can reuse it. */
@@ -222,8 +219,6 @@ const buildPersonEhr = (
           labs[0].latest
         ).date
       : undefined,
-    totalResults: points.length + reports.length,
-    latestDate: events[events.length - 1]?.date,
     examSortKey: range.examSortKey,
     fromDate: range.fromDate,
     toDate: range.toDate,

@@ -12,21 +12,27 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChartLine, Eye } from "lucide-react";
+import { AlertCircle, ChartLine, Eye, Inbox } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { cn, localeDigits } from "@/lib/utils";
 import { STATUS_STYLES, StatusIcon } from "./status-icon";
 import type { LabSeries, PersonEhr } from "./use-person-ehr";
 
 /**
- * Every point on the timeline, written out.
+ * Every electronic result for this person, newest first.
  *
- * The plot answers "when", and only roughly — dots sit on a shared axis and a
- * busy day collapses into one mark. This is the same events read exactly:
- * newest first, matching the reports card, with the before/after split the
- * red rule shows spatially stated per row.
+ * This replaced a dot plot on the same data. The plot showed only roughly
+ * when things happened — dots shared one axis and a busy day collapsed into a
+ * single mark — while the reading, its range and the service name all had to
+ * live in a tooltip. The table states each of them, and says per row which
+ * side of the screening a result falls on.
+ *
+ * Owns the pending and error states because it is the only thing left in the
+ * card: without them a failed fetch would render an empty card, which reads
+ * as "this person has no records".
  */
-export const EhrTimelineTable = ({
+export const EhrRecordsTable = ({
   ehr,
   onViewRecord,
   onSelectSeries,
@@ -50,7 +56,27 @@ export const EhrTimelineTable = ({
     [ehr.events]
   );
 
-  if (rows.length === 0) return null;
+  if (ehr.isPending) {
+    return <Skeleton className="h-24 w-full" />;
+  }
+
+  if (ehr.isError) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0" />
+        <span>{ehr.errorMessage || t("loadError")}</span>
+      </div>
+    );
+  }
+
+  if (rows.length === 0) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Inbox aria-hidden="true" className="h-4 w-4 shrink-0" />
+        <span>{t("noRecords")}</span>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto">

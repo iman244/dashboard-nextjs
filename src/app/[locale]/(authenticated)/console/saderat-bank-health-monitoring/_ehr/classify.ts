@@ -1,5 +1,4 @@
 import { digitsArToEn, digitsFaToEn } from "@persian-tools/persian-tools";
-import { newDate } from "date-fns-jalali";
 
 /**
  * Reading a lab result against its reference range.
@@ -87,19 +86,3 @@ export const jalaliSortKey = (raw: string | null | undefined): number => {
   return year * 10000 + month * 100 + day;
 };
 
-/**
- * Jalali `yyyy/MM/dd` to epoch millis.
- *
- * jalaliSortKey orders correctly but is not linear in days — 1404/01/31 to
- * 1404/02/01 is a jump of 70 — so anything that measures *distance* between
- * dates, such as the timeline, needs this instead.
- */
-export const jalaliTimestamp = (raw: string | null | undefined): number | null => {
-  if (!raw) return null;
-  const parts = toAscii(raw).split("/").map(Number);
-  if (parts.length < 3 || parts.some((n) => !Number.isFinite(n))) return null;
-  const [year, month, day] = parts;
-  const date = newDate(year, month - 1, day);
-  const time = date.getTime();
-  return Number.isFinite(time) ? time : null;
-};

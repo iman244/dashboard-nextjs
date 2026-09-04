@@ -400,13 +400,11 @@
       }
     },
     "Ehr": {
+      "recordsTitle": "Electronic Health Records",
       "resultCount": "{count} results",
       "rangeLabel": "Normal range",
       "noRange": "No reference range",
       "loadError": "Could not load electronic health records.",
-      "timelineTitle": "Timeline",
-      "timelineHint": "Results before the red line are history; results after it are follow-up.",
-      "examMarker": "Screening",
       "chartValue": "Value",
       "chartMin": "Lower bound",
       "chartMax": "Upper bound",
@@ -414,8 +412,6 @@
       "notEnoughPoints": "A trend needs more than one measurement.",
       "afterScreening": "After screening",
       "openPatientReport": "Full Patient Report",
-      "legendResult": "Each dot is a day with a recorded result (a larger dot means more than one)",
-      "legendExam": "Screening date ({date})",
       "tableDate": "Date",
       "tableService": "Service",
       "tableResult": "Result",

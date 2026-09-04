@@ -37,8 +37,7 @@ import {
 import { noteKeyFor } from "../_detail/notes";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
-import { EhrTimeline } from "../../../_ehr/timeline";
-import { EhrTimelineTable } from "../../../_ehr/timeline-table";
+import { EhrRecordsTable } from "../../../_ehr/records-table";
 import { PatientReportLink } from "../../../_ehr/patient-report-link";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 
@@ -282,12 +281,11 @@ const Step2PersonPage = (
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-4">
-          <CardTitle>{tEhr("timelineTitle")}</CardTitle>
+          <CardTitle>{tEhr("recordsTitle")}</CardTitle>
           <PatientReportLink ehr={ehr} nationalId={national_id} />
         </CardHeader>
-        <CardContent className="space-y-6">
-          <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
-          <EhrTimelineTable
+        <CardContent>
+          <EhrRecordsTable
             ehr={ehr}
             onViewRecord={recordDetail.open}
             onSelectSeries={setSelectedSeries}
