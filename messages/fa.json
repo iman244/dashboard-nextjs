@@ -357,7 +357,41 @@
       "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی...",
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
-      "NoResults": "نتیجه‌ای یافت نشد"
+      "NoResults": "نتیجه‌ای یافت نشد",
+      "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
+      "WrongStepAction": "مشاهده در نمای درست"
+    },
+    "Step2Report": {
+      "recordCount": "{count} رکورد",
+      "sections": {
+        "demographics": "اطلاعات جمعیت‌شناختی",
+        "clinicalExam": "معاینات بالینی",
+        "occupationalRisk": "عوامل زیان‌آور شغلی"
+      },
+      "charts": {
+        "gender": "جنسیت",
+        "employmentType": "نوع استخدام",
+        "region": "منطقه",
+        "jobTitle": "عنوان شغل",
+        "heart": "قلب",
+        "digestive": "گوارش",
+        "neurology": "نورولوژی",
+        "headNeck": "سر و گردن",
+        "respiratory": "سیستم تنفسی",
+        "hematology": "هماتولوژی",
+        "rheumatology": "روماتولوژی",
+        "endocrinology": "اندوکرینولوژی",
+        "breast": "پستان",
+        "sinuses": "بینی و سینوس‌ها",
+        "dental": "دهان و حلق و دندان",
+        "skinHair": "پوست و مو",
+        "generalSymptoms": "علائم عمومی",
+        "smoking": "مصرف سیگار",
+        "physicalFactors": "عوامل فیزیکی",
+        "chemicalFactors": "عوامل شیمیایی",
+        "ergonomicFactors": "عوامل ارگونومیک",
+        "psychologicalFactors": "عوامل روانی"
+      }
     }
   }
 }
