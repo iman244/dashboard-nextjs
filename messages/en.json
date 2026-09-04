@@ -416,17 +416,9 @@
       }
     },
     "Ehr": {
-      "title": "Electronic Health Records",
       "resultCount": "{count} results",
-      "latest": "latest {date}",
-      "abnormalCount": "{count} abnormal",
-      "normalCount": "{count} normal",
       "rangeLabel": "Normal range",
       "noRange": "No reference range",
-      "showAll": "Show {count} more",
-      "showLess": "Show less",
-      "noLabs": "No lab results on record for this person.",
-      "noLabsButReports": "No lab results recorded; {count} report(s) listed under Electronic Reports below.",
       "loadError": "Could not load electronic health records.",
       "timelineTitle": "Timeline",
       "timelineHint": "Results before the red line are history; results after it are follow-up.",
@@ -436,8 +428,6 @@
       "chartMax": "Upper bound",
       "measurementCount": "{count} measurements",
       "notEnoughPoints": "A trend needs more than one measurement.",
-      "unknownCount": "{count} unreadable",
-      "reportsTitle": "Electronic Reports",
       "afterScreening": "After screening",
       "openPatientReport": "Full Patient Report",
       "legendResult": "Each dot is a day with a recorded result (a larger dot means more than one)",
@@ -448,7 +438,9 @@
       "tableWhen": "Relative to Screening",
       "beforeScreening": "Before screening",
       "andMore": "and {count} more",
-      "viewDetails": "View details"
+      "viewDetails": "View details",
+      "viewTrend": "Trend chart",
+      "noRecords": "No electronic records found for this person."
     }
   }
 }

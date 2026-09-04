@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { ChartLine, Eye } from "lucide-react";
 import type { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { cn, localeDigits } from "@/lib/utils";
 import { STATUS_STYLES, StatusIcon } from "./status-icon";
-import type { PersonEhr } from "./use-person-ehr";
+import type { LabSeries, PersonEhr } from "./use-person-ehr";
 
 /**
  * Every point on the timeline, written out.
@@ -29,9 +29,11 @@ import type { PersonEhr } from "./use-person-ehr";
 export const EhrTimelineTable = ({
   ehr,
   onViewRecord,
+  onSelectSeries,
 }: {
   ehr: PersonEhr;
   onViewRecord: (record: ElectronicHealthRecord) => void;
+  onSelectSeries: (series: LabSeries) => void;
 }) => {
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.Ehr"
@@ -101,14 +103,31 @@ export const EhrTimelineTable = ({
                 )}
               </TableCell>
               <TableCell>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label={`${t("viewDetails")} — ${row.service}`}
-                  onClick={() => onViewRecord(row.raw)}
-                >
-                  <Eye aria-hidden="true" className="h-4 w-4" />
-                </Button>
+                <span className="flex items-center gap-1">
+                  {row.kind === "lab" && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`${t("viewTrend")} — ${row.service}`}
+                      onClick={() => {
+                        const series = ehr.labs.find(
+                          (l) => l.service === row.service
+                        );
+                        if (series) onSelectSeries(series);
+                      }}
+                    >
+                      <ChartLine aria-hidden="true" className="h-4 w-4" />
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={`${t("viewDetails")} — ${row.service}`}
+                    onClick={() => onViewRecord(row.raw)}
+                  >
+                    <Eye aria-hidden="true" className="h-4 w-4" />
+                  </Button>
+                </span>
               </TableCell>
             </TableRow>
           ))}

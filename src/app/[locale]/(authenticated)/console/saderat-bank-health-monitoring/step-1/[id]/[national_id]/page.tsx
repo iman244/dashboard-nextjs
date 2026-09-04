@@ -31,11 +31,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
-import { EhrSummaryBand } from "../../../_ehr/summary-band";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrTimeline } from "../../../_ehr/timeline";
 import { EhrTimelineTable } from "../../../_ehr/timeline-table";
-import { EhrReports } from "../../../_ehr/reports";
+import { PatientReportLink } from "../../../_ehr/patient-report-link";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { Button } from "@/components/ui/button";
@@ -308,20 +307,20 @@ const PersonMonitoringPage = (
         </CardHeader>
       </Card>
 
-      <EhrSummaryBand
-        ehr={ehr}
-        nationalId={national_id}
-        onSelectSeries={setSelectedSeries}
-      />
 
-      {ehr.hasAny && data && (
+      {data && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between gap-4">
             <CardTitle>{tEhr("timelineTitle")}</CardTitle>
+            <PatientReportLink ehr={ehr} nationalId={national_id} />
           </CardHeader>
           <CardContent className="space-y-6">
             <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
-            <EhrTimelineTable ehr={ehr} onViewRecord={recordDetail.open} />
+            <EhrTimelineTable
+              ehr={ehr}
+              onViewRecord={recordDetail.open}
+              onSelectSeries={setSelectedSeries}
+            />
           </CardContent>
         </Card>
       )}
@@ -1127,7 +1126,6 @@ const PersonMonitoringPage = (
         </div>
       )}
 
-      <EhrReports ehr={ehr} onViewRecord={recordDetail.open} />
 
       <EhrTrendDialog
         series={selectedSeries}

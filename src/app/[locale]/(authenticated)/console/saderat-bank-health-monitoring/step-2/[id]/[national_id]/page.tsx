@@ -16,11 +16,10 @@ import {
 } from "@/data/saderat-bank-health-monitoring/types";
 import { STEP2_FIELD_GROUPS, noteKeyFor } from "../_detail/field-groups";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
-import { EhrSummaryBand } from "../../../_ehr/summary-band";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrTimeline } from "../../../_ehr/timeline";
 import { EhrTimelineTable } from "../../../_ehr/timeline-table";
-import { EhrReports } from "../../../_ehr/reports";
+import { PatientReportLink } from "../../../_ehr/patient-report-link";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 
 const isEmpty = (v: unknown) => v === null || v === undefined || v === "";
@@ -49,14 +48,14 @@ const FieldRow = ({
 );
 
 const Step2PersonPage = (
-  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-2/[id]/[national_id]">
+  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-2/[id]/[national_id]">,
 ) => {
   const { id, national_id } = React.use(props.params);
   const t = useTranslations(
-    "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage"
+    "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage",
   );
   const tDetail = useTranslations(
-    "/console/saderat-bank-health-monitoring.Step2Detail"
+    "/console/saderat-bank-health-monitoring.Step2Detail",
   );
   const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
   const locale = useLocale();
@@ -83,7 +82,7 @@ const Step2PersonPage = (
   });
 
   const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(
-    null
+    null,
   );
   const recordDetail = useRecordDetail();
 
@@ -146,7 +145,8 @@ const Step2PersonPage = (
             {`${matches[0]["نام"] ?? ""} ${matches[0]["نام خانوادگی"] ?? ""}`.trim()}
           </h2>
           <p className="text-sm text-muted-foreground">
-            {localeDigits(national_id, locale)} · {localeDigits(data.name, locale)}
+            {localeDigits(national_id, locale)} ·{" "}
+            {localeDigits(data.name, locale)}
           </p>
         </div>
         <Button asChild variant="outline" size="sm">
@@ -168,23 +168,20 @@ const Step2PersonPage = (
         </div>
       )}
 
-      <EhrSummaryBand
-        ehr={ehr}
-        nationalId={national_id}
-        onSelectSeries={setSelectedSeries}
-      />
-
-      {ehr.hasAny && (
-        <Card>
-          <CardHeader>
-            <CardTitle>{tEhr("timelineTitle")}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
-            <EhrTimelineTable ehr={ehr} onViewRecord={recordDetail.open} />
-          </CardContent>
-        </Card>
-      )}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between gap-4">
+          <CardTitle>{tEhr("timelineTitle")}</CardTitle>
+          <PatientReportLink ehr={ehr} nationalId={national_id} />
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
+          <EhrTimelineTable
+            ehr={ehr}
+            onViewRecord={recordDetail.open}
+            onSelectSeries={setSelectedSeries}
+          />
+        </CardContent>
+      </Card>
 
       {matches.map((record, i) => (
         <div key={i} className="space-y-4">
@@ -223,8 +220,6 @@ const Step2PersonPage = (
           </div>
         </div>
       ))}
-
-      <EhrReports ehr={ehr} onViewRecord={recordDetail.open} />
 
       {recordDetail.modal}
 

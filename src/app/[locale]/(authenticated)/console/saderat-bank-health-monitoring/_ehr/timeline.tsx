@@ -8,6 +8,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { AlertCircle, Inbox } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn, localeDigits } from "@/lib/utils";
 import { StatusIcon } from "./status-icon";
 import { jalaliTimestamp } from "./classify";
@@ -73,7 +75,27 @@ export const EhrTimeline = ({
     };
   }, [ehr.events, campaignDate]);
 
-  if (!model) return null;
+  if (ehr.isPending) {
+    return <Skeleton className="h-24 w-full" />;
+  }
+
+  if (ehr.isError) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0" />
+        <span>{ehr.errorMessage || t("loadError")}</span>
+      </div>
+    );
+  }
+
+  if (!model) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Inbox aria-hidden="true" className="h-4 w-4 shrink-0" />
+        <span>{t("noRecords")}</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2">
