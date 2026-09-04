@@ -252,11 +252,17 @@ are wrong.
 Discovered while fixing other things. Each was deliberately left alone rather than
 silently widening a task's diff.
 
-- **UX-13 · Hardcoded English Zod messages in the auth flow.** The same defect as UX-12,
-  but outside the console: `(auth-flow)/authentication/client.tsx` and
-  `.../register/client.tsx` carry `"Username is required"`, `"Password is required"`,
-  `"Invalid email address"`, `"Password must be at least 8 characters"`. Persian-facing,
-  and on the **first screen every user sees**. ~5 keys, 2 files.
+- **UX-13 · Hardcoded English Zod messages in the auth flow** — ✅ **FIXED** (`9fcf3ae`).
+  `(auth-flow)/authentication/client.tsx` showed `"Username is required"` /
+  `"Password is required"` to Persian users on the first screen every user sees. Now
+  built from a `makeLoginSchema(t)` factory. **Verified in a real browser** — the only
+  change in this whole pass that was.
+- **UX-17 · `authentication/register/client.tsx` is dead code.** It has the same
+  hardcoded-English Zod defect (`"Invalid email address"`, `"Password must be at least 8
+  characters"`), but the route is disabled: the page file is `_page.tsx` and its only UI
+  entry point is commented out in the sign-in page. Translating it would add catalogue
+  entries for an unreachable screen. **Delete the file rather than translating it**, or
+  re-enable signup deliberately.
 - **UX-14 · Latent RTL anchor bug on three more chart axes.** `text-anchor` in SVG
   resolves against inline-base direction, so `textAnchor="end"` anchors the *left* edge
   of a Persian string now that `<html dir="rtl">` is set (Task 1). Task 10 fixed the two
