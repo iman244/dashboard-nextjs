@@ -142,11 +142,11 @@
       "form": {
         "username": {
           "label": "نام کاربری",
-          "placeholder": "ورود به حساب کاربری"
+          "placeholder": "نام کاربری خود را وارد کنید"
         },
         "password": {
           "label": "رمز عبور",
-          "placeholder": "ورود به حساب کاربری"
+          "placeholder": "رمز عبور خود را وارد کنید"
         },
         "register": {
           "label": "حساب کاربری ندارید؟",
@@ -240,7 +240,10 @@
       "selectPatientType": "انتخاب نوع بیمار",
       "search": "جستجو",
       "clear": "پاک کردن",
-      "description": "فیلترهای سوابق پزشکی الکترونیکی"
+      "description": "فیلترهای سوابق پزشکی الکترونیکی",
+      "validation": {
+        "patientTypeRequired": "انتخاب نوع بیمار الزامی است"
+      }
     },
     "PatientTypes": {
       "1": "اطلاعات بستري",
@@ -274,7 +277,12 @@
       "chartPlaceholder": "نمودار",
       "chartComingSoon": "نمودار به زودی",
       "errorMessage": "خطا در بارگذاری داده‌های گزارش",
-      "serviceChartTitle": "تعداد خدمات"
+      "serviceChartTitle": "تعداد خدمات",
+      "validation": {
+        "nationalNumberRequired": "وارد کردن شماره ملی الزامی است",
+        "patientTypeRequired": "انتخاب نوع بیمار الزامی است",
+        "dateRangeInvalid": "تاریخ پایان باید پس از تاریخ شروع باشد"
+      }
     }
   },
   "/console/periodical-reports": {
@@ -303,7 +311,10 @@
       "service": "خدمت",
       "count": "تعداد",
       "patientType": "نوع بیمار",
-      "selectPatientType": "انتخاب نوع بیمار"
+      "selectPatientType": "انتخاب نوع بیمار",
+      "validation": {
+        "patientTypeRequired": "انتخاب نوع بیمار الزامی است"
+      }
     },
     "RecordCountChart": {
       "noDataAvailable": "هیچ داده‌ای موجود نیست",

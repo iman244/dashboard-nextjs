@@ -326,7 +326,7 @@ const MonitoringPage = (
           }}
         >
           <Users className="h-4 w-4 ms-2" />
-          {t("SearchPersonnel") || "جستجوی پرسنل"}
+          {t("SearchPersonnel")}
         </Button>
       </div>
 

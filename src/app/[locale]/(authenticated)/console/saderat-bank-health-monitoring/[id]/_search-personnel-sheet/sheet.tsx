@@ -124,10 +124,9 @@ export function SearchPersonnelSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="h-[80vh] flex flex-col p-4">
         <SheetHeader>
-          <SheetTitle>{t("SearchPersonnel") || "جستجوی پرسنل"}</SheetTitle>
+          <SheetTitle>{t("SearchPersonnel")}</SheetTitle>
           <SheetDescription>
-            {filterDescription || t("SearchPersonnelDescription") ||
-              "جستجو و مشاهده جزئیات پرسنل"}
+            {filterDescription || t("SearchPersonnelDescription")}
           </SheetDescription>
         </SheetHeader>
 
@@ -179,7 +178,7 @@ export function SearchPersonnelSheet({
                       colSpan={table.getAllColumns().length}
                       className="text-center py-8 text-muted-foreground"
                     >
-                      {t("NoResults") || "نتیجه‌ای یافت نشد"}
+                      {t("NoResults")}
                     </TableCell>
                   </TableRow>
                 ) : (

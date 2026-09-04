@@ -36,15 +36,18 @@ import { DateRangePicker } from "@/components/app/date-range-picker";
 import { PatientTypeSelector } from "@/components/app/patient-type-selector";
 
 // Form schema using Zod
-const formSchema = z.object({
-  patientType: z.string().min(1, "Patient type is required"),
-  dateRange: z.object({
-    from: z.date(),
-    to: z.date(),
-  }),
-});
+const makeFormSchema = (t: (key: string) => string) =>
+  z.object({
+    patientType: z.string().min(1, t("validation.patientTypeRequired")),
+    dateRange: z.object({
+      from: z.date(),
+      to: z.date(),
+    }),
+  });
 
-export type PeriodicalReportsFormValues = z.infer<typeof formSchema>;
+export type PeriodicalReportsFormValues = z.infer<
+  ReturnType<typeof makeFormSchema>
+>;
 
 /**
  * Periodical Reports Date Range Form Component
@@ -57,6 +60,7 @@ export const PeriodicalReportsForm = (props: {
   console.log({ props });
   const t = useTranslations("/console/periodical-reports.PeriodicalReports");
   const { setFilters, ehrByNationalNumber_m, filters } = usePeriodicalReports();
+  const formSchema = React.useMemo(() => makeFormSchema(t), [t]);
 
   const form = useForm<PeriodicalReportsFormValues>({
     resolver: zodResolver(formSchema),

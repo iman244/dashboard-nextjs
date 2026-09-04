@@ -48,19 +48,20 @@ interface EHRFilterProps {
 }
 
 // Form schema using Zod
-const formSchema = z.object({
-  nationalNumber: z.string().default("").optional(),
-  patientType: z.string().min(1, "Patient type is required"),
-  dateRange: z
-    .object({
-      from: z.date().optional(),
-      to: z.date().optional(),
-    })
-    .optional()
-    .nullable(),
-});
+const makeFormSchema = (t: (key: string) => string) =>
+  z.object({
+    nationalNumber: z.string().default("").optional(),
+    patientType: z.string().min(1, t("validation.patientTypeRequired")),
+    dateRange: z
+      .object({
+        from: z.date().optional(),
+        to: z.date().optional(),
+      })
+      .optional()
+      .nullable(),
+  });
 
-export type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<ReturnType<typeof makeFormSchema>>;
 
 /**
  * EHR Filter Component
@@ -70,8 +71,8 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
   const t = useTranslations("/console/electronic-health-record.EHRFilter");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { setFilters, filters } = useElectronicHealthRecord();
+  const formSchema = React.useMemo(() => makeFormSchema(t), [t]);
 
-  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: filters,

@@ -240,7 +240,10 @@
       "selectPatientType": "Select patient type",
       "search": "Search",
       "clear": "Clear",
-      "description": "Filter electronic health records by various criteria"
+      "description": "Filter electronic health records by various criteria",
+      "validation": {
+        "patientTypeRequired": "Patient type is required"
+      }
     },
     "PatientTypes": {
       "1": "Inpatient Information",
@@ -274,7 +277,12 @@
       "chartPlaceholder": "Chart",
       "chartComingSoon": "Chart coming soon",
       "errorMessage": "Error loading report data",
-      "serviceChartTitle": "Service Count"
+      "serviceChartTitle": "Service Count",
+      "validation": {
+        "nationalNumberRequired": "National number is required",
+        "patientTypeRequired": "Patient type is required",
+        "dateRangeInvalid": "End date must be after start date"
+      }
     }
   },
   "/console/periodical-reports": {
@@ -303,7 +311,10 @@
       "service": "Service",
       "count": "Count",
       "patientType": "Patient Type",
-      "selectPatientType": "Select Patient Type"
+      "selectPatientType": "Select Patient Type",
+      "validation": {
+        "patientTypeRequired": "Patient type is required"
+      }
     },
     "RecordCountChart": {
       "noDataAvailable": "No data available",

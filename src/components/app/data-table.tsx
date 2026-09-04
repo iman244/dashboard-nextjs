@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ReactTable, ColumnDef, RowData } from "@tanstack/react-table";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
@@ -20,9 +21,11 @@ interface DataTableProps<TData extends RowData, TValue> {
 export const DataTable = <TData extends RowData, TValue = unknown>({ 
   table, 
   columns, 
-  noDataMessage = "هیچ داده‌ای موجود نیست",
+  noDataMessage,
   className = ""
 }: DataTableProps<TData, TValue>) => {
+  const t = useTranslations("common.Dictionary");
+  const emptyMessage = noDataMessage ?? t("NoResults");
 
   return (
     <div className={`rounded-md border overflow-hidden ${className}`}>
@@ -73,7 +76,7 @@ export const DataTable = <TData extends RowData, TValue = unknown>({
                 colSpan={columns.length}
                 className="h-24 text-center"
               >
-                {noDataMessage}
+                {emptyMessage}
               </TableCell>
             </TableRow>
           )}
