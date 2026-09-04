@@ -365,14 +365,17 @@
       "recordCount": "{count} records",
       "sections": {
         "demographics": "Demographics",
+        "vitals": "Vital Signs",
         "clinicalExam": "Clinical Examination",
-        "occupationalRisk": "Occupational Risk Factors"
+        "musculoskeletal": "Musculoskeletal",
+        "medicalHistory": "Medical History",
+        "occupationalRisk": "Occupational Risk Factors",
+        "followUp": "Follow-up"
       },
       "charts": {
         "gender": "Gender",
-        "employmentType": "Employment Type",
-        "region": "Region",
-        "jobTitle": "Job Title",
+        "respiratoryRate": "Respiratory Rate",
+        "heartRate": "Heart Rate",
         "heart": "Heart",
         "digestive": "Digestive",
         "neurology": "Neurology",
@@ -381,16 +384,19 @@
         "hematology": "Hematology",
         "rheumatology": "Rheumatology",
         "endocrinology": "Endocrinology",
-        "breast": "Breast",
-        "sinuses": "Nose & Sinuses",
-        "dental": "Mouth, Throat & Teeth",
         "skinHair": "Skin & Hair",
         "generalSymptoms": "General Symptoms",
+        "breast": "Breast Examination",
+        "upperLimb": "Upper Limb",
+        "lowerLimb": "Lower Limb",
+        "spine": "Spine",
+        "surgeryHistory": "History of Surgery",
+        "medication": "Regular Medication",
+        "hereditaryDisease": "Hereditary Disease in Family",
         "smoking": "Smoking",
-        "physicalFactors": "Physical Factors",
-        "chemicalFactors": "Chemical Factors",
         "ergonomicFactors": "Ergonomic Factors",
-        "psychologicalFactors": "Psychological Factors"
+        "psychologicalFactors": "Psychological Factors",
+        "additionalTests": "Additional Tests Required"
       }
     }
   }

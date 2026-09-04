@@ -25,42 +25,97 @@ export type ChartSection = {
   charts: DistributionChartSpec[];
 };
 
+/**
+ * Fields chosen against the real payload (monitoring id 7, 546 records), not
+ * guessed from the type. Coverage comments come from that data. Anything under
+ * ~50% filled was dropped as unreadable, except `پستان`, which is
+ * gender-conditional: 134/156 women, 5/389 men.
+ *
+ * `نام منطقه` was dropped despite 236 rows: it is 233x "مشهد" plus three
+ * one-off values, so the chart carries no information.
+ */
 export const STEP2_CHART_SECTIONS: ChartSection[] = [
   {
     titleKey: "sections.demographics",
     charts: [
+      // 545/546 filled, 2 distinct
       { field: "جنسیت", titleKey: "charts.gender", color: 1 },
-      { field: "نوع استخدام", titleKey: "charts.employmentType", color: 2 },
-      { field: "نام منطقه", titleKey: "charts.region", color: 3 },
-      { field: "عنوان شغل", titleKey: "charts.jobTitle", color: 4 },
+    ],
+  },
+  {
+    titleKey: "sections.vitals",
+    charts: [
+      // 536/546 filled, 9 distinct
+      { field: "Respiratory rate", titleKey: "charts.respiratoryRate", color: 2 },
+      // 453/546 filled, 3 distinct
+      { field: "Heart rate:", titleKey: "charts.heartRate", color: 3 },
     ],
   },
   {
     titleKey: "sections.clinicalExam",
     charts: [
+      // 421/546 filled, 10 distinct
       { field: "قلب", titleKey: "charts.heart", color: 1 },
+      // 415/546 filled, 23 distinct
       { field: "گوارش", titleKey: "charts.digestive", color: 2 },
+      // 530/546 filled, 4 distinct
       { field: "نورولوژی", titleKey: "charts.neurology", color: 3 },
+      // 523/546 filled, 5 distinct
       { field: "سر و گردن", titleKey: "charts.headNeck", color: 4 },
+      // 530/546 filled, 3 distinct
       { field: "سيستم تنفسي", titleKey: "charts.respiratory", color: 5 },
+      // 533/546 filled, 4 distinct
       { field: "هماتولوژي", titleKey: "charts.hematology", color: 1 },
+      // 533/546 filled, 2 distinct
       { field: "روماتولوژي", titleKey: "charts.rheumatology", color: 2 },
+      // 519/546 filled, 7 distinct
       { field: "اندوكرينولوژي", titleKey: "charts.endocrinology", color: 3 },
-      { field: "پستان", titleKey: "charts.breast", color: 4 },
-      { field: "بینی و سینوس‌ها", titleKey: "charts.sinuses", color: 5 },
-      { field: "دهان و حلق و دندان", titleKey: "charts.dental", color: 1 },
-      { field: "پوست و  مو", titleKey: "charts.skinHair", color: 2 },
-      { field: "علائم عمومي", titleKey: "charts.generalSymptoms", color: 3 },
+      // 534/546 filled, 18 distinct
+      { field: "پوست و  مو", titleKey: "charts.skinHair", color: 4 },
+      // 531/546 filled, 6 distinct
+      { field: "علائم عمومي", titleKey: "charts.generalSymptoms", color: 5 },
+      // 139/546 filled, 3 distinct
+      { field: "پستان", titleKey: "charts.breast", color: 1 },
+    ],
+  },
+  {
+    titleKey: "sections.musculoskeletal",
+    charts: [
+      // 514/546 filled, 12 distinct
+      { field: "سيستم عضلاني اسكلتي فوقان", titleKey: "charts.upperLimb", color: 2 },
+      // 521/546 filled, 5 distinct
+      { field: "سيستم عضلاني اسكلتي تحتاني", titleKey: "charts.lowerLimb", color: 3 },
+      // 492/546 filled, 6 distinct
+      { field: "ستون فقرات پشتی و کمری", titleKey: "charts.spine", color: 4 },
+    ],
+  },
+  {
+    titleKey: "sections.medicalHistory",
+    charts: [
+      // 385/546 filled, 2 distinct
+      { field: "آيا سابقه عمل جراحي داريد ؟ذكر نمايد.", titleKey: "charts.surgeryHistory", color: 5 },
+      // 359/546 filled, 2 distinct
+      { field: "آيا دارو خاصي مصرف مي كنيد؟ذكرنماييد.", titleKey: "charts.medication", color: 1 },
+      // 351/546 filled, 2 distinct
+      { field: "آيا سابقه بيماري ارثي درخانواده داريد ؟نام  ببريد.", titleKey: "charts.hereditaryDisease", color: 2 },
     ],
   },
   {
     titleKey: "sections.occupationalRisk",
     charts: [
-      { field: "آيا سيگارميكشيد؟", titleKey: "charts.smoking", color: 1 },
-      { field: "عوامل فیزیکی", titleKey: "charts.physicalFactors", color: 2 },
-      { field: "عوامل شيميايي", titleKey: "charts.chemicalFactors", color: 3 },
+      // 509/546 filled, 2 distinct
+      { field: "آيا سيگارميكشيد؟", titleKey: "charts.smoking", color: 3 },
+      // 521/546 filled, 8 distinct
       { field: "عوامل ارگونوميك", titleKey: "charts.ergonomicFactors", color: 4 },
+      // 311/546 filled, 3 distinct
       { field: "عوامل  رواني", titleKey: "charts.psychologicalFactors", color: 5 },
+    ],
+  },
+  {
+    titleKey: "sections.followUp",
+    charts: [
+      // 508/546 filled, 10 distinct
+      { field: "آزمایشات تکمیلی مورد نیاز", titleKey: "charts.additionalTests", color: 1 },
     ],
   },
 ];

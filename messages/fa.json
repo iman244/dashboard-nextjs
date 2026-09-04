@@ -365,14 +365,17 @@
       "recordCount": "{count} رکورد",
       "sections": {
         "demographics": "اطلاعات جمعیت‌شناختی",
+        "vitals": "علائم حیاتی",
         "clinicalExam": "معاینات بالینی",
-        "occupationalRisk": "عوامل زیان‌آور شغلی"
+        "musculoskeletal": "سیستم عضلانی اسکلتی",
+        "medicalHistory": "سوابق پزشکی",
+        "occupationalRisk": "عوامل زیان‌آور شغلی",
+        "followUp": "پیگیری"
       },
       "charts": {
         "gender": "جنسیت",
-        "employmentType": "نوع استخدام",
-        "region": "منطقه",
-        "jobTitle": "عنوان شغل",
+        "respiratoryRate": "تعداد تنفس",
+        "heartRate": "ضربان قلب",
         "heart": "قلب",
         "digestive": "گوارش",
         "neurology": "نورولوژی",
@@ -381,16 +384,19 @@
         "hematology": "هماتولوژی",
         "rheumatology": "روماتولوژی",
         "endocrinology": "اندوکرینولوژی",
-        "breast": "پستان",
-        "sinuses": "بینی و سینوس‌ها",
-        "dental": "دهان و حلق و دندان",
         "skinHair": "پوست و مو",
         "generalSymptoms": "علائم عمومی",
+        "breast": "معاینه پستان",
+        "upperLimb": "اندام فوقانی",
+        "lowerLimb": "اندام تحتانی",
+        "spine": "ستون فقرات",
+        "surgeryHistory": "سابقه عمل جراحی",
+        "medication": "مصرف دارو",
+        "hereditaryDisease": "بیماری ارثی در خانواده",
         "smoking": "مصرف سیگار",
-        "physicalFactors": "عوامل فیزیکی",
-        "chemicalFactors": "عوامل شیمیایی",
         "ergonomicFactors": "عوامل ارگونومیک",
-        "psychologicalFactors": "عوامل روانی"
+        "psychologicalFactors": "عوامل روانی",
+        "additionalTests": "آزمایشات تکمیلی مورد نیاز"
       }
     }
   }
