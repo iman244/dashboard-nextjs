@@ -354,5 +354,73 @@
       "ShowAbnormalOnly": "فقط موارد غیرطبیعی",
       "ViewTestChart": "مشاهده نمودار روند آزمایش"
     }
+  },
+  "/patient/sign-in": {
+    "SignInPage": {
+      "title": "ورود بیمار",
+      "description": "برای مشاهده سوابق سلامت خود، کد ملی را وارد کنید.",
+      "notice": "رمز عبور شما همان کد ملی شماست.",
+      "form": {
+        "nationalId": {
+          "label": "کد ملی",
+          "placeholder": "کد ملی ۱۰ رقمی"
+        },
+        "password": {
+          "label": "رمز عبور",
+          "placeholder": "کد ملی خود را دوباره وارد کنید"
+        }
+      },
+      "errors": {
+        "nationalIdRequired": "وارد کردن کد ملی الزامی است",
+        "passwordRequired": "وارد کردن رمز عبور الزامی است",
+        "passwordMismatch": "رمز عبور باید همان کد ملی باشد",
+        "noRecords": "برای این کد ملی سابقه‌ای یافت نشد",
+        "requestFailed": "ارتباط با سامانه سوابق برقرار نشد. دوباره تلاش کنید."
+      },
+      "buttons": {
+        "signIn": "ورود",
+        "signingIn": "در حال بررسی…"
+      }
+    }
+  },
+  "/patient/records": {
+    "PatientRecords": {
+      "title": "سوابق سلامت من",
+      "subtitle": "کد ملی: {nationalId}",
+      "refresh": "بروزرسانی",
+      "signOut": "خروج",
+      "filter": {
+        "title": "فیلترها",
+        "description": "بازه تاریخ و نوع سابقه را انتخاب کنید.",
+        "dateRange": "بازه تاریخ",
+        "selectDateRange": "انتخاب بازه تاریخ",
+        "patientType": "نوع سابقه",
+        "selectPatientType": "انتخاب نوع سابقه",
+        "clear": "بازنشانی",
+        "search": "اعمال"
+      },
+      "activeFilters": {
+        "label": "فیلترهای فعال",
+        "dateRange": "بازه تاریخ:",
+        "patientType": "نوع سابقه:"
+      },
+      "columns": {
+        "date": "تاریخ",
+        "service": "نام خدمت",
+        "doctor": "پزشک معالج",
+        "place": "مکان",
+        "patientType": "نوع سابقه",
+        "actions": "عملیات"
+      },
+      "actions": {
+        "openMenu": "باز کردن منو",
+        "viewDetails": "مشاهده جزئیات"
+      },
+      "table": {
+        "error": "بارگذاری سوابق ناموفق بود: {message}",
+        "retry": "تلاش دوباره",
+        "noData": "در این بازه سابقه‌ای یافت نشد"
+      }
+    }
   }
 }
