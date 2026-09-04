@@ -97,8 +97,10 @@ export function Client() {
 
       {/* Double-bezel: an outer tray holding an inner plate, with concentric radii. */}
       <div className="w-full max-w-[26rem] rounded-[2rem] bg-foreground/[0.035] p-1.5 ring-1 ring-foreground/[0.07] backdrop-blur-sm">
-        <Card className="rounded-[calc(2rem-0.375rem)] border-0 bg-card text-center shadow-[0_1px_2px_rgba(0,0,0,0.03),0_12px_32px_-12px_rgba(0,0,0,0.10),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_16px_40px_-12px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.05)]">
-        <CardHeader className="gap-0 pb-0 pt-9">
+        {/* gap-0 py-0 disables Card's own rhythm so spacing is set once, here,
+            rather than stacking three systems on top of each other. */}
+        <Card className="gap-0 rounded-[1.625rem] border-0 bg-card py-0 text-center shadow-[0_1px_2px_rgba(0,0,0,0.03),0_12px_32px_-12px_rgba(0,0,0,0.10),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_16px_40px_-12px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.05)]">
+        <CardHeader className="gap-0 px-7 pb-0 pt-10">
           <span className="mx-auto mb-4 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-primary">
             {t("description")}
           </span>
@@ -109,9 +111,12 @@ export function Client() {
             {t("description")}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-5 px-7 pb-9 pt-7">
+        <CardContent className="px-7 pb-10 pt-8">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Two groups, not four equal siblings: the credential pair sits
+                tight (16px), then a generous break before the submit act. */}
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="space-y-4 text-start">
               <FormField
                 control={form.control}
                 name="username"
@@ -149,8 +154,10 @@ export function Client() {
                 )}
               />
 
+              </div>
+
               {apiError && (
-                <div className="text-destructive text-sm text-center">
+                <div className="mt-5 rounded-xl bg-destructive/10 px-4 py-3 text-start text-sm text-destructive">
                   {apiError.response?.data.detail}
                 </div>
               )}
@@ -158,7 +165,7 @@ export function Client() {
               <Button
                 type="submit"
                 disabled={isPending}
-                className="group h-12 w-full rounded-full text-[15px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.10),0_8px_20px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_1px_2px_rgba(0,0,0,0.12),0_12px_28px_-8px_color-mix(in_oklab,var(--primary)_65%,transparent)] active:scale-[0.985]"
+                className="group mt-7 h-12 w-full rounded-full text-[15px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.10),0_8px_20px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_1px_2px_rgba(0,0,0,0.12),0_12px_28px_-8px_color-mix(in_oklab,var(--primary)_65%,transparent)] active:scale-[0.985]"
               >
                 <span className="flex w-full items-center justify-center gap-3">
                   {isPending ? t("buttons.signingIn") : t("buttons.signIn")}
