@@ -441,7 +441,13 @@
       "afterScreening": "پس از پایش",
       "openPatientReport": "گزارش کامل بیمار",
       "legendResult": "هر نقطه یک روز است که نتیجه‌ای ثبت شده (نقطه بزرگ‌تر یعنی بیش از یک نتیجه)",
-      "legendExam": "تاریخ پایش ({date})"
+      "legendExam": "تاریخ پایش ({date})",
+      "tableDate": "تاریخ",
+      "tableService": "عنوان",
+      "tableResult": "نتیجه",
+      "tableWhen": "نسبت به پایش",
+      "beforeScreening": "پیش از پایش",
+      "andMore": "و {count} مورد دیگر"
     }
   }
 }

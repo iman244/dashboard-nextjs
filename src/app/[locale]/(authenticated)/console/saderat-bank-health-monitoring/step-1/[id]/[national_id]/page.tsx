@@ -35,6 +35,7 @@ import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrSummaryBand } from "../../../_ehr/summary-band";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrTimeline } from "../../../_ehr/timeline";
+import { EhrTimelineTable } from "../../../_ehr/timeline-table";
 import { EhrReports } from "../../../_ehr/reports";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { useMobileLaboratoryByNationalNumberApi } from "@/data/electronic health record/api/mobile-laboratory-by-national-number";
@@ -327,8 +328,9 @@ const PersonMonitoringPage = (
           <CardHeader>
             <CardTitle>{tEhr("timelineTitle")}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
             <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
+            <EhrTimelineTable ehr={ehr} />
           </CardContent>
         </Card>
       )}

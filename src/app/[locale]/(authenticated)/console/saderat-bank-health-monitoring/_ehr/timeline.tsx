@@ -3,11 +3,23 @@
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { format } from "date-fns-jalali";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn, localeDigits } from "@/lib/utils";
+import { StatusIcon } from "./status-icon";
 import { jalaliTimestamp } from "./classify";
-import type { PersonEhr } from "./use-person-ehr";
+import type { EhrEvent, PersonEhr } from "./use-person-ehr";
 
-type Marker = { key: string; label: string; offset: number; count: number };
+type Marker = {
+  key: string;
+  label: string;
+  offset: number;
+  count: number;
+  items: EhrEvent["items"];
+};
 
 /**
  * Every electronic result on one axis, with the screening marked.
@@ -49,6 +61,7 @@ export const EhrTimeline = ({
       label: p.date,
       offset: at(p.time),
       count: p.count,
+      items: p.items,
     }));
 
     return {
@@ -73,17 +86,54 @@ export const EhrTimeline = ({
         <div className="absolute inset-x-0 top-4 h-px bg-border" />
 
         {model.markers.map((marker) => (
-          <span
-            key={marker.key}
-            title={`${localeDigits(marker.label, locale)} · ${t("resultCount", {
-              count: localeDigits(marker.count, locale),
-            })}`}
-            style={{ insetInlineStart: `${marker.offset}%` }}
-            className={cn(
-              "absolute top-4 -translate-y-1/2 rounded-full bg-primary",
-              marker.count > 1 ? "h-2.5 w-2.5" : "h-2 w-2"
-            )}
-          />
+          <Tooltip key={marker.key}>
+            <TooltipTrigger
+              type="button"
+              aria-label={`${localeDigits(marker.label, locale)} · ${t(
+                "resultCount",
+                { count: localeDigits(marker.count, locale) }
+              )}`}
+              style={{ insetInlineStart: `${marker.offset}%` }}
+              className={cn(
+                "absolute top-4 -translate-y-1/2 rounded-full bg-primary",
+                "focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:outline-none",
+                "hover:ring-primary/30 hover:ring-4",
+                marker.count > 1 ? "h-2.5 w-2.5" : "h-2 w-2"
+              )}
+            />
+            <TooltipContent className="max-w-xs">
+              <p className="font-medium tabular-nums">
+                {localeDigits(marker.label, locale)}
+                {" · "}
+                {t("resultCount", {
+                  count: localeDigits(marker.count, locale),
+                })}
+              </p>
+              <ul className="mt-1 space-y-0.5">
+                {marker.items.slice(0, 8).map((item, i) => (
+                  <li
+                    key={`${item.service}-${i}`}
+                    className="flex items-baseline gap-1.5"
+                  >
+                    {item.status && <StatusIcon status={item.status} />}
+                    <span className="min-w-0 break-words">{item.service}</span>
+                    {item.value && (
+                      <span className="tabular-nums opacity-80">
+                        {localeDigits(item.value, locale)}
+                      </span>
+                    )}
+                  </li>
+                ))}
+                {marker.items.length > 8 && (
+                  <li className="opacity-80">
+                    {t("andMore", {
+                      count: localeDigits(marker.items.length - 8, locale),
+                    })}
+                  </li>
+                )}
+              </ul>
+            </TooltipContent>
+          </Tooltip>
         ))}
 
         <span

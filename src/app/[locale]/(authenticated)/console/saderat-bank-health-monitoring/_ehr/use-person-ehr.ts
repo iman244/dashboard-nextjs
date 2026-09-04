@@ -47,7 +47,22 @@ export type ReportItem = {
   sortKey: number;
 };
 
-export type EhrEvent = { date: string; sortKey: number; count: number };
+/** One result on a timeline date, lab or report. */
+export type EhrEventItem = {
+  service: string;
+  kind: "lab" | "report";
+  value: string;
+  range: string;
+  /** Labs only; reports carry no reference range. */
+  status?: EhrStatus;
+};
+
+export type EhrEvent = {
+  date: string;
+  sortKey: number;
+  count: number;
+  items: EhrEventItem[];
+};
 
 export type PersonEhr = {
   isPending: boolean;
@@ -145,12 +160,33 @@ const buildPersonEhr = (
     .sort((a, b) => b.sortKey - a.sortKey);
 
   const dates = new Map<string, EhrEvent>();
-  [...points, ...reports].forEach(({ date, sortKey }) => {
+  const collect = (date: string, sortKey: number, item: EhrEventItem) => {
     if (!date) return;
     const existing = dates.get(date);
-    if (existing) existing.count += 1;
-    else dates.set(date, { date, sortKey, count: 1 });
-  });
+    if (existing) {
+      existing.count += 1;
+      existing.items.push(item);
+    } else {
+      dates.set(date, { date, sortKey, count: 1, items: [item] });
+    }
+  };
+  points.forEach((p) =>
+    collect(p.date, p.sortKey, {
+      service: p.service,
+      kind: "lab",
+      value: p.value,
+      range: p.range,
+      status: p.status,
+    })
+  );
+  reports.forEach((r) =>
+    collect(r.date, r.sortKey, {
+      service: r.service,
+      kind: "report",
+      value: r.result,
+      range: "",
+    })
+  );
   const events = Array.from(dates.values()).sort((a, b) => a.sortKey - b.sortKey);
 
   const abnormalCount = labs.filter((l) => isAbnormal(l.latest.status)).length;

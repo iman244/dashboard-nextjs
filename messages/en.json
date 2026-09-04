@@ -441,7 +441,13 @@
       "afterScreening": "After screening",
       "openPatientReport": "Full Patient Report",
       "legendResult": "Each dot is a day with a recorded result (a larger dot means more than one)",
-      "legendExam": "Screening date ({date})"
+      "legendExam": "Screening date ({date})",
+      "tableDate": "Date",
+      "tableService": "Service",
+      "tableResult": "Result",
+      "tableWhen": "Relative to Screening",
+      "beforeScreening": "Before screening",
+      "andMore": "and {count} more"
     }
   }
 }
