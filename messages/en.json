@@ -438,7 +438,8 @@
       "notEnoughPoints": "A trend needs more than one measurement.",
       "unknownCount": "{count} unreadable",
       "reportsTitle": "Electronic Reports",
-      "afterScreening": "After screening"
+      "afterScreening": "After screening",
+      "openPatientReport": "Full Patient Report"
     }
   }
 }

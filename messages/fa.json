@@ -438,7 +438,8 @@
       "notEnoughPoints": "برای رسم نمودار به بیش از یک اندازه‌گیری نیاز است.",
       "unknownCount": "{count} نامشخص",
       "reportsTitle": "گزارش‌های الکترونیک",
-      "afterScreening": "پس از پایش"
+      "afterScreening": "پس از پایش",
+      "openPatientReport": "گزارش کامل بیمار"
     }
   }
 }

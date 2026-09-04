@@ -165,7 +165,11 @@ const Step2PersonPage = (
         </div>
       )}
 
-      <EhrSummaryBand ehr={ehr} onSelectSeries={setSelectedSeries} />
+      <EhrSummaryBand
+        ehr={ehr}
+        nationalId={national_id}
+        onSelectSeries={setSelectedSeries}
+      />
 
       {ehr.hasAny && (
         <Card>

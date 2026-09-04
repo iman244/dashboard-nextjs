@@ -2,7 +2,9 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertCircle, Inbox } from "lucide-react";
+import { AlertCircle, ExternalLink, Inbox } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { PatientType } from "@/components/app/patient-type-selector";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -62,9 +64,11 @@ const LabChip = ({
  */
 export const EhrSummaryBand = ({
   ehr,
+  nationalId,
   onSelectSeries,
 }: {
   ehr: PersonEhr;
+  nationalId: string;
   onSelectSeries: (series: LabSeries) => void;
 }) => {
   const t = useTranslations(
@@ -94,8 +98,9 @@ export const EhrSummaryBand = ({
             </p>
           )}
         </div>
-        {!ehr.isPending && ehr.labs.length > 0 && (
-          <p aria-live="polite" className="text-sm shrink-0">
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          {!ehr.isPending && ehr.labs.length > 0 && (
+          <p aria-live="polite" className="text-sm">
             <span
               className={cn(
                 "font-semibold tabular-nums",
@@ -117,7 +122,24 @@ export const EhrSummaryBand = ({
                 })}`}
             </span>
           </p>
-        )}
+          )}
+          <Button asChild variant="outline" size="sm">
+            <Link
+              href={{
+                pathname: "/console/patient-reports",
+                query: {
+                  nationalNumber: nationalId,
+                  fromDate: ehr.fromDate,
+                  toDate: ehr.toDate,
+                  patientType: PatientType.LAB,
+                },
+              }}
+            >
+              <ExternalLink aria-hidden="true" className="h-4 w-4" />
+              {t("openPatientReport")}
+            </Link>
+          </Button>
+        </div>
       </CardHeader>
 
       <CardContent>

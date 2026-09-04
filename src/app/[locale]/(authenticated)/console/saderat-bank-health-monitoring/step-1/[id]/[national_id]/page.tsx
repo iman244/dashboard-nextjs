@@ -316,7 +316,11 @@ const PersonMonitoringPage = (
         </CardHeader>
       </Card>
 
-      <EhrSummaryBand ehr={ehr} onSelectSeries={setSelectedSeries} />
+      <EhrSummaryBand
+        ehr={ehr}
+        nationalId={national_id}
+        onSelectSeries={setSelectedSeries}
+      />
 
       {ehr.hasAny && data && (
         <Card>

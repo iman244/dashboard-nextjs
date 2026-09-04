@@ -69,6 +69,9 @@ export type PersonEhr = {
   latestDate?: string;
   /** Jalali sort key of the screening, for before/after comparisons. */
   examSortKey: number;
+  /** The window these results were fetched over, so a link out can reuse it. */
+  fromDate: string;
+  toDate: string;
   hasAny: boolean;
 };
 
@@ -97,7 +100,7 @@ const toPoint = (record: ElectronicHealthRecord): LabPoint => {
  */
 const buildPersonEhr = (
   results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[],
-  examSortKey: number
+  range: { fromDate: string; toDate: string; examSortKey: number }
 ): PersonEhr => {
   const failed = results.find((r) => r.isError);
   const [labQuery, ...reportQueries] = results;
@@ -177,7 +180,9 @@ const buildPersonEhr = (
       : undefined,
     totalResults: points.length + reports.length,
     latestDate: events[events.length - 1]?.date,
-    examSortKey,
+    examSortKey: range.examSortKey,
+    fromDate: range.fromDate,
+    toDate: range.toDate,
     hasAny: points.length > 0 || reports.length > 0,
   };
 };
@@ -205,8 +210,8 @@ export const usePersonEhr = ({
 
   const combine = React.useCallback(
     (results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]) =>
-      buildPersonEhr(results, range.examSortKey),
-    [range.examSortKey]
+      buildPersonEhr(results, range),
+    [range]
   );
 
   return useQueries({
