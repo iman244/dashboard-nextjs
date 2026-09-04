@@ -15,6 +15,10 @@ import {
 import { STEP2_CHART_SECTIONS } from "./_charts/config";
 import { DistributionChart } from "./_charts/distribution-chart";
 import { useStep2Report } from "./_data/use-step2-report";
+import {
+  SearchPersonnelSheet,
+  type PersonnelFilter,
+} from "./_search-personnel-sheet/sheet";
 
 const Step2MonitoringPage = (
   props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-2/[id]">
@@ -44,6 +48,22 @@ const Step2MonitoringPage = (
   );
 
   const report = useStep2Report(records);
+
+  // Clicking a bar drills into the people behind it, matching step-1.
+  const [activeFilter, setActiveFilter] = React.useState<PersonnelFilter>();
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+
+  const showPersonnelFor = React.useCallback(
+    (field: keyof SBHM_Step2Record, value: string, chartTitle: string) => {
+      setActiveFilter({
+        // the chart counts String(record[field]), so match the same way
+        filterFn: (record) => String(record[field] ?? "") === value,
+        description: `${chartTitle}: ${value}`,
+      });
+      setIsSheetOpen(true);
+    },
+    []
+  );
 
   if (isPending) {
     return (
@@ -121,11 +141,24 @@ const Step2MonitoringPage = (
                 title={tReport(chart.titleKey)}
                 data={report.distributions[chart.field] ?? []}
                 color={chart.color}
+                onBarClick={(name) =>
+                  showPersonnelFor(chart.field, name, tReport(chart.titleKey))
+                }
               />
             ))}
           </div>
         </section>
       ))}
+
+      <SearchPersonnelSheet
+        open={isSheetOpen}
+        onOpenChange={(open) => {
+          setIsSheetOpen(open);
+          if (!open) setActiveFilter(undefined);
+        }}
+        data={records ?? []}
+        filter={activeFilter}
+      />
     </div>
   );
 };
