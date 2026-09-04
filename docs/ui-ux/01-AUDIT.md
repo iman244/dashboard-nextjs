@@ -257,12 +257,10 @@ silently widening a task's diff.
   `"Password is required"` to Persian users on the first screen every user sees. Now
   built from a `makeLoginSchema(t)` factory. **Verified in a real browser** — the only
   change in this whole pass that was.
-- **UX-17 · `authentication/register/client.tsx` is dead code.** It has the same
-  hardcoded-English Zod defect (`"Invalid email address"`, `"Password must be at least 8
-  characters"`), but the route is disabled: the page file is `_page.tsx` and its only UI
-  entry point is commented out in the sign-in page. Translating it would add catalogue
-  entries for an unreachable screen. **Delete the file rather than translating it**, or
-  re-enable signup deliberately.
+- **UX-17 · Disabled signup feature was still being carried** — ✅ **REMOVED** (`647033e`).
+  The route was already dead (`_page.tsx`, entry point commented out), but three files,
+  hardcoded English Zod messages, and 15 message keys per locale remained. Deleted rather
+  than translated. Recoverable from git history if signup is re-enabled.
 - **UX-14 · Latent RTL anchor bug on three more chart axes.** `text-anchor` in SVG
   resolves against inline-base direction, so `textAnchor="end"` anchors the *left* edge
   of a Persian string now that `<html dir="rtl">` is set (Task 1). Task 10 fixed the two
