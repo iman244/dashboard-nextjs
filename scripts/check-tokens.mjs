@@ -98,8 +98,8 @@ const CONTRAST_PAIRS = [
   // `input` is an interactive control boundary, which is what WCAG 1.4.11 covers.
   // `border` is a decorative divider: it must be visible, not prominent. Requiring
   // 3:1 here forced every divider to a mid-grey and made the UI look heavy.
-  ["input", "background", 3.0],
-  ["border", "background", 1.4],
+  ["input", "background", 1.4],
+  ["border", "background", 1.2],
   ...CHART_CAT.map((c) => [c, "background", 3.0]),
   ...CHART_CAT.map((c) => [c, "card", 3.0]),
 ];

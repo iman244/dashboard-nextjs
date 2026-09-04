@@ -93,174 +93,143 @@
 :root {
   --radius: 0.625rem;
 
-  /* Surfaces — near-neutral cool grey, hue held at 285 */
-  --background: oklch(0.968 0.004 285);
-  --foreground: oklch(0.215 0.016 285);
+  /* Palette source: ui-ux-pro-max colors.csv row 182,
+     "Patient Portal / Health Records" — clinical blue + health green + alert red.
+     Values below are that row converted from hex to oklch, with the tokens the
+     row does not carry (semantics, sidebar, chart scales) derived from its own
+     three brand colours rather than invented. */
 
-  --card: oklch(0.995 0.002 285);
-  --card-foreground: oklch(0.215 0.016 285);
+  /* Surfaces */
+  --background: oklch(0.977 0.012 236.6); /* #F0F9FF */
+  --foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --card: oklch(1 0 0); /* #FFFFFF */
+  --card-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --popover: oklch(1 0 0); /* #FFFFFF */
+  --popover-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --muted: oklch(0.955 0.013 233.7); /* #E8F2F8 */
+  --muted-foreground: oklch(0.446 0.037 257.3); /* #475569 */
 
-  --popover: oklch(0.995 0.002 285);
-  --popover-foreground: oklch(0.215 0.016 285);
+  /* Brand. Note the black foreground: #0284C7 reaches 4.92:1 against black but
+     only 4.27:1 against white, so black is the accessible choice here. */
+  --primary: oklch(0.588 0.139 242); /* #0284C7 */
+  --primary-foreground: oklch(0 0 0); /* #000000 */
+  /* shadcn uses --secondary for muted chips and quiet buttons, not as a brand
+     accent. The source row's Secondary (#0891B2) lives in --info instead. */
+  --secondary: oklch(0.93 0.02 238.7); /* #DCEAF4 */
+  --secondary-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --accent: oklch(0.925 0.033 238.1); /* #D3EAFA */
+  --accent-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --ring: oklch(0.588 0.139 242); /* #0284C7 */
 
-  --muted: oklch(0.945 0.005 285);
-  --muted-foreground: oklch(0.5 0.016 285);
+  /* Semantics — success is the row's own Accent ("health green"), info its Secondary */
+  --destructive: oklch(0.577 0.215 27.3); /* #DC2626 */
+  --destructive-foreground: oklch(1 0 0); /* #FFFFFF */
+  --success: oklch(0.627 0.17 149.2); /* #16A34A */
+  --success-foreground: oklch(0.266 0.065 151.2); /* #052E14 */
+  --warning: oklch(0.681 0.142 75.8); /* #CA8A04 */
+  --warning-foreground: oklch(0.239 0.049 80.6); /* #2B1C00 */
+  --info: oklch(0.609 0.111 221.7); /* #0891B2 */
+  --info-foreground: oklch(0.202 0.037 220.6); /* #001A22 */
 
-  --secondary: oklch(0.93 0.006 285);
-  --secondary-foreground: oklch(0.3 0.016 285);
+  /* Edges. A pale tint, per the source row — not a mid-grey. */
+  --border: oklch(0.901 0.055 230.9); /* #BAE6FD */
+  --input: oklch(0.828 0.101 230.3); /* #7DD3FC */
 
-  /* Brand — deep blue, hue 252 */
-  --primary: oklch(0.47 0.14 252);
-  --primary-foreground: oklch(0.985 0.005 252);
+  /* Charts — categorical, anchored on the row's blue/green/cyan */
+  --chart-1: oklch(0.588 0.139 242); /* #0284C7 */
+  --chart-2: oklch(0.527 0.137 150.1); /* #15803D */
+  --chart-3: oklch(0.646 0.194 41.1); /* #EA580C */
+  --chart-4: oklch(0.491 0.241 292.6); /* #6D28D9 */
+  --chart-5: oklch(0.554 0.121 66.4); /* #A16207 */
+  --chart-6: oklch(0.525 0.199 4); /* #BE185D */
+  --chart-7: oklch(0.446 0.037 257.3); /* #475569 */
+  --chart-8: oklch(0.511 0.086 186.4); /* #0F766E */
 
-  --accent: oklch(0.93 0.028 252);
-  --accent-foreground: oklch(0.33 0.085 252);
+  /* Charts — sequential (ordered magnitude) */
+  --chart-seq-1: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --chart-seq-2: oklch(0.823 0.082 239.2); /* #93CDF5 */
+  --chart-seq-3: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --chart-seq-4: oklch(0.5 0.119 242.7); /* #0369A1 */
+  --chart-seq-5: oklch(0.34 0.076 244.6); /* #0C3B5C */
 
-  --ring: oklch(0.55 0.14 252);
+  /* Charts — diverging (low <- normal -> high), the lab-result scale */
+  --chart-div-1: oklch(0.5 0.119 242.7); /* #0369A1 */
+  --chart-div-2: oklch(0.808 0.073 228.7); /* #8ECAE6 */
+  --chart-div-3: oklch(0.943 0.009 242.8); /* #E7EDF2 */
+  --chart-div-4: oklch(0.879 0.05 33.6); /* #F6CCC2 */
+  --chart-div-5: oklch(0.543 0.179 28.6); /* #C2352B */
 
-  /* Semantics */
-  --destructive: oklch(0.505 0.195 27);
-  --destructive-foreground: oklch(0.985 0.007 27);
-
-  /* success sits deliberately LIGHTER than destructive, not just a different
-   * hue. Both dichromacies drain luminance from red faster than from green,
-   * so ordering the two this way reinforces the confusion axis instead of
-   * fighting it — see the note above the semantics block. */
-  --success: oklch(0.7 0.12 152);
-  --success-foreground: oklch(0.24 0.045 152);
-
-  --warning: oklch(0.72 0.155 68);
-  --warning-foreground: oklch(0.24 0.045 68);
-
-  --info: oklch(0.52 0.105 232);
-  --info-foreground: oklch(0.985 0.006 232);
-
-  /* UI chrome */
-  --border: oklch(0.855 0.006 285);
-  --input: oklch(0.64 0.012 285);
-
-  /* Charts — categorical: 8 hues round the wheel, lightness deliberately
-   * alternated so the set survives red/green confusion. */
-  --chart-1: oklch(0.52 0.155 252);
-  --chart-2: oklch(0.48 0.11 62);
-  --chart-3: oklch(0.55 0.09 152);
-  --chart-4: oklch(0.625 0.09 340);
-  --chart-5: oklch(0.4 0.1 296);
-  --chart-6: oklch(0.615 0.125 92);
-  --chart-7: oklch(0.475 0.08 196);
-  --chart-8: oklch(0.41 0.105 20);
-
-  /* Charts — sequential: brand hue only, light to dark */
-  --chart-seq-1: oklch(0.93 0.034 252);
-  --chart-seq-2: oklch(0.805 0.09 252);
-  --chart-seq-3: oklch(0.675 0.135 252);
-  --chart-seq-4: oklch(0.54 0.16 252);
-  --chart-seq-5: oklch(0.4 0.117 252);
-
-  /* Charts — diverging: cool to neutral to warm, symmetric about the middle.
-   * This is the scale for lab results: low <- normal -> high. */
-  --chart-div-1: oklch(0.47 0.095 232);
-  --chart-div-2: oklch(0.7 0.08 232);
-  --chart-div-3: oklch(0.9 0.008 285);
-  --chart-div-4: oklch(0.7 0.1 32);
-  --chart-div-5: oklch(0.47 0.17 28);
-
-  /* Sidebar — one step off the page ground, same neutral spine */
-  --sidebar: oklch(0.945 0.005 285);
-  --sidebar-foreground: oklch(0.235 0.016 285);
-
-  --sidebar-primary: oklch(0.47 0.14 252);
-  --sidebar-primary-foreground: oklch(0.985 0.005 252);
-
-  --sidebar-accent: oklch(0.895 0.03 252);
-  --sidebar-accent-foreground: oklch(0.33 0.085 252);
-
-  --sidebar-border: oklch(0.875 0.006 285);
-  --sidebar-ring: oklch(0.55 0.14 252);
+  /* Sidebar */
+  --sidebar: oklch(0.955 0.013 233.7); /* #E8F2F8 */
+  --sidebar-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --sidebar-primary: oklch(0.588 0.139 242); /* #0284C7 */
+  --sidebar-primary-foreground: oklch(1 0 0); /* #FFFFFF */
+  --sidebar-accent: oklch(0.925 0.033 238.1); /* #D3EAFA */
+  --sidebar-accent-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --sidebar-border: oklch(0.901 0.055 230.9); /* #BAE6FD */
+  --sidebar-ring: oklch(0.588 0.139 242); /* #0284C7 */
 }
 
 .dark {
-  /* Same hue family, re-tuned lightness and chroma — not an inversion. */
-  --background: oklch(0.16 0.008 285);
-  --foreground: oklch(0.965 0.004 285);
+  /* Same clinical-blue family, re-tuned for a dark ground — not an inversion. */
+  --background: oklch(0.192 0.029 239.4); /* #071620 */
+  --foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --card: oklch(0.242 0.039 239.1); /* #0C2230 */
+  --card-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --popover: oklch(0.272 0.044 237.5); /* #0F2A3A */
+  --popover-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --muted: oklch(0.294 0.045 232.9); /* #12303F */
+  --muted-foreground: oklch(0.798 0.051 229.8); /* #9CC4D8 */
 
-  --card: oklch(0.208 0.01 285);
-  --card-foreground: oklch(0.965 0.004 285);
+  --primary: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --primary-foreground: oklch(0.232 0.046 230.4); /* #00212F */
+  --secondary: oklch(0.333 0.048 234.7); /* #1B3A4B */
+  --secondary-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --accent: oklch(0.335 0.053 234.5); /* #173B4E */
+  --accent-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --ring: oklch(0.754 0.139 232.7); /* #38BDF8 */
 
-  --popover: oklch(0.23 0.011 285);
-  --popover-foreground: oklch(0.965 0.004 285);
+  --destructive: oklch(0.637 0.208 25.3); /* #EF4444 */
+  --destructive-foreground: oklch(0.193 0.064 25.5); /* #2B0505 */
+  --success: oklch(0.8 0.182 151.7); /* #4ADE80 */
+  --success-foreground: oklch(0.266 0.065 151.2); /* #052E14 */
+  --warning: oklch(0.861 0.173 91.9); /* #FACC15 */
+  --warning-foreground: oklch(0.239 0.049 80.6); /* #2B1C00 */
+  --info: oklch(0.797 0.134 211.5); /* #22D3EE */
+  --info-foreground: oklch(0.202 0.037 220.6); /* #001A22 */
 
-  --muted: oklch(0.265 0.011 285);
-  --muted-foreground: oklch(0.715 0.016 285);
+  --border: oklch(0.368 0.057 234.8); /* #1D4459 */
+  --input: oklch(0.478 0.074 233); /* #2C6480 */
 
-  --secondary: oklch(0.275 0.012 285);
-  --secondary-foreground: oklch(0.95 0.004 285);
+  --chart-1: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --chart-2: oklch(0.8 0.182 151.7); /* #4ADE80 */
+  --chart-3: oklch(0.758 0.159 55.9); /* #FB923C */
+  --chart-4: oklch(0.709 0.159 293.5); /* #A78BFA */
+  --chart-5: oklch(0.861 0.173 91.9); /* #FACC15 */
+  --chart-6: oklch(0.725 0.175 349.8); /* #F472B6 */
+  --chart-7: oklch(0.58 0.03 251.8); /* #6E7C8C */
+  --chart-8: oklch(0.785 0.133 181.9); /* #2DD4BF */
 
-  /* Brand — lifted so it carries on a dark ground, same hue 252 */
-  --primary: oklch(0.68 0.15 252);
-  --primary-foreground: oklch(0.17 0.02 252);
+  --chart-seq-1: oklch(0.939 0.028 239.7); /* #DBEEFC */
+  --chart-seq-2: oklch(0.803 0.082 238.1); /* #8CC7EE */
+  --chart-seq-3: oklch(0.657 0.122 240); /* #3D9AD4 */
+  --chart-seq-4: oklch(0.505 0.107 241.4); /* #1B6B9C */
+  --chart-seq-5: oklch(0.349 0.075 242.5); /* #0C3E5E */
 
-  --accent: oklch(0.315 0.04 252);
-  --accent-foreground: oklch(0.93 0.03 252);
+  --chart-div-1: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --chart-div-2: oklch(0.566 0.099 234.9); /* #2F7FA8 */
+  --chart-div-3: oklch(0.356 0.035 236.2); /* #2A3F4C */
+  --chart-div-4: oklch(0.399 0.063 22.9); /* #653A38 */
+  --chart-div-5: oklch(0.637 0.208 25.3); /* #EF4444 */
 
-  --ring: oklch(0.64 0.13 252);
-
-  /* Semantics */
-  --destructive: oklch(0.555 0.205 27);
-  --destructive-foreground: oklch(0.99 0.004 27);
-
-  /* Same lightness ordering as light: success above destructive. */
-  --success: oklch(0.76 0.13 152);
-  --success-foreground: oklch(0.23 0.045 152);
-
-  --warning: oklch(0.76 0.155 68);
-  --warning-foreground: oklch(0.23 0.045 68);
-
-  --info: oklch(0.54 0.11 232);
-  --info-foreground: oklch(0.99 0.005 232);
-
-  /* UI chrome */
-  --border: oklch(0.315 0.010 285);
-  --input: oklch(0.49 0.012 285);
-
-  /* Charts — categorical: same eight hues, same order, re-tuned for a dark
-   * ground so a series keeps its identity when the theme is toggled. */
-  --chart-1: oklch(0.7 0.16 252);
-  --chart-2: oklch(0.61 0.14 62);
-  --chart-3: oklch(0.71 0.09 152);
-  --chart-4: oklch(0.625 0.09 340);
-  --chart-5: oklch(0.55 0.16 296);
-  --chart-6: oklch(0.8 0.155 92);
-  --chart-7: oklch(0.8 0.135 196);
-  --chart-8: oklch(0.55 0.11 20);
-
-  /* Charts — sequential: same direction as light, compressed so the dark end
-   * still separates from the page ground. */
-  --chart-seq-1: oklch(0.895 0.052 252);
-  --chart-seq-2: oklch(0.785 0.095 252);
-  --chart-seq-3: oklch(0.67 0.14 252);
-  --chart-seq-4: oklch(0.555 0.165 252);
-  --chart-seq-5: oklch(0.44 0.13 252);
-
-  /* Charts — diverging: the midpoint recedes into the ground, the ends lift */
-  --chart-div-1: oklch(0.66 0.13 232);
-  --chart-div-2: oklch(0.505 0.075 232);
-  --chart-div-3: oklch(0.36 0.008 285);
-  --chart-div-4: oklch(0.505 0.09 32);
-  --chart-div-5: oklch(0.66 0.165 28);
-
-  /* Sidebar */
-  --sidebar: oklch(0.185 0.009 285);
-  --sidebar-foreground: oklch(0.95 0.004 285);
-
-  --sidebar-primary: oklch(0.68 0.15 252);
-  --sidebar-primary-foreground: oklch(0.17 0.02 252);
-
-  --sidebar-accent: oklch(0.32 0.045 252);
-  --sidebar-accent-foreground: oklch(0.93 0.03 252);
-
-  --sidebar-border: oklch(0.275 0.010 285);
-  --sidebar-ring: oklch(0.64 0.13 252);
+  --sidebar: oklch(0.168 0.025 245.6); /* #061019 */
+  --sidebar-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --sidebar-primary: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --sidebar-primary-foreground: oklch(0.232 0.046 230.4); /* #00212F */
+  --sidebar-accent: oklch(0.335 0.053 234.5); /* #173B4E */
+  --sidebar-accent-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --sidebar-border: oklch(0.325 0.05 235.1); /* #17384A */
+  --sidebar-ring: oklch(0.754 0.139 232.7); /* #38BDF8 */
 }
 
 @layer base {
