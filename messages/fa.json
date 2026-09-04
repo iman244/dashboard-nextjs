@@ -337,12 +337,15 @@
         "UploadButton": "بارگذاری",
         "FileLabel": "فایل"
       },
-      "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد"
+      "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد",
+      "ErrorTitle": "بارگذاری انجام نشد",
+      "ErrorMessage": "بارگذاری فایل با خطا مواجه شد. لطفاً دوباره تلاش کنید."
     },
     "DeleteSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "حذف اکسل",
       "DialogDescription": "آیا از حذف {name} اطمینان دارید؟",
-      "SuccessMessage": "حذف اکسل با موفقیت انجام شد"
+      "SuccessMessage": "حذف اکسل با موفقیت انجام شد",
+      "ErrorMessage": "حذف اکسل انجام نشد: {message}"
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "بارگذاری اکسل",
