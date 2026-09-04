@@ -15,11 +15,11 @@ import {
   type SBHM_Step2Record,
 } from "@/data/saderat-bank-health-monitoring/types";
 import { STEP2_FIELD_GROUPS, noteKeyFor } from "../_detail/field-groups";
-import { usePersonEhr, type LabSeries } from "../_ehr/use-person-ehr";
-import { EhrSummaryBand } from "../_ehr/summary-band";
-import { EhrTrendDialog } from "../_ehr/trend-dialog";
-import { EhrTimeline } from "../_ehr/timeline";
-import { EhrReports } from "../_ehr/reports";
+import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
+import { EhrSummaryBand } from "../../../_ehr/summary-band";
+import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
+import { EhrTimeline } from "../../../_ehr/timeline";
+import { EhrReports } from "../../../_ehr/reports";
 
 const isEmpty = (v: unknown) => v === null || v === undefined || v === "";
 
@@ -56,6 +56,7 @@ const Step2PersonPage = (
   const tDetail = useTranslations(
     "/console/saderat-bank-health-monitoring.Step2Detail"
   );
+  const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
   const locale = useLocale();
 
   const { data, isPending, error } = useRetrieve_SBHM_API({
@@ -169,7 +170,7 @@ const Step2PersonPage = (
       {ehr.hasAny && (
         <Card>
           <CardHeader>
-            <CardTitle>{tDetail("ehr.timelineTitle")}</CardTitle>
+            <CardTitle>{tEhr("timelineTitle")}</CardTitle>
           </CardHeader>
           <CardContent>
             <EhrTimeline ehr={ehr} campaignDate={data.created_at} />

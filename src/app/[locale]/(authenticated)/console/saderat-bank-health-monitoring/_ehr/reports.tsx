@@ -19,7 +19,7 @@ import type { PersonEhr } from "./use-person-ehr";
  */
 export const EhrReports = ({ ehr }: { ehr: PersonEhr }) => {
   const t = useTranslations(
-    "/console/saderat-bank-health-monitoring.Step2Detail"
+    "/console/saderat-bank-health-monitoring.Ehr"
   );
   const locale = useLocale();
 
@@ -28,7 +28,7 @@ export const EhrReports = ({ ehr }: { ehr: PersonEhr }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("ehr.reportsTitle")}</CardTitle>
+        <CardTitle>{t("reportsTitle")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {ehr.reports.map((report, i) => (
@@ -42,7 +42,7 @@ export const EhrReports = ({ ehr }: { ehr: PersonEhr }) => {
               </span>
               <span className="flex shrink-0 items-center gap-2">
                 {report.sortKey > ehr.examSortKey && (
-                  <Badge variant="secondary">{t("ehr.afterScreening")}</Badge>
+                  <Badge variant="secondary">{t("afterScreening")}</Badge>
                 )}
                 <span className="text-xs text-muted-foreground tabular-nums">
                   {localeDigits(report.date, locale)}

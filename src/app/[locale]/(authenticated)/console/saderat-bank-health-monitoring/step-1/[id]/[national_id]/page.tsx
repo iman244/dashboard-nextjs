@@ -14,23 +14,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartConfig,
-} from "@/components/ui/chart";
-import {
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ComposedChart,
-  ReferenceArea,
-} from "recharts";
-import { format, newDate } from "date-fns-jalali";
 import { formatCellValue, localeDigits } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Activity,
   Heart,
@@ -41,12 +26,16 @@ import {
   Stethoscope,
   FileText,
   Brain,
-  EyeIcon,
   XIcon,
   ChartArea,
 } from "lucide-react";
 import { toast } from "sonner";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
+import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
+import { EhrSummaryBand } from "../../../_ehr/summary-band";
+import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
+import { EhrTimeline } from "../../../_ehr/timeline";
+import { EhrReports } from "../../../_ehr/reports";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { useMobileLaboratoryByNationalNumberApi } from "@/data/electronic health record/api/mobile-laboratory-by-national-number";
 import { useMobileXRayByNationalNumberApi } from "@/data/electronic health record/api/mobile-xray-by-national-number";
@@ -112,6 +101,7 @@ const PersonMonitoringPage = (
   const mobileNumberByNationalNumber_m = useMobileNumberByNationalNumberApi();
 
   const locale = useLocale();
+  const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
   const today = new Date().toLocaleDateString("fa-IR", {
     year: "numeric",
     month: "2-digit",
@@ -129,6 +119,18 @@ const PersonMonitoringPage = (
     },
   });
   const { error: ehr_error } = ehr_query;
+
+  // The shared EHR layer, alongside step-1's own ehr_query. It reads the same
+  // person but classifies against `نرمال رنج` and covers imaging/pathology as
+  // well, which the LAB-only query above does not.
+  const ehr = usePersonEhr({
+    nationalId: national_id,
+    campaignDate: data?.created_at ?? "",
+    enabled: Boolean(data),
+  });
+  const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(
+    null
+  );
 
   React.useEffect(() => {
     if (ehr_error) {
@@ -158,60 +160,6 @@ const PersonMonitoringPage = (
     });
     return grouped;
   }, [labData]);
-
-  // Prepare chart data for key tests
-  const chartData = React.useMemo(() => {
-    const keyTests = ["Hb", "Hct", "W.B.C", "R.B.C", "Platelets"];
-    const charts: Record<
-      string,
-      Array<{
-        date: string;
-        formattedDate: string;
-        value: number;
-        min: number;
-        max: number;
-        timestamp: number;
-      }>
-    > = {};
-
-    keyTests.forEach((testName) => {
-      const records = groupedLabData[testName] || [];
-      const chartPoints = records
-        .filter((r) => {
-          const value = parseFloat(r["جواب"] || "0");
-          const range = r["نرمال رنج"];
-          return !isNaN(value) && value > 0 && range;
-        })
-        .map((r) => {
-          const value = parseFloat(r["جواب"] || "0");
-          const range = r["نرمال رنج"] || "";
-          const date = r["تاريخ"] || "";
-
-          const rangeMatch = range.match(/(\d+\.?\d*)-(\d+\.?\d*)/);
-          const min = rangeMatch ? parseFloat(rangeMatch[1]) : 0;
-          const max = rangeMatch ? parseFloat(rangeMatch[2]) : 0;
-
-          const [year, month, day] = date.split("/").map(Number);
-          const dateObj = newDate(year, month - 1, day);
-
-          return {
-            date,
-            formattedDate: format(dateObj, "yyyy/MM/dd"),
-            value,
-            min,
-            max,
-            timestamp: dateObj.getTime(),
-          };
-        })
-        .sort((a, b) => a.timestamp - b.timestamp);
-
-      if (chartPoints.length > 0) {
-        charts[testName] = chartPoints;
-      }
-    });
-
-    return charts;
-  }, [groupedLabData]);
 
   // Get latest lab values
   const latestLabValues = React.useMemo(() => {
@@ -368,6 +316,19 @@ const PersonMonitoringPage = (
         </CardHeader>
       </Card>
 
+      <EhrSummaryBand ehr={ehr} onSelectSeries={setSelectedSeries} />
+
+      {ehr.hasAny && data && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{tEhr("timelineTitle")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <EhrTimeline ehr={ehr} campaignDate={data.created_at} />
+          </CardContent>
+        </Card>
+      )}
+
       {/* Vital Signs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
@@ -510,89 +471,6 @@ const PersonMonitoringPage = (
             })}
           </div>
 
-          {/* Lab Trends Charts */}
-          {/* {Object.keys(chartData).length > 0 && (
-            <div className="space-y-6 mt-6">
-              <h3 className="text-lg font-semibold">
-                روند تغییرات آزمایشات کلیدی
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.entries(chartData).map(([testName, data]) => {
-                  if (data.length === 0) return null;
-
-                  const chartConfig: ChartConfig = {
-                    value: {
-                      label: testName,
-                      color: "var(--chart-1)",
-                    },
-                    min: {
-                      label: "حداقل نرمال",
-                      color: "var(--chart-2)",
-                    },
-                    max: {
-                      label: "حداکثر نرمال",
-                      color: "var(--chart-3)",
-                    },
-                  };
-
-                  return (
-                    <Card key={testName} className="p-4">
-                      <CardTitle className="text-base mb-4">
-                        {testName}
-                      </CardTitle>
-                      <ChartContainer
-                        config={chartConfig}
-                        className="h-[200px]"
-                      >
-                        <ComposedChart data={data}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            dataKey="formattedDate"
-                            tick={{ fontSize: 12 }}
-                            angle={-45}
-                            textAnchor="end"
-                            height={60}
-                          />
-                          <YAxis tick={{ fontSize: 12 }} />
-                          <ChartTooltip content={<ChartTooltipContent />} />
-                          <ReferenceArea
-                            y1={data[0]?.min}
-                            y2={data[0]?.max}
-                            fill="rgba(22, 163, 74, 0.1)"
-                            stroke="none"
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="value"
-                            stroke="var(--color-value)"
-                            strokeWidth={2}
-                            dot={{ r: 4 }}
-                            activeDot={{ r: 6 }}
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="min"
-                            stroke="var(--color-min)"
-                            strokeWidth={1}
-                            strokeDasharray="5 5"
-                            dot={false}
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="max"
-                            stroke="var(--color-max)"
-                            strokeWidth={1}
-                            strokeDasharray="5 5"
-                            dot={false}
-                          />
-                        </ComposedChart>
-                      </ChartContainer>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-          )} */}
 
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetContent side="bottom" className="max-h-[100dvh]">
@@ -636,9 +514,7 @@ const PersonMonitoringPage = (
                   const latest = latestLabValues[testName];
                   if (!latest) return null;
 
-                  const value = parseFloat(latest["جواب"] || "0");
                   const range = latest["نرمال رنج"];
-                  const isNormal = range && !isNaN(value) && value > 0;
 
                   return (
                     <div
@@ -653,7 +529,6 @@ const PersonMonitoringPage = (
                               {localeDigits(latest["جواب"], locale)}{" "}
                               {range && `(${localeDigits(range, locale)})`}
                             </span>
-                            {isNormal && getStatusIcon("طبیعی")}
                           </div>
                         )}
                       </div>
@@ -1267,6 +1142,15 @@ const PersonMonitoringPage = (
           )}
         </div>
       )}
+
+      <EhrReports ehr={ehr} />
+
+      <EhrTrendDialog
+        series={selectedSeries}
+        onOpenChange={(open) => {
+          if (!open) setSelectedSeries(null);
+        }}
+      />
     </div>
   );
 };

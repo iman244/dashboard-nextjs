@@ -68,7 +68,7 @@ export const EhrSummaryBand = ({
   onSelectSeries: (series: LabSeries) => void;
 }) => {
   const t = useTranslations(
-    "/console/saderat-bank-health-monitoring.Step2Detail"
+    "/console/saderat-bank-health-monitoring.Ehr"
   );
   const locale = useLocale();
   const [expanded, setExpanded] = React.useState(false);
@@ -80,14 +80,14 @@ export const EhrSummaryBand = ({
     <Card>
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div className="space-y-1">
-          <CardTitle>{t("ehr.title")}</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           {!ehr.isPending && ehr.hasAny && (
             <p className="text-sm text-muted-foreground">
-              {t("ehr.resultCount", {
+              {t("resultCount", {
                 count: localeDigits(ehr.totalResults, locale),
               })}
               {ehr.latestDate
-                ? ` · ${t("ehr.latest", {
+                ? ` · ${t("latest", {
                     date: localeDigits(ehr.latestDate, locale),
                   })}`
                 : ""}
@@ -102,17 +102,17 @@ export const EhrSummaryBand = ({
                 ehr.abnormalCount > 0 ? "text-destructive" : "text-muted-foreground"
               )}
             >
-              {t("ehr.abnormalCount", {
+              {t("abnormalCount", {
                 count: localeDigits(ehr.abnormalCount, locale),
               })}
             </span>
             <span className="text-muted-foreground">
               {" · "}
-              {t("ehr.normalCount", {
+              {t("normalCount", {
                 count: localeDigits(ehr.normalCount, locale),
               })}
               {ehr.unknownCount > 0 &&
-                ` · ${t("ehr.unknownCount", {
+                ` · ${t("unknownCount", {
                   count: localeDigits(ehr.unknownCount, locale),
                 })}`}
             </span>
@@ -136,7 +136,7 @@ export const EhrSummaryBand = ({
           <div className="flex items-start gap-2 text-sm text-muted-foreground">
             <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
             <span className="min-w-0">
-              {t("ehr.loadError")}
+              {t("loadError")}
               {ehr.errorMessage && (
                 <span className="block text-xs opacity-70">
                   {ehr.errorMessage}
@@ -149,7 +149,7 @@ export const EhrSummaryBand = ({
         {!ehr.isPending && !ehr.isError && ehr.labs.length === 0 && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Inbox aria-hidden="true" className="h-4 w-4 shrink-0" />
-            <span>{t("ehr.noLabs")}</span>
+            <span>{t("noLabs")}</span>
           </div>
         )}
 
@@ -162,7 +162,7 @@ export const EhrSummaryBand = ({
                   series={series}
                   onSelect={onSelectSeries}
                   locale={locale}
-                  rangeLabel={t("ehr.rangeLabel")}
+                  rangeLabel={t("rangeLabel")}
                 />
               ))}
             </div>
@@ -173,8 +173,8 @@ export const EhrSummaryBand = ({
                 onClick={() => setExpanded((v) => !v)}
               >
                 {expanded
-                  ? t("ehr.showLess")
-                  : t("ehr.showAll", { count: localeDigits(hidden, locale) })}
+                  ? t("showLess")
+                  : t("showAll", { count: localeDigits(hidden, locale) })}
               </Button>
             )}
           </div>

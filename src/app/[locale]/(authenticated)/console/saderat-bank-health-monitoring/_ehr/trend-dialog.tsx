@@ -32,16 +32,16 @@ export const EhrTrendDialog = ({
   onOpenChange: (open: boolean) => void;
 }) => {
   const t = useTranslations(
-    "/console/saderat-bank-health-monitoring.Step2Detail"
+    "/console/saderat-bank-health-monitoring.Ehr"
   );
   const locale = useLocale();
   const isFa = locale === "fa";
 
   const chartConfig = React.useMemo<ChartConfig>(
     () => ({
-      value: { label: t("ehr.chartValue"), color: "var(--chart-1)" },
-      min: { label: t("ehr.chartMin"), color: "var(--muted-foreground)" },
-      max: { label: t("ehr.chartMax"), color: "var(--muted-foreground)" },
+      value: { label: t("chartValue"), color: "var(--chart-1)" },
+      min: { label: t("chartMin"), color: "var(--muted-foreground)" },
+      max: { label: t("chartMax"), color: "var(--muted-foreground)" },
     }),
     [t]
   );
@@ -66,7 +66,7 @@ export const EhrTrendDialog = ({
           <DialogTitle>{series?.service}</DialogTitle>
           <DialogDescription>
             {series
-              ? t("ehr.measurementCount", {
+              ? t("measurementCount", {
                   count: localeDigits(series.points.length, locale),
                 })
               : ""}
@@ -87,8 +87,8 @@ export const EhrTrendDialog = ({
               </span>
               <span className="text-sm text-muted-foreground tabular-nums">
                 {series.latest.range
-                  ? `${t("ehr.rangeLabel")} ${localeDigits(series.latest.range, locale)}`
-                  : t("ehr.noRange")}
+                  ? `${t("rangeLabel")} ${localeDigits(series.latest.range, locale)}`
+                  : t("noRange")}
               </span>
               <span className="ms-auto text-sm text-muted-foreground tabular-nums">
                 {localeDigits(series.latest.date, locale)}
@@ -143,7 +143,7 @@ export const EhrTrendDialog = ({
               </ChartContainer>
             ) : (
               <p className="text-sm text-muted-foreground">
-                {t("ehr.notEnoughPoints")}
+                {t("notEnoughPoints")}
               </p>
             )}
           </div>

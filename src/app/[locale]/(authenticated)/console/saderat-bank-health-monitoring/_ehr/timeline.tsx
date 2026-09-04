@@ -24,7 +24,7 @@ export const EhrTimeline = ({
   campaignDate: string;
 }) => {
   const t = useTranslations(
-    "/console/saderat-bank-health-monitoring.Step2Detail"
+    "/console/saderat-bank-health-monitoring.Ehr"
   );
   const locale = useLocale();
 
@@ -75,7 +75,7 @@ export const EhrTimeline = ({
         {model.markers.map((marker) => (
           <span
             key={marker.key}
-            title={`${localeDigits(marker.label, locale)} · ${t("ehr.resultCount", {
+            title={`${localeDigits(marker.label, locale)} · ${t("resultCount", {
               count: localeDigits(marker.count, locale),
             })}`}
             style={{ insetInlineStart: `${marker.offset}%` }}
@@ -94,12 +94,12 @@ export const EhrTimeline = ({
           style={{ insetInlineStart: `${model.examOffset}%` }}
           className="absolute top-8 -translate-x-1/2 whitespace-nowrap text-[0.7rem] font-medium text-destructive rtl:translate-x-1/2"
         >
-          {t("ehr.examMarker")}
+          {t("examMarker")}
         </span>
       </div>
 
       <p className="text-xs text-muted-foreground">
-        {t("ehr.timelineHint", {
+        {t("timelineHint", {
           date: localeDigits(model.examLabel, locale),
         })}
       </p>

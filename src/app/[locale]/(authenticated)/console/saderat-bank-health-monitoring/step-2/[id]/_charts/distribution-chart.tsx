@@ -5,7 +5,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
-import { LocaleChartTooltip } from "./locale-tooltip";
+import { LocaleChartTooltip } from "../../../_charts/locale-tooltip";
 import type { DistributionDatum } from "../_data/use-step2-report";
 
 const chartConfig = { value: { label: "value" } };
