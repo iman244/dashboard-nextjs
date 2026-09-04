@@ -27,7 +27,13 @@ import {
   TextCard,
   isBlank,
 } from "../../../_detail/blocks";
-import { STEP2_SECTIONS, STEP2_VITALS } from "../_detail/sections";
+import {
+  DENSITY_GRID,
+  STEP2_SECTIONS,
+  STEP2_VITALS,
+  fieldOf,
+  iconOf,
+} from "../_detail/sections";
 import { noteKeyFor } from "../_detail/notes";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
@@ -68,25 +74,31 @@ const RecordSections = ({ record }: { record: SBHM_Step2Record }) => {
         // a note belongs under the field it annotates, never as a row of its own
         const notes = new Set(
           section.fields
-            .map((f) => noteKeyFor(f))
+            .map((f) => noteKeyFor(fieldOf(f)))
             .filter((n): n is NonNullable<typeof n> => Boolean(n))
         );
-        const fields = section.fields.filter(
-          (f) => !notes.has(f) && !isBlank(record[f])
-        );
-        if (fields.length === 0) return null;
+        const entries = section.fields.filter((f) => {
+          const field = fieldOf(f);
+          return !notes.has(field) && !isBlank(record[field]);
+        });
+        if (entries.length === 0) return null;
+
+        const grid = DENSITY_GRID[section.density];
 
         if (section.kind === "texts") {
           return (
-            <div key={section.titleKey} className="grid gap-4 md:grid-cols-2">
-              {fields.map((field) => (
-                <TextCard
-                  key={field}
-                  icon={section.icon}
-                  title={field}
-                  value={record[field]}
-                />
-              ))}
+            <div key={section.titleKey} className={grid}>
+              {entries.map((entry) => {
+                const field = fieldOf(entry);
+                return (
+                  <TextCard
+                    key={field}
+                    icon={section.icon}
+                    title={field}
+                    value={record[field]}
+                  />
+                );
+              })}
             </div>
           );
         }
@@ -97,13 +109,15 @@ const RecordSections = ({ record }: { record: SBHM_Step2Record }) => {
             icon={section.icon}
             title={t(section.titleKey)}
           >
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {fields.map((field) => {
+            <div className={grid}>
+              {entries.map((entry) => {
+                const field = fieldOf(entry);
                 const noteKey = noteKeyFor(field);
                 return (
                   <BadgeItem
                     key={field}
                     label={field}
+                    icon={iconOf(entry)}
                     value={record[field] as string | number | null}
                     note={noteKey ? record[noteKey] : undefined}
                   />

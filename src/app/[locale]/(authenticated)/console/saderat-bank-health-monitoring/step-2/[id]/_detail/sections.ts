@@ -4,12 +4,14 @@ import {
   Brain,
   Briefcase,
   Bone,
+  Droplet,
   Ear,
   FileText,
   Heart,
   Ruler,
   Stethoscope,
   Thermometer,
+  TrendingUp,
   Wind,
   type LucideIcon,
 } from "lucide-react";
@@ -50,12 +52,42 @@ export const STEP2_VITALS: VitalStat[] = [
   { field: "Height", icon: Ruler, unit: "cm" },
 ];
 
+/**
+ * A field in a section, optionally carrying its own icon.
+ *
+ * step-1 draws its clinical-exam findings with a leading system icon and
+ * everything else without one, so the icon belongs to the field rather than
+ * to the section.
+ */
+export type SectionField = F | { field: F; icon: LucideIcon };
+
+export const fieldOf = (f: SectionField): F =>
+  typeof f === "string" ? f : f.field;
+
+export const iconOf = (f: SectionField): LucideIcon | undefined =>
+  typeof f === "string" ? undefined : f.icon;
+
 export type Step2Section = {
   titleKey: string;
   icon: LucideIcon;
   /** "badges" renders a grid of verdicts; "texts" renders full-width prose. */
   kind: "badges" | "texts";
-  fields: F[];
+  /**
+   * How tightly the section's grid packs, following step-1: short verdicts
+   * four across, clinical findings three, long questionnaire sentences and
+   * imaging reports two so the Persian prose is not squeezed.
+   */
+  density: Density;
+  fields: SectionField[];
+};
+
+export type Density = "dense" | "medium" | "wide";
+
+/** step-1's grid class strings, verbatim. */
+export const DENSITY_GRID: Record<Density, string> = {
+  dense: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4",
+  medium: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+  wide: "grid grid-cols-1 md:grid-cols-2 gap-4",
 };
 
 export const STEP2_SECTIONS: Step2Section[] = [
@@ -63,6 +95,7 @@ export const STEP2_SECTIONS: Step2Section[] = [
     titleKey: "sections.ecg",
     icon: Heart,
     kind: "badges",
+    density: "dense",
     fields: [
       "ECG Diagnisis:",
       "P wave:",
@@ -81,37 +114,42 @@ export const STEP2_SECTIONS: Step2Section[] = [
     titleKey: "sections.clinicalExam",
     icon: Stethoscope,
     kind: "badges",
+    density: "medium",
+    // icons per finding, mirroring step-1's clinicalSections choices wherever
+    // the two workbooks name the same system
     fields: [
-      "علائم عمومي",
-      "قلب",
+      { field: "علائم عمومي", icon: Activity },
+      { field: "قلب", icon: Heart },
       "توضیحات قلب",
-      "گوارش",
+      { field: "گوارش", icon: Stethoscope },
       "توضیحات گوارش",
-      "سيستم تنفسي",
-      "توضیحات  ارزيابي تنفسي",
-      "نورولوژی",
-      "نورولوژی.1",
+      { field: "سيستم تنفسي", icon: Activity },
+      { field: "توضیحات  ارزيابي تنفسي", icon: Wind },
+      { field: "نورولوژی", icon: Brain },
+      { field: "نورولوژی.1", icon: Brain },
       "توضیحات نورولوژی",
-      "سر و گردن",
+      { field: "سر و گردن", icon: Stethoscope },
       "توضیحات سر و گردن",
-      "بینی و سینوس‌ها",
+      { field: "بینی و سینوس‌ها", icon: Wind },
       "توضیحات بینی و سینوس‌ها",
-      "هماتولوژي",
+      { field: "هماتولوژي", icon: Droplet },
       "توضیحات هماتولوژي",
-      "روماتولوژي",
+      { field: "روماتولوژي", icon: Stethoscope },
       "توضیحات روماتولوژي",
-      "اندوكرينولوژي",
+      { field: "اندوكرينولوژي", icon: TrendingUp },
       "توضیحات اندوكرينولوژي",
-      "توضیحات سایکولوژی",
-      "پوست و  مو",
-      "مشکلات بالینی",
-      "مشکلات آزمایشگاهی",
+      // orphan note: step_2 has no سایکولوژی field for it to sit under
+      { field: "توضیحات سایکولوژی", icon: FileText },
+      { field: "پوست و  مو", icon: Stethoscope },
+      { field: "مشکلات بالینی", icon: FileText },
+      { field: "مشکلات آزمایشگاهی", icon: FileText },
     ],
   },
   {
     titleKey: "sections.dental",
     icon: Ear,
     kind: "badges",
+    density: "dense",
     fields: [
       "دهان و حلق و دندان",
       "توضیحات دهان و حلق و دندان",
@@ -119,10 +157,15 @@ export const STEP2_SECTIONS: Step2Section[] = [
       "دندان هاي ترميم شده و اندو شده",
     ],
   },
+  // The two gender-specific examinations are separate sections, not one
+  // mixed section titled for women. Neither needs a gender check: a section
+  // whose every field is blank renders nothing, so a male record shows only
+  // the men's one.
   {
     titleKey: "sections.womensHealth",
     icon: Activity,
     kind: "badges",
+    density: "wide",
     fields: [
       "پستان",
       "توضیحات در مورد پستان",
@@ -133,8 +176,6 @@ export const STEP2_SECTIONS: Step2Section[] = [
       "توضیحات معاينات ‍ژنيكولوژي*",
       "لگن و ارگان تناسلي ادراري(زنان)",
       "توضیحات لگن و ارگان تناسلي ادراري(زنان)",
-      "لگن  و ارگان تناسلي ادراري (مردان)",
-      "توضیحات لگن  و ارگان تناسلي ادراري (مردان)",
       "آيافواصل قاعدگي شما منظم است؟",
       "روش پيشگيري از حاملگي",
       "آيا درحال حاضر بيماري مرتبط با زنان داريد؟",
@@ -142,9 +183,20 @@ export const STEP2_SECTIONS: Step2Section[] = [
     ],
   },
   {
+    titleKey: "sections.mensHealth",
+    icon: Stethoscope,
+    kind: "badges",
+    density: "wide",
+    fields: [
+      "لگن  و ارگان تناسلي ادراري (مردان)",
+      "توضیحات لگن  و ارگان تناسلي ادراري (مردان)",
+    ],
+  },
+  {
     titleKey: "sections.imaging",
     icon: FileText,
     kind: "badges",
+    density: "wide",
     fields: [
       "راديوگرافي قفسه سينه",
       "راديوگرافي قفسه سينه.1",
@@ -166,6 +218,7 @@ export const STEP2_SECTIONS: Step2Section[] = [
     titleKey: "sections.musculoskeletal",
     icon: Bone,
     kind: "badges",
+    density: "dense",
     fields: [
       "سيستم عضلاني اسكلتي فوقان",
       "توضیحات سيستم عضلاني اسكلتي فوقان",
@@ -181,6 +234,7 @@ export const STEP2_SECTIONS: Step2Section[] = [
     titleKey: "sections.medicalHistory",
     icon: Brain,
     kind: "badges",
+    density: "wide",
     fields: [
       "آيا سابقه بيماري هاي ذيل را داريد؟",
       "آيا سابقه بيماري ديگري داريد؟ذكرنمائيد.",
@@ -206,6 +260,7 @@ export const STEP2_SECTIONS: Step2Section[] = [
     titleKey: "sections.occupationalRisk",
     icon: Briefcase,
     kind: "badges",
+    density: "wide",
     fields: [
       "عوامل فیزیکی",
       "عوامل فیزیکی.1",
@@ -235,6 +290,7 @@ export const STEP2_SECTIONS: Step2Section[] = [
     titleKey: "sections.smoking",
     icon: Wind,
     kind: "badges",
+    density: "dense",
     fields: [
       "آيا سيگارميكشيد؟",
       "تعداد نخ سیگار در روز",
@@ -249,6 +305,7 @@ export const STEP2_SECTIONS: Step2Section[] = [
     titleKey: "sections.administrative",
     icon: Briefcase,
     kind: "badges",
+    density: "dense",
     fields: [
       "شماره پرسنل",
       "عنوان شغل",
@@ -267,6 +324,7 @@ export const STEP2_SECTIONS: Step2Section[] = [
     titleKey: "sections.followUp",
     icon: AlertCircle,
     kind: "texts",
+    density: "wide",
     fields: [
       "توصیه‌های عمومی",
       "توضیحات توصیه‌های عمومی",

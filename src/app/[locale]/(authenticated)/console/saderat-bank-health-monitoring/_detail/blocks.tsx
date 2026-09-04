@@ -101,17 +101,50 @@ export const SectionCard = ({
   </Card>
 );
 
-/** One reading in a section grid: label, verdict badge, status mark, note. */
+/**
+ * One reading in a section grid: label, verdict badge, status mark, note.
+ *
+ * Two shapes, both step-1's. With an `icon` it is step-1's clinical-exam row
+ * — the icon leading, label above the badge. Without one it is step-1's lab
+ * row — label above, badge and status mark on one line. The note, when there
+ * is one, sits underneath either way.
+ */
 export const BadgeItem = ({
   label,
   value,
   note,
+  icon: Icon,
 }: {
   label: string;
   value: string | number | null;
   note?: unknown;
+  icon?: LucideIcon;
 }) => {
   const locale = useLocale();
+  const noteEl = !isBlank(note) ? (
+    <p className="text-xs text-muted-foreground italic whitespace-pre-line">
+      {formatCellValue(note as string, locale)}
+    </p>
+  ) : null;
+
+  if (Icon) {
+    return (
+      <div className="flex items-start gap-3 p-3 border rounded-lg">
+        <Icon
+          aria-hidden="true"
+          className="h-5 w-5 mt-0.5 text-muted-foreground"
+        />
+        <div className="flex-1">
+          <div className="font-medium text-sm">{label}</div>
+          <Badge variant={getStatusColor(value)} className="mt-1 text-xs">
+            {value != null ? formatCellValue(value, locale) : "-"}
+          </Badge>
+          {noteEl}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-2 p-3 border rounded-lg">
       <div className="text-xs text-muted-foreground">{label}</div>
@@ -121,11 +154,7 @@ export const BadgeItem = ({
         </Badge>
         {getStatusIcon(value)}
       </div>
-      {!isBlank(note) && (
-        <p className="text-xs text-muted-foreground italic whitespace-pre-line">
-          {formatCellValue(note as string, locale)}
-        </p>
-      )}
+      {noteEl}
     </div>
   );
 };
