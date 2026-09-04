@@ -110,12 +110,24 @@ const PersonMonitoringPage = (
   });
   const { error: ehr_error } = ehr_query;
 
+  const person_data = React.useMemo(() => {
+    return data?.json.find(
+      (item) => item["personel.کد ملی"] === national_id
+    ) as MonitoringData | undefined;
+  }, [data, national_id]);
+
   // The shared EHR layer, alongside step-1's own ehr_query. It reads the same
   // person but classifies against `نرمال رنج` and covers imaging/pathology as
   // well, which the LAB-only query above does not.
+  //
+  // `تاریخ` is this person's own exam date. The campaign's `created_at` is
+  // when the workbook was uploaded, so it cannot stand in for it.
   const ehr = usePersonEhr({
     nationalId: national_id,
     campaignDate: data?.created_at ?? "",
+    examDate: person_data?.["تاریخ"]
+      ? String(person_data["تاریخ"])
+      : undefined,
     enabled: Boolean(data),
   });
   const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(
@@ -127,12 +139,6 @@ const PersonMonitoringPage = (
       toast.error("خطا در دریافت جزییات آزمایش‌ها: " + ehr_error.message);
     }
   }, [ehr_error]);
-
-  const person_data = React.useMemo(() => {
-    return data?.json.find(
-      (item) => item["personel.کد ملی"] === national_id
-    ) as MonitoringData | undefined;
-  }, [data, national_id]);
 
   const labData = React.useMemo(() => {
     return ehr_query.data || [];
