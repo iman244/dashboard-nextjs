@@ -96,7 +96,7 @@ Always: `npm install` → `npm run build` → `npx tsc --noEmit`.
 | Phase | State | Artifact |
 |---|---|---|
 | 1. Audit | ✅ done (2026-09-04) — 12 findings, health score 16/40 | `01-AUDIT.md` |
-| 2. Plan | not started | `docs/superpowers/plans/` |
+| 2. Plan | ✅ done (2026-09-04) — 10 tasks, Wave 1 | `docs/superpowers/plans/2026-09-04-ui-ux-pass.md` |
 | 3. Execute | not started | checkboxes in the plan |
 | 4. Verify | not started | tsc + lint + build + browser check, both directions |
 
