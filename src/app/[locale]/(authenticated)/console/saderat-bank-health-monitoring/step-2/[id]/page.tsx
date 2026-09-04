@@ -157,6 +157,7 @@ const Step2MonitoringPage = (
           if (!open) setActiveFilter(undefined);
         }}
         data={records ?? []}
+        monitoringId={data.id}
         filter={activeFilter}
       />
     </div>

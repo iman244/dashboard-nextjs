@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Search, XIcon } from "lucide-react";
+import { FileSearch, Search, XIcon } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -17,6 +17,7 @@ import { DataTable, TablePagination } from "@/components/app";
 import { appTableFeatures } from "@/components/app/table-features";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { localeDigits } from "@/lib/utils";
+import { Link } from "@/i18n/navigation";
 import type { SBHM_Step2Record } from "@/data/saderat-bank-health-monitoring/types";
 
 const columnHelper = createColumnHelper<
@@ -33,18 +34,19 @@ export type PersonnelFilter = {
  * The people behind a bar. Opened by clicking a chart; `filter` carries the
  * predicate for the clicked value.
  *
- * Rows are not links: step-2 has no per-person page. step-1 has [national_id]
- * and does link. If step-2 gains that page, the name cell is where it goes.
+ * The actions column links to the per-person page, keyed on national id.
  */
 export function SearchPersonnelSheet({
   open,
   onOpenChange,
   data,
+  monitoringId,
   filter,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   data: SBHM_Step2Record[];
+  monitoringId: number;
   filter?: PersonnelFilter;
 }) {
   const t = useTranslations(
@@ -73,8 +75,27 @@ export function SearchPersonnelSheet({
           header: "کد ملی",
           cell: (info) => localeDigits(String(info.getValue() ?? ""), locale),
         }),
+        columnHelper.display({
+          id: "actions",
+          header: t("Actions"),
+          cell: ({ row }) => {
+            const nationalId = String(row.original["کد ملی"] ?? "");
+            // the route keys on national id; a row without one has nowhere to go
+            if (!nationalId) return null;
+            return (
+              <Button variant="ghost" size="sm" asChild>
+                <Link
+                  href={`/console/saderat-bank-health-monitoring/step-2/${monitoringId}/${nationalId}`}
+                  onClick={() => onOpenChange(false)}
+                >
+                  <FileSearch className="h-4 w-4" />
+                </Link>
+              </Button>
+            );
+          },
+        }),
       ]),
-    [locale]
+    [locale, monitoringId, onOpenChange, t]
   );
 
   const table = useTable({
