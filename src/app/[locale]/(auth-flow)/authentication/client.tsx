@@ -179,13 +179,18 @@ export function Client() {
                 className="group mt-7 h-12 w-full rounded-full text-[15px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.10),0_8px_20px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_1px_2px_rgba(0,0,0,0.12),0_12px_28px_-8px_color-mix(in_oklab,var(--primary)_65%,transparent)] active:scale-[0.985]"
               >
                 <span className="flex w-full items-center justify-center gap-3">
-                  {isPending && <Spinner className="size-4" />}
                   {isPending ? t("buttons.signingIn") : t("buttons.signIn")}
-                  {!isPending && (
-                    <span
-                      aria-hidden="true"
-                      className="flex size-7 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5"
-                    >
+                  {/* One trailing slot whose contents swap. The spinner used to
+                      render on the leading side while the arrow sat trailing, so
+                      the label jumped sideways on click — ux-guidelines #19,
+                      keep async states in a stable container. */}
+                  <span
+                    aria-hidden="true"
+                    className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5"
+                  >
+                    {isPending ? (
+                      <Spinner className="size-3.5" />
+                    ) : (
                       <svg viewBox="0 0 16 16" fill="none" className="size-3.5 rtl:rotate-180">
                         <path
                           d="M2.5 8h10M9 4.5 12.5 8 9 11.5"
@@ -195,8 +200,8 @@ export function Client() {
                           strokeLinejoin="round"
                         />
                       </svg>
-                    </span>
-                  )}
+                    )}
+                  </span>
                 </span>
               </Button>
             </form>
