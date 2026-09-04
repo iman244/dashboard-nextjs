@@ -4,6 +4,7 @@ import { BarChart, FileText, SquareActivity, User } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
+import { NavUser } from "./nav-user";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -71,6 +73,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter dir={dir}>
+        <NavUser />
+      </SidebarFooter>
     </Sidebar>
   );
 }

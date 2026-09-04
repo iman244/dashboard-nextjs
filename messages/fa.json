@@ -204,7 +204,9 @@
       "periodicalReports": "گزارشات دوره‌ای",
       "patientReports": "گزارشات بیمار",
       "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
-      "formSabtPayesh": "فرم ثبت پایش"
+      "formSabtPayesh": "فرم ثبت پایش",
+      "account": "حساب کاربری",
+      "logout": "خروج"
     }
   },
   "/console/electronic-health-record": {
