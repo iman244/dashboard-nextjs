@@ -81,14 +81,14 @@ export const EhrSummaryBand = ({
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div className="space-y-1">
           <CardTitle>{t("title")}</CardTitle>
-          {!ehr.isPending && ehr.hasAny && (
+          {!ehr.isPending && ehr.labs.length > 0 && (
             <p className="text-sm text-muted-foreground">
               {t("resultCount", {
-                count: localeDigits(ehr.totalResults, locale),
+                count: localeDigits(ehr.labResultCount, locale),
               })}
-              {ehr.latestDate
+              {ehr.latestLabDate
                 ? ` · ${t("latest", {
-                    date: localeDigits(ehr.latestDate, locale),
+                    date: localeDigits(ehr.latestLabDate, locale),
                   })}`
                 : ""}
             </p>
@@ -149,7 +149,13 @@ export const EhrSummaryBand = ({
         {!ehr.isPending && !ehr.isError && ehr.labs.length === 0 && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Inbox aria-hidden="true" className="h-4 w-4 shrink-0" />
-            <span>{t("noLabs")}</span>
+            <span>
+              {ehr.reports.length > 0
+                ? t("noLabsButReports", {
+                    count: localeDigits(ehr.reports.length, locale),
+                  })
+                : t("noLabs")}
+            </span>
           </div>
         )}
 

@@ -61,6 +61,10 @@ export type PersonEhr = {
   normalCount: number;
   /** Results whose reference range could not be read — neither pass nor fail. */
   unknownCount: number;
+  /** Lab measurements only — what the band actually lists. */
+  labResultCount: number;
+  latestLabDate?: string;
+  /** Labs plus reports, for the timeline which plots both. */
   totalResults: number;
   latestDate?: string;
   /** Jalali sort key of the screening, for before/after comparisons. */
@@ -163,6 +167,14 @@ const buildPersonEhr = (
     abnormalCount,
     normalCount,
     unknownCount: labs.length - abnormalCount - normalCount,
+    labResultCount: points.length,
+    latestLabDate: labs.length
+      ? labs.reduce(
+          (latest, series) =>
+            series.latest.sortKey > latest.sortKey ? series.latest : latest,
+          labs[0].latest
+        ).date
+      : undefined,
     totalResults: points.length + reports.length,
     latestDate: events[events.length - 1]?.date,
     examSortKey,
