@@ -354,5 +354,71 @@
       "ShowAbnormalOnly": "Abnormal only",
       "ViewTestChart": "View test trend chart"
     }
+  },
+  "/patient/sign-in": {
+    "SignInPage": {
+      "title": "Patient sign in",
+      "description": "Enter your national ID to see your own health records.",
+      "form": {
+        "nationalId": {
+          "label": "National ID",
+          "placeholder": "10-digit national ID"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        }
+      },
+      "errors": {
+        "nationalIdRequired": "National ID is required",
+        "passwordRequired": "Password is required",
+        "invalidCredentials": "Incorrect national ID or password",
+        "requestFailed": "Could not reach the records service. Please try again."
+      },
+      "buttons": {
+        "signIn": "Sign in",
+        "signingIn": "Checking…"
+      }
+    }
+  },
+  "/patient/records": {
+    "PatientRecords": {
+      "title": "My health records",
+      "subtitle": "National ID: {nationalId}",
+      "refresh": "Refresh",
+      "signOut": "Sign out",
+      "filter": {
+        "title": "Filters",
+        "description": "Choose a date range and a record type.",
+        "dateRange": "Date range",
+        "selectDateRange": "Select a date range",
+        "patientType": "Record type",
+        "selectPatientType": "Select a record type",
+        "clear": "Reset",
+        "search": "Apply"
+      },
+      "activeFilters": {
+        "label": "Active filters",
+        "dateRange": "Date range:",
+        "patientType": "Record type:"
+      },
+      "columns": {
+        "date": "Date",
+        "service": "Service",
+        "doctor": "Doctor",
+        "place": "Location",
+        "patientType": "Record type",
+        "actions": "Actions"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "viewDetails": "View details"
+      },
+      "table": {
+        "error": "Could not load your records: {message}",
+        "retry": "Try again",
+        "noData": "No records in this date range"
+      }
+    }
   }
 }

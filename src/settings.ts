@@ -17,6 +17,9 @@ export const REFRESH_TOKEN_KEY =
 export const LOCALE_COOKIE_NAME =
   process.env.NEXT_PUBLIC_LOCALE_COOKIE_NAME || "locale";
 
+export const PATIENT_SESSION_KEY =
+  process.env.NEXT_PUBLIC_PATIENT_SESSION_KEY || "patient_national_id";
+
 console.log({
   DJANGO_ADDRESS: process.env.NEXT_PUBLIC_DJANGO_ADDRESS,
   DJANGO_API_PATH: process.env.NEXT_PUBLIC_DJANGO_API_PATH,

@@ -40,7 +40,10 @@ export const TablePagination = <T extends RowData,>({
   const NextIcon = isRtl ? ChevronLeft : ChevronRight;
   const LastIcon = isRtl ? ChevronsLeft : ChevronsRight;
   return (
-    <div className="flex items-center justify-between">
+    // flex-wrap: at narrow widths the row's two halves together exceed the
+    // container and used to push past it. Wrapping costs nothing wherever they
+    // already fit.
+    <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex items-center gap-2">
         <p className="text-sm text-muted-foreground">
           {t("Showing", {
