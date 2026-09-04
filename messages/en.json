@@ -401,7 +401,6 @@
     },
     "Ehr": {
       "recordsTitle": "Electronic Health Records",
-      "resultCount": "{count} results",
       "rangeLabel": "Normal range",
       "noRange": "No reference range",
       "loadError": "Could not load electronic health records.",
@@ -410,11 +409,7 @@
       "chartMax": "Upper bound",
       "measurementCount": "{count} measurements",
       "notEnoughPoints": "A trend needs more than one measurement.",
-      "afterScreening": "After screening",
       "openPatientReport": "Full Patient Report",
-      "tableWhen": "Relative to Screening",
-      "beforeScreening": "Before screening",
-      "andMore": "and {count} more",
       "viewDetails": "View details",
       "viewTrend": "Trend chart",
       "noRecords": "No electronic records found for this person."

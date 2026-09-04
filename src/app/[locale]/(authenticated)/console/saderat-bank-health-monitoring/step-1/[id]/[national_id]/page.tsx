@@ -119,15 +119,9 @@ const PersonMonitoringPage = (
   // The shared EHR layer, alongside step-1's own ehr_query. It reads the same
   // person but classifies against `نرمال رنج` and covers imaging/pathology as
   // well, which the LAB-only query above does not.
-  //
-  // `تاریخ` is this person's own exam date. The campaign's `created_at` is
-  // when the workbook was uploaded, so it cannot stand in for it.
   const ehr = usePersonEhr({
     nationalId: national_id,
     campaignDate: data?.created_at ?? "",
-    examDate: person_data?.["تاریخ"]
-      ? String(person_data["تاریخ"])
-      : undefined,
     enabled: Boolean(data),
   });
   const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(

@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, ChartLine, Eye, Inbox } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -54,7 +53,7 @@ export const EhrRecordsTable = ({
       [...ehr.events]
         .sort((a, b) => b.sortKey - a.sortKey)
         .flatMap((event) =>
-          event.items.map((item) => ({ ...item, date: event.date, sortKey: event.sortKey }))
+          event.items.map((item) => ({ ...item, date: event.date }))
         ),
     [ehr.events]
   );
@@ -90,11 +89,6 @@ export const EhrRecordsTable = ({
             <TableHead>{tDictionary("serviceName")}</TableHead>
             <TableHead>{tDictionary("answer")}</TableHead>
             <TableHead>{tDictionary("normalRange")}</TableHead>
-            {/* derived here, not a payload column, and only when the step
-                records an exam date to compare against */}
-            {ehr.examSortKey !== undefined && (
-              <TableHead>{t("tableWhen")}</TableHead>
-            )}
             <TableHead>
               <span className="sr-only">{t("viewDetails")}</span>
             </TableHead>
@@ -125,17 +119,6 @@ export const EhrRecordsTable = ({
               <TableCell className="whitespace-nowrap tabular-nums text-muted-foreground">
                 {row.range ? localeDigits(row.range, locale) : "—"}
               </TableCell>
-              {ehr.examSortKey !== undefined && (
-                <TableCell className="whitespace-nowrap">
-                  {row.sortKey > ehr.examSortKey ? (
-                    <Badge variant="secondary">{t("afterScreening")}</Badge>
-                  ) : (
-                    <span className="text-xs text-muted-foreground">
-                      {t("beforeScreening")}
-                    </span>
-                  )}
-                </TableCell>
-              )}
               <TableCell>
                 <span className="flex items-center gap-1">
                   {row.kind === "lab" && (

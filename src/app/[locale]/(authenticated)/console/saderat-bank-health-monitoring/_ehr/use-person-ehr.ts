@@ -83,15 +83,6 @@ export type PersonEhr = {
   /** Lab measurements only — what the band actually lists. */
   labResultCount: number;
   latestLabDate?: string;
-  /**
-   * Jalali sort key of the exam, for before/after comparisons.
-   *
-   * Undefined when the step has no exam date. It is deliberately NOT derived
-   * from the campaign's `created_at`, which is when the workbook was uploaded
-   * — a result landing after the exam but before the upload would otherwise
-   * be reported as predating the screening.
-   */
-  examSortKey?: number;
   /** The window these results were fetched over, so a link out can reuse it. */
   fromDate: string;
   toDate: string;
@@ -124,7 +115,7 @@ const toPoint = (record: ElectronicHealthRecord): LabPoint => {
  */
 const buildPersonEhr = (
   results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[],
-  range: { fromDate: string; toDate: string; examSortKey?: number }
+  range: { fromDate: string; toDate: string }
 ): PersonEhr => {
   const failed = results.find((r) => r.isError);
   const [labQuery, ...reportQueries] = results;
@@ -226,7 +217,6 @@ const buildPersonEhr = (
           labs[0].latest
         ).date
       : undefined,
-    examSortKey: range.examSortKey,
     fromDate: range.fromDate,
     toDate: range.toDate,
     hasAny: points.length > 0 || reports.length > 0,
@@ -237,21 +227,11 @@ const buildPersonEhr = (
 export const usePersonEhr = ({
   nationalId,
   campaignDate,
-  examDate,
   enabled = true,
 }: {
   nationalId: string;
-  /**
-   * `created_at` of the monitoring campaign, ISO. Used only to anchor how far
-   * back to request history — never as the exam date.
-   */
+  /** `created_at` of the campaign, ISO. Anchors how far back to ask, only. */
   campaignDate: string;
-  /**
-   * The person's own exam date, Jalali `yyyy/MM/dd`. step_1 records one per
-   * person; step_2 has no such column, so it passes nothing and the
-   * before/after comparison is withheld rather than guessed.
-   */
-  examDate?: string;
   enabled?: boolean;
 }): PersonEhr => {
   const range = React.useMemo(() => {
@@ -260,9 +240,8 @@ export const usePersonEhr = ({
     return {
       fromDate: format(subYears(anchor, EHR_HISTORY_YEARS), "yyyy/MM/dd"),
       toDate: format(new Date(), "yyyy/MM/dd"),
-      examSortKey: examDate ? jalaliSortKey(examDate) : undefined,
     };
-  }, [campaignDate, examDate]);
+  }, [campaignDate]);
 
   const combine = React.useCallback(
     (results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]) =>
