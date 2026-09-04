@@ -204,7 +204,9 @@
       "periodicalReports": "Periodical Reports",
       "patientReports": "Patient Reports",
       "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
-      "formSabtPayesh": "Form Sabt Payesh"
+      "formSabtPayesh": "Form Sabt Payesh",
+      "account": "Account",
+      "logout": "Log out"
     }
   },
   "/console/electronic-health-record": {

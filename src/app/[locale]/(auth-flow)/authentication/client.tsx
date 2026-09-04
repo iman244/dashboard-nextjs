@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
-import { Link } from "@/i18n/navigation";
+// import { Link } from "@/i18n/navigation"; // only used by the disabled signup link below
 import { useLocale, useTranslations } from "next-intl";
 import {
   Card,
@@ -30,7 +30,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils"; // only used by the disabled signup link below
 
 // Define the form schema
 const loginSchema = z.object({
@@ -141,7 +141,10 @@ export function Client() {
             </form>
           </Form>
 
-          <div className="text-center! text-sm">
+          {/* Signup is disabled: this is the only UI entry point to
+              /authentication/register, and that route now returns 404.
+              Uncomment both to re-enable signup. */}
+          {/* <div className="text-center! text-sm">
             <span className="text-muted-foreground">
               {t("form.register.label")}
             </span>
@@ -152,7 +155,7 @@ export function Client() {
             >
               {t("form.register.link")}
             </Link>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </main>
