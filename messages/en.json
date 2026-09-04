@@ -1,323 +1,355 @@
 {
-  "Metadata": {
-    "title": "Dashboard"
-  },
-  "Application": {
-    "copy": "Copy to clipboard",
-    "copied": "Copied!"
-  },
-  "Theme": {
-    "toggle": "Toggle theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System",
-    "current": "{theme} theme"
-  },
-  "NetworkErrorDialog": {
-    "AlertDialogTitle": "Network Error",
-    "AlertDialogDescription": "Connection to the server is lost. Please reload the page.",
-    "AlertDialogAction": "Reload"
-  },
-  "HomePage": {
-    "title": "Welcome",
-    "description": "Clinical data console to explore EHRs, run periodical analytics, and build patient-specific reports.",
-    "buttons": {
-      "goToConsole": "Go to Console",
-      "signInRegister": "Sign In / Register"
+  "common": {
+    "Application": {
+      "copy": "Copy to clipboard",
+      "copied": "Copied!"
     },
-    "features": {
-      "ehr": {
-        "title": "Electronic Health Records",
-        "description": "Search and filter clinical records with sortable tables and detail views."
-      },
-      "periodical": {
-        "title": "Periodical Reports",
-        "description": "Visualize trends with charts for records and patients over time."
-      },
-      "patient": {
-        "title": "Patient Reports",
-        "description": "Aggregate services per patient and drill down into result trends."
-      },
-      "cta": "Get started"
-    }
-  },
-  "SignInPage": {
-    "title": "Sign In",
-    "description": "Enter your credentials to sign in",
-    "buttons": {
-      "signIn": "Sign In",
-      "signingIn": "Signing in..."
+    "Theme": {
+      "toggle": "Toggle theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "current": "{theme} theme"
     },
-    "form": {
-      "username": {
-        "label": "Username",
-        "placeholder": "Enter your username"
+    "NetworkErrorDialog": {
+      "AlertDialogTitle": "Network Error",
+      "AlertDialogDescription": "Connection to the server is lost. Please reload the page.",
+      "AlertDialogAction": "Reload"
+    },
+    "EHRDetailModal": {
+      "title": "Electronic Health Record Details",
+      "downloadResult": "Result",
+      "downloadXRay": "X-Ray",
+      "getMobileNumber": "show",
+      "sections": {
+        "patientInfo": "Patient Information",
+        "medicalInfo": "Medical Information",
+        "answer": "Answer & Results",
+        "status": "Status",
+        "laboratoryReport": "Laboratory Report"
       },
-      "password": {
-        "label": "Password",
-        "placeholder": "Enter your password"
+      "fields": {
+        "patientName": "Patient Name",
+        "nationalId": "National ID",
+        "date": "Date",
+        "serviceName": "Service Name",
+        "treatingPhysician": "Treating Physician",
+        "location": "Location",
+        "patientType": "Patient Type",
+        "age": "Age",
+        "patientCode": "Patient Code",
+        "recordNumber": "Record Number",
+        "admissionCode": "Admission Code",
+        "serviceCode": "Service Code",
+        "nationalServiceCode": "National Service Code",
+        "physicianCode": "Physician Code",
+        "physicianSystem": "Physician System",
+        "locationCode": "Location Code",
+        "inquiryCode": "Inquiry Code",
+        "answer": "Answer",
+        "normalRange": "Normal Range",
+        "receptionServiceId": "Reception Service ID",
+        "mobileNumber": "Mobile Number"
       },
-      "register": {
-        "label": "Don't have an account?",
-        "link": "Sign up"
+      "patientTypes": {
+        "inpatient": "Inpatient",
+        "outpatient": "Outpatient"
+      },
+      "error": {
+        "mobileLaboratoryByNationalNumber": "Error downloading laboratory report",
+        "mobileXRayByNationalNumber": "Error downloading X-Ray",
+        "mobileNumberByNationalNumber": "Error getting mobile number"
       }
-    }
-  },
-  "SignUpPage": {
-    "title": "Sign Up",
-    "description": "Create a new account",
-    "buttons": {
-      "signUp": "Sign Up",
-      "signingUp": "Signing up..."
     },
-    "form": {
-      "username": {
-        "label": "Username",
-        "placeholder": "Enter your username"
-      },
-      "email": {
-        "label": "Email (Optional)",
-        "placeholder": "Enter your email"
-      },
-      "password": {
-        "label": "Password",
-        "placeholder": "Enter your password"
-      },
-      "signIn": {
-        "label": "Already have an account?",
-        "link": "Sign in"
-      }
-    }
-  },
-  "EHRTable": {
-    "title": "Electronic Health Records",
-    "pagination": {
-      "showing": "Showing {start} to {end} of {total} records",
-      "rowsPerPage": "Rows per page:",
-      "page": "Page {current} of {total}",
-      "firstPage": "First page",
-      "previousPage": "Previous page",
-      "nextPage": "Next page",
-      "lastPage": "Last page",
-      "noData": "No data found",
-      "loading": "Loading..."
-    }
-  },
-  "EHRFilter": {
-    "title": "Filters",
-    "nationalNumber": "National Number",
-    "nationalNumberPlaceholder": "Enter national number",
-    "dateRange": "Date Range",
-    "selectDateRange": "Select date range",
-    "patientType": "Patient Type",
-    "selectPatientType": "Select patient type",
-    "search": "Search",
-    "clear": "Clear",
-    "description": "Filter electronic health records by various criteria"
-  },
-  "AuthenticatedGroupLayout": {
-    "description1": "You are not authenticated, you will be redirected to login in a few seconds.",
-    "description2": "If you are not redirected, please click the login button.",
-    "redirectToLogin": "Login"
-  },
-  "AuthAuthenticated": {
-    "description": "You are authenticated, you will be redirected to the desired page in a few seconds.",
-    "description2": "If you are not redirected, please click the button below.",
-    "redirect": "Redirect"
-  },
-  "ConsoleSidebar": {
-    "dashboard": "Dashboard",
-    "electronicHealthRecord": "Electronic Health Record",
-    "periodicalReports": "Periodical Reports",
-    "patientReports": "Patient Reports",
-    "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
-    "formSabtPayesh": "Form Sabt Payesh"
-  },
-  "EHRDetailModal": {
-    "title": "Electronic Health Record Details",
-    "downloadResult": "Result",
-    "downloadXRay": "X-Ray",
-    "getMobileNumber": "show",
-    "sections": {
-      "patientInfo": "Patient Information",
-      "medicalInfo": "Medical Information",
-      "answer": "Answer & Results",
-      "status": "Status",
-      "laboratoryReport": "Laboratory Report"
+    "ServiceCountChart": {
+      "noDataAvailable": "No data available",
+      "serviceName": "Service Name",
+      "serviceCount": "Service Count"
     },
-    "fields": {
+    "data": {
       "patientName": "Patient Name",
-      "nationalId": "National ID",
+      "lastName": "Last Name",
+      "answer": "Answer",
+      "normalRange": "Normal Range",
+      "serviceName": "Service Name",
+      "treatingPhysician": "Treating Physician"
+    },
+    "dictionary": {
       "date": "Date",
       "serviceName": "Service Name",
       "treatingPhysician": "Treating Physician",
-      "location": "Location",
-      "patientType": "Patient Type",
-      "age": "Age",
-      "patientCode": "Patient Code",
-      "recordNumber": "Record Number",
-      "admissionCode": "Admission Code",
-      "serviceCode": "Service Code",
-      "nationalServiceCode": "National Service Code",
-      "physicianCode": "Physician Code",
-      "physicianSystem": "Physician System",
-      "locationCode": "Location Code",
-      "inquiryCode": "Inquiry Code",
       "answer": "Answer",
-      "normalRange": "Normal Range",
-      "receptionServiceId": "Reception Service ID",
-      "mobileNumber": "Mobile Number"
+      "normalRange": "Normal Range"
     },
-    "patientTypes": {
-      "inpatient": "Inpatient",
-      "outpatient": "Outpatient"
-    },
-    "error": {
-      "mobileLaboratoryByNationalNumber": "Error downloading laboratory report",
-      "mobileXRayByNationalNumber": "Error downloading X-Ray",
-      "mobileNumberByNationalNumber": "Error getting mobile number"
+    "Dictionary": {
+      "Name": "Name",
+      "CreatedAt": "Created At",
+      "Delete": "Delete",
+      "Actions": "Actions",
+      "Cancel": "Cancel",
+      "NoResults": "No results",
+      "Showing": "Showing {start} to {end} of {total}",
+      "Rows per page": "Rows per page",
+      "Page": "Page {current} of {total}",
+      "First page": "First page",
+      "Previous page": "Previous page",
+      "Next page": "Next page",
+      "Last page": "Last page"
     }
   },
-  "PeriodicalReports": {
-    "title": "Periodical Reports",
-    "description": "Generate comprehensive reports for specific time periods",
-    "selectPeriod": "Select Time Period",
-    "dateRange": "Select date range",
-    "selectDateRange": "Select date range",
-    "generateReport": "Generate Report",
-    "reportResults": "Report Results",
-    "totalRecords": "Total Records",
-    "selectedPeriod": "Selected Period",
-    "chartPlaceholder": "Chart",
-    "loadingMessage": "Report is getting ready...",
-    "chartComingSoon": "Chart coming soon",
-    "errorMessage": "Error loading report data",
-    "chartTitle": "Records Count by Date",
-    "patientChartTitle": "Patient Count by Date",
-    "serviceChartTitle": "Service Distribution",
-    "debugData": "Debug Data",
-    "noDataAvailable": "No data available",
-    "date": "Date",
-    "recordCount": "Record Count",
-    "patientCount": "Patient Count",
-    "service": "Service",
-    "count": "Count",
-    "patientType": "Patient Type"
-  },
-  "RecordCountChart": {
-    "noDataAvailable": "No data available",
-    "date": "Date",
-    "recordCount": "Record Count"
-  },
-  "PatientCountChart": {
-    "noDataAvailable": "No data available",
-    "date": "Date",
-    "patientCount": "Patient Count"
-  },
-  "ServicePieChart": {
-    "noDataAvailable": "No data available",
-    "service": "Service",
-    "count": "Count",
-    "percentage": "Percentage"
-  },
-  "ServiceCountChart": {
-    "noDataAvailable": "No data available",
-    "serviceName": "Service Name",
-    "serviceCount": "Service Count"
-  },
-  "PatientReports": {
-    "title": "Patient Reports",
-    "description": "Generate comprehensive reports for specific patients",
-    "loadingMessage": "Report is getting ready...",
-    "selectPatientAndPeriod": "Select Patient and Time Period",
-    "nationalNumber": "National Number",
-    "nationalNumberPlaceholder": "Enter national number",
-    "dateRange": "Select date range",
-    "selectDateRange": "Select date range",
-    "generateReport": "Generate Report",
-    "reportResults": "Report Results",
-    "totalRecords": "Total Records",
-    "patientInfo": "Patient Information",
-    "selectedPatientAndPeriod": "Selected Patient and Period",
-    "chartPlaceholder": "Chart",
-    "chartComingSoon": "Chart coming soon",
-    "errorMessage": "Error loading report data",
-    "serviceChartTitle": "Service Count"
-  },
-  "PatientTypes": {
-    "1": "Inpatient Information",
-    "2": "Laboratory",
-    "3": "Imaging",
-    "4": "Pathology",
-    "5": "Clinic",
-    "6": "Emergency",
-    "7": "Prescription & Equipment",
-    "25": "Telemedicine Patients"
-  },
-  "data": {
-    "patientName": "Patient Name",
-    "lastName": "Last Name",
-    "answer": "Answer",
-    "normalRange": "Normal Range",
-    "serviceName": "Service Name",
-    "treatingPhysician": "Treating Physician"
-  },
-  "ServiceRecordsTable": {
-    "answerStatus": "Answer Status",
-    "normal": "Normal",
-    "abnormal": "Abnormal",
-    "actions": "Actions"
-  },
-  "dictionary": {
-    "date": "Date",
-    "serviceName": "Service Name",
-    "treatingPhysician": "Treating Physician",
-    "answer": "Answer",
-    "normalRange": "Normal Range"
-  },
-  "UploadSaderatBankHealthMonitoringExcelDialog": {
-    "DialogTitle": "Upload Excel",
-    "Form": {
-      "NameLabel": "Name",
-      "NamePlaceholder": "Enter name",
-      "UploadButton": "Upload",
-      "FileLabel": "File"
+  "/": {
+    "Metadata": {
+      "title": "Dashboard"
     },
-    "SuccessMessage": "Excel uploaded successfully"
+    "HomePage": {
+      "title": "Welcome",
+      "description": "Clinical data console to explore EHRs, run periodical analytics, and build patient-specific reports.",
+      "buttons": {
+        "goToConsole": "Go to Console",
+        "signInRegister": "Sign In / Register"
+      },
+      "features": {
+        "ehr": {
+          "title": "Electronic Health Records",
+          "description": "Search and filter clinical records with sortable tables and detail views."
+        },
+        "periodical": {
+          "title": "Periodical Reports",
+          "description": "Visualize trends with charts for records and patients over time."
+        },
+        "patient": {
+          "title": "Patient Reports",
+          "description": "Aggregate services per patient and drill down into result trends."
+        },
+        "cta": "Get started"
+      }
+    }
   },
-  "DeleteSaderatBankHealthMonitoringExcelDialog": {
-    "DialogTitle": "Delete Excel",
-    "DialogDescription": "Are you sure you want to delete this excel?",
-    "SuccessMessage": "Excel deleted successfully"
+  "/authentication": {
+    "SignInPage": {
+      "title": "Sign In",
+      "description": "Enter your credentials to sign in",
+      "buttons": {
+        "signIn": "Sign In",
+        "signingIn": "Signing in..."
+      },
+      "form": {
+        "username": {
+          "label": "Username",
+          "placeholder": "Enter your username"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        },
+        "register": {
+          "label": "Don't have an account?",
+          "link": "Sign up"
+        }
+      }
+    }
   },
-  "SaderatBankHealthMonitoringPage": {
-    "UploadExcel": "Upload Excel",
-    "Loading": "Loading...",
-    "ErrorTitle": "Error loading data",
-    "EmptyStateTitle": "No data available",
-    "EmptyStateDescription": "Please upload an Excel file",
-    "EmptyStateDescriptionDetail": "No records available to display",
-    "ReportTitle": "Statistical Report",
-    "SearchPersonnel": "Search Personnel",
-    "SearchPersonnelDescription": "Search and view personnel details",
-    "SearchPlaceholder": "Search by name, last name or national ID...",
-    "ClearSearch": "Clear",
-    "NoSearchResults": "No results found",
-    "NoResults": "No results found"
+  "/authentication/register": {
+    "SignUpPage": {
+      "title": "Sign Up",
+      "description": "Create a new account",
+      "buttons": {
+        "signUp": "Sign Up",
+        "signingUp": "Signing up..."
+      },
+      "form": {
+        "api": {
+          "username": {
+            "error": "Username already exists."
+          }
+        },
+        "username": {
+          "label": "Username",
+          "placeholder": "Enter your username"
+        },
+        "email": {
+          "label": "Email (Optional)",
+          "placeholder": "Enter your email"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        },
+        "signIn": {
+          "label": "Already have an account?",
+          "link": "Sign in"
+        }
+      }
+    }
   },
-  "Dictionary": {
-    "Name": "Name",
-    "CreatedAt": "Created At",
-    "Delete": "Delete",
-    "Actions": "Actions",
-    "Cancel": "Cancel",
-    "NoResults": "No results",
-    "Showing": "Showing {start} to {end} of {total}",
-    "Rows per page": "Rows per page",
-    "Page": "Page {current} of {total}",
-    "First page": "First page",
-    "Previous page": "Previous page",
-    "Next page": "Next page",
-    "Last page": "Last page"
+  "/auth-authenticated": {
+    "AuthAuthenticated": {
+      "description1": "You are authenticated, you will be redirected to the desired page in a few seconds.",
+      "description2": "If you are not redirected, please click the button below.",
+      "redirect": "Redirect"
+    }
+  },
+  "/console-unauthenticate": {
+    "AuthenticatedGroupLayout": {
+      "description1": "You are not authenticated, you will be redirected to login in a few seconds.",
+      "description2": "If you are not redirected, please click the login button.",
+      "redirectToLogin": "Login"
+    }
+  },
+  "/form-sabt-payesh": {},
+  "/console": {
+    "ConsoleSidebar": {
+      "dashboard": "Dashboard",
+      "electronicHealthRecord": "Electronic Health Record",
+      "periodicalReports": "Periodical Reports",
+      "patientReports": "Patient Reports",
+      "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
+      "formSabtPayesh": "Form Sabt Payesh"
+    }
+  },
+  "/console/electronic-health-record": {
+    "EHRTable": {
+      "title": "Electronic Health Records",
+      "pagination": {
+        "showing": "Showing {start} to {end} of {total} records",
+        "rowsPerPage": "Rows per page:",
+        "page": "Page {current} of {total}",
+        "firstPage": "First page",
+        "previousPage": "Previous page",
+        "nextPage": "Next page",
+        "lastPage": "Last page",
+        "noData": "No data found",
+        "loading": "Loading..."
+      }
+    },
+    "EHRFilter": {
+      "title": "Filters",
+      "nationalNumber": "National Number",
+      "nationalNumberPlaceholder": "Enter national number",
+      "dateRange": "Date Range",
+      "selectDateRange": "Select date range",
+      "patientType": "Patient Type",
+      "selectPatientType": "Select patient type",
+      "search": "Search",
+      "clear": "Clear",
+      "description": "Filter electronic health records by various criteria"
+    },
+    "PatientTypes": {
+      "1": "Inpatient Information",
+      "2": "Laboratory",
+      "3": "Imaging",
+      "4": "Pathology",
+      "5": "Clinic",
+      "6": "Emergency",
+      "7": "Prescription & Equipment",
+      "25": "Telemedicine Patients"
+    }
+  },
+  "/console/form-sabt-payesh": {},
+  "/console/patient-reports": {
+    "PatientReports": {
+      "title": "Patient Reports",
+      "description": "Generate comprehensive reports for specific patients",
+      "loadingMessage": "Report is getting ready...",
+      "selectPatientAndPeriod": "Select Patient and Time Period",
+      "nationalNumber": "National Number",
+      "nationalNumberPlaceholder": "Enter national number",
+      "dateRange": "Select date range",
+      "selectDateRange": "Select date range",
+      "patientType": "Patient Type",
+      "selectPatientType": "Select Patient Type",
+      "generateReport": "Generate Report",
+      "reportResults": "Report Results",
+      "totalRecords": "Total Records",
+      "patientInfo": "Patient Information",
+      "selectedPatientAndPeriod": "Selected Patient and Period",
+      "chartPlaceholder": "Chart",
+      "chartComingSoon": "Chart coming soon",
+      "errorMessage": "Error loading report data",
+      "serviceChartTitle": "Service Count"
+    }
+  },
+  "/console/periodical-reports": {
+    "PeriodicalReports": {
+      "title": "Periodical Reports",
+      "description": "Generate comprehensive reports for specific time periods",
+      "selectPeriod": "Select Time Period",
+      "dateRange": "Select date range",
+      "selectDateRange": "Select date range",
+      "generateReport": "Generate Report",
+      "reportResults": "Report Results",
+      "totalRecords": "Total Records",
+      "selectedPeriod": "Selected Period",
+      "chartPlaceholder": "Chart",
+      "loadingMessage": "Report is getting ready...",
+      "chartComingSoon": "Chart coming soon",
+      "errorMessage": "Error loading report data",
+      "chartTitle": "Records Count by Date",
+      "patientChartTitle": "Patient Count by Date",
+      "serviceChartTitle": "Service Distribution",
+      "debugData": "Debug Data",
+      "noDataAvailable": "No data available",
+      "date": "Date",
+      "recordCount": "Record Count",
+      "patientCount": "Patient Count",
+      "service": "Service",
+      "count": "Count",
+      "patientType": "Patient Type",
+      "selectPatientType": "Select Patient Type"
+    },
+    "RecordCountChart": {
+      "noDataAvailable": "No data available",
+      "date": "Date",
+      "recordCount": "Record Count"
+    },
+    "PatientCountChart": {
+      "noDataAvailable": "No data available",
+      "date": "Date",
+      "patientCount": "Patient Count"
+    },
+    "ServicePieChart": {
+      "noDataAvailable": "No data available",
+      "service": "Service",
+      "count": "Count",
+      "percentage": "Percentage"
+    },
+    "ServiceRecordsTable": {
+      "answerStatus": "Answer Status",
+      "normal": "Normal",
+      "abnormal": "Abnormal",
+      "actions": "Actions"
+    }
+  },
+  "/console/saderat-bank-health-monitoring": {
+    "UploadSaderatBankHealthMonitoringExcelDialog": {
+      "DialogTitle": "Upload Excel",
+      "Form": {
+        "NameLabel": "Name",
+        "NamePlaceholder": "Enter name",
+        "UploadButton": "Upload",
+        "FileLabel": "File"
+      },
+      "SuccessMessage": "Excel uploaded successfully"
+    },
+    "DeleteSaderatBankHealthMonitoringExcelDialog": {
+      "DialogTitle": "Delete Excel",
+      "DialogDescription": "Are you sure you want to delete this excel?",
+      "SuccessMessage": "Excel deleted successfully"
+    },
+    "SaderatBankHealthMonitoringPage": {
+      "UploadExcel": "Upload Excel",
+      "Loading": "Loading...",
+      "ErrorTitle": "Error loading data",
+      "EmptyStateTitle": "No data available",
+      "EmptyStateDescription": "Please upload an Excel file",
+      "EmptyStateDescriptionDetail": "No records available to display",
+      "ReportTitle": "Statistical Report",
+      "SearchPersonnel": "Search Personnel",
+      "SearchPersonnelDescription": "Search and view personnel details",
+      "SearchPlaceholder": "Search by name, last name or national ID...",
+      "ClearSearch": "Clear",
+      "NoSearchResults": "No results found",
+      "NoResults": "No results found"
+    }
   }
 }

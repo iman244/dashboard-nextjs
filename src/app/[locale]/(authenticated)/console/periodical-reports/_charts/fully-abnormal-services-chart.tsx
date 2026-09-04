@@ -37,7 +37,7 @@ export const FullyAbnormalServicesChart: React.FC<FullyAbnormalServicesChart> = 
   onServiceClick, 
   selectedService 
 }) => {
-  const t = useTranslations("ServiceCountChart");
+  const t = useTranslations("common.ServiceCountChart");
 
   // Process data to get fully abnormal services
   const chartData = React.useMemo(() => {

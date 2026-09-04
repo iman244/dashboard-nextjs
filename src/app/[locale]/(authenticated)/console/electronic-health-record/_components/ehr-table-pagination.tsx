@@ -33,7 +33,7 @@ export const EHRTablePagination = ({
   pageIncrement = 10,
   showPageSizeSelector = true,
 }: EHRTablePaginationProps) => {
-  const t = useTranslations("EHRTable");
+  const t = useTranslations("/console/electronic-health-record.EHRTable");
 
   return (
     <div className="flex items-center justify-between">

@@ -31,8 +31,8 @@ const SaderatBankHealthMonitoringPage = (
     SBHM_ListSerializer[number] | null
   >(null);
   const { data, isPending, error } = useList_SBHM_API();
-  const tDictionary = useTranslations("Dictionary");
-  const t = useTranslations("SaderatBankHealthMonitoringPage");
+  const tDictionary = useTranslations("common.Dictionary");
+  const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
   const locale = useLocale();
   const isRtl = locale === "fa";
 

@@ -43,7 +43,7 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({
   onServiceClick, 
   selectedService 
 }) => {
-  const t = useTranslations("ServiceCountChart");
+  const t = useTranslations("common.ServiceCountChart");
 
   // Process data to get mixed results only
   const chartData = React.useMemo(() => {

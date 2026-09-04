@@ -1,331 +1,355 @@
 {
-  "Metadata": {
-    "title": "داشبورد"
-  },
-  "Application": {
-    "copy": "کپی به کلیپبورد",
-    "copied": "کپی شد!"
-  },
-  "Theme": {
-    "toggle": "تغییر حالت نمایش",
-    "light": "روشن",
-    "dark": "تاریک",
-    "system": "سیستم",
-    "current": "حالت {theme}"
-  },
-  "NetworkErrorDialog": {
-    "AlertDialogTitle": "خطای شبکه",
-    "AlertDialogDescription": "ارتباط با شبکه اینترنت قطع شده است",
-    "AlertDialogAction": "بازیابی صفحه"
-  },
-  "HomePage": {
-    "title": "خوش آمدید",
-    "description": "کنسول داده‌های بالینی برای مرور پرونده الکترونیک سلامت، گزارش‌های دوره‌ای و گزارش‌های بیمار.",
-    "buttons": {
-      "goToConsole": "ورود به داشبورد",
-      "signInRegister": "ورود / ثبت نام"
+  "common": {
+    "Application": {
+      "copy": "کپی به کلیپبورد",
+      "copied": "کپی شد!"
     },
-    "features": {
-      "ehr": {
-        "title": "سوابق پزشکی الکترونیکی",
-        "description": "جستجو و فیلتر رکوردهای بالینی با جدول‌های قابل مرتب‌سازی و جزئیات."
-      },
-      "periodical": {
-        "title": "گزارشات دوره‌ای",
-        "description": "نمایش روندها با نمودارهای تعداد رکورد و بیماران در گذر زمان."
-      },
-      "patient": {
-        "title": "گزارشات بیمار",
-        "description": "تجمیع خدمات برای هر بیمار و مشاهده روند نتایج در طول زمان."
-      },
-      "cta": "شروع کنید"
-    }
-  },
-  "SignInPage": {
-    "title": "ورود",
-    "description": "ورود به حساب کاربری",
-    "buttons": {
-      "signIn": "ورود",
-      "signingIn": "در حال ورود..."
+    "Theme": {
+      "toggle": "تغییر حالت نمایش",
+      "light": "روشن",
+      "dark": "تاریک",
+      "system": "سیستم",
+      "current": "حالت {theme}"
     },
-    "form": {
-      "username": {
-        "label": "نام کاربری",
-        "placeholder": "ورود به حساب کاربری"
+    "NetworkErrorDialog": {
+      "AlertDialogTitle": "خطای شبکه",
+      "AlertDialogDescription": "ارتباط با شبکه اینترنت قطع شده است",
+      "AlertDialogAction": "بازیابی صفحه"
+    },
+    "EHRDetailModal": {
+      "title": "جزئیات پرونده الکترونیک سلامت",
+      "downloadResult": "جواب آزمایش",
+      "downloadXRay": "عکس رادیولوژی",
+      "getMobileNumber": "مشاهده",
+      "sections": {
+        "patientInfo": "اطلاعات بیمار",
+        "medicalInfo": "اطلاعات پزشکی",
+        "answer": "جواب و نتایج",
+        "status": "وضعیت",
+        "laboratoryReport": "گزارش آزمایشگاه"
       },
-      "password": {
-        "label": "رمز عبور",
-        "placeholder": "ورود به حساب کاربری"
+      "fields": {
+        "patientName": "نام بیمار",
+        "nationalId": "کد ملی",
+        "date": "تاریخ",
+        "serviceName": "نام خدمت",
+        "treatingPhysician": "نام پزشک معالج",
+        "location": "مکان",
+        "patientType": "نوع بیمار",
+        "age": "سن",
+        "patientCode": "کد بیمار",
+        "recordNumber": "شماره پرونده",
+        "admissionCode": "کد پذیرش",
+        "serviceCode": "کد خدمت",
+        "nationalServiceCode": "کد ملی خدمت",
+        "physicianCode": "کد پزشک معالج",
+        "physicianSystem": "نظام پزشکی معالج",
+        "locationCode": "کد مکان",
+        "inquiryCode": "کد استعلام",
+        "answer": "جواب",
+        "normalRange": "نرمال رنج",
+        "receptionServiceId": "شناسه سرویس پذیرش",
+        "mobileNumber": "شماره موبایل"
       },
-      "register": {
-        "label": "حساب کاربری ندارید؟",
-        "link": "ثبت نام"
+      "patientTypes": {
+        "inpatient": "بستری",
+        "outpatient": "سرپایی"
+      },
+      "error": {
+        "mobileLaboratoryByNationalNumber": "خطا در دریافت گزارش آزمایشگاه",
+        "mobileXRayByNationalNumber": "خطا در دریافت عکس رادیولوژی",
+        "mobileNumberByNationalNumber": "خطا در دریافت شماره موبایل"
       }
-    }
-  },
-  "SignUpPage": {
-    "title": "ثبت نام",
-    "description": "ایجاد حساب کاربری",
-    "buttons": {
-      "signUp": "ثبت نام",
-      "signingUp": "در حال ثبت نام..."
     },
-    "form": {
-      "api": {
-        "username": {
-          "error": "نام کاربری در سیستم وجود دارد"
-        }
-      },
-      "username": {
-        "label": "نام کاربری",
-        "placeholder": "نام کاربری خود را وارد کنید"
-      },
-      "email": {
-        "label": "ایمیل (اختیاری)",
-        "placeholder": "ایمیل خود را وارد کنید"
-      },
-      "password": {
-        "label": "رمز عبور",
-        "placeholder": "رمز عبور خود را وارد کنید"
-      },
-      "signIn": {
-        "label": "حساب کاربری دارید؟",
-        "link": "ورود"
-      }
-    }
-  },
-  "EHRTable": {
-    "title": "سوابق پزشکی الکترونیکی",
-    "pagination": {
-      "showing": "نمایش {start} تا {end} از {total} رکورد",
-      "rowsPerPage": "ردیف در صفحه:",
-      "page": "صفحه {current} از {total}",
-      "firstPage": "صفحه اول",
-      "previousPage": "صفحه قبلی",
-      "nextPage": "صفحه بعدی",
-      "lastPage": "صفحه آخر",
-      "noData": "هیچ داده‌ای یافت نشد",
-      "loading": "در حال بارگذاری..."
-    }
-  },
-  "EHRFilter": {
-    "title": "فیلترها",
-    "nationalNumber": "شماره ملی",
-    "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
-    "dateRange": "بازه تاریخ",
-    "selectDateRange": "انتخاب بازه تاریخ",
-    "patientType": "نوع بیمار",
-    "selectPatientType": "انتخاب نوع بیمار",
-    "search": "جستجو",
-    "clear": "پاک کردن",
-    "description": "فیلترهای سوابق پزشکی الکترونیکی"
-  },
-  "AuthenticatedGroupLayout": {
-    "description1": "شما احراز هویت نشده اید، تا چند ثانیه دیگر به صفحه ورود منتقل خواهید شد.",
-    "description2": "اگر منتقل نشدید، لطفاً بر روی دکمه ورود کلیک کنید.",
-    "redirectToLogin": "صفحه ورود"
-  },
-  "AuthAuthenticated": {
-    "description1": "شما احراز هویت شده اید، تا چند ثانیه دیگر به صفحه مورد نظر منتقل خواهید شد.",
-    "description2": "اگر منتقل نشدید، لطفاً بر روی دکمه زیر کلیک کنید.",
-    "redirect": "برو"
-  },
-  "ConsoleSidebar": {
-    "dashboard": "داشبورد",
-    "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
-    "periodicalReports": "گزارشات دوره‌ای",
-    "patientReports": "گزارشات بیمار",
-    "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
-    "formSabtPayesh": "فرم ثبت پایش"
-  },
-  "EHRDetailModal": {
-    "title": "جزئیات پرونده الکترونیک سلامت",
-    "downloadResult": "جواب آزمایش",
-    "downloadXRay": "عکس رادیولوژی",
-    "getMobileNumber": "مشاهده",
-    "sections": {
-      "patientInfo": "اطلاعات بیمار",
-      "medicalInfo": "اطلاعات پزشکی",
-      "answer": "جواب و نتایج",
-      "status": "وضعیت",
-      "laboratoryReport": "گزارش آزمایشگاه"
+    "ServiceCountChart": {
+      "noDataAvailable": "هیچ داده‌ای موجود نیست",
+      "serviceName": "نام خدمت",
+      "serviceCount": "تعداد خدمت"
     },
-    "fields": {
-      "patientName": "نام بیمار",
-      "nationalId": "کد ملی",
+    "data": {
+      "patientName": "نام بيمار",
+      "lastName": "نام خانوادگي بيمار",
+      "answer": "جواب",
+      "normalRange": "نرمال رنج",
+      "serviceName": "نام خدمت",
+      "treatingPhysician": "نام پزشک معالج"
+    },
+    "dictionary": {
       "date": "تاریخ",
       "serviceName": "نام خدمت",
       "treatingPhysician": "نام پزشک معالج",
-      "location": "مکان",
-      "patientType": "نوع بیمار",
-      "age": "سن",
-      "patientCode": "کد بیمار",
-      "recordNumber": "شماره پرونده",
-      "admissionCode": "کد پذیرش",
-      "serviceCode": "کد خدمت",
-      "nationalServiceCode": "کد ملی خدمت",
-      "physicianCode": "کد پزشک معالج",
-      "physicianSystem": "نظام پزشکی معالج",
-      "locationCode": "کد مکان",
-      "inquiryCode": "کد استعلام",
       "answer": "جواب",
-      "normalRange": "نرمال رنج",
-      "receptionServiceId": "شناسه سرویس پذیرش",
-      "mobileNumber": "شماره موبایل"
+      "normalRange": "نرمال رنج"
     },
-    "patientTypes": {
-      "inpatient": "بستری",
-      "outpatient": "سرپایی"
-    },
-    "error": {
-      "mobileLaboratoryByNationalNumber": "خطا در دریافت گزارش آزمایشگاه",
-      "mobileXRayByNationalNumber": "خطا در دریافت عکس رادیولوژی",
-      "mobileNumberByNationalNumber": "خطا در دریافت شماره موبایل"
+    "Dictionary": {
+      "Name": "نام",
+      "CreatedAt": "تاریخ ایجاد",
+      "Delete": "حذف",
+      "Actions": "عملیات",
+      "Cancel": "انصراف",
+      "NoResults": "هیچ داده‌ای یافت نشد",
+      "Showing": "نمایش {start} تا {end} از {total}",
+      "Rows per page": "ردیف در صفحه:",
+      "Page": "صفحه {current} از {total}",
+      "First page": "صفحه اول",
+      "Previous page": "صفحه قبلی",
+      "Next page": "صفحه بعدی",
+      "Last page": "صفحه آخر"
     }
   },
-  "PeriodicalReports": {
-    "title": "گزارشات دوره‌ای",
-    "description": "تولید گزارشات جامع برای دوره‌های زمانی",
-    "selectPeriod": "انتخاب دوره زمانی",
-    "dateRange": "انتخاب بازه تاریخ",
-    "selectDateRange": "انتخاب بازه تاریخ",
-    "generateReport": "تولید گزارش",
-    "reportResults": "نتایج گزارش",
-    "totalRecords": "تعداد کل رکوردها",
-    "selectedPeriod": "دوره انتخابی",
-    "chartPlaceholder": "نمودار",
-    "loadingMessage": "گزارش در حال آماده‌سازی است...",
-    "chartComingSoon": "نمودار به زودی",
-    "errorMessage": "خطا در بارگذاری داده‌های گزارش",
-    "chartTitle": "تعداد رکوردها بر اساس تاریخ",
-    "patientChartTitle": "تعداد بیماران بر اساس تاریخ",
-    "serviceChartTitle": "توزیع خدمات",
-    "debugData": "داده‌های دیباگ",
-    "noDataAvailable": "هیچ داده‌ای موجود نیست",
-    "date": "تاریخ",
-    "recordCount": "تعداد رکورد",
-    "patientCount": "تعداد بیماران",
-    "service": "خدمت",
-    "count": "تعداد",
-    "patientType": "نوع بیمار",
-    "selectPatientType": "انتخاب نوع بیمار"
-  },
-  "RecordCountChart": {
-    "noDataAvailable": "هیچ داده‌ای موجود نیست",
-    "date": "تاریخ",
-    "recordCount": "تعداد رکورد"
-  },
-  "PatientCountChart": {
-    "noDataAvailable": "هیچ داده‌ای موجود نیست",
-    "date": "تاریخ",
-    "patientCount": "تعداد بیماران"
-  },
-  "ServicePieChart": {
-    "noDataAvailable": "هیچ داده‌ای موجود نیست",
-    "service": "خدمت",
-    "count": "تعداد",
-    "percentage": "درصد"
-  },
-  "ServiceCountChart": {
-    "noDataAvailable": "هیچ داده‌ای موجود نیست",
-    "serviceName": "نام خدمت",
-    "serviceCount": "تعداد خدمت"
-  },
-  "PatientReports": {
-    "title": "گزارشات بیمار",
-    "description": "تولید گزارشات جامع برای بیماران",
-    "patientType": "نوع بیمار",
-    "selectPatientType": "انتخاب نوع بیمار",
-    "loadingMessage": "گزارش در حال آماده‌سازی است...",
-    "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
-    "nationalNumber": "شماره ملی",
-    "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
-    "dateRange": "انتخاب بازه تاریخ",
-    "selectDateRange": "انتخاب بازه تاریخ",
-    "generateReport": "تولید گزارش",
-    "reportResults": "نتایج گزارش",
-    "totalRecords": "تعداد کل رکوردها",
-    "patientInfo": "اطلاعات بیمار",
-    "selectedPatientAndPeriod": "بیمار و دوره انتخابی",
-    "chartPlaceholder": "نمودار",
-    "chartComingSoon": "نمودار به زودی",
-    "errorMessage": "خطا در بارگذاری داده‌های گزارش",
-    "serviceChartTitle": "تعداد خدمات"
-  },
-  "PatientTypes": {
-    "1": "اطلاعات بستري",
-    "2": "آزمايشگاه",
-    "3": "تصويربرداري",
-    "4": "پاتولوژي",
-    "5": "درمانگاه",
-    "6": "اورژانس",
-    "7": "نسخ دارو و تجهيزات",
-    "25": "بيماران پاراكلينيك"
-  },
-  "data": {
-    "patientName": "نام بيمار",
-    "lastName": "نام خانوادگي بيمار",
-    "answer": "جواب",
-    "normalRange": "نرمال رنج",
-    "serviceName": "نام خدمت",
-    "treatingPhysician": "نام پزشک معالج"
-  },
-  "ServiceRecordsTable": {
-    "normal": "طبیعی",
-    "abnormal": "غیرطبیعی",
-    "answerStatus": "وضعیت جواب",
-    "actions": "عملیات"
-  },
-  "dictionary": {
-    "date": "تاریخ",
-    "serviceName": "نام خدمت",
-    "treatingPhysician": "نام پزشک معالج",
-    "answer": "جواب",
-    "normalRange": "نرمال رنج"
-  },
-  "UploadSaderatBankHealthMonitoringExcelDialog": {
-    "DialogTitle": "بارگذاری اکسل",
-    "Form": {
-      "NameLabel": "نام",
-      "NamePlaceholder": "نام را وارد کنید",
-      "UploadButton": "بارگذاری",
-      "FileLabel": "فایل"
+  "/": {
+    "Metadata": {
+      "title": "داشبورد"
     },
-    "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد"
+    "HomePage": {
+      "title": "خوش آمدید",
+      "description": "کنسول داده‌های بالینی برای مرور پرونده الکترونیک سلامت، گزارش‌های دوره‌ای و گزارش‌های بیمار.",
+      "buttons": {
+        "goToConsole": "ورود به داشبورد",
+        "signInRegister": "ورود / ثبت نام"
+      },
+      "features": {
+        "ehr": {
+          "title": "سوابق پزشکی الکترونیکی",
+          "description": "جستجو و فیلتر رکوردهای بالینی با جدول‌های قابل مرتب‌سازی و جزئیات."
+        },
+        "periodical": {
+          "title": "گزارشات دوره‌ای",
+          "description": "نمایش روندها با نمودارهای تعداد رکورد و بیماران در گذر زمان."
+        },
+        "patient": {
+          "title": "گزارشات بیمار",
+          "description": "تجمیع خدمات برای هر بیمار و مشاهده روند نتایج در طول زمان."
+        },
+        "cta": "شروع کنید"
+      }
+    }
   },
-  "DeleteSaderatBankHealthMonitoringExcelDialog": {
-    "DialogTitle": "حذف اکسل",
-    "DialogDescription": "آیا از حذف {name} اطمینان دارید؟",
-    "SuccessMessage": "حذف اکسل با موفقیت انجام شد"
-  },  
-  "SaderatBankHealthMonitoringPage": {
-    "UploadExcel": "بارگذاری اکسل",
-    "Loading": "در حال بارگذاری...",
-    "ErrorTitle": "خطا در بارگذاری داده‌ها",
-    "EmptyStateTitle": "هیچ داده‌ای موجود نیست",
-    "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
-    "EmptyStateDescriptionDetail": "هیچ رکوردی برای نمایش وجود ندارد",
-    "ReportTitle": "گزارش آماری",
-    "SearchPersonnel": "جستجوی پرسنل",
-    "SearchPersonnelDescription": "جستجو و مشاهده جزئیات پرسنل",
-    "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی...",
-    "ClearSearch": "پاک کردن",
-    "NoSearchResults": "نتیجه‌ای یافت نشد",
-    "NoResults": "نتیجه‌ای یافت نشد"
+  "/authentication": {
+    "SignInPage": {
+      "title": "ورود",
+      "description": "ورود به حساب کاربری",
+      "buttons": {
+        "signIn": "ورود",
+        "signingIn": "در حال ورود..."
+      },
+      "form": {
+        "username": {
+          "label": "نام کاربری",
+          "placeholder": "ورود به حساب کاربری"
+        },
+        "password": {
+          "label": "رمز عبور",
+          "placeholder": "ورود به حساب کاربری"
+        },
+        "register": {
+          "label": "حساب کاربری ندارید؟",
+          "link": "ثبت نام"
+        }
+      }
+    }
   },
-  "Dictionary": {
-    "Name": "نام",
-    "CreatedAt": "تاریخ ایجاد",
-    "Delete": "حذف",
-    "Actions": "عملیات",
-    "Cancel": "انصراف",
-    "NoResults": "هیچ داده‌ای یافت نشد",
-    "Showing": "نمایش {start} تا {end} از {total}",
-    "Rows per page": "ردیف در صفحه:",
-    "Page": "صفحه {current} از {total}",
-    "First page": "صفحه اول",
-    "Previous page": "صفحه قبلی",
-    "Next page": "صفحه بعدی",
-    "Last page": "صفحه آخر"
+  "/authentication/register": {
+    "SignUpPage": {
+      "title": "ثبت نام",
+      "description": "ایجاد حساب کاربری",
+      "buttons": {
+        "signUp": "ثبت نام",
+        "signingUp": "در حال ثبت نام..."
+      },
+      "form": {
+        "api": {
+          "username": {
+            "error": "نام کاربری در سیستم وجود دارد"
+          }
+        },
+        "username": {
+          "label": "نام کاربری",
+          "placeholder": "نام کاربری خود را وارد کنید"
+        },
+        "email": {
+          "label": "ایمیل (اختیاری)",
+          "placeholder": "ایمیل خود را وارد کنید"
+        },
+        "password": {
+          "label": "رمز عبور",
+          "placeholder": "رمز عبور خود را وارد کنید"
+        },
+        "signIn": {
+          "label": "حساب کاربری دارید؟",
+          "link": "ورود"
+        }
+      }
+    }
+  },
+  "/auth-authenticated": {
+    "AuthAuthenticated": {
+      "description1": "شما احراز هویت شده اید، تا چند ثانیه دیگر به صفحه مورد نظر منتقل خواهید شد.",
+      "description2": "اگر منتقل نشدید، لطفاً بر روی دکمه زیر کلیک کنید.",
+      "redirect": "برو"
+    }
+  },
+  "/console-unauthenticate": {
+    "AuthenticatedGroupLayout": {
+      "description1": "شما احراز هویت نشده اید، تا چند ثانیه دیگر به صفحه ورود منتقل خواهید شد.",
+      "description2": "اگر منتقل نشدید، لطفاً بر روی دکمه ورود کلیک کنید.",
+      "redirectToLogin": "صفحه ورود"
+    }
+  },
+  "/form-sabt-payesh": {},
+  "/console": {
+    "ConsoleSidebar": {
+      "dashboard": "داشبورد",
+      "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
+      "periodicalReports": "گزارشات دوره‌ای",
+      "patientReports": "گزارشات بیمار",
+      "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
+      "formSabtPayesh": "فرم ثبت پایش"
+    }
+  },
+  "/console/electronic-health-record": {
+    "EHRTable": {
+      "title": "سوابق پزشکی الکترونیکی",
+      "pagination": {
+        "showing": "نمایش {start} تا {end} از {total} رکورد",
+        "rowsPerPage": "ردیف در صفحه:",
+        "page": "صفحه {current} از {total}",
+        "firstPage": "صفحه اول",
+        "previousPage": "صفحه قبلی",
+        "nextPage": "صفحه بعدی",
+        "lastPage": "صفحه آخر",
+        "noData": "هیچ داده‌ای یافت نشد",
+        "loading": "در حال بارگذاری..."
+      }
+    },
+    "EHRFilter": {
+      "title": "فیلترها",
+      "nationalNumber": "شماره ملی",
+      "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
+      "dateRange": "بازه تاریخ",
+      "selectDateRange": "انتخاب بازه تاریخ",
+      "patientType": "نوع بیمار",
+      "selectPatientType": "انتخاب نوع بیمار",
+      "search": "جستجو",
+      "clear": "پاک کردن",
+      "description": "فیلترهای سوابق پزشکی الکترونیکی"
+    },
+    "PatientTypes": {
+      "1": "اطلاعات بستري",
+      "2": "آزمايشگاه",
+      "3": "تصويربرداري",
+      "4": "پاتولوژي",
+      "5": "درمانگاه",
+      "6": "اورژانس",
+      "7": "نسخ دارو و تجهيزات",
+      "25": "بيماران پاراكلينيك"
+    }
+  },
+  "/console/form-sabt-payesh": {},
+  "/console/patient-reports": {
+    "PatientReports": {
+      "title": "گزارشات بیمار",
+      "description": "تولید گزارشات جامع برای بیماران",
+      "patientType": "نوع بیمار",
+      "selectPatientType": "انتخاب نوع بیمار",
+      "loadingMessage": "گزارش در حال آماده‌سازی است...",
+      "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
+      "nationalNumber": "شماره ملی",
+      "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
+      "dateRange": "انتخاب بازه تاریخ",
+      "selectDateRange": "انتخاب بازه تاریخ",
+      "generateReport": "تولید گزارش",
+      "reportResults": "نتایج گزارش",
+      "totalRecords": "تعداد کل رکوردها",
+      "patientInfo": "اطلاعات بیمار",
+      "selectedPatientAndPeriod": "بیمار و دوره انتخابی",
+      "chartPlaceholder": "نمودار",
+      "chartComingSoon": "نمودار به زودی",
+      "errorMessage": "خطا در بارگذاری داده‌های گزارش",
+      "serviceChartTitle": "تعداد خدمات"
+    }
+  },
+  "/console/periodical-reports": {
+    "PeriodicalReports": {
+      "title": "گزارشات دوره‌ای",
+      "description": "تولید گزارشات جامع برای دوره‌های زمانی",
+      "selectPeriod": "انتخاب دوره زمانی",
+      "dateRange": "انتخاب بازه تاریخ",
+      "selectDateRange": "انتخاب بازه تاریخ",
+      "generateReport": "تولید گزارش",
+      "reportResults": "نتایج گزارش",
+      "totalRecords": "تعداد کل رکوردها",
+      "selectedPeriod": "دوره انتخابی",
+      "chartPlaceholder": "نمودار",
+      "loadingMessage": "گزارش در حال آماده‌سازی است...",
+      "chartComingSoon": "نمودار به زودی",
+      "errorMessage": "خطا در بارگذاری داده‌های گزارش",
+      "chartTitle": "تعداد رکوردها بر اساس تاریخ",
+      "patientChartTitle": "تعداد بیماران بر اساس تاریخ",
+      "serviceChartTitle": "توزیع خدمات",
+      "debugData": "داده‌های دیباگ",
+      "noDataAvailable": "هیچ داده‌ای موجود نیست",
+      "date": "تاریخ",
+      "recordCount": "تعداد رکورد",
+      "patientCount": "تعداد بیماران",
+      "service": "خدمت",
+      "count": "تعداد",
+      "patientType": "نوع بیمار",
+      "selectPatientType": "انتخاب نوع بیمار"
+    },
+    "RecordCountChart": {
+      "noDataAvailable": "هیچ داده‌ای موجود نیست",
+      "date": "تاریخ",
+      "recordCount": "تعداد رکورد"
+    },
+    "PatientCountChart": {
+      "noDataAvailable": "هیچ داده‌ای موجود نیست",
+      "date": "تاریخ",
+      "patientCount": "تعداد بیماران"
+    },
+    "ServicePieChart": {
+      "noDataAvailable": "هیچ داده‌ای موجود نیست",
+      "service": "خدمت",
+      "count": "تعداد",
+      "percentage": "درصد"
+    },
+    "ServiceRecordsTable": {
+      "normal": "طبیعی",
+      "abnormal": "غیرطبیعی",
+      "answerStatus": "وضعیت جواب",
+      "actions": "عملیات"
+    }
+  },
+  "/console/saderat-bank-health-monitoring": {
+    "UploadSaderatBankHealthMonitoringExcelDialog": {
+      "DialogTitle": "بارگذاری اکسل",
+      "Form": {
+        "NameLabel": "نام",
+        "NamePlaceholder": "نام را وارد کنید",
+        "UploadButton": "بارگذاری",
+        "FileLabel": "فایل"
+      },
+      "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد"
+    },
+    "DeleteSaderatBankHealthMonitoringExcelDialog": {
+      "DialogTitle": "حذف اکسل",
+      "DialogDescription": "آیا از حذف {name} اطمینان دارید؟",
+      "SuccessMessage": "حذف اکسل با موفقیت انجام شد"
+    },
+    "SaderatBankHealthMonitoringPage": {
+      "UploadExcel": "بارگذاری اکسل",
+      "Loading": "در حال بارگذاری...",
+      "ErrorTitle": "خطا در بارگذاری داده‌ها",
+      "EmptyStateTitle": "هیچ داده‌ای موجود نیست",
+      "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
+      "EmptyStateDescriptionDetail": "هیچ رکوردی برای نمایش وجود ندارد",
+      "ReportTitle": "گزارش آماری",
+      "SearchPersonnel": "جستجوی پرسنل",
+      "SearchPersonnelDescription": "جستجو و مشاهده جزئیات پرسنل",
+      "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی...",
+      "ClearSearch": "پاک کردن",
+      "NoSearchResults": "نتیجه‌ای یافت نشد",
+      "NoResults": "نتیجه‌ای یافت نشد"
+    }
   }
 }

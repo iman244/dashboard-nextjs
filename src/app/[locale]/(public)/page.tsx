@@ -13,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Metadata" });
+  const t = await getTranslations({ locale, namespace: "/.Metadata" });
 
   return {
     title: t("title"),
@@ -21,7 +21,7 @@ export async function generateMetadata({
 }
 
 export default async function LandingPage() {
-  const t = await getTranslations("HomePage");
+  const t = await getTranslations("/.HomePage");
   const locale = await getLocale();
   const isRTL = locale === "fa";
   const Chevron = isRTL ? ChevronLeft : ChevronRight;

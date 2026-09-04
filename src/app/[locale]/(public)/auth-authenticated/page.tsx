@@ -10,7 +10,7 @@ const AuthAuthenticated = () => {
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next");
   const href = nextPath || AppRoutes.CONSOLE;
-  const t = useTranslations("AuthAuthenticated");
+  const t = useTranslations("/auth-authenticated.AuthAuthenticated");
 
   return (
     <div className="flex flex-col items-center! justify-center gap-4 h-screen mx-auto">

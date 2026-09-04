@@ -71,7 +71,7 @@ export const ServiceDetailsTable: React.FC<{
   selectedService: string;
 }> = ({ data, selectedService }) => {
   const locale = useLocale();
-  const tDictionary = useTranslations("dictionary");
+  const tDictionary = useTranslations("common.dictionary");
 
   const detailsColumnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
 
@@ -272,8 +272,8 @@ const Client = (props: {
     patientType: string;
   };
 }) => {
-  const t = useTranslations("PatientReports");
-  const tData = useTranslations("data");
+  const t = useTranslations("/console/patient-reports.PatientReports");
+  const tData = useTranslations("common.data");
   const { ehrByNationalNumber_m, filters } = usePatientReports();
   const { data, isPending } = ehrByNationalNumber_m;
   const locale = useLocale();

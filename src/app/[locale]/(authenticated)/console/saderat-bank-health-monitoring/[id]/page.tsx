@@ -38,7 +38,7 @@ const MonitoringPage = (
     filterFn: (record: SBHM_RetrieveSerializer["json"][number]) => boolean;
     description: string;
   } | null>(null);
-  const t = useTranslations("SaderatBankHealthMonitoringPage");
+  const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
 
   const { data, isPending, error } = monitoring_query;
 

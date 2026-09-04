@@ -42,7 +42,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function Client() {
   const [apiError, setApiError] = useState<string | null>(null);
-  const t = useTranslations("SignUpPage");
+  const t = useTranslations("/authentication/register.SignUpPage");
   const { onRegister } = useOnRegister();
 
   const locale = useLocale();

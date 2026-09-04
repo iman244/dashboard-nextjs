@@ -30,7 +30,7 @@ export const TablePagination = <T extends RowData,>({
   pageIncrement = 10,
   showPageSizeSelector = true,
 }: TablePaginationProps<T>) => {
-  const t = useTranslations("Dictionary");
+  const t = useTranslations("common.Dictionary");
   const locale = useLocale();
   return (
     <div className="flex items-center justify-between">

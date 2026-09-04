@@ -29,7 +29,7 @@ const chartConfig: ChartConfig = {
 };
 
 export const ServiceCountChart: React.FC<ServiceCountChart> = ({ data }) => {
-  const t = useTranslations("ServiceCountChart");
+  const t = useTranslations("common.ServiceCountChart");
 
   // Process data to group by service name and count occurrences
   const chartData: ChartDataPoint[] = React.useMemo(() => {

@@ -16,7 +16,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 
 export function DarkModeToggle() {
   const { setTheme, resolvedTheme, theme } = useTheme()
-  const t = useTranslations("Theme")
+  const t = useTranslations("common.Theme")
   const locale = useLocale()
   const isRTL = locale === "fa"
 

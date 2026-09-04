@@ -67,7 +67,7 @@ export type FormValues = z.infer<typeof formSchema>;
  * Provides filtering options for national number, date range, and patient type inside a dialog
  */
 export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
-  const t = useTranslations("EHRFilter");
+  const t = useTranslations("/console/electronic-health-record.EHRFilter");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { setFilters, filters } = useElectronicHealthRecord();
 

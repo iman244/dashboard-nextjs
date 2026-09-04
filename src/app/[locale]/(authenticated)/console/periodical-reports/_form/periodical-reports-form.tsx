@@ -55,7 +55,7 @@ export const PeriodicalReportsForm = (props: {
   compact?: boolean;
 }) => {
   console.log({ props });
-  const t = useTranslations("PeriodicalReports");
+  const t = useTranslations("/console/periodical-reports.PeriodicalReports");
   const { setFilters, ehrByNationalNumber_m, filters } = usePeriodicalReports();
 
   const form = useForm<PeriodicalReportsFormValues>({
@@ -134,7 +134,7 @@ const MyForm = ({
   onSubmit: (data: PeriodicalReportsFormValues) => void;
 }) => {
   const { ehrByNationalNumber_m } = usePeriodicalReports();
-  const t = useTranslations("PeriodicalReports");
+  const t = useTranslations("/console/periodical-reports.PeriodicalReports");
   const locale = useLocale();
   return (
     <div className="flex-1 flex flex-col gap-6 justify-center items-center">

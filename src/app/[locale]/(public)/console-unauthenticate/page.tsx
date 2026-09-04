@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import React from "react";
 
 const ConsoleUnauthenticate = () => {
-  const t = useTranslations("AuthenticatedGroupLayout");
+  const t = useTranslations("/console-unauthenticate.AuthenticatedGroupLayout");
   const pathname = usePathname();
   return (
     <div className="flex flex-col items-center justify-center gap-4 h-screen mx-auto">

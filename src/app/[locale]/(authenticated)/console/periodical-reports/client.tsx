@@ -15,7 +15,7 @@ import { localeDigits } from "@/lib/utils";
 const Client = (props: {
   initialValues: { patientType?: string; fromDate?: string; toDate?: string };
 }) => {
-  const t = useTranslations("PeriodicalReports");
+  const t = useTranslations("/console/periodical-reports.PeriodicalReports");
   const {
     ehrByNationalNumber_m,
     filters,
