@@ -45,7 +45,13 @@ interface EHRDetailModalProps {
         };
       }
     >;
-    mobileNumberByNationalNumber_m: UseMutationResult<
+    /**
+     * Optional: a page that must not expose the patient's phone number (the
+     * patient portal) simply omits it, and the lookup disappears from the
+     * dialog. Absence is the switch — there is no separate flag to keep in
+     * sync, and such a page never builds the mutation at all.
+     */
+    mobileNumberByNationalNumber_m?: UseMutationResult<
       MobileNumberByNationalNumberApiResponse,
       Error,
       {
@@ -165,6 +171,7 @@ export const EHRDetailModal = ({
 
   const handleGetMobileNumber = React.useCallback(
     (record: ElectronicHealthRecord) => {
+      if (!mobileNumberByNationalNumber_m) return;
       mobileNumberByNationalNumber_m.mutate(
         {
           params: {
@@ -266,29 +273,34 @@ export const EHRDetailModal = ({
                   </div>
                 </div>
               ))}
-              <div key={"mobileNumber"} className="space-y-1 flex flex-col gap-1">
-                <label className="text-sm font-medium text-muted-foreground">
-                  {t("fields.mobileNumber")}
-                </label>
-                {mobileNumber ? (
-                  <div className="flex items-center gap-1">
-                    <div className="text-sm flex-1">
-                      {formatCellValue(mobileNumber, locale)}
+              {mobileNumberByNationalNumber_m && (
+                <div
+                  key={"mobileNumber"}
+                  className="space-y-1 flex flex-col gap-1"
+                >
+                  <label className="text-sm font-medium text-muted-foreground">
+                    {t("fields.mobileNumber")}
+                  </label>
+                  {mobileNumber ? (
+                    <div className="flex items-center gap-1">
+                      <div className="text-sm flex-1">
+                        {formatCellValue(mobileNumber, locale)}
+                      </div>
+                      <CopyButton value={String(mobileNumber)} />
                     </div>
-                    <CopyButton value={String(mobileNumber)} />
-                  </div>
-                ) : (
-                  <Button
-                    variant={"ghost"}
-                    size="sm"
-                    onClick={() => handleGetMobileNumber(record)}
-                    disabled={mobileNumberByNationalNumber_m.isPending}
-                    className="w-fit"
-                  >
-                    {t("getMobileNumber")}
-                  </Button>
-                )}
-              </div>
+                  ) : (
+                    <Button
+                      variant={"ghost"}
+                      size="sm"
+                      onClick={() => handleGetMobileNumber(record)}
+                      disabled={mobileNumberByNationalNumber_m.isPending}
+                      className="w-fit"
+                    >
+                      {t("getMobileNumber")}
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

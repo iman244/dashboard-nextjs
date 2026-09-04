@@ -9,6 +9,7 @@ import { TablePagination } from "@/components/app/table-pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate, localeDigits } from "@/lib/utils";
+import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { useRouter } from "@/i18n/navigation";
 import { AppRoutes } from "@/app/paths";
 import { usePatientSession } from "../../provider";
@@ -32,6 +33,11 @@ const Client = () => {
     loadRecords,
     records_m,
     openDetail,
+    closeDetail,
+    selectedRecord,
+    isDetailModalOpen,
+    mobileLaboratoryByNationalNumber_m,
+    mobileXRayByNationalNumber_m,
   } = usePatientRecords();
 
   const columns = usePatientRecordColumns({ onViewDetails: openDetail });
@@ -131,6 +137,19 @@ const Client = () => {
       </div>
 
       <TablePagination table={table} />
+
+      {/* No mobileNumberByNationalNumber_m: the patient's phone number has no
+          business being looked up on the patient's own page, and omitting the
+          mutation is what removes the control. */}
+      <EHRDetailModal
+        record={selectedRecord}
+        isOpen={isDetailModalOpen}
+        onClose={closeDetail}
+        actions={{
+          mobileLaboratoryByNationalNumber_m,
+          mobileXRayByNationalNumber_m,
+        }}
+      />
     </main>
   );
 };
