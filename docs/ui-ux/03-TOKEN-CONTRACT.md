@@ -109,11 +109,20 @@ Checked programmatically, not by eye. WCAG 2.1, both themes.
 
 ## Distinguishability requirements
 
+> **Colour-vision deficiency was descoped by the product owner on 2026-09-05.** The
+> dichromacy checks still run and still print, but they are **advisory** — they no longer
+> fail the build. Do not re-gate them without asking.
+>
+> What this costs, recorded so the trade is visible rather than forgotten: roughly 1 in 12
+> men has some red/green deficiency, and the normal/abnormal lab badge is how a clinician
+> sees a value is out of range. The palette currently still passes these checks — the
+> question is only whether future changes are allowed to break them.
+
 | Check | Requirement |
 |---|---|
-| Every pair within `chart-1..8` | perceptibly distinct in normal vision |
-| Every pair within `chart-1..8` | still distinct simulated under **deuteranopia** and **protanopia** |
-| `success` vs `destructive` | distinct under deuteranopia — the most common confusion, and the one that matters most on a clinical status badge |
+| Every pair within `chart-1..8` | perceptibly distinct in normal vision — **gating** |
+| Every pair within `chart-1..8` | distinct under **deuteranopia** / **protanopia** — advisory |
+| `success` vs `destructive` | distinct under dichromacy — advisory |
 | `chart-seq-1..5` | monotonically increasing in darkness; adjacent steps distinguishable |
 | `chart-div-1..5` | symmetric about the midpoint; the two ends clearly opposed |
 

@@ -883,9 +883,17 @@ function checkCategoricalDistinct(theme, label, map) {
       }
     }
     const pass = bad.length === 0;
-    if (!pass) {
+    // Colour-vision deficiency is measured and reported, but does not gate.
+    // Descoped by the product owner on 2026-09-05; see the contract.
+    const contractual = vision === "normal";
+    if (!pass && contractual) {
       failures.push(
         `distinct [${theme}] chart-1..8 under ${modeLabel}: ${bad.length} pair(s) below ΔE00 ${threshold} ` +
+          `(worst ${minPair} = ${min.toFixed(1)})`,
+      );
+    } else if (!pass) {
+      warnings.push(
+        `[${theme}] chart-1..8 under ${modeLabel}: ${bad.length} pair(s) below ΔE00 ${threshold} ` +
           `(worst ${minPair} = ${min.toFixed(1)})`,
       );
     }
@@ -933,10 +941,11 @@ function checkSemanticDistinct(theme, label, map) {
   ]) {
     const dist = perceptualDistance(s, d, vision);
     const pass = dist >= threshold;
-    // Only deuteranopia is a contract requirement; the others are advisory context.
-    const contractual = vision === "deuteranopia";
+    // Colour-vision deficiency is measured and reported, but does not gate.
+    // Descoped by the product owner on 2026-09-05; see the contract.
+    const contractual = vision === "normal";
     if (!pass && contractual) {
-      failures.push(`distinct [${theme}]: success vs destructive under deuteranopia = ΔE00 ${dist.toFixed(1)} (needs ${threshold})`);
+      failures.push(`distinct [${theme}]: success vs destructive under ${modeLabel} = ΔE00 ${dist.toFixed(1)} (needs ${threshold})`);
     } else if (!pass) {
       warnings.push(`[${theme}] success vs destructive under ${modeLabel} = ΔE00 ${dist.toFixed(1)}`);
     }
