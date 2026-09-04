@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -32,13 +32,16 @@ import {
 } from "@/components/ui/card";
 // import { cn } from "@/lib/utils"; // only used by the disabled signup link below
 
-// Define the form schema
-const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
-});
+// Define the form schema. Built from `t` rather than at module scope so the
+// validation messages reach the user in their own language; these render through
+// <FormMessage/> and were previously hardcoded English on a Persian-first screen.
+const makeLoginSchema = (t: (key: string) => string) =>
+  z.object({
+    username: z.string().min(1, t("validation.usernameRequired")),
+    password: z.string().min(1, t("validation.passwordRequired")),
+  });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<ReturnType<typeof makeLoginSchema>>;
 
 export function Client() {
   const [apiError, setApiError] = useState<JwtCreateApiError | null>(null);
@@ -48,6 +51,8 @@ export function Client() {
   const dir = locale === "fa" ? "rtl" : "ltr";
 
   const { onLogin } = useOnLogin();
+
+  const loginSchema = useMemo(() => makeLoginSchema(t), [t]);
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),

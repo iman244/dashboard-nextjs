@@ -153,6 +153,10 @@
           "label": "Don't have an account?",
           "link": "Sign up"
         }
+      },
+      "validation": {
+        "usernameRequired": "Username is required",
+        "passwordRequired": "Password is required"
       }
     }
   },
