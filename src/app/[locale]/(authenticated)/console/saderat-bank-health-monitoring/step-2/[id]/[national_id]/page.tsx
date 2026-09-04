@@ -15,37 +15,13 @@ import {
   type SBHM_Step2Record,
 } from "@/data/saderat-bank-health-monitoring/types";
 import { STEP2_FIELD_GROUPS, noteKeyFor } from "../_detail/field-groups";
+import { RecordCards } from "../../../_detail/record-cards";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrTimeline } from "../../../_ehr/timeline";
 import { EhrTimelineTable } from "../../../_ehr/timeline-table";
 import { PatientReportLink } from "../../../_ehr/patient-report-link";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
-
-const isEmpty = (v: unknown) => v === null || v === undefined || v === "";
-
-/** One field and, when present, its paired `توضیحات` note. */
-const FieldRow = ({
-  label,
-  value,
-  note,
-  locale,
-}: {
-  label: string;
-  value: unknown;
-  note?: unknown;
-  locale: string;
-}) => (
-  <div className="flex flex-col gap-0.5 py-2 border-b last:border-b-0">
-    <span className="text-xs text-muted-foreground">{label}</span>
-    <span className="text-sm">{localeDigits(String(value), locale)}</span>
-    {!isEmpty(note) && (
-      <span className="text-xs text-muted-foreground italic">
-        {localeDigits(String(note), locale)}
-      </span>
-    )}
-  </div>
-);
 
 const Step2PersonPage = (
   props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-2/[id]/[national_id]">,
@@ -55,7 +31,7 @@ const Step2PersonPage = (
     "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage",
   );
   const tDetail = useTranslations(
-    "/console/saderat-bank-health-monitoring.Step2Detail",
+    "/console/saderat-bank-health-monitoring.Detail",
   );
   const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
   const locale = useLocale();
@@ -190,34 +166,11 @@ const Step2PersonPage = (
               {tDetail("recordIndex", { index: localeDigits(i + 1, locale) })}
             </Badge>
           )}
-          <div className="grid gap-4 md:grid-cols-2">
-            {STEP2_FIELD_GROUPS.map((group) => {
-              // only fields this person actually has
-              const rows = group.fields.filter((f) => !isEmpty(record[f]));
-              if (rows.length === 0) return null;
-              return (
-                <Card key={group.titleKey}>
-                  <CardHeader>
-                    <CardTitle>{tDetail(group.titleKey)}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {rows.map((field) => {
-                      const noteKey = noteKeyFor(field);
-                      return (
-                        <FieldRow
-                          key={field}
-                          label={field}
-                          value={record[field]}
-                          note={noteKey ? record[noteKey] : undefined}
-                          locale={locale}
-                        />
-                      );
-                    })}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+          <RecordCards
+            groups={STEP2_FIELD_GROUPS}
+            record={record}
+            noteKeyFor={noteKeyFor}
+          />
         </div>
       ))}
 

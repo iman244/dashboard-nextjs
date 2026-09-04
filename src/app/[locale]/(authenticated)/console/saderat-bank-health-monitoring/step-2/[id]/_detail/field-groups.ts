@@ -1,4 +1,5 @@
 import type { SBHM_Step2Record } from "@/data/saderat-bank-health-monitoring/types";
+import type { FieldGroup } from "../../../_detail/record-cards";
 
 /**
  * Every step_2 field, grouped for the per-person view.
@@ -9,12 +10,7 @@ import type { SBHM_Step2Record } from "@/data/saderat-bank-health-monitoring/typ
  * Coverage comments are from monitoring id 7 (546 records). Fields are typed,
  * so a key that stops existing upstream is a compile error.
  */
-export type FieldGroup = {
-  titleKey: string;
-  fields: (keyof SBHM_Step2Record)[];
-};
-
-export const STEP2_FIELD_GROUPS: FieldGroup[] = [
+export const STEP2_FIELD_GROUPS: FieldGroup<keyof SBHM_Step2Record>[] = [
   {
     titleKey: "groups.identity",
     fields: [

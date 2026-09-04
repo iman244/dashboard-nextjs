@@ -399,7 +399,7 @@
         "additionalTests": "Additional Tests Required"
       }
     },
-    "Step2Detail": {
+    "Detail": {
       "notFound": "No record with this national ID in this monitoring.",
       "backToReport": "Back to report",
       "duplicateNationalId": "This national ID appears on {count} records. All are shown below.",
@@ -407,12 +407,17 @@
       "groups": {
         "identity": "Identity",
         "vitals": "Vital Signs",
+        "labs": "Laboratory",
+        "urinalysis": "Urinalysis",
         "ecg": "ECG",
         "clinicalExam": "Clinical Examination",
         "musculoskeletal": "Musculoskeletal",
+        "dental": "Oral & Dental",
+        "imaging": "Imaging",
         "medicalHistory": "Medical History",
         "occupationalRisk": "Occupational Risk Factors",
-        "followUp": "Follow-up"
+        "followUp": "Follow-up",
+        "administrative": "Administrative"
       }
     },
     "Ehr": {

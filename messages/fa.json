@@ -399,7 +399,7 @@
         "additionalTests": "آزمایشات تکمیلی مورد نیاز"
       }
     },
-    "Step2Detail": {
+    "Detail": {
       "notFound": "رکوردی با این کد ملی در این پایش یافت نشد.",
       "backToReport": "بازگشت به گزارش",
       "duplicateNationalId": "این کد ملی در {count} رکورد وجود دارد. همه در ادامه نمایش داده شده‌اند.",
@@ -407,12 +407,17 @@
       "groups": {
         "identity": "مشخصات",
         "vitals": "علائم حیاتی",
+        "labs": "آزمایشات",
+        "urinalysis": "آزمایش ادرار",
         "ecg": "نوار قلب",
         "clinicalExam": "معاینات بالینی",
         "musculoskeletal": "سیستم عضلانی اسکلتی",
+        "dental": "دهان و دندان",
+        "imaging": "تصویربرداری",
         "medicalHistory": "سوابق پزشکی",
         "occupationalRisk": "عوامل زیان‌آور شغلی",
-        "followUp": "پیگیری"
+        "followUp": "پیگیری",
+        "administrative": "اطلاعات اداری"
       }
     },
     "Ehr": {
