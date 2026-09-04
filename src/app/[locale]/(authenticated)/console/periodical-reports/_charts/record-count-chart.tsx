@@ -90,7 +90,7 @@ export const RecordCountChart: React.FC<RecordCountChart> = ({ data }) => {
           tickMargin={12}
         />
         <YAxis
-          tickFormatter={(value) => digitsEnToFa(value.toString())}
+          tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
           fontSize={12}
           tickMargin={24}
         />
@@ -103,7 +103,7 @@ export const RecordCountChart: React.FC<RecordCountChart> = ({ data }) => {
                 </span>
               )}
               formatter={(value) => [
-                digitsEnToFa(value.toString()),
+                digitsEnToFa(String(value ?? "")),
                 " ",
                 t("recordCount"),
               ]}

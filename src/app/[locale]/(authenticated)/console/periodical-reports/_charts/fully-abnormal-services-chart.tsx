@@ -137,7 +137,7 @@ export const FullyAbnormalServicesChart: React.FC<FullyAbnormalServicesChart> = 
             height={80}
           />
           <YAxis
-            tickFormatter={(value) => digitsEnToFa(value.toString())}
+            tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
             fontSize={12}
             tickMargin={24}
           />
@@ -151,7 +151,7 @@ export const FullyAbnormalServicesChart: React.FC<FullyAbnormalServicesChart> = 
                 )}
                 formatter={(value) => {
                   return [
-                    digitsEnToFa(value.toString()),
+                    digitsEnToFa(String(value ?? "")),
                     " ",
                     "نتایج غیرطبیعی",
                   ];

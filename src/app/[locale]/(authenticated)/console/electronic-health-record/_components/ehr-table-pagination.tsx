@@ -13,11 +13,12 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Table as TanStackTable } from "@tanstack/react-table";
+import { ReactTable } from "@tanstack/react-table";
+import { type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 
 interface EHRTablePaginationProps {
-  table: TanStackTable<ElectronicHealthRecord>;
+  table: ReactTable<AppTableFeatures, ElectronicHealthRecord>;
   formatNumber: (num: number) => string;
   pageIncrement?: number;
   showPageSizeSelector?: boolean;
@@ -40,14 +41,14 @@ export const EHRTablePagination = ({
         <p className="text-sm text-muted-foreground">
           {t("pagination.showing", {
             start: formatNumber(
-              table.getState().pagination.pageIndex *
-                table.getState().pagination.pageSize +
+              table.state.pagination.pageIndex *
+                table.state.pagination.pageSize +
                 1
             ),
             end: formatNumber(
               Math.min(
-                (table.getState().pagination.pageIndex + 1) *
-                  table.getState().pagination.pageSize,
+                (table.state.pagination.pageIndex + 1) *
+                  table.state.pagination.pageSize,
                 table.getFilteredRowModel().rows.length
               )
             ),
@@ -61,7 +62,7 @@ export const EHRTablePagination = ({
           <div className="flex items-center space-x-2 space-x-reverse">
             <p className="text-sm font-medium">{t("pagination.rowsPerPage")}</p>
             <Select
-              value={`${table.getState().pagination.pageSize}`}
+              value={`${table.state.pagination.pageSize}`}
               onValueChange={(value) => {
                 table.setPageSize(Number(value));
               }}
@@ -69,7 +70,7 @@ export const EHRTablePagination = ({
               <SelectTrigger className="h-8 w-[70px]">
                 <SelectValue
                   placeholder={formatNumber(
-                    table.getState().pagination.pageSize
+                    table.state.pagination.pageSize
                   )}
                 />
               </SelectTrigger>
@@ -116,7 +117,7 @@ export const EHRTablePagination = ({
           {/* Page Numbers */}
           {Array.from({ length: table.getPageCount() }, (_, i) => {
             const pageNumber = i + 1;
-            const currentPage = table.getState().pagination.pageIndex + 1;
+            const currentPage = table.state.pagination.pageIndex + 1;
 
             // Show first page, last page, current page, and pages around current page
             if (
@@ -183,7 +184,7 @@ export const EHRTablePagination = ({
         <div className="flex items-center space-x-2 space-x-reverse">
           <p className="text-sm font-medium">
             {t("pagination.page", {
-              current: formatNumber(table.getState().pagination.pageIndex + 1),
+              current: formatNumber(table.state.pagination.pageIndex + 1),
               total: formatNumber(table.getPageCount()),
             })}
           </p>

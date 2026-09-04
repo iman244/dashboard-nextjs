@@ -7,15 +7,8 @@ import { PatientReportsForm } from "./_form/patient-reports-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { formatDate, formatNumber, localeDigits } from "@/lib/utils";
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-  ColumnDef,
-} from "@tanstack/react-table";
+import { createColumnHelper, useTable } from "@tanstack/react-table";
+import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { DataTable } from "@/components/app";
 import { Button } from "@/components/ui/button";
@@ -46,7 +39,7 @@ interface ServiceCountData {
   abnormalResults: number;
 }
 
-const columnHelper = createColumnHelper<ServiceCountData>();
+const columnHelper = createColumnHelper<AppTableFeatures, ServiceCountData>();
 
 // Chart configuration for service trend
 const serviceTrendChartConfig: ChartConfig = {
@@ -80,10 +73,10 @@ export const ServiceDetailsTable: React.FC<{
   const locale = useLocale();
   const tDictionary = useTranslations("dictionary");
 
-  const detailsColumnHelper = createColumnHelper<ElectronicHealthRecord>();
+  const detailsColumnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
 
   const columns = React.useMemo(
-    () => [
+    () => detailsColumnHelper.columns([
       detailsColumnHelper.accessor("تاريخ", {
         header: tDictionary("date"),
         cell: (info) => <span>{localeDigits(info.getValue(), locale)}</span>,
@@ -100,7 +93,7 @@ export const ServiceDetailsTable: React.FC<{
           <span>{localeDigits(info.getValue()?.toString() || "", locale)}</span>
         ),
       }),
-    ],
+    ]),
     [tDictionary, locale, detailsColumnHelper]
   );
 
@@ -147,15 +140,13 @@ export const ServiceDetailsTable: React.FC<{
       .sort((a, b) => a.timestamp - b.timestamp);
   }, [filteredRecords]);
 
-  const table = useReactTable({
+  const table = useTable({
+    features: appTableFeatures,
     data: filteredRecords,
     columns: columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
+        pageIndex: 0,
         pageSize: 5,
       },
     },
@@ -189,7 +180,7 @@ export const ServiceDetailsTable: React.FC<{
                 tickMargin={12}
               />
               <YAxis
-                tickFormatter={(value) => digitsEnToFa(value.toString())}
+                tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
                 fontSize={12}
                 tickMargin={24}
               />
@@ -208,7 +199,7 @@ export const ServiceDetailsTable: React.FC<{
                           : name === "normalRangeMin"
                           ? "حد پایین نرمال"
                           : "حد بالای نرمال";
-                      return [digitsEnToFa(value.toString()), " ", label];
+                      return [digitsEnToFa(String(value ?? "")), " ", label];
                     }}
                   />
                 }
@@ -363,7 +354,7 @@ const Client = (props: {
   }, [data]);
 
   const columns = React.useMemo(
-    () => [
+    () => columnHelper.columns([
       columnHelper.accessor("serviceName", {
         header: tData("serviceName"),
         cell: (info) => <span className="font-medium">{info.getValue()}</span>,
@@ -408,17 +399,14 @@ const Client = (props: {
           </div>
         ),
       }),
-    ],
+    ]),
     [tData, locale]
   );
 
-  const table = useReactTable<ServiceCountData>({
+  const table = useTable({
+    features: appTableFeatures,
     data: aggregatedData,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     globalFilterFn: (row, columnId, value) => {
       const serviceName = row.getValue("serviceName") as string;
       return serviceName.toLowerCase().includes(value.toLowerCase());
@@ -429,6 +417,7 @@ const Client = (props: {
     onGlobalFilterChange: setSearchTerm,
     initialState: {
       pagination: {
+        pageIndex: 0,
         pageSize: 10,
       },
     },
@@ -514,7 +503,7 @@ const Client = (props: {
 
                   <DataTable
                     table={table}
-                    columns={columns as ColumnDef<ServiceCountData, unknown>[]}
+                    columns={columns}
                   />
                   <TablePagination
                     table={table}

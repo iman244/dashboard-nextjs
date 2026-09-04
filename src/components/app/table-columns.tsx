@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
+import { createColumnHelper, ColumnDef, RowData } from "@tanstack/react-table";
 import { formatCellValue } from "@/lib/utils";
+import { type AppTableFeatures } from "./table-features";
 
-export const useGenericTableColumns = <TData,>(
+export const useGenericTableColumns = <TData extends RowData,>(
   config: {
     columns: Array<{
       key: keyof TData;
@@ -19,11 +20,11 @@ export const useGenericTableColumns = <TData,>(
       cell: (row: TData) => React.ReactNode;
     };
   }
-): ColumnDef<TData>[] => {
-  const columnHelper = createColumnHelper<TData>();
+): ColumnDef<AppTableFeatures, TData>[] => {
+  const columnHelper = createColumnHelper<AppTableFeatures, TData>();
 
   return React.useMemo(() => {
-    const baseColumns: ColumnDef<TData>[] = config.columns.map((col) => {
+    const baseColumns: ColumnDef<AppTableFeatures, TData>[] = config.columns.map((col) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const columnDef = columnHelper.accessor(col.key as any, {
         header: col.header,
@@ -48,9 +49,9 @@ export const useGenericTableColumns = <TData,>(
         cell: ({ row }) => config.actions!.cell(row.original),
       });
 
-      return [...baseColumns, actionsColumn];
+      return columnHelper.columns([...baseColumns, actionsColumn]);
     }
 
-    return baseColumns;
+    return columnHelper.columns(baseColumns);
   }, [config.columns, config.locale, config.actions, columnHelper]);
 };

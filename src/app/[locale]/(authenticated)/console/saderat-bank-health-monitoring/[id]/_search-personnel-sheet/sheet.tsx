@@ -10,14 +10,8 @@ import {
 } from "@/components/ui/table";
 import { SBHM_RetrieveSerializer } from "@/data/saderat-bank-health-monitoring/types";
 import { cn, localeDigits } from "@/lib/utils";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { createColumnHelper, useTable } from "@tanstack/react-table";
+import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { TablePagination } from "../table-pagination";
@@ -34,7 +28,7 @@ import {
 } from "@/components/ui/sheet";
 
 const columnHelper =
-  createColumnHelper<SBHM_RetrieveSerializer["json"][number]>();
+  createColumnHelper<AppTableFeatures, SBHM_RetrieveSerializer["json"][number]>();
 
 interface SearchPersonnelSheetProps {
   open: boolean;
@@ -67,8 +61,9 @@ export function SearchPersonnelSheet({
     return result;
   }, [data, filterFn]);
 
-  const table = useReactTable({
-    columns: [
+  const table = useTable({
+    features: appTableFeatures,
+    columns: columnHelper.columns([
       columnHelper.accessor("نام", {
         header: "نام",
         cell: (info) => `${info.getValue()}`,
@@ -98,11 +93,8 @@ export function SearchPersonnelSheet({
           </Button>
         ),
       }),
-    ],
+    ]),
     data: filteredData,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     globalFilterFn: (row, columnId, value) => {
       const firstName = String(row.getValue("نام") || "").toLowerCase();
       const lastName = String(row.getValue("نام خانوادگی") || "").toLowerCase();
@@ -123,6 +115,7 @@ export function SearchPersonnelSheet({
     onGlobalFilterChange: setSearchTerm,
     initialState: {
       pagination: {
+        pageIndex: 0,
         pageSize: 10,
       },
     },
@@ -174,10 +167,7 @@ export function SearchPersonnelSheet({
                       >
                         {header.isPlaceholder
                           ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                          : <table.FlexRender header={header} />}
                       </TableHead>
                     ))}
                   </TableRow>
@@ -196,12 +186,9 @@ export function SearchPersonnelSheet({
                 ) : (
                   table.getRowModel().rows.map((row) => (
                     <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
+                      {row.getAllCells().map((cell) => (
                         <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
+                          <table.FlexRender cell={cell} />
                         </TableCell>
                       ))}
                     </TableRow>

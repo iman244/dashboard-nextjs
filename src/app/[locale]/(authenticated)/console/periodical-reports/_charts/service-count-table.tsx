@@ -4,14 +4,8 @@
 import React, { useMemo, useState } from "react";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { DataTable, TablePagination } from "@/components/app";
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { createColumnHelper, useTable } from "@tanstack/react-table";
+import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FileText, XIcon, Search } from "lucide-react";
@@ -37,7 +31,7 @@ interface ServiceCountData {
   abnormalResults: number;
 }
 
-const columnHelper = createColumnHelper<ServiceCountData>();
+const columnHelper = createColumnHelper<AppTableFeatures, ServiceCountData>();
 
 export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
   data,
@@ -118,7 +112,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
   }, [data]);
 
   const columns = useMemo(
-    () => [
+    () => columnHelper.columns([
       columnHelper.accessor("serviceName", {
         header: "نام خدمت",
         cell: (info) => <span className="font-medium">{info.getValue()}</span>,
@@ -163,19 +157,16 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
           </div>
         ),
       }),
-    ],
+    ]),
     []
   );
 
   console.log({ aggregatedData });
 
-  const table = useReactTable({
+  const table = useTable({
+    features: appTableFeatures,
     data: aggregatedData,
     columns: columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     globalFilterFn: (row, columnId, value) => {
       const serviceName = row.getValue("serviceName") as string;
       return serviceName.toLowerCase().includes(value.toLowerCase());
@@ -185,6 +176,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
     },
     initialState: {
       pagination: {
+        pageIndex: 0,
         pageSize: 10,
       },
     },

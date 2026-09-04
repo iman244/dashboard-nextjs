@@ -2,12 +2,8 @@
 
 import React from "react";
 import { useTranslations, useLocale } from "next-intl";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-} from "@tanstack/react-table";
+import { useTable } from "@tanstack/react-table";
+import { appTableFeatures } from "@/components/app/table-features";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, XIcon } from "lucide-react";
 
@@ -53,14 +49,13 @@ const Client = () => {
   });
 
   // Table instance
-  const table = useReactTable({
+  const table = useTable({
+    features: appTableFeatures,
     data: ehrByNationalNumber_m.data || [],
     columns: columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
+        pageIndex: 0,
         pageSize: 10,
       },
       sorting: [
