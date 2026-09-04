@@ -55,7 +55,7 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
         </TableHeader>
         <TableBody>
           {isLoading ? (
-            <LoadingSkeleton />
+            <LoadingSkeleton columnCount={columns.length} />
           ) : isError ? (
             <TableRow>
               <TableCell

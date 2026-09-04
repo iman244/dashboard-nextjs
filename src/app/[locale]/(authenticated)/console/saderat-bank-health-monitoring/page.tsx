@@ -103,7 +103,9 @@ const SaderatBankHealthMonitoringPage = (
     );
   }
 
-  if (data === undefined) {
+  // `isPending` above already covers `data === undefined`, so this branch has
+  // to test the genuinely-empty list or it can never render.
+  if (!data || data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-3">
         <Inbox className="h-12 w-12 text-muted-foreground" />
@@ -111,6 +113,9 @@ const SaderatBankHealthMonitoringPage = (
         <p className="text-sm text-muted-foreground">
           {t("EmptyStateDescription")}
         </p>
+        <UploadSaderatBankHealthMonitoringExcelDialog
+          trigger={<Button>{t("UploadExcel")}</Button>}
+        />
       </div>
     );
   }
