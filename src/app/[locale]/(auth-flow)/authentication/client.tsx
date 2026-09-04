@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { DarkModeToggle } from "@/components/app/theme-toggle";
 import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
@@ -98,6 +99,12 @@ export function Client() {
             "radial-gradient(48rem 34rem at 84% 92%, color-mix(in oklab, var(--chart-5) 6%, transparent), transparent 62%)",
         }}
       />
+
+      {/* Theme control sits in the page corner, clear of the card, so it reads as
+          chrome rather than part of the sign-in form. */}
+      <div className="absolute end-4 top-4 z-10">
+        <DarkModeToggle />
+      </div>
 
       {/* Double-bezel: an outer tray holding an inner plate, with concentric radii. */}
       <div className="w-full max-w-[26rem] rounded-[2rem] bg-foreground/[0.035] p-1.5 ring-1 ring-foreground/[0.07] backdrop-blur-sm">

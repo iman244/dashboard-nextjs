@@ -15,11 +15,13 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NavUser } from "./nav-user";
+import { DarkModeToggle } from "@/components/app/theme-toggle";
 
 export function AppSidebar() {
   const pathname = usePathname();
 
   const t = useTranslations("/console.ConsoleSidebar");
+  const tTheme = useTranslations("common.Theme");
   const locale = useLocale();
   const side = locale === "fa" ? "right" : "left";
   const dir = locale === "fa" ? "rtl" : "ltr";
@@ -74,6 +76,12 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter dir={dir}>
+        {/* Hidden when the sidebar collapses to icons — the trigger is a fixed
+            36px control and would overflow the rail. */}
+        <div className="flex items-center justify-between gap-2 px-1 group-data-[collapsible=icon]:hidden">
+          <span className="text-xs text-muted-foreground">{tTheme("label")}</span>
+          <DarkModeToggle />
+        </div>
         <NavUser />
       </SidebarFooter>
     </Sidebar>

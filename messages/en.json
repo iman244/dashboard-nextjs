@@ -9,7 +9,8 @@
       "light": "Light",
       "dark": "Dark",
       "system": "System",
-      "current": "{theme} theme"
+      "current": "{theme} theme",
+      "label": "Appearance"
     },
     "NetworkErrorDialog": {
       "AlertDialogTitle": "Network Error",

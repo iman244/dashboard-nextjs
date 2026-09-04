@@ -9,7 +9,8 @@
       "light": "روشن",
       "dark": "تاریک",
       "system": "سیستم",
-      "current": "حالت {theme}"
+      "current": "حالت {theme}",
+      "label": "نمایش"
     },
     "NetworkErrorDialog": {
       "AlertDialogTitle": "خطای شبکه",

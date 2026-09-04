@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import ButtonsSection from "./_components/ButtonsSection";
-import { DarkModeToggle } from "./_components/DarkModeToggle";
+import { DarkModeToggle } from "@/components/app/theme-toggle";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
