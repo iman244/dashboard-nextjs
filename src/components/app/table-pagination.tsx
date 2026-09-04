@@ -15,16 +15,17 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Table as TanStackTable } from "@tanstack/react-table";
+import { ReactTable, RowData } from "@tanstack/react-table";
 import { localeDigits } from "@/lib/utils";
+import { type AppTableFeatures } from "./table-features";
 
-interface TablePaginationProps<T> {
-  table: TanStackTable<T>;
+interface TablePaginationProps<T extends RowData> {
+  table: ReactTable<AppTableFeatures, T>;
   pageIncrement?: number;
   showPageSizeSelector?: boolean;
 }
 
-export const TablePagination = <T,>({
+export const TablePagination = <T extends RowData,>({
   table,
   pageIncrement = 10,
   showPageSizeSelector = true,
@@ -37,15 +38,15 @@ export const TablePagination = <T,>({
         <p className="text-sm text-muted-foreground">
           {t("Showing", {
             start: localeDigits(
-              table.getState().pagination.pageIndex *
-                table.getState().pagination.pageSize +
+              table.state.pagination.pageIndex *
+                table.state.pagination.pageSize +
                 1,
               locale
             ),
             end: localeDigits(
               Math.min(
-                (table.getState().pagination.pageIndex + 1) *
-                  table.getState().pagination.pageSize,
+                (table.state.pagination.pageIndex + 1) *
+                  table.state.pagination.pageSize,
                 table.getFilteredRowModel().rows.length
               ),
               locale
@@ -63,7 +64,7 @@ export const TablePagination = <T,>({
           <div className="flex items-center space-x-2 space-x-reverse">
             <p className="text-sm font-medium">{t("Rows per page")}</p>
             <Select
-              value={`${table.getState().pagination.pageSize}`}
+              value={`${table.state.pagination.pageSize}`}
               onValueChange={(value) => {
                 table.setPageSize(Number(value));
               }}
@@ -71,7 +72,7 @@ export const TablePagination = <T,>({
               <SelectTrigger className="h-8 w-[70px]">
                 <SelectValue
                   placeholder={localeDigits(
-                    table.getState().pagination.pageSize,
+                    table.state.pagination.pageSize,
                     locale
                   )}
                 />
@@ -119,7 +120,7 @@ export const TablePagination = <T,>({
           {/* Page Numbers */}
           {Array.from({ length: table.getPageCount() }, (_, i) => {
             const pageNumber = i + 1;
-            const currentPage = table.getState().pagination.pageIndex + 1;
+            const currentPage = table.state.pagination.pageIndex + 1;
 
             // Show first page, last page, current page, and pages around current page
             if (
@@ -187,7 +188,7 @@ export const TablePagination = <T,>({
           <p className="text-sm font-medium">
             {t("Page", {
               current: localeDigits(
-                table.getState().pagination.pageIndex + 1,
+                table.state.pagination.pageIndex + 1,
                 locale
               ),
               total: localeDigits(table.getPageCount(), locale),

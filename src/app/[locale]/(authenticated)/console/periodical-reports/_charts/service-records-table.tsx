@@ -4,14 +4,8 @@ import React, { useMemo } from "react";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/app";
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { createColumnHelper, useTable } from "@tanstack/react-table";
+import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Eye, FileText } from "lucide-react";
@@ -27,7 +21,7 @@ interface ServiceRecordsTableProps {
   selectedService: string | null;
 }
 const fallbackdata: ElectronicHealthRecord[] = [];
-const columnHelper = createColumnHelper<ElectronicHealthRecord>();
+const columnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
 
 export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
   data,
@@ -80,7 +74,7 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
   );
 
   const columns = useMemo(
-    () => [
+    () => columnHelper.columns([
       columnHelper.accessor("نام بيمار", {
         header: t("patientName"),
         cell: (info) => (
@@ -127,7 +121,7 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
             </div>
           );
         },
-        sortingFn: (rowA, rowB) => {
+        sortFn: (rowA, rowB) => {
           const answerA = rowA.original["جواب"];
           const normalRangeA = rowA.original["نرمال رنج"];
           const answerB = rowB.original["جواب"];
@@ -231,7 +225,7 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
           </div>
         ),
       }),
-    ],
+    ]),
     [t, tSRT, locale, setSelectedRecord, handlePatientReport]
   );
 
@@ -244,15 +238,13 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
     return data.filter((record) => record["نام خدمت"] === selectedService);
   }, [data, selectedService]);
 
-  const table = useReactTable({
+  const table = useTable({
+    features: appTableFeatures,
     data: filteredRecords || fallbackdata,
     columns: columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
+        pageIndex: 0,
         pageSize: 5,
       },
     },

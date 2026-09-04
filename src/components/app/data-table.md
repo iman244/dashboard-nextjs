@@ -26,13 +26,14 @@ A generic data table component built on top of TanStack Table with built-in sort
 
 ```tsx
 import { DataTable } from "@/components/app";
-import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
+import { useTable } from "@tanstack/react-table";
+import { appTableFeatures } from "@/components/app/table-features";
 
 const MyComponent = () => {
-  const table = useReactTable({
+  const table = useTable({
+    features: appTableFeatures,
     data: myData,
     columns: myColumns,
-    getCoreRowModel: getCoreRowModel(),
   });
 
   return (

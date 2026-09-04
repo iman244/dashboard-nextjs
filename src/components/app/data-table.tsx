@@ -2,12 +2,13 @@
 
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { flexRender, Table as TanStackTable, ColumnDef } from "@tanstack/react-table";
+import { ReactTable, ColumnDef, RowData } from "@tanstack/react-table";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import type { AppTableFeatures } from "./table-features";
 
-interface DataTableProps<TData, TValue> {
-  table: TanStackTable<TData>;
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData extends RowData, TValue> {
+  table: ReactTable<AppTableFeatures, TData>;
+  columns: ColumnDef<AppTableFeatures, TData, TValue>[];
   noDataMessage?: string;
   className?: string;
 }
@@ -16,7 +17,7 @@ interface DataTableProps<TData, TValue> {
  * Generic data table component with sorting capabilities
  * Similar to EHRTable but without loading/error states
  */
-export const DataTable = <TData, TValue = unknown>({ 
+export const DataTable = <TData extends RowData, TValue = unknown>({ 
   table, 
   columns, 
   noDataMessage = "هیچ داده‌ای موجود نیست",
@@ -38,10 +39,7 @@ export const DataTable = <TData, TValue = unknown>({
                   <div className="flex items-center gap-2 space-x-reverse">
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : <table.FlexRender header={header} />}
                     {header.column.getCanSort() && (
                       <span className="ml-2 text-muted-foreground">
                         {{
@@ -61,16 +59,10 @@ export const DataTable = <TData, TValue = unknown>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
+              <TableRow key={row.id}>
+                {row.getAllCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                    <table.FlexRender cell={cell} />
                   </TableCell>
                 ))}
               </TableRow>

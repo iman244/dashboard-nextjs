@@ -1,5 +1,6 @@
 import React from "react";
-import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
+import { type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { formatCellValue } from "@/lib/utils";
 import { MoreHorizontal, Eye, BarChart3 } from "lucide-react";
@@ -15,7 +16,7 @@ import { format, subYears } from "date-fns-jalali";
 import { useElectronicHealthRecord } from "../provider";
 import { useLocale } from "next-intl";
 
-const columnHelper = createColumnHelper<ElectronicHealthRecord>();
+const columnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
 
 /**
  * Hook to get EHR table column definitions with locale-aware formatting
@@ -65,7 +66,7 @@ export const useEHRColumns = ({
   );
 
   return React.useMemo(
-    () => [
+    () => columnHelper.columns([
       columnHelper.accessor("نام بيمار", {
         header: "نام و نام خانوادگی بیمار",
         cell: (info) =>
@@ -75,16 +76,16 @@ export const useEHRColumns = ({
             }`,
             locale
           ),
-      }) as ColumnDef<ElectronicHealthRecord>,
+      }),
       columnHelper.accessor("كدملي", {
         header: "کد ملی",
         cell: (info) => formatCellValue(info.getValue(), locale),
-      }) as ColumnDef<ElectronicHealthRecord>,
+      }),
       columnHelper.accessor("تاريخ", {
         header: "تاریخ",
         cell: (info) => formatCellValue(info.getValue(), locale),
         enableSorting: true,
-      }) as ColumnDef<ElectronicHealthRecord>,
+      }),
       columnHelper.accessor("نام خدمت", {
         header: "نام خدمت",
         cell: (info) => (
@@ -92,19 +93,19 @@ export const useEHRColumns = ({
             {formatCellValue(info.getValue(), locale)}
           </div>
         ),
-      }) as ColumnDef<ElectronicHealthRecord>,
+      }),
       columnHelper.accessor("نام پزشك معالج", {
         header: "نام پزشک معالج",
         cell: (info) => formatCellValue(info.getValue(), locale),
-      }) as ColumnDef<ElectronicHealthRecord>,
+      }),
       columnHelper.accessor("مكان", {
         header: "مکان",
         cell: (info) => formatCellValue(info.getValue(), locale),
-      }) as ColumnDef<ElectronicHealthRecord>,
+      }),
       columnHelper.accessor("PatientType", {
         header: "نوع بیمار",
         cell: (info) => formatCellValue(info.getValue(), locale),
-      }) as ColumnDef<ElectronicHealthRecord>,
+      }),
       // Actions column
       columnHelper.display({
         id: "actions",
@@ -139,8 +140,8 @@ export const useEHRColumns = ({
             </DropdownMenu>
           );
         },
-      }) as ColumnDef<ElectronicHealthRecord>,
-    ],
+      }),
+    ]),
     [locale, onViewDetails, handlePatientReport, isRtl]
   );
 };

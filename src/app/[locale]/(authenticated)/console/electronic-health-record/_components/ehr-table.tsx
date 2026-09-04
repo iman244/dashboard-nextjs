@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { flexRender, Table as TanStackTable, ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
+import { ReactTable, ColumnDef } from "@tanstack/react-table";
+import { type AppTableFeatures } from "@/components/app/table-features";
 import { useTranslations } from "next-intl";
 import { LoadingSkeleton } from "./loading-skeleton";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
@@ -7,8 +8,8 @@ import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import React from "react";
 
 interface EHRTableProps {
-  table: TanStackTable<ElectronicHealthRecord>;
-  columns: ColumnDef<ElectronicHealthRecord>[];
+  table: ReactTable<AppTableFeatures, ElectronicHealthRecord>;
+  columns: ColumnDef<AppTableFeatures, ElectronicHealthRecord>[];
   isLoading: boolean;
   isError: boolean;
   error?: Error | null;
@@ -35,10 +36,7 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
                   <div className="flex items-center gap-2 space-x-reverse">
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : <table.FlexRender header={header} />}
                     {header.column.getCanSort() && (
                       <span className="ml-2 text-muted-foreground">
                         {{
@@ -70,16 +68,10 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
             </TableRow>
           ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
+              <TableRow key={row.id}>
+                {row.getAllCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                    <table.FlexRender cell={cell} />
                   </TableCell>
                 ))}
               </TableRow>

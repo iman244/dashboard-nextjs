@@ -3,12 +3,8 @@
 import React from "react";
 import UploadSaderatBankHealthMonitoringExcelDialog from "./_upload-excel-dialog/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { createColumnHelper, useTable } from "@tanstack/react-table";
+import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import {
   Table,
   TableBody,
@@ -26,7 +22,7 @@ import Link from "next/link";
 import { useList_SBHM_API } from "@/data/saderat-bank-health-monitoring/api";
 import { SBHM_ListSerializer } from "@/data/saderat-bank-health-monitoring/types";
 
-const columnHelper = createColumnHelper<SBHM_ListSerializer[number]>();
+const columnHelper = createColumnHelper<AppTableFeatures, SBHM_ListSerializer[number]>();
 
 const SaderatBankHealthMonitoringPage = (
   props: PageProps<"/[locale]/console/saderat-bank-health-monitoring">
@@ -40,8 +36,9 @@ const SaderatBankHealthMonitoringPage = (
   const locale = useLocale();
   const isRtl = locale === "fa";
 
-  const table = useReactTable({
-    columns: [
+  const table = useTable({
+    features: appTableFeatures,
+    columns: columnHelper.columns([
       columnHelper.accessor("name", {
         header: tDictionary("Name"),
         cell: (info) => localeDigits(info.getValue(), locale),
@@ -49,7 +46,7 @@ const SaderatBankHealthMonitoringPage = (
       columnHelper.accessor("created_at", {
         header: tDictionary("CreatedAt"),
         cell: (info) =>
-          localeDigits(formatDate(info.getValue(), locale), locale),
+          localeDigits(formatDate(new Date(info.getValue()), locale), locale),
       }),
       columnHelper.display({
         header: tDictionary("Actions"),
@@ -71,9 +68,8 @@ const SaderatBankHealthMonitoringPage = (
           </div>
         ),
       }),
-    ],
+    ]),
     data: data || [],
-    getCoreRowModel: getCoreRowModel(),
   });
 
   if (isPending) {
@@ -133,10 +129,7 @@ const SaderatBankHealthMonitoringPage = (
                   >
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : <table.FlexRender header={header} />}
                   </TableHead>
                 ))}
               </TableRow>
@@ -148,10 +141,7 @@ const SaderatBankHealthMonitoringPage = (
                 <TableRow key={row.id}>
                   {row.getAllCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}
                 </TableRow>
