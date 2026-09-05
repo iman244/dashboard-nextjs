@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertCircle, ArrowRight, Inbox } from "lucide-react";
+import { AlertCircle, ArrowLeft, Inbox } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -259,7 +259,11 @@ const Step2PersonPage = (
             </div>
             <Button asChild variant="outline" size="sm">
               <Link href={SBHM_DETAIL_PATH("step_2", data.id)}>
-                <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+                {/* Base icon is the LTR appearance and rtl:rotate-180 mirrors it,
+                    as with the sign-in button. "Back" points left when reading
+                    left-to-right and right when reading right-to-left; this was
+                    ArrowRight, so it pointed the wrong way in BOTH directions. */}
+                <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
                 {tDetail("backToReport")}
               </Link>
             </Button>
