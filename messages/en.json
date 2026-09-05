@@ -113,8 +113,10 @@
       "description": "Clinical data console to explore EHRs, run periodical analytics, and build patient-specific reports.",
       "buttons": {
         "goToConsole": "Go to Console",
-        "signInRegister": "Sign In / Register"
+        "signInRegister": "Sign In / Register",
+        "patientSignIn": "I'm a patient"
       },
+      "patientHint": "Patients: sign in with your national ID to see your own records.",
       "features": {
         "ehr": {
           "title": "Electronic Health Records",
