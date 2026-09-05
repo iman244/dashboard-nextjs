@@ -262,3 +262,46 @@
 .font-english ol.toaster {
   direction: ltr;
 }
+
+/* ---------------------------------------------------------------------------
+ * Motion
+ *
+ * One keyframe, used by the sign-in submit while it is working. It is an
+ * indeterminate progress indicator, not decoration: since the post-login
+ * interstitial was removed, that button is the only thing on screen for the
+ * whole navigation, and a 3.5mm spinner is a weak signal that anything is
+ * still happening. ux-guidelines #12 allows an infinite animation exactly
+ * here — a loading indicator — and nowhere else.
+ *
+ * The element carrying this is hidden outright under prefers-reduced-motion;
+ * the spinner and the label still report the state.
+ * ------------------------------------------------------------------------- */
+@keyframes auth-sweep {
+  from {
+    transform: translateX(-150%);
+  }
+  to {
+    transform: translateX(400%);
+  }
+}
+
+/* A component can opt its whole subtree out of spatial movement.
+ *
+ * Needed because Tailwind v4 emits movement as the standalone `translate` and
+ * `scale` properties: `transform: none` cannot cancel them, and a plain
+ * `motion-reduce:translate-none` utility loses to the higher-specificity
+ * `group-hover:` and `rtl:` rules that set them in the first place. A user's
+ * motion preference is the one thing that should outrank a component style, so
+ * this is where !important is correct rather than lazy.
+ *
+ * Opacity, colour and the spinner's rotation are deliberately left alone — the
+ * state still has to be legible, which is the difference between reducing
+ * motion and deleting feedback.
+ */
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="reduce-movement"],
+  [data-motion="reduce-movement"] * {
+    translate: none !important;
+    scale: none !important;
+  }
+}

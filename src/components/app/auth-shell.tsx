@@ -103,6 +103,12 @@ export function AuthShell({
  * moment you clicked — ux-guidelines #19, keep async states in a stable
  * container.
  *
+ * Motion, in one line each: the press acknowledges at 100ms, hover settles at
+ * 200ms, the arrow departs in the reading direction as the spinner arrives in
+ * its place, and a sweep runs the length of the pill while the navigation is in
+ * flight. Every one of those has a prefers-reduced-motion path that drops the
+ * movement and keeps the state legible.
+ *
  * `busy` must stay true through the navigation that follows a successful submit,
  * not just while the request is in flight. Neither sign-in shows an interstitial
  * any more, so this button is what the user watches while the next page loads;
@@ -124,20 +130,80 @@ export function AuthSubmitButton({
     <Button
       type="submit"
       disabled={busy}
+      // Opts the whole button out of translate/scale under a reduced-motion
+      // preference; see the rule in globals.css for why a utility cannot.
+      data-motion="reduce-movement"
       className={cn(
-        "group mt-7 h-12 w-full rounded-full text-[15px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.10),0_8px_20px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_1px_2px_rgba(0,0,0,0.12),0_12px_28px_-8px_color-mix(in_oklab,var(--primary)_65%,transparent)] active:scale-[0.985]",
+        "group relative mt-7 h-12 w-full overflow-hidden rounded-full text-[15px] font-medium",
+        "shadow-[0_1px_2px_rgba(0,0,0,0.10),0_8px_20px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent)]",
+        // Named properties, not transition-all: `all` also animates anything a
+        // future class happens to change, including layout-driving ones.
+        // 200ms for a routine state change; the press below overrides to 100ms
+        // because feedback that acknowledges a click has to feel immediate.
+        // Both were 500ms, which is the band for an authored entrance and reads
+        // as latency on a control you press every morning.
+        //
+        // `scale`, not `transform`: Tailwind v4 compiles scale-* and translate-*
+        // to the standalone `scale` and `translate` CSS properties. Naming
+        // `transform` here would transition a property nothing sets, and the
+        // press would snap instead of easing — which the old `transition-all`
+        // covered only by accident.
+        "transition-[box-shadow,scale] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        "hover:shadow-[0_1px_2px_rgba(0,0,0,0.12),0_12px_28px_-8px_color-mix(in_oklab,var(--primary)_65%,transparent)]",
+        "active:scale-[0.985] active:duration-100",
+        // Working is not unavailable. shadcn dims a disabled control to 50%,
+        // which reads as "you may not press this" when the truth is "this is
+        // busy on your behalf" — the sweep and spinner carry that instead.
+        "disabled:opacity-100",
+        // Flatten while busy: nothing to press, so nothing should look raised.
+        busy &&
+          "shadow-[0_1px_2px_rgba(0,0,0,0.10)] hover:shadow-[0_1px_2px_rgba(0,0,0,0.10)]",
+        "motion-reduce:transition-none motion-reduce:active:scale-100",
         className
       )}
     >
-      <span className="flex w-full items-center justify-center gap-3">
+      {/* Indeterminate progress. This button is the only thing on screen for
+          the whole post-submit navigation, and a 14px spinner is a thin signal
+          that anything is still happening. Bounded to the pill, transform-only,
+          and gone entirely under reduced motion. */}
+      {busy && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-hidden rounded-full rtl:-scale-x-100 motion-reduce:hidden"
+        >
+          <span className="absolute inset-y-0 w-1/3 animate-[auth-sweep_1.4s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-primary-foreground/25 to-transparent" />
+        </span>
+      )}
+
+      <span className="relative flex w-full items-center justify-center gap-3">
         {busy ? busyLabel : idleLabel}
         <span
           aria-hidden="true"
-          className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5"
+          className={cn(
+            "relative flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15",
+            "transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
+            // Forward is the reading direction. This was -translate-x in LTR
+            // and +translate-x in RTL, so the arrow flinched backwards on hover
+            // in both — the same inversion the step-2 back arrow had.
+            "group-hover:scale-105 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5",
+            // translate-none/scale-100, not transform-none: same reason as
+            // above — the movement lives in `translate` and `scale`, so
+            // `transform: none` would cancel nothing at all.
+            "motion-reduce:translate-none motion-reduce:scale-100"
+          )}
         >
-          {busy ? (
-            <Spinner className="size-3.5" />
-          ) : (
+          {/* Both states are always mounted so the slot can cross-fade instead
+              of hard-cutting. The arrow leaves the way it points — the action
+              departed — and the spinner arrives in its place. */}
+          <span
+            className={cn(
+              "absolute inset-0 flex items-center justify-center transition-[opacity,translate] duration-200 ease-out",
+              busy
+                ? "opacity-0 translate-x-2 rtl:-translate-x-2"
+                : "opacity-100 translate-x-0",
+              "motion-reduce:translate-none motion-reduce:duration-0"
+            )}
+          >
             <svg
               viewBox="0 0 16 16"
               fill="none"
@@ -151,7 +217,16 @@ export function AuthSubmitButton({
                 strokeLinejoin="round"
               />
             </svg>
-          )}
+          </span>
+          <span
+            className={cn(
+              "absolute inset-0 flex items-center justify-center transition-[opacity,scale] duration-200 ease-out",
+              busy ? "opacity-100 scale-100" : "opacity-0 scale-75",
+              "motion-reduce:scale-100 motion-reduce:duration-0"
+            )}
+          >
+            <Spinner className="size-3.5" />
+          </span>
         </span>
       </span>
     </Button>
