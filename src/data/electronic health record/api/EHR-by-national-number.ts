@@ -44,7 +44,16 @@ export const useEHRByNationalNumberApi = ({
   >;
 }) => {
   return useQuery({
-    queryKey: [EHR_BY_NATIONAL_NUMBER_KEY, input.params.nationalNumber],
+    // Every param belongs in the key. Keying on nationalNumber alone made two
+    // lookups for the same person with different patientType/date ranges share
+    // one cache entry and serve each other's rows.
+    queryKey: [
+      EHR_BY_NATIONAL_NUMBER_KEY,
+      input.params.nationalNumber,
+      input.params.patientType,
+      input.params.fromDate,
+      input.params.toDate,
+    ],
     queryFn: () => ehr_by_national_number(input),
     ...options,
   });

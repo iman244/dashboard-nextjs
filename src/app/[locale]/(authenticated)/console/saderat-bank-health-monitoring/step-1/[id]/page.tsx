@@ -31,7 +31,7 @@ import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 const MonitoringPage = (
-  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/[id]">
+  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-1/[id]">
 ) => {
   const { id: monitoring_id } = React.use(props.params);
   const locale = useLocale();

@@ -24,6 +24,7 @@ import { useIsStaff } from "@/data/user/fetches/me";
 import {
   SBHM_ListSerializer,
   SBHM_TYPE_LABEL_KEY,
+  SBHM_DETAIL_PATH,
 } from "@/data/saderat-bank-health-monitoring/types";
 
 const columnHelper = createColumnHelper<AppTableFeatures, SBHM_ListSerializer[number]>();
@@ -64,7 +65,7 @@ const SaderatBankHealthMonitoringPage = (
           <div className="flex gap-2 items-center">
             <Button variant={"ghost"} asChild>
               <Link
-                href={`/console/saderat-bank-health-monitoring/${row.original.id}`}
+                href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
                 aria-label={t("ViewDataset")}
               >
                 <Table2 />
@@ -152,7 +153,6 @@ const SaderatBankHealthMonitoringPage = (
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={"text-start"}
                   >
                     {header.isPlaceholder
                       ? null

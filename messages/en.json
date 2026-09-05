@@ -148,6 +148,10 @@
         "password": {
           "label": "Password",
           "placeholder": "Enter your password"
+        },
+        "register": {
+          "label": "Don't have an account?",
+          "link": "Sign up"
         }
       },
       "validation": {
@@ -359,12 +363,87 @@
       "NoSearchResults": "No results found",
       "NoResults": "No results found",
       "ViewDataset": "View dataset",
-      "ViewPersonRecord": "View health record"
+      "ViewPersonRecord": "View health record",
+      "WrongStepTitle": "This record belongs to a different step.",
+      "WrongStepAction": "Open it in the right view"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} abnormal findings",
       "ShowAbnormalOnly": "Abnormal only",
       "ViewTestChart": "View test trend chart"
+    },
+    "Step2Report": {
+      "recordCount": "{count} records",
+      "sections": {
+        "demographics": "Demographics",
+        "vitals": "Vital Signs",
+        "clinicalExam": "Clinical Examination",
+        "musculoskeletal": "Musculoskeletal",
+        "medicalHistory": "Medical History",
+        "occupationalRisk": "Occupational Risk Factors",
+        "followUp": "Follow-up"
+      },
+      "charts": {
+        "gender": "Gender",
+        "respiratoryRate": "Respiratory Rate",
+        "heartRate": "Heart Rate",
+        "heart": "Heart",
+        "digestive": "Digestive",
+        "neurology": "Neurology",
+        "headNeck": "Head & Neck",
+        "respiratory": "Respiratory System",
+        "hematology": "Hematology",
+        "rheumatology": "Rheumatology",
+        "endocrinology": "Endocrinology",
+        "skinHair": "Skin & Hair",
+        "generalSymptoms": "General Symptoms",
+        "breast": "Breast Examination",
+        "upperLimb": "Upper Limb",
+        "lowerLimb": "Lower Limb",
+        "spine": "Spine",
+        "surgeryHistory": "History of Surgery",
+        "medication": "Regular Medication",
+        "hereditaryDisease": "Hereditary Disease in Family",
+        "smoking": "Smoking",
+        "ergonomicFactors": "Ergonomic Factors",
+        "psychologicalFactors": "Psychological Factors",
+        "additionalTests": "Additional Tests Required"
+      }
+    },
+    "Ehr": {
+      "recordsTitle": "Electronic Health Records",
+      "rangeLabel": "Normal range",
+      "noRange": "No reference range",
+      "loadError": "Could not load electronic health records.",
+      "chartValue": "Value",
+      "chartMin": "Lower bound",
+      "chartMax": "Upper bound",
+      "measurementCount": "{count} measurements",
+      "notEnoughPoints": "A trend needs more than one measurement.",
+      "viewDetails": "View details",
+      "viewTrend": "Trend chart",
+      "noRecords": "No electronic records found for this person.",
+      "tableActions": "Actions"
+    },
+    "Detail": {
+      "notFound": "No record with this national ID in this monitoring.",
+      "backToReport": "Back to report",
+      "duplicateNationalId": "This national ID appears on {count} records. All are shown below.",
+      "recordIndex": "Record {index}",
+      "sections": {
+        "ecg": "Electrocardiogram",
+        "clinicalExam": "Clinical Examination",
+        "dental": "Oral, Throat & Dental",
+        "womensHealth": "Breast & Gynaecological Examination",
+        "mensHealth": "Men's Examination",
+        "imaging": "Imaging & Diagnostic Tests",
+        "musculoskeletal": "Musculoskeletal System",
+        "medicalHistory": "Medical History",
+        "occupationalRisk": "Occupational Hazards",
+        "smoking": "Tobacco Use",
+        "administrative": "Administrative",
+        "followUp": "Follow-up"
+      }
     }
   },
   "/patient/sign-in": {
@@ -430,6 +509,39 @@
         "error": "Could not load your records: {message}",
         "retry": "Try again",
         "noData": "No records in this date range"
+      }
+    }
+  },
+  "/authentication/register": {
+    "SignUpPage": {
+      "title": "Sign Up",
+      "description": "Create a new account",
+      "buttons": {
+        "signUp": "Sign Up",
+        "signingUp": "Signing up..."
+      },
+      "form": {
+        "api": {
+          "username": {
+            "error": "Username already exists."
+          }
+        },
+        "username": {
+          "label": "Username",
+          "placeholder": "Enter your username"
+        },
+        "email": {
+          "label": "Email (Optional)",
+          "placeholder": "Enter your email"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        },
+        "signIn": {
+          "label": "Already have an account?",
+          "link": "Sign in"
+        }
       }
     }
   }

@@ -143,11 +143,15 @@
       "form": {
         "username": {
           "label": "نام کاربری",
-          "placeholder": "نام کاربری خود را وارد کنید"
+          "placeholder": "ورود به حساب کاربری"
         },
         "password": {
           "label": "رمز عبور",
-          "placeholder": "رمز عبور خود را وارد کنید"
+          "placeholder": "ورود به حساب کاربری"
+        },
+        "register": {
+          "label": "حساب کاربری ندارید؟",
+          "link": "ثبت نام"
         }
       },
       "validation": {
@@ -359,12 +363,87 @@
       "NoSearchResults": "نتیجه‌ای یافت نشد",
       "NoResults": "نتیجه‌ای یافت نشد",
       "ViewDataset": "مشاهده مجموعه داده",
-      "ViewPersonRecord": "مشاهده پرونده سلامت"
+      "ViewPersonRecord": "مشاهده پرونده سلامت",
+      "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
+      "WrongStepAction": "مشاهده در نمای درست"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} یافته غیرطبیعی",
       "ShowAbnormalOnly": "فقط موارد غیرطبیعی",
       "ViewTestChart": "مشاهده نمودار روند آزمایش"
+    },
+    "Step2Report": {
+      "recordCount": "{count} رکورد",
+      "sections": {
+        "demographics": "اطلاعات جمعیت‌شناختی",
+        "vitals": "علائم حیاتی",
+        "clinicalExam": "معاینات بالینی",
+        "musculoskeletal": "سیستم عضلانی اسکلتی",
+        "medicalHistory": "سوابق پزشکی",
+        "occupationalRisk": "عوامل زیان‌آور شغلی",
+        "followUp": "پیگیری"
+      },
+      "charts": {
+        "gender": "جنسیت",
+        "respiratoryRate": "تعداد تنفس",
+        "heartRate": "ضربان قلب",
+        "heart": "قلب",
+        "digestive": "گوارش",
+        "neurology": "نورولوژی",
+        "headNeck": "سر و گردن",
+        "respiratory": "سیستم تنفسی",
+        "hematology": "هماتولوژی",
+        "rheumatology": "روماتولوژی",
+        "endocrinology": "اندوکرینولوژی",
+        "skinHair": "پوست و مو",
+        "generalSymptoms": "علائم عمومی",
+        "breast": "معاینه پستان",
+        "upperLimb": "اندام فوقانی",
+        "lowerLimb": "اندام تحتانی",
+        "spine": "ستون فقرات",
+        "surgeryHistory": "سابقه عمل جراحی",
+        "medication": "مصرف دارو",
+        "hereditaryDisease": "بیماری ارثی در خانواده",
+        "smoking": "مصرف سیگار",
+        "ergonomicFactors": "عوامل ارگونومیک",
+        "psychologicalFactors": "عوامل روانی",
+        "additionalTests": "آزمایشات تکمیلی مورد نیاز"
+      }
+    },
+    "Ehr": {
+      "recordsTitle": "سوابق الکترونیک سلامت",
+      "rangeLabel": "محدوده طبیعی",
+      "noRange": "بدون محدوده مرجع",
+      "loadError": "دریافت سوابق الکترونیک ناموفق بود.",
+      "chartValue": "مقدار",
+      "chartMin": "حد پایین",
+      "chartMax": "حد بالا",
+      "measurementCount": "{count} اندازه‌گیری",
+      "notEnoughPoints": "برای رسم نمودار به بیش از یک اندازه‌گیری نیاز است.",
+      "viewDetails": "مشاهده جزئیات",
+      "viewTrend": "نمودار روند",
+      "noRecords": "سابقه الکترونیکی برای این فرد یافت نشد.",
+      "tableActions": "عملیات"
+    },
+    "Detail": {
+      "notFound": "رکوردی با این کد ملی در این پایش یافت نشد.",
+      "backToReport": "بازگشت به گزارش",
+      "duplicateNationalId": "این کد ملی در {count} رکورد وجود دارد. همه در ادامه نمایش داده شده‌اند.",
+      "recordIndex": "رکورد {index}",
+      "sections": {
+        "ecg": "نوار قلب",
+        "clinicalExam": "معاینات بالینی",
+        "dental": "دهان و حلق و دندان",
+        "womensHealth": "معاینات زنان و پستان",
+        "mensHealth": "معاینات مردان",
+        "imaging": "تصویربرداری و تست‌های تشخیصی",
+        "musculoskeletal": "سیستم عضلانی اسکلتی",
+        "medicalHistory": "سوابق پزشکی",
+        "occupationalRisk": "عوامل زیان‌آور شغلی",
+        "smoking": "مصرف دخانیات",
+        "administrative": "اطلاعات اداری",
+        "followUp": "پیگیری"
+      }
     }
   },
   "/patient/sign-in": {
@@ -430,6 +509,39 @@
         "error": "بارگذاری سوابق ناموفق بود: {message}",
         "retry": "تلاش دوباره",
         "noData": "در این بازه سابقه‌ای یافت نشد"
+      }
+    }
+  },
+  "/authentication/register": {
+    "SignUpPage": {
+      "title": "ثبت نام",
+      "description": "ایجاد حساب کاربری",
+      "buttons": {
+        "signUp": "ثبت نام",
+        "signingUp": "در حال ثبت نام..."
+      },
+      "form": {
+        "api": {
+          "username": {
+            "error": "نام کاربری در سیستم وجود دارد"
+          }
+        },
+        "username": {
+          "label": "نام کاربری",
+          "placeholder": "نام کاربری خود را وارد کنید"
+        },
+        "email": {
+          "label": "ایمیل (اختیاری)",
+          "placeholder": "ایمیل خود را وارد کنید"
+        },
+        "password": {
+          "label": "رمز عبور",
+          "placeholder": "رمز عبور خود را وارد کنید"
+        },
+        "signIn": {
+          "label": "حساب کاربری دارید؟",
+          "link": "ورود"
+        }
       }
     }
   }
