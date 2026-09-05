@@ -1,5 +1,16 @@
 {
   "common": {
+    "Navigation": {
+      "backToHome": "Back to home"
+    },
+    "Loading": {
+      "default": "Loading…",
+      "session": "Checking your session…",
+      "datasets": "Loading datasets…",
+      "report": "Building the report…",
+      "record": "Loading the health record…",
+      "records": "Loading records…"
+    },
     "DateRangePicker": {
       "placeholder": "Select a date range",
       "sinceYear": "Since the start of {year}",
@@ -123,7 +134,6 @@
         "signInRegister": "Sign In / Register",
         "patientSignIn": "I'm a patient"
       },
-      "patientHint": "Patients: sign in with your national ID to see your own records.",
       "features": {
         "ehr": {
           "title": "Electronic Health Records",

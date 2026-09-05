@@ -1,4 +1,5 @@
 "use client";
+import { LoadingState } from "@/components/app/loading-state";
 import { SBHM_RetrieveSerializer } from "@/data/saderat-bank-health-monitoring/types";
 import { localeDigits } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
@@ -15,7 +16,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Link } from "@/i18n/navigation";
 import { AlertCircle, Inbox, Users, BarChart3 } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { SearchPersonnelSheet } from "./_search-personnel-sheet/sheet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -51,6 +51,7 @@ const MonitoringPage = (
     description: string;
   } | null>(null);
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
+  const tLoading = useTranslations("common.Loading");
 
   const { data, isPending, error } = monitoring_query;
 
@@ -213,12 +214,7 @@ const MonitoringPage = (
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center h-[400px]">
-        <div className="flex items-center flex-col gap-3">
-          <Spinner className="h-8 w-8" />
-          <span className="text-muted-foreground">{t("Loading")}</span>
-        </div>
-      </div>
+      <LoadingState label={tLoading("report")} />
     );
   }
 

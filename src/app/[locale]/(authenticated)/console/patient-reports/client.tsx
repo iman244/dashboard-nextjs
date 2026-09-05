@@ -1,12 +1,12 @@
 "use client";
 
+import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { usePatientReports } from "./provider";
 import { PatientReportsForm } from "./_form/patient-reports-form";
 import { Card, CardContent } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 import { formatDate, formatNumber, localeDigits } from "@/lib/utils";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
@@ -309,6 +309,7 @@ const Client = (props: {
   };
 }) => {
   const t = useTranslations("/console/patient-reports.PatientReports");
+  const tLoading = useTranslations("common.Loading");
   const tData = useTranslations("common.data");
   const tDictionary = useTranslations("common.Dictionary");
   const {
@@ -507,12 +508,7 @@ const Client = (props: {
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <div className="flex items-center flex-col gap-2">
-          <Spinner />
-          <span className="text-muted-foreground">{t("loadingMessage")}</span>
-        </div>
-      </div>
+      <LoadingState label={tLoading("report")} />
     );
   }
 

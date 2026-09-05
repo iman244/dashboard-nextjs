@@ -274,6 +274,27 @@ VIS-09, 13, 14, 17 are typechecked and built but visually unverified.
     which were crawlable pages telling anonymous visitors they were signed in.
   - `scripts/check-metadata.mjs` prints the resolved title/description/robots for every
     route in both locales. It needs the dev server, so it is a manual check, not a gate.
+- 2026-09-05 — **VIS-16, loading states.** Grounded in `impeccable harden` plus the
+  `ui-ux-pro-max` guideline rows for loading (#10, #12, #14, #19, #32, #78, #118).
+  Eight route-level pending states agreed on nothing: three spellings of the spinner size,
+  four container heights, and half showed no text at all. All eight now render
+  `components/app/loading-state.tsx` with a **contextual** label — "Loading datasets…",
+  "Building the report…" — rather than a bare spinner, which is what #78 means by not
+  leaving a wait unexplained.
+  - The `Spinner` primitive carried `role="status"` and a hardcoded `aria-label="Loading"`.
+    Two costs: on a Persian-first product that was the only thing a Persian screen-reader
+    user heard, and every spinner being its own live region is exactly what **#118** warns
+    against. The icon is now `aria-hidden` decoration and the container owns the status.
+    Measured after: **1 live region on screen, spinner `aria-hidden`.**
+  - `aria-busy` added to both dialog submits (they were already `disabled`, so #32 held).
+  - The step-1 person page rendered a hardcoded English `Error:` prefix; now translated,
+    with `role="alert"` per **#44**.
+  - The root `app/loading.tsx` stays label-less on purpose: it sits above
+    `NextIntlClientProvider`, so an English string there would be the one thing a Persian
+    reader hears. Silent status region, documented in the file.
+- 2026-09-05 — Both sign-ins gained a **back-to-home** link, from `AuthShell` so the two
+  cannot drift. 44px tap target, mirrored arrow, verified not to overlap the card at 1440
+  and 390. `patientHint` removed from the landing page and both catalogues, as asked.
 - 2026-09-05 — `defaultLocale` was **already** `fa` in `src/i18n/routing.ts`; verified `/`
   and `/console` both 307 to the `/fa` equivalents. Nothing to change.
 - 2026-09-05 — **`locale === "fa"` is now 20 occurrences across 14 files**, up from 16 —

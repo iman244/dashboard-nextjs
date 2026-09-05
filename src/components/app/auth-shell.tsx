@@ -12,6 +12,9 @@ import { DarkModeToggle } from "@/components/app/theme-toggle";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { ArrowLeft } from "lucide-react";
 
 /**
  * The sign-in world, in one place.
@@ -41,6 +44,8 @@ export function AuthShell({
   description?: string;
   children: React.ReactNode;
 }) {
+  const t = useTranslations("common.Navigation");
+
   return (
     <main
       className="relative min-h-dvh flex items-center justify-center overflow-hidden px-4 py-24"
@@ -90,6 +95,17 @@ export function AuthShell({
           <CardContent className="px-7 pb-10 pt-8">{children}</CardContent>
         </Card>
       </div>
+
+      {/* Below the tray, not inside the card: it is a way out, not a step in
+          the form. Both sign-ins get it from here, so a visitor who arrived on
+          the wrong one of the two is never stranded. */}
+      <Link
+        href="/"
+        className="absolute bottom-6 inline-flex min-h-11 items-center gap-2 rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <ArrowLeft aria-hidden="true" className="size-4 rtl:rotate-180" />
+        {t("backToHome")}
+      </Link>
     </main>
   );
 }

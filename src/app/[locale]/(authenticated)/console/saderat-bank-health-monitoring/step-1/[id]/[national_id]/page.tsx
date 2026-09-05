@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
 import { useMonitoringIdRouteContext } from "../route-context";
 import { useEHRByNationalNumberApi } from "@/data/electronic health record/api/EHR-by-national-number";
@@ -14,7 +15,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Spinner } from "@/components/ui/spinner";
 import { formatCellValue, localeDigits } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -130,10 +130,15 @@ const PersonMonitoringPage = (
 
   const locale = useLocale();
   const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
+  const tLoading = useTranslations("common.Loading");
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.PersonRecord"
   );
   const tDictionary = useTranslations("common.Dictionary");
+  // ErrorTitle lives in the page namespace the other monitoring routes read.
+  const tPage = useTranslations(
+    "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage"
+  );
   // Defaults to off: nothing is hidden from a clinician unless they ask.
   const [abnormalOnly, setAbnormalOnly] = React.useState(false);
   const today = new Date().toLocaleDateString("fa-IR", {
@@ -210,14 +215,19 @@ const PersonMonitoringPage = (
 
   if (isPending || ehr_query.isPending) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Spinner />
-      </div>
+      <LoadingState label={tLoading("record")} />
     );
   }
 
   if (error) {
-    return <div className="text-destructive">Error: {error?.message}</div>;
+    // role=alert per ux-guidelines #44: an error must be announced, not only
+    // coloured. The label was a hardcoded English "Error:" on a Persian-first
+    // product, so it now comes from the same key the other routes use.
+    return (
+      <div role="alert" className="text-destructive">
+        {tPage("ErrorTitle")}: {error?.message}
+      </div>
+    );
   }
 
   if (!person_data) {

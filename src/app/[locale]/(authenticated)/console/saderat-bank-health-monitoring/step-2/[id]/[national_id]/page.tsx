@@ -1,9 +1,9 @@
 "use client";
 
+import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, ArrowLeft, Inbox } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -140,6 +140,7 @@ const Step2PersonPage = (
     "/console/saderat-bank-health-monitoring.Detail"
   );
   const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
+  const tLoading = useTranslations("common.Loading");
   const locale = useLocale();
 
   const { data, isPending, error } = useRetrieve_SBHM_API({
@@ -170,12 +171,7 @@ const Step2PersonPage = (
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center h-[400px]">
-        <div className="flex items-center flex-col gap-3">
-          <Spinner className="h-8 w-8" />
-          <span className="text-muted-foreground">{t("Loading")}</span>
-        </div>
-      </div>
+      <LoadingState label={tLoading("record")} />
     );
   }
 

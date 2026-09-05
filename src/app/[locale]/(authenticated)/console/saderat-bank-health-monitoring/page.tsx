@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
 import UploadSaderatBankHealthMonitoringExcelDialog from "./_upload-excel-dialog/dialog";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,6 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { formatDate, localeDigits } from "@/lib/utils";
 import { Table2, Trash, AlertCircle, Inbox } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import DeleteSaderatBankHealthMonitoringExcelDialog from "./_delete-excel-dialog/dialog";
 import Link from "next/link";
 import { useList_SBHM_API } from "@/data/saderat-bank-health-monitoring/api";
@@ -39,6 +39,7 @@ const SaderatBankHealthMonitoringPage = (
   const { data, isPending, error } = useList_SBHM_API();
   const isStaff = useIsStaff();
   const tDictionary = useTranslations("common.Dictionary");
+  const tLoading = useTranslations("common.Loading");
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
   const tStep = useTranslations("common.SBHM_Step");
   const locale = useLocale();
@@ -109,15 +110,7 @@ const SaderatBankHealthMonitoringPage = (
 
   if (isPending) {
     return withHeader(
-      <div
-        aria-busy="true"
-        className="flex flex-col items-center justify-center h-[400px]"
-      >
-        <div className="flex items-center flex-col gap-3">
-          <Spinner className="h-8 w-8" />
-          <span className="text-muted-foreground">{t("Loading")}</span>
-        </div>
-      </div>
+      <LoadingState label={tLoading("datasets")} />
     );
   }
 

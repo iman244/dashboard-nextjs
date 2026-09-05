@@ -17,8 +17,7 @@ const ButtonsSection = () => {
       : getAuthRedirectUrl(AppRoutes.CONSOLE);
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap justify-center gap-3">
+    <div className="flex flex-wrap justify-center gap-3">
         <Button asChild size="lg" className="min-w-[200px] px-8 py-6 text-base">
           <Link href={href}>{t("buttons.goToConsole")}</Link>
         </Button>
@@ -38,9 +37,6 @@ const ButtonsSection = () => {
             {t("buttons.patientSignIn")}
           </Link>
         </Button>
-      </div>
-
-      <p className="text-sm text-muted-foreground">{t("patientHint")}</p>
     </div>
   );
 };
