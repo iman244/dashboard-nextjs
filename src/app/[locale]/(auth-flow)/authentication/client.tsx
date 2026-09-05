@@ -62,7 +62,7 @@ export function Client() {
     },
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, isSuccess } = useMutation({
     mutationKey: [JWT_CREATE_KEY],
     mutationFn: jwt_create,
     onSuccess: onLogin,
@@ -71,6 +71,13 @@ export function Client() {
       setApiError(error);
     },
   });
+
+  // There is no interstitial after sign-in any more — this card is what the user
+  // watches while the console loads. So the busy state has to outlive the
+  // mutation: on `isPending` alone the button would snap back to "Sign in" the
+  // instant the request resolved, then sit there looking idle and clickable
+  // through the whole navigation.
+  const isBusy = isPending || isSuccess;
 
   const onSubmit = React.useCallback(
     async (data: LoginFormData) => {
@@ -138,7 +145,8 @@ export function Client() {
                       <Input
                         placeholder={t("form.username.placeholder")}
                         {...field}
-                        disabled={isPending}
+                        autoComplete="username"
+                        disabled={isBusy}
                       />
                     </FormControl>
                     <FormMessage />
@@ -157,7 +165,8 @@ export function Client() {
                         type="password"
                         placeholder={t("form.password.placeholder")}
                         {...field}
-                        disabled={isPending}
+                        autoComplete="current-password"
+                        disabled={isBusy}
                       />
                     </FormControl>
                     <FormMessage />
@@ -168,18 +177,30 @@ export function Client() {
               </div>
 
               {apiError && (
-                <div className="mt-5 rounded-xl bg-destructive/10 px-4 py-3 text-start text-sm text-destructive">
+                <div
+                  role="alert"
+                  className="mt-5 rounded-xl bg-destructive/10 px-4 py-3 text-start text-sm text-destructive"
+                >
                   {apiError.response?.data.detail}
                 </div>
               )}
 
+              {/* Success has no visual frame of its own now — the card simply
+                  stays put until the console arrives. Sighted users read that
+                  from the button; this is the same news for everyone else.
+                  Nothing else announces it: the redirect is a client navigation
+                  the route announcer only picks up once the URL actually flips. */}
+              <p role="status" aria-live="polite" className="sr-only">
+                {isSuccess ? t("status.signedIn") : ""}
+              </p>
+
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isBusy}
                 className="group mt-7 h-12 w-full rounded-full text-[15px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.10),0_8px_20px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_1px_2px_rgba(0,0,0,0.12),0_12px_28px_-8px_color-mix(in_oklab,var(--primary)_65%,transparent)] active:scale-[0.985]"
               >
                 <span className="flex w-full items-center justify-center gap-3">
-                  {isPending ? t("buttons.signingIn") : t("buttons.signIn")}
+                  {isBusy ? t("buttons.signingIn") : t("buttons.signIn")}
                   {/* One trailing slot whose contents swap. The spinner used to
                       render on the leading side while the arrow sat trailing, so
                       the label jumped sideways on click — ux-guidelines #19,
@@ -188,7 +209,7 @@ export function Client() {
                     aria-hidden="true"
                     className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5"
                   >
-                    {isPending ? (
+                    {isBusy ? (
                       <Spinner className="size-3.5" />
                     ) : (
                       <svg viewBox="0 0 16 16" fill="none" className="size-3.5 rtl:rotate-180">

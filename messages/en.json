@@ -143,6 +143,9 @@
         "signIn": "Sign In",
         "signingIn": "Signing in..."
       },
+      "status": {
+        "signedIn": "Signed in successfully."
+      },
       "form": {
         "username": {
           "label": "Username",

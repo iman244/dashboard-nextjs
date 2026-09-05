@@ -155,6 +155,7 @@ Ordered by dependency. Each has an ID so we can refer to it without re-explainin
 | **VIS-18** | Axis, gridline, tooltip styling | ❌ not started |
 | **VIS-19** | Reconsider the gender pie | ❌ not started |
 | — | Theme toggle in console + sign-in (UX-08) | ✅ |
+| — | Post-login transition (UX-18) | ✅ interstitial deleted; 3513ms → 542ms, measured |
 
 **The gap that matters most: none of the console work has been seen in a browser.**
 Every authenticated route is behind a Django login that has not been available, so
@@ -166,3 +167,19 @@ VIS-09, 13, 14, 17 are typechecked and built but visually unverified.
   ours to own.
 - 2026-09-04 — Motion deferred: it does not address the actual problem, which is that the
   palette has no contrast to work with.
+- 2026-09-05 — **UX-18, the post-login transition.** `/impeccable critique` scored it 14/40;
+  full report in `.impeccable/critique/2026-09-05T00-21-24Z__*.md`. The "you are authenticated"
+  notice was deleted rather than restyled: it was a developer's redirect-fired confirmation
+  left in the user's path, and the correct delay-free redirect already existed in
+  `on-login.ts` but could never run — flipping `authStatus` unmounted the component that
+  owned it. Measured after: click → `/console` **542ms** (was 3513ms), zero frames showing
+  neither the sign-in card nor console chrome. Same treatment applied to the logout path.
+  Two leaks closed alongside: `?next=` was an unvalidated open redirect (verified: a crafted
+  link landed the browser on `example.com` after a real sign-in; now blocked, including the
+  `//host` form), and `src/settings.ts` was dumping backend addresses and token keys to every
+  visitor's console on every page load.
+- 2026-09-05 — **Not** done, deliberately, and still open: the two interstitial route files
+  are no longer rendered but still live in `(public)/`, so `/fa/auth-authenticated` remains a
+  crawlable page that tells an anonymous visitor they are signed in; and `jwt_verify` failing
+  still leaves `authStatus` in `Loading` forever on a bare spinner with no exit. Both were
+  scoped out of this pass.

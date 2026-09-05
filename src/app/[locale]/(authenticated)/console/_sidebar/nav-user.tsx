@@ -19,8 +19,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/app/_auth";
 import { useMe_API } from "@/data/user/fetches/me";
-import { useRouter } from "@/i18n/navigation";
-import { AppRoutes } from "@/app/paths";
 
 export function NavUser() {
   const t = useTranslations("/console.ConsoleSidebar");
@@ -28,16 +26,16 @@ export function NavUser() {
   const isRtl = locale === "fa";
   const { isMobile } = useSidebar();
   const { unauthenticateUser } = useAuth();
-  const router = useRouter();
 
   const { data: user, isPending } = useMe_API();
 
   const handleLogout = () => {
-    // clears tokens, resets the query cache and flips auth status
+    // Clears tokens, resets the query cache and flips auth status. That flip is
+    // all this needs to do: the authenticated layout redirects on the same tick.
+    // It used to also push to sign-in, because that layout sat on a 3s timer —
+    // now that the timer is gone, two navigations would race for the same
+    // moment. The layout is the single owner.
     unauthenticateUser();
-    // the authenticated layout would redirect on its own after a delay;
-    // for an explicit logout we send the user straight to sign-in
-    router.push(AppRoutes.AUTHENTICATION);
   };
 
   return (

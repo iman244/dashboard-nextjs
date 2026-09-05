@@ -143,6 +143,9 @@
         "signIn": "ورود",
         "signingIn": "در حال ورود..."
       },
+      "status": {
+        "signedIn": "با موفقیت وارد شدید."
+      },
       "form": {
         "username": {
           "label": "نام کاربری",
