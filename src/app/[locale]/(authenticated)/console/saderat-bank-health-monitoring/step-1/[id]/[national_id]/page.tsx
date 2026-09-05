@@ -33,7 +33,6 @@ import { toast } from "sonner";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrRecordsTable } from "../../../_ehr/records-table";
-import { PatientReportLink } from "../../../_ehr/patient-report-link";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { Button } from "@/components/ui/button";
@@ -309,9 +308,8 @@ const PersonMonitoringPage = (
 
       {data && (
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-4">
+          <CardHeader>
             <CardTitle>{tEhr("recordsTitle")}</CardTitle>
-            <PatientReportLink ehr={ehr} nationalId={national_id} />
           </CardHeader>
           <CardContent>
             <EhrRecordsTable

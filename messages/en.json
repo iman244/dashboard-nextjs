@@ -409,7 +409,6 @@
       "chartMax": "Upper bound",
       "measurementCount": "{count} measurements",
       "notEnoughPoints": "A trend needs more than one measurement.",
-      "openPatientReport": "Full Patient Report",
       "viewDetails": "View details",
       "viewTrend": "Trend chart",
       "noRecords": "No electronic records found for this person.",

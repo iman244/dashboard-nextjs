@@ -38,7 +38,6 @@ import { noteKeyFor } from "../_detail/notes";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrRecordsTable } from "../../../_ehr/records-table";
-import { PatientReportLink } from "../../../_ehr/patient-report-link";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 
 /** One step_2 record, laid out the way the step-1 person page lays out its own. */
@@ -280,9 +279,8 @@ const Step2PersonPage = (
       )}
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between gap-4">
+        <CardHeader>
           <CardTitle>{tEhr("recordsTitle")}</CardTitle>
-          <PatientReportLink ehr={ehr} nationalId={national_id} />
         </CardHeader>
         <CardContent>
           <EhrRecordsTable

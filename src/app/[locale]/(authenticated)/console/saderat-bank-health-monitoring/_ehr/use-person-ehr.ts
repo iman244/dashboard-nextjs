@@ -83,9 +83,6 @@ export type PersonEhr = {
   /** Lab measurements only — what the band actually lists. */
   labResultCount: number;
   latestLabDate?: string;
-  /** The window these results were fetched over, so a link out can reuse it. */
-  fromDate: string;
-  toDate: string;
   hasAny: boolean;
 };
 
@@ -114,8 +111,7 @@ const toPoint = (record: ElectronicHealthRecord): LabPoint => {
  * dropped imaging report reads to the user as "this patient had no imaging".
  */
 const buildPersonEhr = (
-  results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[],
-  range: { fromDate: string; toDate: string }
+  results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]
 ): PersonEhr => {
   const failed = results.find((r) => r.isError);
   const [labQuery, ...reportQueries] = results;
@@ -217,8 +213,6 @@ const buildPersonEhr = (
           labs[0].latest
         ).date
       : undefined,
-    fromDate: range.fromDate,
-    toDate: range.toDate,
     hasAny: points.length > 0 || reports.length > 0,
   };
 };
@@ -245,8 +239,8 @@ export const usePersonEhr = ({
 
   const combine = React.useCallback(
     (results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]) =>
-      buildPersonEhr(results, range),
-    [range]
+      buildPersonEhr(results),
+    []
   );
 
   return useQueries({
