@@ -274,6 +274,18 @@ VIS-09, 13, 14, 17 are typechecked and built but visually unverified.
     which were crawlable pages telling anonymous visitors they were signed in.
   - `scripts/check-metadata.mjs` prints the resolved title/description/robots for every
     route in both locales. It needs the dev server, so it is a manual check, not a gate.
+- 2026-09-05 — **Persian sign-in placeholders were the page description.** Both the
+  username and password fields in `fa` read "ورود به حساب کاربری" — the same string as
+  `SignInPage.description`, copy-pasted. English was correct, which is why it survived: the
+  fields only look wrong in the locale that is the product's default. Now "نام کاربری خود
+  را وارد کنید" / "رمز عبور خود را وارد کنید". The patient form was checked and is fine.
+- 2026-09-05 — **The submit badge moved on the one click it is watched.** The arrow/spinner
+  slot shared the centring flex row with the label, so the label growing from "ورود" to
+  "در حال ورود…" re-centred the pair and shoved the badge **29px in Persian, 16px in
+  English**. Second instance of ux-guidelines #19 on this same control. The badge is now
+  `absolute end-2` and the label centres alone: measured identical at 24px (fa, trailing =
+  left) and 296px (en, trailing = right) in both states, 16–18px clearance at 390px.
+  All twelve ASCII `...` in the catalogues became `…` to match the new loading copy.
 - 2026-09-05 — **VIS-16, loading states.** Grounded in `impeccable harden` plus the
   `ui-ux-pro-max` guideline rows for loading (#10, #12, #14, #19, #32, #78, #118).
   Eight route-level pending states agreed on nothing: three spellings of the spinner size,

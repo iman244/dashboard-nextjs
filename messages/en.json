@@ -157,7 +157,7 @@
       "description": "Enter your credentials to sign in",
       "buttons": {
         "signIn": "Sign In",
-        "signingIn": "Signing in..."
+        "signingIn": "Signing in…"
       },
       "status": {
         "signedIn": "Signed in successfully."
@@ -232,7 +232,7 @@
         "nextPage": "Next page",
         "lastPage": "Last page",
         "noData": "No data found",
-        "loading": "Loading..."
+        "loading": "Loading…"
       }
     },
     "EHRFilter": {
@@ -266,7 +266,7 @@
     "PatientReports": {
       "title": "Patient Reports",
       "description": "Generate comprehensive reports for specific patients",
-      "loadingMessage": "Report is getting ready...",
+      "loadingMessage": "Report is getting ready…",
       "selectPatientAndPeriod": "Select Patient and Time Period",
       "nationalNumber": "National Number",
       "nationalNumberPlaceholder": "Enter national number",
@@ -309,7 +309,7 @@
       "totalRecords": "Total Records",
       "selectedPeriod": "Selected Period",
       "chartPlaceholder": "Chart",
-      "loadingMessage": "Report is getting ready...",
+      "loadingMessage": "Report is getting ready…",
       "chartComingSoon": "Chart coming soon",
       "errorMessage": "Error loading report data",
       "chartTitle": "Records Count by Date",
@@ -383,7 +383,7 @@
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "Upload Excel",
-      "Loading": "Loading...",
+      "Loading": "Loading…",
       "ErrorTitle": "Error loading data",
       "EmptyStateTitle": "No data available",
       "EmptyStateDescription": "Please upload an Excel file",
@@ -391,7 +391,7 @@
       "ReportTitle": "Statistical Report",
       "SearchPersonnel": "Search Personnel",
       "SearchPersonnelDescription": "Search and view personnel details",
-      "SearchPlaceholder": "Search by name, last name or national ID...",
+      "SearchPlaceholder": "Search by name, last name or national ID…",
       "ClearSearch": "Clear",
       "NoSearchResults": "No results found",
       "NoResults": "No results found",
@@ -556,7 +556,7 @@
       "description": "Create a new account",
       "buttons": {
         "signUp": "Sign Up",
-        "signingUp": "Signing up..."
+        "signingUp": "Signing up…"
       },
       "form": {
         "api": {

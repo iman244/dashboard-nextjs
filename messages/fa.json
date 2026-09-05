@@ -157,7 +157,7 @@
       "description": "ورود به حساب کاربری",
       "buttons": {
         "signIn": "ورود",
-        "signingIn": "در حال ورود..."
+        "signingIn": "در حال ورود…"
       },
       "status": {
         "signedIn": "با موفقیت وارد شدید."
@@ -165,11 +165,11 @@
       "form": {
         "username": {
           "label": "نام کاربری",
-          "placeholder": "ورود به حساب کاربری"
+          "placeholder": "نام کاربری خود را وارد کنید"
         },
         "password": {
           "label": "رمز عبور",
-          "placeholder": "ورود به حساب کاربری"
+          "placeholder": "رمز عبور خود را وارد کنید"
         },
         "register": {
           "label": "حساب کاربری ندارید؟",
@@ -232,7 +232,7 @@
         "nextPage": "صفحه بعدی",
         "lastPage": "صفحه آخر",
         "noData": "هیچ داده‌ای یافت نشد",
-        "loading": "در حال بارگذاری..."
+        "loading": "در حال بارگذاری…"
       }
     },
     "EHRFilter": {
@@ -268,7 +268,7 @@
       "description": "تولید گزارشات جامع برای بیماران",
       "patientType": "نوع بیمار",
       "selectPatientType": "انتخاب نوع بیمار",
-      "loadingMessage": "گزارش در حال آماده‌سازی است...",
+      "loadingMessage": "گزارش در حال آماده‌سازی است…",
       "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
       "nationalNumber": "شماره ملی",
       "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
@@ -309,7 +309,7 @@
       "totalRecords": "تعداد کل رکوردها",
       "selectedPeriod": "دوره انتخابی",
       "chartPlaceholder": "نمودار",
-      "loadingMessage": "گزارش در حال آماده‌سازی است...",
+      "loadingMessage": "گزارش در حال آماده‌سازی است…",
       "chartComingSoon": "نمودار به زودی",
       "errorMessage": "خطا در بارگذاری داده‌های گزارش",
       "chartTitle": "تعداد رکوردها بر اساس تاریخ",
@@ -383,7 +383,7 @@
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "بارگذاری اکسل",
-      "Loading": "در حال بارگذاری...",
+      "Loading": "در حال بارگذاری…",
       "ErrorTitle": "خطا در بارگذاری داده‌ها",
       "EmptyStateTitle": "هیچ داده‌ای موجود نیست",
       "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
@@ -391,7 +391,7 @@
       "ReportTitle": "گزارش آماری",
       "SearchPersonnel": "جستجوی پرسنل",
       "SearchPersonnelDescription": "جستجو و مشاهده جزئیات پرسنل",
-      "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی...",
+      "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی…",
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
       "NoResults": "نتیجه‌ای یافت نشد",
@@ -556,7 +556,7 @@
       "description": "ایجاد حساب کاربری",
       "buttons": {
         "signUp": "ثبت نام",
-        "signingUp": "در حال ثبت نام..."
+        "signingUp": "در حال ثبت نام…"
       },
       "form": {
         "api": {

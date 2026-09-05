@@ -114,10 +114,13 @@ export function AuthShell({
  * The pill submit, with one trailing slot whose contents swap between an arrow
  * and a spinner.
  *
- * The single slot is the point: an earlier version rendered the spinner on the
- * leading side while the arrow sat trailing, so the label jumped sideways the
- * moment you clicked — ux-guidelines #19, keep async states in a stable
- * container.
+ * The single slot is the point, and it is pinned to the trailing edge rather
+ * than sharing the centring flow. Two versions of the same bug got it here:
+ * first the spinner rendered on the leading side while the arrow sat trailing,
+ * so the label jumped; then the slot sat in the flex row, and the label growing
+ * from "Sign In" to "Signing in…" re-centred the pair and moved the badge 16px
+ * in English, 29px in Persian. Both are ux-guidelines #19 — keep an async state
+ * in a stable container. Now only the glyph inside the badge changes.
  *
  * Motion, in one line each: the press acknowledges at 100ms, hover settles at
  * 200ms, the arrow departs in the reading direction as the spinner arrives in
@@ -191,12 +194,21 @@ export function AuthSubmitButton({
         </span>
       )}
 
-      <span className="relative flex w-full items-center justify-center gap-3">
-        {busy ? busyLabel : idleLabel}
+      <span className="relative flex w-full items-center justify-center">
+        {/* The label is the only thing in the centring flow, so it stays put.
+            The badge below is taken out of flow and pinned to the trailing
+            edge — when it shared the flex row, the label changing from "Sign
+            In" to "Signing in…" re-centred the pair and shoved the badge 16px
+            in English and 29px in Persian, on the one click where the button
+            is being watched. That is ux-guidelines #19 exactly: keep an async
+            state in a stable container. */}
+        <span className="px-9">{busy ? busyLabel : idleLabel}</span>
         <span
           aria-hidden="true"
           className={cn(
-            "relative flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15",
+            // end-2, not right-2: the trailing edge is the right in English
+            // and the left in Persian, and the arrow points that way in both.
+            "absolute end-2 flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15",
             "transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
             // Forward is the reading direction. This was -translate-x in LTR
             // and +translate-x in RTL, so the arrow flinched backwards on hover
