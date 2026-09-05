@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { SBHM_RetrieveSerializer } from "@/data/saderat-bank-health-monitoring/types";
-import { cn, localeDigits } from "@/lib/utils";
+import { localeDigits } from "@/lib/utils";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { useLocale, useTranslations } from "next-intl";
@@ -48,7 +48,6 @@ export function SearchPersonnelSheet({
   filterDescription,
 }: SearchPersonnelSheetProps) {
   const locale = useLocale();
-  const isRtl = locale === "fa";
   const [searchTerm, setSearchTerm] = React.useState("");
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
 
@@ -163,7 +162,6 @@ export function SearchPersonnelSheet({
                     {headerGroup.headers.map((header) => (
                       <TableHead
                         key={header.id}
-                        className={cn(isRtl ? "text-right" : "text-left")}
                       >
                         {header.isPlaceholder
                           ? null

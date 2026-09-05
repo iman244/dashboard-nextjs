@@ -85,22 +85,12 @@ export const EhrRecordsTable = ({
     <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          {/* TableHead hardcodes `text-left`, a physical property, so in
-              Persian every header sits opposite the cells beneath it.
-              `text-start` follows the writing direction the cells already
-              use. */}
           <TableRow>
-            <TableHead className="text-start">{tDictionary("date")}</TableHead>
-            <TableHead className="text-start">
-              {tDictionary("serviceName")}
-            </TableHead>
-            <TableHead className="text-start">
-              {tDictionary("answer")}
-            </TableHead>
-            <TableHead className="text-start">
-              {tDictionary("normalRange")}
-            </TableHead>
-            <TableHead className="text-start">{t("tableActions")}</TableHead>
+            <TableHead>{tDictionary("date")}</TableHead>
+            <TableHead>{tDictionary("serviceName")}</TableHead>
+            <TableHead>{tDictionary("answer")}</TableHead>
+            <TableHead>{tDictionary("normalRange")}</TableHead>
+            <TableHead>{t("tableActions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
