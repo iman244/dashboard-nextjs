@@ -22,15 +22,22 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
   const t = useTranslations("/console/electronic-health-record.EHRTable");
 
   return (
-    <div className="rounded-md border overflow-hidden">
+    // aria-busy per ux-guidelines #78, overflow-x-auto per #71.
+    <div
+      className="rounded-xl border border-border bg-card"
+      aria-busy={isLoading || undefined}
+    >
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="hover:bg-transparent">
               {headerGroup.headers.map((header) => (
-                <TableHead 
+                <TableHead
                   key={header.id}
-                  className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                  className={`h-10 text-xs font-medium tracking-wide text-muted-foreground ${
+                    header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                  }`}
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   <div className="flex items-center gap-2">
@@ -57,30 +64,31 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
           {isLoading ? (
             <LoadingSkeleton columnCount={columns.length} />
           ) : isError ? (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="h-24 text-center text-red-500"
-              >
-                خطا در بارگذاری داده‌ها:{" "}
-                {error?.message}
+            <TableRow className="hover:bg-transparent">
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                {/* text-destructive rather than a hardcoded text-red-500, so the
+                    error tracks the theme in both light and dark. */}
+                <span className="text-destructive">
+                  خطا در بارگذاری داده‌ها: {error?.message}
+                </span>
               </TableCell>
             </TableRow>
           ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
+              <TableRow key={row.id} className="border-border">
                 {row.getAllCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  // tabular-nums so Persian digits align down the column.
+                  <TableCell key={cell.id} className="py-3 tabular-nums">
                     <table.FlexRender cell={cell} />
                   </TableCell>
                 ))}
               </TableRow>
             ))
           ) : (
-            <TableRow>
+            <TableRow className="hover:bg-transparent">
               <TableCell
                 colSpan={columns.length}
-                className="h-24 text-center"
+                className="h-24 text-center text-muted-foreground"
               >
                 {t("pagination.noData")}
               </TableCell>
@@ -88,6 +96,7 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 };

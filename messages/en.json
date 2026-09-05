@@ -1,5 +1,22 @@
 {
   "common": {
+    "Navigation": {
+      "backToHome": "Back to home"
+    },
+    "Loading": {
+      "default": "Loading…",
+      "session": "Checking your session…",
+      "datasets": "Loading datasets…",
+      "report": "Building the report…",
+      "record": "Loading the health record…",
+      "records": "Loading records…"
+    },
+    "DateRangePicker": {
+      "placeholder": "Select a date range",
+      "sinceYear": "Since the start of {year}",
+      "sinceThisYear": "Since the start of this year",
+      "sinceMonth": "Since the start of {month}"
+    },
     "Application": {
       "copy": "Copy to clipboard",
       "copied": "Copied!"
@@ -9,7 +26,8 @@
       "light": "Light",
       "dark": "Dark",
       "system": "System",
-      "current": "{theme} theme"
+      "current": "{theme} theme",
+      "label": "Appearance"
     },
     "NetworkErrorDialog": {
       "AlertDialogTitle": "Network Error",
@@ -116,7 +134,6 @@
         "signInRegister": "Sign In / Register",
         "patientSignIn": "I'm a patient"
       },
-      "patientHint": "Patients: sign in with your national ID to see your own records.",
       "features": {
         "ehr": {
           "title": "Electronic Health Records",
@@ -140,7 +157,10 @@
       "description": "Enter your credentials to sign in",
       "buttons": {
         "signIn": "Sign In",
-        "signingIn": "Signing in..."
+        "signingIn": "Signing in…"
+      },
+      "status": {
+        "signedIn": "Signed in successfully."
       },
       "form": {
         "username": {
@@ -178,6 +198,17 @@
   },
   "/form-sabt-payesh": {},
   "/console": {
+    "ConsoleHome": {
+      "title": "Dashboard",
+      "subtitle": "Choose a section to get started.",
+      "descriptions": {
+        "electronicHealthRecord": "Search and browse patient health records",
+        "periodicalReports": "Generate comprehensive reports for time periods",
+        "patientReports": "Generate comprehensive reports for patients",
+        "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
+        "formSabtPayesh": "Register monitoring data with the online form"
+      }
+    },
     "ConsoleSidebar": {
       "dashboard": "Dashboard",
       "electronicHealthRecord": "Electronic Health Record",
@@ -201,7 +232,7 @@
         "nextPage": "Next page",
         "lastPage": "Last page",
         "noData": "No data found",
-        "loading": "Loading..."
+        "loading": "Loading…"
       }
     },
     "EHRFilter": {
@@ -235,7 +266,7 @@
     "PatientReports": {
       "title": "Patient Reports",
       "description": "Generate comprehensive reports for specific patients",
-      "loadingMessage": "Report is getting ready...",
+      "loadingMessage": "Report is getting ready…",
       "selectPatientAndPeriod": "Select Patient and Time Period",
       "nationalNumber": "National Number",
       "nationalNumberPlaceholder": "Enter national number",
@@ -278,7 +309,7 @@
       "totalRecords": "Total Records",
       "selectedPeriod": "Selected Period",
       "chartPlaceholder": "Chart",
-      "loadingMessage": "Report is getting ready...",
+      "loadingMessage": "Report is getting ready…",
       "chartComingSoon": "Chart coming soon",
       "errorMessage": "Error loading report data",
       "chartTitle": "Records Count by Date",
@@ -352,7 +383,7 @@
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "Upload Excel",
-      "Loading": "Loading...",
+      "Loading": "Loading…",
       "ErrorTitle": "Error loading data",
       "EmptyStateTitle": "No data available",
       "EmptyStateDescription": "Please upload an Excel file",
@@ -360,14 +391,15 @@
       "ReportTitle": "Statistical Report",
       "SearchPersonnel": "Search Personnel",
       "SearchPersonnelDescription": "Search and view personnel details",
-      "SearchPlaceholder": "Search by name, last name or national ID...",
+      "SearchPlaceholder": "Search by name, last name or national ID…",
       "ClearSearch": "Clear",
       "NoSearchResults": "No results found",
       "NoResults": "No results found",
       "ViewDataset": "View dataset",
       "ViewPersonRecord": "View health record",
       "WrongStepTitle": "This record belongs to a different step.",
-      "WrongStepAction": "Open it in the right view"
+      "WrongStepAction": "Open it in the right view",
+      "PageTitle": "Saderat Bank Health Monitoring"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} abnormal findings",
@@ -450,8 +482,12 @@
   },
   "/patient/sign-in": {
     "SignInPage": {
+      "eyebrow": "Health Record",
       "title": "Patient sign in",
       "description": "Enter your national ID to see your own health records.",
+      "status": {
+        "signedIn": "Signed in successfully."
+      },
       "form": {
         "nationalId": {
           "label": "National ID",
@@ -520,7 +556,7 @@
       "description": "Create a new account",
       "buttons": {
         "signUp": "Sign Up",
-        "signingUp": "Signing up..."
+        "signingUp": "Signing up…"
       },
       "form": {
         "api": {
@@ -545,6 +581,72 @@
           "link": "Sign in"
         }
       }
+    }
+  },
+  "metadata": {
+    "app": {
+      "name": "Infirmary Dashboard",
+      "description": "Electronic health records, periodical reporting and workplace health monitoring in one place."
+    },
+    "home": {
+      "title": "Welcome",
+      "description": "Reach health records, reports and health monitoring."
+    },
+    "authentication": {
+      "title": "Sign In",
+      "description": "Sign in to your account to reach the dashboard."
+    },
+    "console": {
+      "title": "Dashboard",
+      "description": "Choose a section to get started."
+    },
+    "electronicHealthRecord": {
+      "title": "Electronic Health Record",
+      "description": "Search and browse patient health records."
+    },
+    "periodicalReports": {
+      "title": "Periodical Reports",
+      "description": "Generate comprehensive reports for time periods."
+    },
+    "patientReports": {
+      "title": "Patient Reports",
+      "description": "Generate comprehensive reports for patients."
+    },
+    "saderatBankHealthMonitoring": {
+      "title": "Saderat Bank Health Monitoring",
+      "description": "Uploaded datasets and their step reports."
+    },
+    "sbhmStep1": {
+      "title": "Step 1 Report",
+      "description": "Statistical report for a step 1 monitoring dataset."
+    },
+    "sbhmStep2": {
+      "title": "Step 2 Report",
+      "description": "Statistical report for a step 2 monitoring dataset."
+    },
+    "sbhmPerson": {
+      "title": "Personnel Health Record",
+      "description": "One person’s findings within a monitoring dataset."
+    },
+    "formSabtPayesh": {
+      "title": "Form Sabt Payesh",
+      "description": "Register monitoring data with the online form."
+    },
+    "patientSignIn": {
+      "title": "Patient Sign In",
+      "description": "Sign in with your national ID to see your health records."
+    },
+    "patientRecords": {
+      "title": "My Health Records",
+      "description": "Your own electronic health records."
+    },
+    "loading": {
+      "title": "Loading",
+      "description": "Loading."
+    },
+    "redirecting": {
+      "title": "Redirecting",
+      "description": "Taking you to the right page."
     }
   }
 }

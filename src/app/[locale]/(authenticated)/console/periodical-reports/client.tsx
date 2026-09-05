@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePeriodicalReports } from "./provider";
@@ -8,14 +9,15 @@ import { RecordCountChart } from "./_charts/record-count-chart";
 import { PatientCountChart } from "./_charts/patient-count-chart";
 import { ServiceCountTable } from "./_charts/service-count-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 import { formatDate } from "@/lib/utils";
 import { localeDigits } from "@/lib/utils";
+import { PageHeader } from "@/components/app/page-header";
 
 const Client = (props: {
   initialValues: { patientType?: string; fromDate?: string; toDate?: string };
 }) => {
   const t = useTranslations("/console/periodical-reports.PeriodicalReports");
+  const tLoading = useTranslations("common.Loading");
   const {
     ehrByNationalNumber_m,
     filters,
@@ -26,18 +28,13 @@ const Client = (props: {
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <div className="flex items-center flex-col gap-2">
-          <Spinner />
-          <span className="text-muted-foreground">{t("loadingMessage")}</span>
-        </div>
-      </div>
+      <LoadingState label={tLoading("report")} />
     );
   }
 
   return (
     <div className="mt-2 space-y-4">
-      {/* Header */}
+      <PageHeader title={t("title")} />
 
       <div className="flex items-center gap-2">
         <PeriodicalReportsForm
@@ -51,9 +48,9 @@ const Client = (props: {
           <div>
             {filters.dateRange?.from && filters.dateRange.to && (
               <div className="flex flex-col gap-2 items-center justify-center">
-                <h1 className="text-2xl font-bold">
+                <h2 className="text-lg font-semibold">
                   گزارش بیماران در بازه تاریخ
-                </h1>
+                </h2>
                 <p className="text-muted-foreground">
                   {localeDigits(
                     formatDate(filters.dateRange?.from, locale),

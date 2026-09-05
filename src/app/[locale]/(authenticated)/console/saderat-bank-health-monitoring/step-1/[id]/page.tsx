@@ -1,12 +1,21 @@
 "use client";
+import { LoadingState } from "@/components/app/loading-state";
 import { SBHM_RetrieveSerializer } from "@/data/saderat-bank-health-monitoring/types";
 import { localeDigits } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import React from "react";
 import { useMonitoringIdRouteContext } from "./route-context";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/app/page-header";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+} from "@/components/ui/breadcrumb";
+import { Link } from "@/i18n/navigation";
 import { AlertCircle, Inbox, Users, BarChart3 } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { SearchPersonnelSheet } from "./_search-personnel-sheet/sheet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -27,7 +36,6 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 const MonitoringPage = (
@@ -35,6 +43,7 @@ const MonitoringPage = (
 ) => {
   const { id: monitoring_id } = React.use(props.params);
   const locale = useLocale();
+  const fmt = useLocaleDigits();
   const { monitoring_query } = useMonitoringIdRouteContext();
   const [isSearchSheetOpen, setIsSearchSheetOpen] = React.useState(false);
   const [activeFilter, setActiveFilter] = React.useState<{
@@ -42,6 +51,7 @@ const MonitoringPage = (
     description: string;
   } | null>(null);
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
+  const tLoading = useTranslations("common.Loading");
 
   const { data, isPending, error } = monitoring_query;
 
@@ -204,12 +214,7 @@ const MonitoringPage = (
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center h-[400px]">
-        <div className="flex items-center flex-col gap-3">
-          <Spinner className="h-8 w-8" />
-          <span className="text-muted-foreground">{t("Loading")}</span>
-        </div>
-      </div>
+      <LoadingState label={tLoading("report")} />
     );
   }
 
@@ -311,25 +316,40 @@ const MonitoringPage = (
 
   return (
     <div className="space-y-6">
-      {/* Header with Search Button */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BarChart3 className="h-5 w-5" />
-          <h2 className="text-2xl font-bold">
+      <PageHeader
+        breadcrumbs={
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/console/saderat-bank-health-monitoring">
+                    {t("PageTitle")}
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        }
+        title={
+          <span className="flex items-center gap-2">
+            <BarChart3 className="size-5 shrink-0 text-muted-foreground" />
             {t("ReportTitle")} {data.name}
-          </h2>
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => {
-            setActiveFilter(null);
-            setIsSearchSheetOpen(true);
-          }}
-        >
-          <Users className="h-4 w-4 ms-2" />
-          {t("SearchPersonnel")}
-        </Button>
-      </div>
+          </span>
+        }
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setActiveFilter(null);
+              setIsSearchSheetOpen(true);
+            }}
+          >
+            <Users className="h-4 w-4 ms-2" />
+            {t("SearchPersonnel")}
+          </Button>
+        }
+      />
 
       {/* Summary Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -448,12 +468,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -493,7 +513,7 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                     // Unrotated with the default centred anchor. `textAnchor="end"`
                     // resolves against the inline-base direction, so under the
@@ -504,13 +524,13 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.bpGroupDistribution[index]) {
@@ -544,18 +564,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-3)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.ageDistribution[index]) {
@@ -598,18 +618,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-4)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.fbsDistribution[index]) {
@@ -643,18 +663,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.totalCholDistribution[index]) {
@@ -688,12 +708,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -733,18 +753,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.ldlDistribution[index]) {
@@ -778,18 +798,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-3)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.tshDistribution[index]) {
@@ -823,18 +843,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-4)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.vitDDistribution[index]) {
@@ -868,18 +888,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.hba1cDistribution[index]) {
@@ -913,12 +933,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -958,18 +978,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.t3Distribution[index]) {
@@ -1003,18 +1023,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-3)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.t4Distribution[index]) {
@@ -1048,18 +1068,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-4)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.vitaminB12Distribution[index]) {
@@ -1093,18 +1113,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.ferritinDistribution[index]) {
@@ -1138,12 +1158,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1183,18 +1203,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.ureaDistribution[index]) {
@@ -1228,18 +1248,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-3)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.sgotDistribution[index]) {
@@ -1273,18 +1293,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-4)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.sgptDistribution[index]) {
@@ -1318,18 +1338,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.crDistribution[index]) {
@@ -1363,12 +1383,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1408,18 +1428,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-2)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.cbcWbcDistribution[index]) {
@@ -1453,18 +1473,18 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
                   <Bar
                     dataKey="value"
-                    fill="var(--chart-5)"
+                    fill="var(--chart-1)"
                     barSize={40}
                     onClick={(data, index) => {
                       if (data && reportData.uaGluDistribution[index]) {
@@ -1498,7 +1518,7 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                     // See the BMI chart above: rotated Persian ticks anchored to
                     // the wrong edge under RTL. Centred and unrotated instead.
@@ -1507,7 +1527,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />

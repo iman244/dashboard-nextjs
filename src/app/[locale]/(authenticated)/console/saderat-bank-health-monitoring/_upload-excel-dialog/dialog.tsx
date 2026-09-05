@@ -199,7 +199,7 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} aria-busy={isPending}>
               {isPending && <Spinner />}
               {t("Form.UploadButton")}
             </Button>

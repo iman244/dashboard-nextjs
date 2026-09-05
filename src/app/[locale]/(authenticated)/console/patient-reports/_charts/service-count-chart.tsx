@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import {
   ChartContainer,
@@ -10,7 +11,6 @@ import {
   ChartConfig,
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { CHART_TICK_FONT_SIZE, CHART_TICK_FONT_SIZE_SM } from "@/lib/chart";
 
 interface ServiceCountChart {
@@ -25,12 +25,13 @@ type ChartDataPoint = {
 const chartConfig: ChartConfig = {
   count: {
     label: "تعداد خدمات",
-    color: "var(--chart-3)",
+    color: "var(--chart-1)",
   },
 };
 
 export const ServiceCountChart: React.FC<ServiceCountChart> = ({ data }) => {
   const t = useTranslations("common.ServiceCountChart");
+  const fmt = useLocaleDigits();
 
   // Process data to group by service name and count occurrences
   const chartData: ChartDataPoint[] = React.useMemo(() => {
@@ -80,13 +81,13 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({ data }) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="serviceName"
-          tickFormatter={(value) => digitsEnToFa(value)}
+          tickFormatter={fmt}
           textAnchor="middle"
           fontSize={CHART_TICK_FONT_SIZE_SM}
           tickMargin={12}
         />
         <YAxis
-          tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+          tickFormatter={fmt}
           fontSize={CHART_TICK_FONT_SIZE}
           tickMargin={24}
         />
@@ -95,11 +96,11 @@ export const ServiceCountChart: React.FC<ServiceCountChart> = ({ data }) => {
             <ChartTooltipContent
               labelFormatter={(value) => (
                 <span className="font-medium">
-                  {t("serviceName")}: {digitsEnToFa(value as string)}
+                  {t("serviceName")}: {fmt(value as string)}
                 </span>
               )}
               formatter={(value) => [
-                digitsEnToFa(String(value ?? "")),
+                fmt(value),
                 " ",
                 t("serviceCount"),
               ]}

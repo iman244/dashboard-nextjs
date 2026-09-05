@@ -1,5 +1,16 @@
 import React from "react";
 import Client from "./client";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "patientReports");
+}
 
 const Page = async (
   props: PageProps<"/[locale]/console/patient-reports">

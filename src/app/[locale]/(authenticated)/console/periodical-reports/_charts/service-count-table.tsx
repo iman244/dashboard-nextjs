@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sheet";
 import { ServiceRecordsTable } from "./service-records-table";
 import { formatNumber, localeDigits } from "@/lib/utils";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 interface ServiceCountTableProps {
   data: ElectronicHealthRecord[];
@@ -64,7 +64,6 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const locale = useLocale();
   const tSCT = useTranslations("/console/periodical-reports.ServiceCountTable");
   const tDictionary = useTranslations("common.Dictionary");
 

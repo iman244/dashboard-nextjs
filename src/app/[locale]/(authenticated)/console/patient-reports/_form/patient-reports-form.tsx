@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,7 +25,7 @@ import {
 } from "@/components/ui/form";
 import { CalendarIcon, Search } from "lucide-react";
 import { usePatientReports } from "../provider";
-import { digitsEnToFa, digitsFaToEn } from "@persian-tools/persian-tools";
+import { digitsFaToEn } from "@persian-tools/persian-tools";
 import { format, newDate } from "date-fns-jalali";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogDescription } from "@radix-ui/react-dialog";
@@ -137,6 +138,7 @@ const MyForm = ({
 }) => {
   const { ehrByNationalNumber_m } = usePatientReports();
   const t = useTranslations("/console/patient-reports.PatientReports");
+  const fmt = useLocaleDigits();
   const locale = useLocale();
   
   return (
@@ -160,7 +162,7 @@ const MyForm = ({
                         <Input
                           {...field}
                           placeholder={t("nationalNumberPlaceholder")}
-                          value={digitsEnToFa(field.value || "")}
+                          value={fmt(field.value || "")}
                           onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>

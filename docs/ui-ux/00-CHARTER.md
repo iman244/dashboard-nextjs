@@ -124,6 +124,16 @@ during the audit; the console was not. Specifically unconfirmed:
 
 **To close this out:** log in and walk the console in both `/fa` and `/en`.
 
+## Wave 2 — Visual design
+
+Wave 1 (correctness, RTL, a11y, error surfacing) merged to `main` as PR #6 @ 3586cab.
+
+The visual/beauty work has its own roadmap: **[02-VISUAL-ROADMAP.md](02-VISUAL-ROADMAP.md)**
+— read that for anything about colour, typography, spacing, or chart styling. Branch:
+`feat/visual-design`.
+
+---
+
 ## Decisions Log
 
 Append one line per decision that a future reader could not infer from the code.

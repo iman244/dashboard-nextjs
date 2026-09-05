@@ -1,5 +1,22 @@
 {
   "common": {
+    "Navigation": {
+      "backToHome": "بازگشت به صفحه اصلی"
+    },
+    "Loading": {
+      "default": "در حال بارگذاری…",
+      "session": "در حال بررسی نشست شما…",
+      "datasets": "در حال بارگذاری مجموعه‌داده‌ها…",
+      "report": "در حال ساخت گزارش…",
+      "record": "در حال بارگذاری پرونده سلامت…",
+      "records": "در حال بارگذاری سوابق…"
+    },
+    "DateRangePicker": {
+      "placeholder": "انتخاب بازه تاریخ",
+      "sinceYear": "از ابتدای سال {year}",
+      "sinceThisYear": "از ابتدای امسال",
+      "sinceMonth": "از ابتدای {month}"
+    },
     "Application": {
       "copy": "کپی به کلیپبورد",
       "copied": "کپی شد!"
@@ -9,7 +26,8 @@
       "light": "روشن",
       "dark": "تاریک",
       "system": "سیستم",
-      "current": "حالت {theme}"
+      "current": "حالت {theme}",
+      "label": "نمایش"
     },
     "NetworkErrorDialog": {
       "AlertDialogTitle": "خطای شبکه",
@@ -116,7 +134,6 @@
         "signInRegister": "ورود / ثبت نام",
         "patientSignIn": "بیمار هستم"
       },
-      "patientHint": "بیماران: برای مشاهده سوابق خود با کد ملی وارد شوید.",
       "features": {
         "ehr": {
           "title": "سوابق پزشکی الکترونیکی",
@@ -140,16 +157,19 @@
       "description": "ورود به حساب کاربری",
       "buttons": {
         "signIn": "ورود",
-        "signingIn": "در حال ورود..."
+        "signingIn": "در حال ورود…"
+      },
+      "status": {
+        "signedIn": "با موفقیت وارد شدید."
       },
       "form": {
         "username": {
           "label": "نام کاربری",
-          "placeholder": "ورود به حساب کاربری"
+          "placeholder": "نام کاربری خود را وارد کنید"
         },
         "password": {
           "label": "رمز عبور",
-          "placeholder": "ورود به حساب کاربری"
+          "placeholder": "رمز عبور خود را وارد کنید"
         },
         "register": {
           "label": "حساب کاربری ندارید؟",
@@ -178,6 +198,17 @@
   },
   "/form-sabt-payesh": {},
   "/console": {
+    "ConsoleHome": {
+      "title": "داشبورد",
+      "subtitle": "برای شروع، یکی از بخش‌های زیر را انتخاب کنید.",
+      "descriptions": {
+        "electronicHealthRecord": "جستجو و مرور سوابق پزشکی بیماران",
+        "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
+        "patientReports": "تولید گزارشات جامع برای بیماران",
+        "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
+        "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
+      }
+    },
     "ConsoleSidebar": {
       "dashboard": "داشبورد",
       "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
@@ -201,7 +232,7 @@
         "nextPage": "صفحه بعدی",
         "lastPage": "صفحه آخر",
         "noData": "هیچ داده‌ای یافت نشد",
-        "loading": "در حال بارگذاری..."
+        "loading": "در حال بارگذاری…"
       }
     },
     "EHRFilter": {
@@ -237,7 +268,7 @@
       "description": "تولید گزارشات جامع برای بیماران",
       "patientType": "نوع بیمار",
       "selectPatientType": "انتخاب نوع بیمار",
-      "loadingMessage": "گزارش در حال آماده‌سازی است...",
+      "loadingMessage": "گزارش در حال آماده‌سازی است…",
       "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
       "nationalNumber": "شماره ملی",
       "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
@@ -278,7 +309,7 @@
       "totalRecords": "تعداد کل رکوردها",
       "selectedPeriod": "دوره انتخابی",
       "chartPlaceholder": "نمودار",
-      "loadingMessage": "گزارش در حال آماده‌سازی است...",
+      "loadingMessage": "گزارش در حال آماده‌سازی است…",
       "chartComingSoon": "نمودار به زودی",
       "errorMessage": "خطا در بارگذاری داده‌های گزارش",
       "chartTitle": "تعداد رکوردها بر اساس تاریخ",
@@ -352,7 +383,7 @@
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "بارگذاری اکسل",
-      "Loading": "در حال بارگذاری...",
+      "Loading": "در حال بارگذاری…",
       "ErrorTitle": "خطا در بارگذاری داده‌ها",
       "EmptyStateTitle": "هیچ داده‌ای موجود نیست",
       "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
@@ -360,14 +391,15 @@
       "ReportTitle": "گزارش آماری",
       "SearchPersonnel": "جستجوی پرسنل",
       "SearchPersonnelDescription": "جستجو و مشاهده جزئیات پرسنل",
-      "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی...",
+      "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی…",
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
       "NoResults": "نتیجه‌ای یافت نشد",
       "ViewDataset": "مشاهده مجموعه داده",
       "ViewPersonRecord": "مشاهده پرونده سلامت",
       "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
-      "WrongStepAction": "مشاهده در نمای درست"
+      "WrongStepAction": "مشاهده در نمای درست",
+      "PageTitle": "پایش سلامت بانک صادرات"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} یافته غیرطبیعی",
@@ -450,8 +482,12 @@
   },
   "/patient/sign-in": {
     "SignInPage": {
+      "eyebrow": "پرونده سلامت",
       "title": "ورود بیمار",
-      "description": "برای مشاهده سوابق سلامت خود، کد ملی را وارد کنید.",
+      "description": "برای مشاهده سوابق سلامت کد ملی خود را وارد کنید.",
+      "status": {
+        "signedIn": "با موفقیت وارد شدید."
+      },
       "form": {
         "nationalId": {
           "label": "کد ملی",
@@ -520,7 +556,7 @@
       "description": "ایجاد حساب کاربری",
       "buttons": {
         "signUp": "ثبت نام",
-        "signingUp": "در حال ثبت نام..."
+        "signingUp": "در حال ثبت نام…"
       },
       "form": {
         "api": {
@@ -545,6 +581,72 @@
           "link": "ورود"
         }
       }
+    }
+  },
+  "metadata": {
+    "app": {
+      "name": "داشبورد درمانگاه",
+      "description": "سوابق پزشکی الکترونیکی، گزارش‌گیری دوره‌ای و پایش سلامت، یک‌جا."
+    },
+    "home": {
+      "title": "خوش آمدید",
+      "description": "دسترسی به سوابق پزشکی، گزارش‌ها و پایش سلامت."
+    },
+    "authentication": {
+      "title": "ورود",
+      "description": "برای دسترسی به داشبورد وارد حساب کاربری خود شوید."
+    },
+    "console": {
+      "title": "داشبورد",
+      "description": "برای شروع، یکی از بخش‌ها را انتخاب کنید."
+    },
+    "electronicHealthRecord": {
+      "title": "سوابق پزشکی الکترونیکی",
+      "description": "جستجو و مرور سوابق پزشکی بیماران."
+    },
+    "periodicalReports": {
+      "title": "گزارشات دوره‌ای",
+      "description": "تولید گزارشات جامع برای دوره‌های زمانی."
+    },
+    "patientReports": {
+      "title": "گزارشات بیمار",
+      "description": "تولید گزارشات جامع برای بیماران."
+    },
+    "saderatBankHealthMonitoring": {
+      "title": "پایش سلامت بانک صادرات",
+      "description": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای."
+    },
+    "sbhmStep1": {
+      "title": "گزارش مرحله ۱",
+      "description": "گزارش آماری یک مجموعه‌داده پایش مرحله ۱."
+    },
+    "sbhmStep2": {
+      "title": "گزارش مرحله ۲",
+      "description": "گزارش آماری یک مجموعه‌داده پایش مرحله ۲."
+    },
+    "sbhmPerson": {
+      "title": "پرونده سلامت فرد",
+      "description": "یافته‌های یک فرد در یک مجموعه‌داده پایش."
+    },
+    "formSabtPayesh": {
+      "title": "فرم ثبت پایش",
+      "description": "ثبت اطلاعات پایش با فرم آنلاین."
+    },
+    "patientSignIn": {
+      "title": "ورود بیمار",
+      "description": "با کد ملی وارد شوید تا سوابق سلامت خود را ببینید."
+    },
+    "patientRecords": {
+      "title": "سوابق سلامت من",
+      "description": "سوابق پزشکی الکترونیکی شما."
+    },
+    "loading": {
+      "title": "در حال بارگذاری",
+      "description": "در حال بارگذاری."
+    },
+    "redirecting": {
+      "title": "در حال انتقال",
+      "description": "در حال انتقال به صفحه‌ی درست."
     }
   }
 }

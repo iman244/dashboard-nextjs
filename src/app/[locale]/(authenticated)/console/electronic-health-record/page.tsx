@@ -1,10 +1,15 @@
 import { Metadata } from 'next'
 import Client from './client'
 import React from 'react'
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: 'Electronic Health Record',
-  description: 'Electronic Health Record',
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "electronicHealthRecord");
 }
 
 const Page = () => {

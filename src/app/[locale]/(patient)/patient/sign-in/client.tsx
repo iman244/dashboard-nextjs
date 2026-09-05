@@ -6,15 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
+import { useDirection } from "@/lib/use-direction";
 import { digitsFaToEn } from "@persian-tools/persian-tools";
 import { localeDigits } from "@/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -24,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { AuthShell, AuthSubmitButton } from "@/components/app/auth-shell";
 import {
   ehr_by_national_number,
   EHR_BY_NATIONAL_NUMBER_KEY,
@@ -37,6 +31,7 @@ import { signInProbeParams } from "../../_data/ehr-params";
 export function Client() {
   const t = useTranslations("/patient/sign-in.SignInPage");
   const locale = useLocale();
+  const dir = useDirection();
   const router = useRouter();
   const { signIn } = usePatientSession();
   const [formError, setFormError] = React.useState<string | null>(null);
@@ -68,6 +63,14 @@ export function Client() {
     mutationFn: ehr_by_national_number,
   });
 
+  // Held separately from `isPending` rather than derived from `isSuccess`: this
+  // request succeeds even when it finds no records, which is a rejected sign-in,
+  // not a redirect. Only the branch that actually navigates sets this — and it
+  // must stay set through the navigation, since this card is what the patient
+  // watches while their records load.
+  const [redirecting, setRedirecting] = React.useState(false);
+  const isBusy = isPending || redirecting;
+
   const onSubmit = React.useCallback(
     (data: FormData) => {
       setFormError(null);
@@ -94,6 +97,7 @@ export function Client() {
               return;
             }
             signIn(nationalId);
+            setRedirecting(true);
             router.replace(AppRoutes.PATIENT_RECORDS);
           },
           onError: (error) => {
@@ -107,69 +111,79 @@ export function Client() {
   );
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md mx-auto">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">{t("title")}</CardTitle>
-          <CardDescription>{t("description")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="nationalId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.nationalId.label")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        inputMode="numeric"
-                        autoComplete="username"
-                        placeholder={t("form.nationalId.placeholder")}
-                        disabled={isPending}
-                        value={localeDigits(field.value, locale)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.password.label")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="password"
-                        autoComplete="current-password"
-                        placeholder={t("form.password.placeholder")}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {formError && (
-                <p role="alert" className="text-destructive text-sm text-center">
-                  {formError}
-                </p>
+    <AuthShell
+      dir={dir}
+      eyebrow={t("eyebrow")}
+      title={t("title")}
+      description={t("description")}
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-4 text-start">
+            <FormField
+              control={form.control}
+              name="nationalId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("form.nationalId.label")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      inputMode="numeric"
+                      autoComplete="username"
+                      placeholder={t("form.nationalId.placeholder")}
+                      disabled={isBusy}
+                      value={localeDigits(field.value, locale)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
+            />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? t("buttons.signingIn") : t("buttons.signIn")}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </main>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("form.password.label")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      autoComplete="current-password"
+                      placeholder={t("form.password.placeholder")}
+                      disabled={isBusy}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Same error treatment as the staff card: a tinted block in the flow,
+              not a bare red line, so it reads as part of the form. */}
+          {formError && (
+            <div
+              role="alert"
+              className="mt-5 rounded-xl bg-destructive/10 px-4 py-3 text-start text-sm text-destructive"
+            >
+              {formError}
+            </div>
+          )}
+
+          <p role="status" aria-live="polite" className="sr-only">
+            {redirecting ? t("status.signedIn") : ""}
+          </p>
+
+          <AuthSubmitButton
+            busy={isBusy}
+            idleLabel={t("buttons.signIn")}
+            busyLabel={t("buttons.signingIn")}
+          />
+        </form>
+      </Form>
+    </AuthShell>
   );
 }

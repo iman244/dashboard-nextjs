@@ -1,11 +1,12 @@
 "use client";
 
+import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { usePatientReports } from "./provider";
 import { PatientReportsForm } from "./_form/patient-reports-form";
 import { Card, CardContent } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 import { formatDate, formatNumber, localeDigits } from "@/lib/utils";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
@@ -30,9 +31,9 @@ import {
   ChartConfig,
 } from "@/components/ui/chart";
 import { Line, XAxis, YAxis, CartesianGrid, ReferenceArea, ComposedChart } from "recharts";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { format, newDate } from "date-fns-jalali";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
+import { PageHeader } from "@/components/app/page-header";
 
 interface ServiceCountData {
   serviceName: string;
@@ -79,23 +80,23 @@ const columnHelper = createColumnHelper<AppTableFeatures, ServiceCountData>();
 const serviceTrendChartConfig: ChartConfig = {
   testValue: {
     label: "مقدار آزمایش",
-    color: "#2563eb", // Blue for test values
+    color: "var(--chart-1)", // the measured series
   },
   normalRangeMin: {
     label: "حد پایین نرمال",
-    color: "#16a34a", // Green for normal range
+    color: "var(--success)", // reference range bound
   },
   normalRangeMax: {
     label: "حد بالای نرمال",
-    color: "#16a34a", // Green for normal range
+    color: "var(--success)", // reference range bound
   },
   normalArea: {
     label: "محدوده طبیعی",
-    color: "#16a34a", // Green for normal area
+    color: "var(--success)", // the in-range band
   },
   abnormalArea: {
     label: "محدوده غیرطبیعی",
-    color: "#dc2626", // Red for abnormal area
+    color: "var(--destructive)", // out-of-range band
   },
 };
 
@@ -105,6 +106,7 @@ export const ServiceDetailsTable: React.FC<{
   selectedService: string;
 }> = ({ data, selectedService }) => {
   const locale = useLocale();
+  const fmt = useLocaleDigits();
   const tDictionary = useTranslations("common.dictionary");
 
   const detailsColumnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
@@ -208,13 +210,13 @@ export const ServiceDetailsTable: React.FC<{
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="formattedDate"
-                tickFormatter={(value) => digitsEnToFa(value)}
+                tickFormatter={fmt}
                 textAnchor="middle"
                 fontSize={CHART_TICK_FONT_SIZE}
                 tickMargin={12}
               />
               <YAxis
-                tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                tickFormatter={fmt}
                 fontSize={CHART_TICK_FONT_SIZE}
                 tickMargin={24}
               />
@@ -223,7 +225,7 @@ export const ServiceDetailsTable: React.FC<{
                   <ChartTooltipContent
                     labelFormatter={(value) => (
                       <span className="font-medium">
-                        تاریخ: {digitsEnToFa(value as string)}
+                        تاریخ: {fmt(value as string)}
                       </span>
                     )}
                     formatter={(value, name) => {
@@ -233,7 +235,7 @@ export const ServiceDetailsTable: React.FC<{
                           : name === "normalRangeMin"
                           ? "حد پایین نرمال"
                           : "حد بالای نرمال";
-                      return [digitsEnToFa(String(value ?? "")), " ", label];
+                      return [fmt(value), " ", label];
                     }}
                   />
                 }
@@ -307,6 +309,7 @@ const Client = (props: {
   };
 }) => {
   const t = useTranslations("/console/patient-reports.PatientReports");
+  const tLoading = useTranslations("common.Loading");
   const tData = useTranslations("common.data");
   const tDictionary = useTranslations("common.Dictionary");
   const {
@@ -505,18 +508,13 @@ const Client = (props: {
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <div className="flex items-center flex-col gap-2">
-          <Spinner />
-          <span className="text-muted-foreground">{t("loadingMessage")}</span>
-        </div>
-      </div>
+      <LoadingState label={tLoading("report")} />
     );
   }
 
   return (
     <div className="mt-2 space-y-4">
-      {/* Header */}
+      <PageHeader title={t("title")} />
       <div className="flex items-center gap-2">
         <PatientReportsForm
           initialValues={props.initialValues}

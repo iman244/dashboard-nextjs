@@ -8,6 +8,8 @@ import { appTableFeatures } from "@/components/app/table-features";
 import { TablePagination } from "@/components/app/table-pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/app/page-header";
+import { DarkModeToggle } from "@/components/app/theme-toggle";
 import { formatDate, localeDigits } from "@/lib/utils";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { useRouter } from "@/i18n/navigation";
@@ -58,21 +60,31 @@ const Client = () => {
   }, [router, signOut]);
 
   return (
-    <main className="container mx-auto p-4 space-y-4 min-h-screen flex flex-col">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">
-            {t("subtitle", {
-              nationalId: localeDigits(nationalId ?? "", locale),
-            })}
-          </p>
-        </div>
-        <Button variant="ghost" size="sm" onClick={handleSignOut}>
-          <LogOut className="me-2 h-4 w-4" />
-          {t("signOut")}
-        </Button>
-      </div>
+    // min-h-dvh, not min-h-screen: 100vh overshoots the visible area on iOS
+    // Safari while its toolbar is showing. The sign-in card next door already
+    // uses dvh; this is the same page in the same session.
+    <main className="container mx-auto p-4 space-y-4 min-h-dvh flex flex-col">
+      {/* Was a hand-rolled h1 + p that duplicated PageHeader's job at slightly
+          different values (font-bold vs font-semibold, no measure cap, no rule).
+          Patients are outside the console, so there is no breadcrumb — but the
+          heading, the type scale and the action slot are the same everywhere.
+          The theme toggle lives here because this route group has no sidebar:
+          without it a patient has no way to reach it at all. */}
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle", {
+          nationalId: localeDigits(nationalId ?? "", locale),
+        })}
+        actions={
+          <>
+            <DarkModeToggle />
+            <Button variant="ghost" size="sm" onClick={handleSignOut}>
+              <LogOut className="me-2 h-4 w-4" />
+              {t("signOut")}
+            </Button>
+          </>
+        }
+      />
 
       <div className="flex items-center justify-between gap-2">
         <RecordsFilter isLoading={records_m.isPending} />

@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -11,7 +12,6 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { formatDate } from "@/lib/utils";
 import { format, startOfMonth, startOfYear, subMonths } from "date-fns-jalali";
 
@@ -25,10 +25,12 @@ interface DateRangePickerProps {
 export function DateRangePicker({
   value,
   onChange,
-  placeholder = "انتخاب بازه تاریخ",
+  placeholder,
   className,
 }: DateRangePickerProps) {
   const locale = useLocale();
+  const fmt = useLocaleDigits();
+  const t = useTranslations("common.DateRangePicker");
 
   const getUtilityButtons = React.useCallback(() => {
     const now = new Date();
@@ -49,24 +51,29 @@ export function DateRangePicker({
 
     return [
       {
-        label: `از ابتدای سال ${digitsEnToFa(format(previousJalaliYear, "yyyy"))}`,
+        // The months and years stay Jalali in both locales: the calendar this
+        // control opens is Jalali, so a Gregorian label would name a different
+        // range than the one it selects.
+        label: t("sinceYear", { year: fmt(format(previousJalaliYear, "yyyy")) }),
         range: { from: startOfPreviousJalaliYear, to: now }
       },
       {
-        label: `از ابتدای امسال`,
+        label: t("sinceThisYear"),
         range: { from: startOfCurrentJalaliYear, to: now }
       },
       {
-        label: `از ابتدای ${digitsEnToFa(format(previousMonth, "MMMM"))}`,
+        label: t("sinceMonth", { month: fmt(format(previousMonth, "MMMM")) }),
         range: { from: startOfPreviousMonth, to: now }
       },
       {
-        label: `از ابتدای ${digitsEnToFa(format(now, "MMMM"))}`,
+        label: t("sinceMonth", { month: fmt(format(now, "MMMM")) }),
         range: { from: startOfCurrentMonth, to: now }
       },
 
     ];
-  }, [])
+    // `fmt` and `t` are both locale-bound; an empty dep list froze these labels
+    // at whatever locale rendered first.
+  }, [fmt, t])
 
   const utilityButtons = getUtilityButtons();
 
@@ -87,20 +94,20 @@ export function DateRangePicker({
               value.to ? (
                 <>
                   <span>
-                    {digitsEnToFa(formatDate(value.from, locale))}
+                    {fmt(formatDate(value.from, locale))}
                   </span>
                   {" - "}
                   <span>
-                    {digitsEnToFa(formatDate(value.to, locale))}
+                    {fmt(formatDate(value.to, locale))}
                   </span>
                 </>
               ) : (
                 <span>
-                  {digitsEnToFa(formatDate(value.from, locale))}
+                  {fmt(formatDate(value.from, locale))}
                 </span>
               )
             ) : (
-              <span>{digitsEnToFa(placeholder)}</span>
+              <span>{placeholder ?? t("placeholder")}</span>
             )}
           </Button>
         </PopoverTrigger>

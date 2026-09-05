@@ -184,7 +184,7 @@ function DropdownMenuShortcut({
     <span
       data-slot="dropdown-menu-shortcut"
       className={cn(
-        "text-muted-foreground ml-auto text-xs tracking-widest",
+        "text-muted-foreground ms-auto text-xs tracking-widest",
         className
       )}
       {...props}
@@ -217,7 +217,11 @@ function DropdownMenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ml-auto size-4" />
+      {/* ms-auto, not ml-auto, and mirrored: a submenu opens toward the
+          reading end, so the affordance has to point that way in both
+          directions. Nothing uses DropdownMenuSub yet — fixed so the first
+          use does not have to discover it. */}
+      <ChevronRightIcon className="ms-auto size-4 rtl:rotate-180" />
     </DropdownMenuPrimitive.SubTrigger>
   )
 }

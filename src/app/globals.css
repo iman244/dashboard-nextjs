@@ -17,6 +17,19 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-chart-div-5: var(--chart-div-5);
+  --color-chart-div-4: var(--chart-div-4);
+  --color-chart-div-3: var(--chart-div-3);
+  --color-chart-div-2: var(--chart-div-2);
+  --color-chart-div-1: var(--chart-div-1);
+  --color-chart-seq-5: var(--chart-seq-5);
+  --color-chart-seq-4: var(--chart-seq-4);
+  --color-chart-seq-3: var(--chart-seq-3);
+  --color-chart-seq-2: var(--chart-seq-2);
+  --color-chart-seq-1: var(--chart-seq-1);
+  --color-chart-8: var(--chart-8);
+  --color-chart-7: var(--chart-7);
+  --color-chart-6: var(--chart-6);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -25,6 +38,13 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+  --color-info-foreground: var(--info-foreground);
+  --color-info: var(--info);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning: var(--warning);
+  --color-success-foreground: var(--success-foreground);
+  --color-success: var(--success);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -44,96 +64,175 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ---------------------------------------------------------------------------
+ * Colour system — see docs/ui-ux/03-TOKEN-CONTRACT.md
+ *
+ * Neutral spine  — hue 285, chroma <= 0.02. Surfaces, text, borders and the
+ *                  sidebar are near-grey so that data colour carries meaning.
+ * Brand          — hue 252, a deep blue. Actions, focus and identity only;
+ *                  it should cover roughly 5% of any screen.
+ * Semantics      — conventional hues: green success, amber warning, red
+ *                  danger, blue info. Clinically opposite findings no longer
+ *                  have to share the destructive red. success and destructive
+ *                  are separated in LIGHTNESS as well as hue (success is the
+ *                  lighter of the two in both themes) because hue alone does
+ *                  not survive red/green deficiency, and that pair is how a
+ *                  clinician sees a lab value is out of range.
+ * Charts         — three scales chosen by data shape, never interchangeable:
+ *                  categorical (chart-1..8)   unordered categories
+ *                  sequential  (chart-seq-1..5) ordered magnitude
+ *                  diverging   (chart-div-1..5) signed distance from a middle
+ *
+ * Light and dark are the same hue family with re-tuned lightness and chroma,
+ * not an inversion. Every pair in the contract is measured, not eyeballed;
+ * the categorical scale is verified under deuteranopia and protanopia. All
+ * values are oklch() and in sRGB gamut, and must be referenced bare —
+ * var(--chart-1), never hsl(var(--chart-1)).
+ * ------------------------------------------------------------------------- */
+
 :root {
   --radius: 0.625rem;
 
-  /* Base */
-  --background: oklch(0.99 0.01 210);      /* sky-50 */
-  --foreground: oklch(0.21 0.05 235);      /* sky-950-ish */
+  /* Palette source: ui-ux-pro-max colors.csv row 182,
+     "Patient Portal / Health Records" — clinical blue + health green + alert red.
+     Values below are that row converted from hex to oklch, with the tokens the
+     row does not carry (semantics, sidebar, chart scales) derived from its own
+     three brand colours rather than invented. */
 
-  --card: oklch(0.985 0.01 210);            /* sky-50 */
-  --card-foreground: oklch(0.21 0.05 235);
+  /* Surfaces */
+  --background: oklch(0.977 0.012 236.6); /* #F0F9FF */
+  --foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --card: oklch(1 0 0); /* #FFFFFF */
+  --card-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --popover: oklch(1 0 0); /* #FFFFFF */
+  --popover-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --muted: oklch(0.955 0.013 233.7); /* #E8F2F8 */
+  --muted-foreground: oklch(0.446 0.037 257.3); /* #475569 */
 
-  --popover: oklch(0.985 0.01 210);
-  --popover-foreground: oklch(0.21 0.05 235);
+  /* Brand. Note the black foreground: #0284C7 reaches 4.92:1 against black but
+     only 4.27:1 against white, so black is the accessible choice here. */
+  /* Row 41 (Insurance Platform) rather than row 182's #0284C7/black pair:
+     that blue sits at lightness 0.588, so black on it passes 4.92:1 numerically
+     while still reading as dark-on-dark. Guideline 76. */
+  --primary: oklch(0.5 0.119 242.7); /* #0369A1 */
+  --primary-foreground: oklch(1 0 0); /* #FFFFFF */
+  /* shadcn uses --secondary for muted chips and quiet buttons, not as a brand
+     accent. The source row's Secondary (#0891B2) lives in --info instead. */
+  --secondary: oklch(0.93 0.02 238.7); /* #DCEAF4 */
+  --secondary-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --accent: oklch(0.925 0.033 238.1); /* #D3EAFA */
+  --accent-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --ring: oklch(0.5 0.119 242.7); /* #0369A1 */
 
-  /* Primary */
-  --primary: oklch(0.62 0.17 230);          /* sky-500 */
-  --primary-foreground: oklch(0.98 0.01 210); /* sky-50 */
+  /* Semantics — success is the row's own Accent ("health green"), info its Secondary */
+  --destructive: oklch(0.577 0.215 27.3); /* #DC2626 */
+  --destructive-foreground: oklch(1 0 0); /* #FFFFFF */
+  --success: oklch(0.527 0.137 150.1); /* #15803D */
+  --success-foreground: oklch(1 0 0); /* #FFFFFF */
+  --warning: oklch(0.681 0.142 75.8); /* #CA8A04 */
+  --warning-foreground: oklch(0.239 0.049 80.6); /* #2B1C00 */
+  --info: oklch(0.52 0.094 223.1); /* #0E7490 */
+  --info-foreground: oklch(1 0 0); /* #FFFFFF */
 
-  /* Secondary */
-  --secondary: oklch(0.93 0.04 215);        /* sky-100 */
-  --secondary-foreground: oklch(0.26 0.07 230); /* sky-900 */
+  /* Edges. A pale tint, per the source row — not a mid-grey. */
+  --border: oklch(0.901 0.055 230.9); /* #BAE6FD */
+  --input: oklch(0.828 0.101 230.3); /* #7DD3FC */
 
-  /* Muted */
-  --muted: oklch(0.95 0.02 215);            /* sky-100/50 */
-  --muted-foreground: oklch(0.55 0.06 230); /* sky-600 */
+  /* Charts — categorical, anchored on the row's blue/green/cyan */
+  --chart-1: oklch(0.588 0.139 242); /* #0284C7 */
+  --chart-2: oklch(0.553 0.174 38.4); /* #C2410C */
+  --chart-3: oklch(0.548 0.117 164.5); /* #059669 */
+  --chart-4: oklch(0.491 0.241 292.6); /* #6D28D9 */
+  --chart-5: oklch(0.554 0.121 66.4); /* #A16207 */
+  --chart-6: oklch(0.455 0.171 13.7); /* #9F1239 */
+  --chart-7: oklch(0.609 0.111 221.7); /* #0891B2 */
+  --chart-8: oklch(0.525 0.199 4); /* #BE185D */
 
-  /* Accent */
-  --accent: oklch(0.88 0.07 215);           /* sky-200 */
-  --accent-foreground: oklch(0.26 0.07 230);
+  /* Charts — sequential (ordered magnitude) */
+  --chart-seq-1: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --chart-seq-2: oklch(0.823 0.082 239.2); /* #93CDF5 */
+  --chart-seq-3: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --chart-seq-4: oklch(0.5 0.119 242.7); /* #0369A1 */
+  --chart-seq-5: oklch(0.34 0.076 244.6); /* #0C3B5C */
 
-  /* Destructive */
-  --destructive: oklch(0.58 0.24 27);       /* red-500 */
-
-  /* UI chrome */
-  --border: oklch(0.9 0.03 215);             /* sky-200 */
-  --input: oklch(0.9 0.03 215);
-  --ring: oklch(0.7 0.12 230);               /* sky-400 */
-
-  /* Charts — sky spectrum */
-  --chart-1: oklch(0.62 0.17 230); /* sky-500 */
-  --chart-2: oklch(0.68 0.14 215); /* sky-400 */
-  --chart-3: oklch(0.55 0.12 240); /* sky-600 */
-  --chart-4: oklch(0.75 0.1 205);  /* sky-300 */
-  --chart-5: oklch(0.45 0.1 255);  /* sky-700 */
+  /* Charts — diverging (low <- normal -> high), the lab-result scale */
+  --chart-div-1: oklch(0.5 0.119 242.7); /* #0369A1 */
+  --chart-div-2: oklch(0.808 0.073 228.7); /* #8ECAE6 */
+  --chart-div-3: oklch(0.943 0.009 242.8); /* #E7EDF2 */
+  --chart-div-4: oklch(0.879 0.05 33.6); /* #F6CCC2 */
+  --chart-div-5: oklch(0.543 0.179 28.6); /* #C2352B */
 
   /* Sidebar */
-  --sidebar: oklch(0.97 0.015 210);           /* sky-50 */
-  --sidebar-foreground: oklch(0.21 0.05 235);
-
-  --sidebar-primary: oklch(0.62 0.17 230);    /* sky-500 */
-  --sidebar-primary-foreground: oklch(0.98 0.01 210);
-
-  --sidebar-accent: oklch(0.9 0.05 215);      /* sky-200 */
-  --sidebar-accent-foreground: oklch(0.26 0.07 230);
-
-  --sidebar-border: oklch(0.9 0.03 215);
-  --sidebar-ring: oklch(0.7 0.12 230);
+  --sidebar: oklch(0.955 0.013 233.7); /* #E8F2F8 */
+  --sidebar-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --sidebar-primary: oklch(0.5 0.119 242.7); /* #0369A1 */
+  --sidebar-primary-foreground: oklch(1 0 0); /* #FFFFFF */
+  --sidebar-accent: oklch(0.925 0.033 238.1); /* #D3EAFA */
+  --sidebar-accent-foreground: oklch(0.391 0.085 240.9); /* #0C4A6E */
+  --sidebar-border: oklch(0.901 0.055 230.9); /* #BAE6FD */
+  --sidebar-ring: oklch(0.5 0.119 242.7); /* #0369A1 */
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  /* Same clinical-blue family, re-tuned for a dark ground — not an inversion. */
+  --background: oklch(0.192 0.029 239.4); /* #071620 */
+  --foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --card: oklch(0.242 0.039 239.1); /* #0C2230 */
+  --card-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --popover: oklch(0.272 0.044 237.5); /* #0F2A3A */
+  --popover-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --muted: oklch(0.294 0.045 232.9); /* #12303F */
+  --muted-foreground: oklch(0.798 0.051 229.8); /* #9CC4D8 */
+
+  --primary: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --primary-foreground: oklch(0.232 0.046 230.4); /* #00212F */
+  --secondary: oklch(0.333 0.048 234.7); /* #1B3A4B */
+  --secondary-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --accent: oklch(0.335 0.053 234.5); /* #173B4E */
+  --accent-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --ring: oklch(0.754 0.139 232.7); /* #38BDF8 */
+
+  --destructive: oklch(0.652 0.208 25.3); /* #F54A49 — lifted from #EF4444: as text on the dark card it measured 4.34:1, under the 4.5 that WCAG 1.4.3 asks of running text */
+  --destructive-foreground: oklch(0.193 0.064 25.5); /* #2B0505 */
+  --success: oklch(0.8 0.182 151.7); /* #4ADE80 */
+  --success-foreground: oklch(0.266 0.065 151.2); /* #052E14 */
+  --warning: oklch(0.861 0.173 91.9); /* #FACC15 */
+  --warning-foreground: oklch(0.239 0.049 80.6); /* #2B1C00 */
+  --info: oklch(0.797 0.134 211.5); /* #22D3EE */
+  --info-foreground: oklch(0.202 0.037 220.6); /* #001A22 */
+
+  --border: oklch(0.368 0.057 234.8); /* #1D4459 */
+  --input: oklch(0.478 0.074 233); /* #2C6480 */
+
+  --chart-1: oklch(0.685 0.148 237.3); /* #0EA5E9 */
+  --chart-2: oklch(0.645 0.215 16.4); /* #F43F5E */
+  --chart-3: oklch(0.554 0.121 66.4); /* #A16207 */
+  --chart-4: oklch(0.548 0.117 164.5); /* #059669 */
+  --chart-5: oklch(0.606 0.219 292.7); /* #8B5CF6 */
+  --chart-6: oklch(0.609 0.111 221.7); /* #0891B2 */
+  --chart-7: oklch(0.646 0.194 41.1); /* #EA580C */
+  --chart-8: oklch(0.656 0.212 354.3); /* #EC4899 */
+
+  --chart-seq-1: oklch(0.939 0.028 239.7); /* #DBEEFC */
+  --chart-seq-2: oklch(0.803 0.082 238.1); /* #8CC7EE */
+  --chart-seq-3: oklch(0.657 0.122 240); /* #3D9AD4 */
+  --chart-seq-4: oklch(0.505 0.107 241.4); /* #1B6B9C */
+  --chart-seq-5: oklch(0.349 0.075 242.5); /* #0C3E5E */
+
+  --chart-div-1: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --chart-div-2: oklch(0.566 0.099 234.9); /* #2F7FA8 */
+  --chart-div-3: oklch(0.356 0.035 236.2); /* #2A3F4C */
+  --chart-div-4: oklch(0.399 0.063 22.9); /* #653A38 */
+  --chart-div-5: oklch(0.652 0.208 25.3); /* #F54A49 — lifted from #EF4444: as text on the dark card it measured 4.34:1, under the 4.5 that WCAG 1.4.3 asks of running text */
+
+  --sidebar: oklch(0.168 0.025 245.6); /* #061019 */
+  --sidebar-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --sidebar-primary: oklch(0.754 0.139 232.7); /* #38BDF8 */
+  --sidebar-primary-foreground: oklch(0.232 0.046 230.4); /* #00212F */
+  --sidebar-accent: oklch(0.335 0.053 234.5); /* #173B4E */
+  --sidebar-accent-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
+  --sidebar-border: oklch(0.325 0.05 235.1); /* #17384A */
+  --sidebar-ring: oklch(0.754 0.139 232.7); /* #38BDF8 */
 }
 
 @layer base {
@@ -162,4 +261,47 @@
 
 .font-english ol.toaster {
   direction: ltr;
+}
+
+/* ---------------------------------------------------------------------------
+ * Motion
+ *
+ * One keyframe, used by the sign-in submit while it is working. It is an
+ * indeterminate progress indicator, not decoration: since the post-login
+ * interstitial was removed, that button is the only thing on screen for the
+ * whole navigation, and a 3.5mm spinner is a weak signal that anything is
+ * still happening. ux-guidelines #12 allows an infinite animation exactly
+ * here — a loading indicator — and nowhere else.
+ *
+ * The element carrying this is hidden outright under prefers-reduced-motion;
+ * the spinner and the label still report the state.
+ * ------------------------------------------------------------------------- */
+@keyframes auth-sweep {
+  from {
+    transform: translateX(-150%);
+  }
+  to {
+    transform: translateX(400%);
+  }
+}
+
+/* A component can opt its whole subtree out of spatial movement.
+ *
+ * Needed because Tailwind v4 emits movement as the standalone `translate` and
+ * `scale` properties: `transform: none` cannot cancel them, and a plain
+ * `motion-reduce:translate-none` utility loses to the higher-specificity
+ * `group-hover:` and `rtl:` rules that set them in the first place. A user's
+ * motion preference is the one thing that should outrank a component style, so
+ * this is where !important is correct rather than lazy.
+ *
+ * Opacity, colour and the spinner's rotation are deliberately left alone — the
+ * state still has to be legible, which is the difference between reducing
+ * motion and deleting feedback.
+ */
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="reduce-movement"],
+  [data-motion="reduce-movement"] * {
+    translate: none !important;
+    scale: none !important;
+  }
 }

@@ -49,3 +49,21 @@ export const getAuthRedirectUrl = (nextPath: string): string => {
   const nextParam = encodeURIComponent(nextPath);
   return `${AppRoutes.AUTHENTICATION}?next=${nextParam}`;
 };
+
+/**
+ * Resolve the post-sign-in destination from an untrusted `?next=` parameter.
+ *
+ * `next` arrives from the query string, so anyone can put anything in it. Fed
+ * straight to `router.push`/`<Link href>` it is an open redirect: a link like
+ * `/authentication?next=https://evil.example/session-expired` shows our real
+ * domain and our real sign-in form, then throws the user off-site the instant
+ * their credentials are accepted — the moment they are least suspicious.
+ *
+ * Only a same-origin absolute path survives. `//host` is rejected too: browsers
+ * read a protocol-relative URL as another origin, so it would leak just as badly.
+ */
+export const safeNextPath = (next: string | null | undefined): string => {
+  if (!next) return AppRoutes.CONSOLE;
+  if (!next.startsWith("/") || next.startsWith("//")) return AppRoutes.CONSOLE;
+  return next;
+};

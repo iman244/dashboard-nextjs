@@ -1,9 +1,9 @@
 "use client";
 
+import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertCircle, ArrowRight, Inbox } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
+import { AlertCircle, ArrowLeft, Inbox } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -140,6 +140,7 @@ const Step2PersonPage = (
     "/console/saderat-bank-health-monitoring.Detail"
   );
   const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
+  const tLoading = useTranslations("common.Loading");
   const locale = useLocale();
 
   const { data, isPending, error } = useRetrieve_SBHM_API({
@@ -170,12 +171,7 @@ const Step2PersonPage = (
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center h-[400px]">
-        <div className="flex items-center flex-col gap-3">
-          <Spinner className="h-8 w-8" />
-          <span className="text-muted-foreground">{t("Loading")}</span>
-        </div>
-      </div>
+      <LoadingState label={tLoading("record")} />
     );
   }
 
@@ -259,7 +255,11 @@ const Step2PersonPage = (
             </div>
             <Button asChild variant="outline" size="sm">
               <Link href={SBHM_DETAIL_PATH("step_2", data.id)}>
-                <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+                {/* Base icon is the LTR appearance and rtl:rotate-180 mirrors it,
+                    as with the sign-in button. "Back" points left when reading
+                    left-to-right and right when reading right-to-left; this was
+                    ArrowRight, so it pointed the wrong way in BOTH directions. */}
+                <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
                 {tDetail("backToReport")}
               </Link>
             </Button>

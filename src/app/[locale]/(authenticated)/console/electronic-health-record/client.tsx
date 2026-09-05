@@ -2,9 +2,11 @@
 
 import React from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { useTable } from "@tanstack/react-table";
 import { appTableFeatures } from "@/components/app/table-features";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/app/page-header";
 import { RefreshCw, XIcon } from "lucide-react";
 
 import { useEHRColumns } from "./_columns";
@@ -15,11 +17,11 @@ import { EHRDetailModal } from "@/data/electronic health record/components/EHRDe
 import { formatNumber, formatDate } from "@/lib/utils";
 import { useElectronicHealthRecord } from "./provider";
 import { Badge } from "@/components/ui/badge";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 
 const Client = () => {
   const t = useTranslations("/console/electronic-health-record.EHRTable");
+  const fmt = useLocaleDigits();
   const tPatientTypes = useTranslations("/console/electronic-health-record.PatientTypes");
   const locale = useLocale();
   const {
@@ -69,33 +71,35 @@ const Client = () => {
 
   return (
     <div className="space-y-4 h-full flex flex-col">
-      {/* Header with title and refresh button */}
-      <h2 className="text-2xl font-bold">{t("title")}</h2>
-
-      {/* Filter Section */}
-
-      <div className="flex items-center justify-between">
-        <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
-        <Button
-          onClick={callMutation}
-          variant="outline"
-          size="sm"
-          disabled={ehrByNationalNumber_m.isPending}
-          className="flex items-center gap-2"
-        >
-          <RefreshCw
-            className={`h-4 w-4 ${
-              ehrByNationalNumber_m.isPending ? "animate-spin" : ""
-            }`}
-          />
-          <span>بروزرسانی</span>
-        </Button>
-      </div>
+      <PageHeader
+        title={t("title")}
+        actions={
+          <>
+            <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
+            <Button
+              onClick={callMutation}
+              variant="outline"
+              size="sm"
+              disabled={ehrByNationalNumber_m.isPending}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw
+                className={`h-4 w-4 ${
+                  ehrByNationalNumber_m.isPending ? "animate-spin" : ""
+                }`}
+              />
+              <span>بروزرسانی</span>
+            </Button>
+          </>
+        }
+      />
 
       {(filters.nationalNumber ||
         filters.dateRange?.from ||
         filters.dateRange?.to) && (
-        <div className="flex items-center gap-2">
+        // flex-wrap per ux-guidelines #115: a chip collection must reflow,
+        // not clip, when space or text size changes.
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm font-medium text-foreground">فیلترها</span>
           {filters.nationalNumber && (
             <Badge
@@ -121,7 +125,7 @@ const Client = () => {
               <XIcon className="w-4 h-4" />
               <span>بازه تاریخ:</span>
               <span>
-                {digitsEnToFa(
+                {fmt(
                   `${formatDate(
                     filters.dateRange?.from,
                     locale

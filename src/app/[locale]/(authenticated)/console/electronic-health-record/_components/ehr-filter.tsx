@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -39,7 +40,6 @@ import {
 } from "@/components/ui/form";
 import { Search, Filter, X } from "lucide-react";
 import { useElectronicHealthRecord } from "../provider";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { DateRangePicker } from "@/components/app/date-range-picker";
 import { PatientTypeSelector } from "@/components/app/patient-type-selector";
 
@@ -69,6 +69,7 @@ export type FormValues = z.infer<ReturnType<typeof makeFormSchema>>;
  */
 export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
   const t = useTranslations("/console/electronic-health-record.EHRFilter");
+  const fmt = useLocaleDigits();
   const tDictionary = useTranslations("common.Dictionary");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { setFilters, filters } = useElectronicHealthRecord();
@@ -152,7 +153,7 @@ export const EHRFilter = ({ isLoading = false }: EHRFilterProps) => {
                       <Input
                         {...field}
                         placeholder={t("nationalNumberPlaceholder")}
-                        value={digitsEnToFa(field.value || "")}
+                        value={fmt(field.value || "")}
                       />
                     </FormControl>
                     <FormMessage />

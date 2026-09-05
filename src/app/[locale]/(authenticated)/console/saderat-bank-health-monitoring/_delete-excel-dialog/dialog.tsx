@@ -70,6 +70,7 @@ const DeleteSaderatBankHealthMonitoringExcelDialog = ({
               })
             }
             disabled={isPending}
+            aria-busy={isPending}
           >
             {isPending && <Spinner />}
             {tDictionary("Delete")}

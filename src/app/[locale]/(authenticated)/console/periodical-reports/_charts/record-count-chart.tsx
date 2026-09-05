@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import {
   ChartContainer,
@@ -11,7 +12,6 @@ import {
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { format, newDate } from "date-fns-jalali";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 interface RecordCountChart {
@@ -34,6 +34,7 @@ const chartConfig: ChartConfig = {
 
 export const RecordCountChart: React.FC<RecordCountChart> = ({ data }) => {
   const t = useTranslations("/console/periodical-reports.RecordCountChart");
+  const fmt = useLocaleDigits();
 
   // Process data to group by date and count records
   const chartData: ChartDataPoint[] = React.useMemo(() => {
@@ -85,13 +86,13 @@ export const RecordCountChart: React.FC<RecordCountChart> = ({ data }) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="formattedDate"
-          tickFormatter={(value) => digitsEnToFa(value)}
+          tickFormatter={fmt}
           textAnchor="middle"
           fontSize={CHART_TICK_FONT_SIZE}
           tickMargin={12}
         />
         <YAxis
-          tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+          tickFormatter={fmt}
           fontSize={CHART_TICK_FONT_SIZE}
           tickMargin={24}
         />
@@ -100,11 +101,11 @@ export const RecordCountChart: React.FC<RecordCountChart> = ({ data }) => {
             <ChartTooltipContent
               labelFormatter={(value) => (
                 <span className="font-medium">
-                  {t("date")}: {digitsEnToFa(value as string)}
+                  {t("date")}: {fmt(value as string)}
                 </span>
               )}
               formatter={(value) => [
-                digitsEnToFa(String(value ?? "")),
+                fmt(value),
                 " ",
                 t("recordCount"),
               ]}

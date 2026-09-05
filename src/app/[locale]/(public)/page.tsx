@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { pageMetadata } from "@/lib/metadata";
+import { isRtlLocale } from "@/lib/direction";
 import ButtonsSection from "./_components/ButtonsSection";
-import { DarkModeToggle } from "./_components/DarkModeToggle";
+import { DarkModeToggle } from "@/components/app/theme-toggle";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -11,19 +14,17 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
-}) {
+}): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "/.Metadata" });
-
-  return {
-    title: t("title"),
-  };
+  // Was the route-local "/.Metadata" namespace with a title and no description;
+  // it now reads from the one place every other route reads from.
+  return pageMetadata(locale, "home");
 }
 
 export default async function LandingPage() {
   const t = await getTranslations("/.HomePage");
   const locale = await getLocale();
-  const isRTL = locale === "fa";
+  const isRTL = isRtlLocale(locale);
   const Chevron = isRTL ? ChevronLeft : ChevronRight;
   return (
     <div className="min-h-screen bg-background flex flex-col">
