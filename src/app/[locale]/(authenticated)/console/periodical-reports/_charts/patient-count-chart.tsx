@@ -12,6 +12,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { format, newDate } from "date-fns-jalali";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
+import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 interface PatientCountChart {
   data: ElectronicHealthRecord[];
@@ -27,7 +28,7 @@ type ChartDataPoint = {
 const patientChartConfig: ChartConfig = {
   patientCount: {
     label: "تعداد بیماران",
-    color: "hsl(var(--chart-2))",
+    color: "var(--chart-2)",
   },
 };
 
@@ -88,12 +89,12 @@ export const PatientCountChart: React.FC<PatientCountChart> = ({ data }) => {
           dataKey="formattedDate"
           tickFormatter={(value) => digitsEnToFa(value)}
           textAnchor="middle"
-          fontSize={12}
+          fontSize={CHART_TICK_FONT_SIZE}
           tickMargin={12}
         />
         <YAxis
           tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-          fontSize={12}
+          fontSize={CHART_TICK_FONT_SIZE}
           tickMargin={24}
         />
         <ChartTooltip

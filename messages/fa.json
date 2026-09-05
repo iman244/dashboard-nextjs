@@ -94,7 +94,8 @@
       "First page": "صفحه اول",
       "Previous page": "صفحه قبلی",
       "Next page": "صفحه بعدی",
-      "Last page": "صفحه آخر"
+      "Last page": "صفحه آخر",
+      "Close": "بستن"
     },
     "SBHM_Step": {
       "Label": "مرحله",
@@ -152,39 +153,10 @@
           "label": "حساب کاربری ندارید؟",
           "link": "ثبت نام"
         }
-      }
-    }
-  },
-  "/authentication/register": {
-    "SignUpPage": {
-      "title": "ثبت نام",
-      "description": "ایجاد حساب کاربری",
-      "buttons": {
-        "signUp": "ثبت نام",
-        "signingUp": "در حال ثبت نام..."
       },
-      "form": {
-        "api": {
-          "username": {
-            "error": "نام کاربری در سیستم وجود دارد"
-          }
-        },
-        "username": {
-          "label": "نام کاربری",
-          "placeholder": "نام کاربری خود را وارد کنید"
-        },
-        "email": {
-          "label": "ایمیل (اختیاری)",
-          "placeholder": "ایمیل خود را وارد کنید"
-        },
-        "password": {
-          "label": "رمز عبور",
-          "placeholder": "رمز عبور خود را وارد کنید"
-        },
-        "signIn": {
-          "label": "حساب کاربری دارید؟",
-          "link": "ورود"
-        }
+      "validation": {
+        "usernameRequired": "وارد کردن نام کاربری الزامی است",
+        "passwordRequired": "وارد کردن رمز عبور الزامی است"
       }
     }
   },
@@ -240,7 +212,10 @@
       "selectPatientType": "انتخاب نوع بیمار",
       "search": "جستجو",
       "clear": "پاک کردن",
-      "description": "فیلترهای سوابق پزشکی الکترونیکی"
+      "description": "فیلترهای سوابق پزشکی الکترونیکی",
+      "validation": {
+        "patientTypeRequired": "انتخاب نوع بیمار الزامی است"
+      }
     },
     "PatientTypes": {
       "1": "اطلاعات بستري",
@@ -274,7 +249,19 @@
       "chartPlaceholder": "نمودار",
       "chartComingSoon": "نمودار به زودی",
       "errorMessage": "خطا در بارگذاری داده‌های گزارش",
-      "serviceChartTitle": "تعداد خدمات"
+      "serviceChartTitle": "تعداد خدمات",
+      "validation": {
+        "nationalNumberRequired": "وارد کردن شماره ملی الزامی است",
+        "patientTypeRequired": "انتخاب نوع بیمار الزامی است",
+        "dateRangeInvalid": "تاریخ پایان باید پس از تاریخ شروع باشد"
+      },
+      "viewServiceChart": "مشاهده نمودار خدمت",
+      "columnServiceCount": "تعداد دفعات",
+      "columnNormalResults": "تعداد جواب‌های طبیعی",
+      "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
+      "columnActions": "عملیات",
+      "noLabResult": "بدون نتیجه آزمایشگاهی",
+      "viewRecordDetails": "مشاهده جزئیات"
     }
   },
   "/console/periodical-reports": {
@@ -303,7 +290,10 @@
       "service": "خدمت",
       "count": "تعداد",
       "patientType": "نوع بیمار",
-      "selectPatientType": "انتخاب نوع بیمار"
+      "selectPatientType": "انتخاب نوع بیمار",
+      "validation": {
+        "patientTypeRequired": "انتخاب نوع بیمار الزامی است"
+      }
     },
     "RecordCountChart": {
       "noDataAvailable": "هیچ داده‌ای موجود نیست",
@@ -325,7 +315,18 @@
       "normal": "طبیعی",
       "abnormal": "غیرطبیعی",
       "answerStatus": "وضعیت جواب",
-      "actions": "عملیات"
+      "actions": "عملیات",
+      "viewRecordDetails": "مشاهده جزئیات پرونده",
+      "viewPatientReport": "مشاهده گزارش بیمار"
+    },
+    "ServiceCountTable": {
+      "viewServiceRecords": "مشاهده پرونده‌های خدمت",
+      "columnServiceName": "نام خدمت",
+      "columnServiceCount": "تعداد دفعات",
+      "columnNormalResults": "تعداد جواب‌های طبیعی",
+      "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
+      "columnActions": "عملیات",
+      "noLabResult": "بدون نتیجه آزمایشگاهی"
     }
   },
   "/console/saderat-bank-health-monitoring": {
@@ -337,12 +338,15 @@
         "UploadButton": "بارگذاری",
         "FileLabel": "فایل"
       },
-      "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد"
+      "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد",
+      "ErrorTitle": "بارگذاری انجام نشد",
+      "ErrorMessage": "بارگذاری فایل با خطا مواجه شد. لطفاً دوباره تلاش کنید."
     },
     "DeleteSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "حذف اکسل",
       "DialogDescription": "آیا از حذف {name} اطمینان دارید؟",
-      "SuccessMessage": "حذف اکسل با موفقیت انجام شد"
+      "SuccessMessage": "حذف اکسل با موفقیت انجام شد",
+      "ErrorMessage": "حذف اکسل انجام نشد: {message}"
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "بارگذاری اکسل",
@@ -358,8 +362,15 @@
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
       "NoResults": "نتیجه‌ای یافت نشد",
+      "ViewDataset": "مشاهده مجموعه داده",
+      "ViewPersonRecord": "مشاهده پرونده سلامت",
       "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
       "WrongStepAction": "مشاهده در نمای درست"
+    },
+    "PersonRecord": {
+      "AbnormalFindings": "{count} یافته غیرطبیعی",
+      "ShowAbnormalOnly": "فقط موارد غیرطبیعی",
+      "ViewTestChart": "مشاهده نمودار روند آزمایش"
     },
     "Step2Report": {
       "recordCount": "{count} رکورد",
@@ -432,6 +443,105 @@
         "smoking": "مصرف دخانیات",
         "administrative": "اطلاعات اداری",
         "followUp": "پیگیری"
+      }
+    }
+  },
+  "/patient/sign-in": {
+    "SignInPage": {
+      "title": "ورود بیمار",
+      "description": "برای مشاهده سوابق سلامت خود، کد ملی را وارد کنید.",
+      "form": {
+        "nationalId": {
+          "label": "کد ملی",
+          "placeholder": "کد ملی ۱۰ رقمی"
+        },
+        "password": {
+          "label": "رمز عبور",
+          "placeholder": "رمز عبور خود را وارد کنید"
+        }
+      },
+      "errors": {
+        "nationalIdRequired": "وارد کردن کد ملی الزامی است",
+        "passwordRequired": "وارد کردن رمز عبور الزامی است",
+        "invalidCredentials": "کد ملی یا رمز عبور نادرست است",
+        "requestFailed": "ارتباط با سامانه سوابق برقرار نشد. دوباره تلاش کنید."
+      },
+      "buttons": {
+        "signIn": "ورود",
+        "signingIn": "در حال بررسی…"
+      }
+    }
+  },
+  "/patient/records": {
+    "PatientRecords": {
+      "title": "سوابق سلامت من",
+      "subtitle": "کد ملی: {nationalId}",
+      "refresh": "بروزرسانی",
+      "signOut": "خروج",
+      "filter": {
+        "title": "فیلترها",
+        "description": "بازه تاریخ و نوع سابقه را انتخاب کنید.",
+        "dateRange": "بازه تاریخ",
+        "selectDateRange": "انتخاب بازه تاریخ",
+        "patientType": "نوع سابقه",
+        "selectPatientType": "انتخاب نوع سابقه",
+        "clear": "بازنشانی",
+        "search": "اعمال"
+      },
+      "activeFilters": {
+        "label": "فیلترهای فعال",
+        "dateRange": "بازه تاریخ:",
+        "patientType": "نوع سابقه:"
+      },
+      "columns": {
+        "date": "تاریخ",
+        "service": "نام خدمت",
+        "doctor": "پزشک معالج",
+        "place": "مکان",
+        "patientType": "نوع سابقه",
+        "actions": "عملیات"
+      },
+      "actions": {
+        "openMenu": "باز کردن منو",
+        "viewDetails": "مشاهده جزئیات"
+      },
+      "table": {
+        "error": "بارگذاری سوابق ناموفق بود: {message}",
+        "retry": "تلاش دوباره",
+        "noData": "در این بازه سابقه‌ای یافت نشد"
+      }
+    }
+  },
+  "/authentication/register": {
+    "SignUpPage": {
+      "title": "ثبت نام",
+      "description": "ایجاد حساب کاربری",
+      "buttons": {
+        "signUp": "ثبت نام",
+        "signingUp": "در حال ثبت نام..."
+      },
+      "form": {
+        "api": {
+          "username": {
+            "error": "نام کاربری در سیستم وجود دارد"
+          }
+        },
+        "username": {
+          "label": "نام کاربری",
+          "placeholder": "نام کاربری خود را وارد کنید"
+        },
+        "email": {
+          "label": "ایمیل (اختیاری)",
+          "placeholder": "ایمیل خود را وارد کنید"
+        },
+        "password": {
+          "label": "رمز عبور",
+          "placeholder": "رمز عبور خود را وارد کنید"
+        },
+        "signIn": {
+          "label": "حساب کاربری دارید؟",
+          "link": "ورود"
+        }
       }
     }
   }

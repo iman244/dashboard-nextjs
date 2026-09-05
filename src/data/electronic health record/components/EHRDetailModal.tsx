@@ -45,7 +45,13 @@ interface EHRDetailModalProps {
         };
       }
     >;
-    mobileNumberByNationalNumber_m: UseMutationResult<
+    /**
+     * Optional: a page that must not expose the patient's phone number (the
+     * patient portal) simply omits it, and the lookup disappears from the
+     * dialog. Absence is the switch — there is no separate flag to keep in
+     * sync, and such a page never builds the mutation at all.
+     */
+    mobileNumberByNationalNumber_m?: UseMutationResult<
       MobileNumberByNationalNumberApiResponse,
       Error,
       {
@@ -82,6 +88,7 @@ const CopyButton = ({ value, className }: CopyButtonProps) => {
       onClick={handleCopy}
       className={`h-6 w-6 p-0 ${className}`}
       title={copied ? t("copied") : t("copy")}
+      aria-label={copied ? t("copied") : t("copy")}
     >
       {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
     </Button>
@@ -96,6 +103,7 @@ export const EHRDetailModal = ({
 }: EHRDetailModalProps) => {
   const locale = useLocale();
   const t = useTranslations("common.EHRDetailModal");
+  const tDictionary = useTranslations("common.Dictionary");
   const {
     mobileLaboratoryByNationalNumber_m,
     mobileXRayByNationalNumber_m,
@@ -163,6 +171,7 @@ export const EHRDetailModal = ({
 
   const handleGetMobileNumber = React.useCallback(
     (record: ElectronicHealthRecord) => {
+      if (!mobileNumberByNationalNumber_m) return;
       mobileNumberByNationalNumber_m.mutate(
         {
           params: {
@@ -228,12 +237,13 @@ export const EHRDetailModal = ({
       >
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-right">{t("title")}</DialogTitle>
+            <DialogTitle className="text-start">{t("title")}</DialogTitle>
             <DialogClose asChild>
               <Button
                 variant={"ghost"}
                 size="icon"
-                className="absolute top-6 left-4 size-2"
+                className="absolute top-6 start-4 size-2"
+                aria-label={tDictionary("Close")}
               >
                 <XIcon className="h-2 w-2" />
               </Button>
@@ -245,7 +255,7 @@ export const EHRDetailModal = ({
           {/* Patient Info Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b pb-2">
-              <h3 className="text-lg font-semibold text-right">
+              <h3 className="text-lg font-semibold text-start">
                 {t("sections.patientInfo")}
               </h3>
             </div>
@@ -263,35 +273,40 @@ export const EHRDetailModal = ({
                   </div>
                 </div>
               ))}
-              <div key={"mobileNumber"} className="space-y-1 flex flex-col gap-1">
-                <label className="text-sm font-medium text-muted-foreground">
-                  {t("fields.mobileNumber")}
-                </label>
-                {mobileNumber ? (
-                  <div className="flex items-center gap-1">
-                    <div className="text-sm flex-1">
-                      {formatCellValue(mobileNumber, locale)}
+              {mobileNumberByNationalNumber_m && (
+                <div
+                  key={"mobileNumber"}
+                  className="space-y-1 flex flex-col gap-1"
+                >
+                  <label className="text-sm font-medium text-muted-foreground">
+                    {t("fields.mobileNumber")}
+                  </label>
+                  {mobileNumber ? (
+                    <div className="flex items-center gap-1">
+                      <div className="text-sm flex-1">
+                        {formatCellValue(mobileNumber, locale)}
+                      </div>
+                      <CopyButton value={String(mobileNumber)} />
                     </div>
-                    <CopyButton value={String(mobileNumber)} />
-                  </div>
-                ) : (
-                  <Button
-                    variant={"ghost"}
-                    size="sm"
-                    onClick={() => handleGetMobileNumber(record)}
-                    disabled={mobileNumberByNationalNumber_m.isPending}
-                    className="w-fit"
-                  >
-                    {t("getMobileNumber")}
-                  </Button>
-                )}
-              </div>
+                  ) : (
+                    <Button
+                      variant={"ghost"}
+                      size="sm"
+                      onClick={() => handleGetMobileNumber(record)}
+                      disabled={mobileNumberByNationalNumber_m.isPending}
+                      className="w-fit"
+                    >
+                      {t("getMobileNumber")}
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Medical Info Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-right border-b pb-2">
+            <h3 className="text-lg font-semibold text-start border-b pb-2">
               {t("sections.medicalInfo")}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -314,7 +329,7 @@ export const EHRDetailModal = ({
           {/* Answer & Results Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b pb-2">
-              <h3 className="text-lg font-semibold text-right">
+              <h3 className="text-lg font-semibold text-start">
                 {t("sections.answer")}
               </h3>
               <div className="flex gap-2">
@@ -331,7 +346,7 @@ export const EHRDetailModal = ({
                   disabled={mobileLaboratoryByNationalNumber_m.isPending}
                   className="h-8 px-3"
                 >
-                  <DownloadIcon className="h-3 w-3 ml-1" />
+                  <DownloadIcon className="h-3 w-3 ms-1" />
                   {t("downloadResult")}
                 </Button>
                 <Button
@@ -347,7 +362,7 @@ export const EHRDetailModal = ({
                   disabled={mobileXRayByNationalNumber_m.isPending}
                   className="h-8 px-3"
                 >
-                  <DownloadIcon className="h-3 w-3 ml-1" />
+                  <DownloadIcon className="h-3 w-3 ms-1" />
                   {t("downloadXRay")}
                 </Button>
               </div>

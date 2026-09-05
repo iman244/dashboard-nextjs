@@ -69,5 +69,5 @@ const MyComponent = () => {
 
 - This component does not handle loading or error states - those should be managed by the parent component
 - Sorting is handled automatically by TanStack Table
-- The component uses RTL-friendly styling with `space-x-reverse` classes
+- The component uses logical CSS properties (gap, ms/me, start/end) so it mirrors automatically under dir="rtl"
 - Sort icons are automatically displayed for sortable columns

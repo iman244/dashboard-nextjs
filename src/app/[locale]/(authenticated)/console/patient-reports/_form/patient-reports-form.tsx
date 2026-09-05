@@ -32,21 +32,24 @@ import { DateRangePicker } from "@/components/app/date-range-picker";
 import { PatientTypeSelector } from "@/components/app/patient-type-selector";
 
 // Form schema using Zod
-const formSchema = z.object({
-  nationalNumber: z.string().min(1, "National number is required"),
-  patientType: z.string().min(1, "Patient type is required"),
-  dateRange: z
-    .object({
-      from: z.date(),
-      to: z.date(),
-    })
-    .refine((data) => data.from <= data.to, {
-      message: "End date must be after start date",
-      path: ["to"],
-    }),
-});
+const makeFormSchema = (t: (key: string) => string) =>
+  z.object({
+    nationalNumber: z.string().min(1, t("validation.nationalNumberRequired")),
+    patientType: z.string().min(1, t("validation.patientTypeRequired")),
+    dateRange: z
+      .object({
+        from: z.date(),
+        to: z.date(),
+      })
+      .refine((data) => data.from <= data.to, {
+        message: t("validation.dateRangeInvalid"),
+        path: ["to"],
+      }),
+  });
 
-export type PatientReportsFormValues = z.infer<typeof formSchema>;
+export type PatientReportsFormValues = z.infer<
+  ReturnType<typeof makeFormSchema>
+>;
 
 /**
  * Patient Reports Form Component
@@ -60,6 +63,7 @@ export const PatientReportsForm = (props: {
   const t = useTranslations("/console/patient-reports.PatientReports");
   const { setFilters, ehrByNationalNumber_m } = usePatientReports();
   const locale = useLocale();
+  const formSchema = React.useMemo(() => makeFormSchema(t), [t]);
 
   const form = useForm<PatientReportsFormValues>({
     resolver: zodResolver(formSchema),

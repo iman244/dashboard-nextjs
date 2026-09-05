@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
-// import { Link } from "@/i18n/navigation"; // only used by the disabled signup link below
 import { useLocale, useTranslations } from "next-intl";
 import {
   Card,
@@ -30,15 +29,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-// import { cn } from "@/lib/utils"; // only used by the disabled signup link below
 
-// Define the form schema
-const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
-});
+// Define the form schema. Built from `t` rather than at module scope so the
+// validation messages reach the user in their own language; these render through
+// <FormMessage/> and were previously hardcoded English on a Persian-first screen.
+const makeLoginSchema = (t: (key: string) => string) =>
+  z.object({
+    username: z.string().min(1, t("validation.usernameRequired")),
+    password: z.string().min(1, t("validation.passwordRequired")),
+  });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<ReturnType<typeof makeLoginSchema>>;
 
 export function Client() {
   const [apiError, setApiError] = useState<JwtCreateApiError | null>(null);
@@ -48,6 +49,8 @@ export function Client() {
   const dir = locale === "fa" ? "rtl" : "ltr";
 
   const { onLogin } = useOnLogin();
+
+  const loginSchema = useMemo(() => makeLoginSchema(t), [t]);
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -141,21 +144,6 @@ export function Client() {
             </form>
           </Form>
 
-          {/* Signup is disabled: this is the only UI entry point to
-              /authentication/register, and that route now returns 404.
-              Uncomment both to re-enable signup. */}
-          {/* <div className="text-center! text-sm">
-            <span className="text-muted-foreground">
-              {t("form.register.label")}
-            </span>
-            <Link
-              href="/authentication/register"
-              className={cn("text-primary hover:underline font-medium", locale === "fa" ? "mr-2" : "ml-2")}
-
-            >
-              {t("form.register.link")}
-            </Link>
-          </div> */}
         </CardContent>
       </Card>
     </main>

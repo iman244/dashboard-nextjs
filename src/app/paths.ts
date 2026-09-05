@@ -2,6 +2,8 @@ export enum AppRoutes {
   AUTHENTICATION = "/authentication",
   CONSOLE = "/console",
   LOADING = "/loading",
+  PATIENT_SIGN_IN = "/patient/sign-in",
+  PATIENT_RECORDS = "/patient/records",
 }
 
 // Routes that require authentication

@@ -94,7 +94,8 @@
       "First page": "First page",
       "Previous page": "Previous page",
       "Next page": "Next page",
-      "Last page": "Last page"
+      "Last page": "Last page",
+      "Close": "Close"
     },
     "SBHM_Step": {
       "Label": "Step",
@@ -152,39 +153,10 @@
           "label": "Don't have an account?",
           "link": "Sign up"
         }
-      }
-    }
-  },
-  "/authentication/register": {
-    "SignUpPage": {
-      "title": "Sign Up",
-      "description": "Create a new account",
-      "buttons": {
-        "signUp": "Sign Up",
-        "signingUp": "Signing up..."
       },
-      "form": {
-        "api": {
-          "username": {
-            "error": "Username already exists."
-          }
-        },
-        "username": {
-          "label": "Username",
-          "placeholder": "Enter your username"
-        },
-        "email": {
-          "label": "Email (Optional)",
-          "placeholder": "Enter your email"
-        },
-        "password": {
-          "label": "Password",
-          "placeholder": "Enter your password"
-        },
-        "signIn": {
-          "label": "Already have an account?",
-          "link": "Sign in"
-        }
+      "validation": {
+        "usernameRequired": "Username is required",
+        "passwordRequired": "Password is required"
       }
     }
   },
@@ -240,7 +212,10 @@
       "selectPatientType": "Select patient type",
       "search": "Search",
       "clear": "Clear",
-      "description": "Filter electronic health records by various criteria"
+      "description": "Filter electronic health records by various criteria",
+      "validation": {
+        "patientTypeRequired": "Patient type is required"
+      }
     },
     "PatientTypes": {
       "1": "Inpatient Information",
@@ -274,7 +249,19 @@
       "chartPlaceholder": "Chart",
       "chartComingSoon": "Chart coming soon",
       "errorMessage": "Error loading report data",
-      "serviceChartTitle": "Service Count"
+      "serviceChartTitle": "Service Count",
+      "validation": {
+        "nationalNumberRequired": "National number is required",
+        "patientTypeRequired": "Patient type is required",
+        "dateRangeInvalid": "End date must be after start date"
+      },
+      "viewServiceChart": "View service chart",
+      "columnServiceCount": "Times recorded",
+      "columnNormalResults": "Normal results",
+      "columnAbnormalResults": "Abnormal results",
+      "columnActions": "Actions",
+      "noLabResult": "No lab result",
+      "viewRecordDetails": "View details"
     }
   },
   "/console/periodical-reports": {
@@ -303,7 +290,10 @@
       "service": "Service",
       "count": "Count",
       "patientType": "Patient Type",
-      "selectPatientType": "Select Patient Type"
+      "selectPatientType": "Select Patient Type",
+      "validation": {
+        "patientTypeRequired": "Patient type is required"
+      }
     },
     "RecordCountChart": {
       "noDataAvailable": "No data available",
@@ -325,7 +315,18 @@
       "answerStatus": "Answer Status",
       "normal": "Normal",
       "abnormal": "Abnormal",
-      "actions": "Actions"
+      "actions": "Actions",
+      "viewRecordDetails": "View record details",
+      "viewPatientReport": "View patient report"
+    },
+    "ServiceCountTable": {
+      "viewServiceRecords": "View service records",
+      "columnServiceName": "Service Name",
+      "columnServiceCount": "Times recorded",
+      "columnNormalResults": "Normal results",
+      "columnAbnormalResults": "Abnormal results",
+      "columnActions": "Actions",
+      "noLabResult": "No lab result"
     }
   },
   "/console/saderat-bank-health-monitoring": {
@@ -337,12 +338,15 @@
         "UploadButton": "Upload",
         "FileLabel": "File"
       },
-      "SuccessMessage": "Excel uploaded successfully"
+      "SuccessMessage": "Excel uploaded successfully",
+      "ErrorTitle": "Upload failed",
+      "ErrorMessage": "The file could not be uploaded. Please try again."
     },
     "DeleteSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "Delete Excel",
       "DialogDescription": "Are you sure you want to delete this excel?",
-      "SuccessMessage": "Excel deleted successfully"
+      "SuccessMessage": "Excel deleted successfully",
+      "ErrorMessage": "Could not delete the Excel file: {message}"
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "Upload Excel",
@@ -358,8 +362,15 @@
       "ClearSearch": "Clear",
       "NoSearchResults": "No results found",
       "NoResults": "No results found",
+      "ViewDataset": "View dataset",
+      "ViewPersonRecord": "View health record",
       "WrongStepTitle": "This record belongs to a different step.",
       "WrongStepAction": "Open it in the right view"
+    },
+    "PersonRecord": {
+      "AbnormalFindings": "{count} abnormal findings",
+      "ShowAbnormalOnly": "Abnormal only",
+      "ViewTestChart": "View test trend chart"
     },
     "Step2Report": {
       "recordCount": "{count} records",
@@ -432,6 +443,105 @@
         "smoking": "Tobacco Use",
         "administrative": "Administrative",
         "followUp": "Follow-up"
+      }
+    }
+  },
+  "/patient/sign-in": {
+    "SignInPage": {
+      "title": "Patient sign in",
+      "description": "Enter your national ID to see your own health records.",
+      "form": {
+        "nationalId": {
+          "label": "National ID",
+          "placeholder": "10-digit national ID"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        }
+      },
+      "errors": {
+        "nationalIdRequired": "National ID is required",
+        "passwordRequired": "Password is required",
+        "invalidCredentials": "Incorrect national ID or password",
+        "requestFailed": "Could not reach the records service. Please try again."
+      },
+      "buttons": {
+        "signIn": "Sign in",
+        "signingIn": "Checking…"
+      }
+    }
+  },
+  "/patient/records": {
+    "PatientRecords": {
+      "title": "My health records",
+      "subtitle": "National ID: {nationalId}",
+      "refresh": "Refresh",
+      "signOut": "Sign out",
+      "filter": {
+        "title": "Filters",
+        "description": "Choose a date range and a record type.",
+        "dateRange": "Date range",
+        "selectDateRange": "Select a date range",
+        "patientType": "Record type",
+        "selectPatientType": "Select a record type",
+        "clear": "Reset",
+        "search": "Apply"
+      },
+      "activeFilters": {
+        "label": "Active filters",
+        "dateRange": "Date range:",
+        "patientType": "Record type:"
+      },
+      "columns": {
+        "date": "Date",
+        "service": "Service",
+        "doctor": "Doctor",
+        "place": "Location",
+        "patientType": "Record type",
+        "actions": "Actions"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "viewDetails": "View details"
+      },
+      "table": {
+        "error": "Could not load your records: {message}",
+        "retry": "Try again",
+        "noData": "No records in this date range"
+      }
+    }
+  },
+  "/authentication/register": {
+    "SignUpPage": {
+      "title": "Sign Up",
+      "description": "Create a new account",
+      "buttons": {
+        "signUp": "Sign Up",
+        "signingUp": "Signing up..."
+      },
+      "form": {
+        "api": {
+          "username": {
+            "error": "Username already exists."
+          }
+        },
+        "username": {
+          "label": "Username",
+          "placeholder": "Enter your username"
+        },
+        "email": {
+          "label": "Email (Optional)",
+          "placeholder": "Enter your email"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        },
+        "signIn": {
+          "label": "Already have an account?",
+          "link": "Sign in"
+        }
       }
     }
   }

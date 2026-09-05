@@ -82,7 +82,7 @@ export function DateRangePicker({
               className
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="me-2 h-4 w-4" />
             {value?.from ? (
               value.to ? (
                 <>
@@ -90,7 +90,7 @@ export function DateRangePicker({
                     {digitsEnToFa(formatDate(value.from, locale))}
                   </span>
                   {" - "}
-                  <span dir="rtl">
+                  <span>
                     {digitsEnToFa(formatDate(value.to, locale))}
                   </span>
                 </>
@@ -124,7 +124,7 @@ export function DateRangePicker({
             key={index}
             variant="ghost"
             size="sm"
-            className="text-xs justify-start text-right"
+            className="text-xs justify-start text-start"
             onClick={() => onChange(button.range)}
             type="button"
           >

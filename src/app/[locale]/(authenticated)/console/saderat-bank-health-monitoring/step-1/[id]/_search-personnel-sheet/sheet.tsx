@@ -86,6 +86,7 @@ export function SearchPersonnelSheet({
             <Link
               href={`/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${row.original["personel.کد ملی"]}`}
               onClick={() => onOpenChange(false)}
+              aria-label={t("ViewPersonRecord")}
             >
               <FileSearchCorner className="h-4 w-4" />
             </Link>
@@ -124,23 +125,22 @@ export function SearchPersonnelSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="h-[80vh] flex flex-col p-4">
         <SheetHeader>
-          <SheetTitle>{t("SearchPersonnel") || "جستجوی پرسنل"}</SheetTitle>
+          <SheetTitle>{t("SearchPersonnel")}</SheetTitle>
           <SheetDescription>
-            {filterDescription || t("SearchPersonnelDescription") ||
-              "جستجو و مشاهده جزئیات پرسنل"}
+            {filterDescription || t("SearchPersonnelDescription")}
           </SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 overflow-auto space-y-4 mt-4">
           {/* Search Input */}
-          <div className="flex items-center gap-2 space-x-reverse">
+          <div className="flex items-center gap-2">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={t("SearchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pr-10"
+                className="pe-10"
               />
             </div>
             {searchTerm && (
@@ -178,7 +178,7 @@ export function SearchPersonnelSheet({
                       colSpan={table.getAllColumns().length}
                       className="text-center py-8 text-muted-foreground"
                     >
-                      {t("NoResults") || "نتیجه‌ای یافت نشد"}
+                      {t("NoResults")}
                     </TableCell>
                   </TableRow>
                 ) : (

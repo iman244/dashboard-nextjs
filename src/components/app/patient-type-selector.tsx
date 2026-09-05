@@ -72,9 +72,15 @@ export function PatientTypeSelector<
       render={({ field }) => (
         <FormItem className={className}>
           {label && <FormLabel>{label}</FormLabel>}
+          {/*
+            Controlled on purpose: `defaultValue` would leave the trigger
+            showing a stale option after the form is reset (e.g. the filter
+            dialog's "Clear"). `?? ""` keeps the Select controlled while still
+            letting Radix render the placeholder for an empty value.
+          */}
           <Select
             onValueChange={field.onChange}
-            defaultValue={field.value}
+            value={field.value ?? ""}
           >
             <FormControl>
               <SelectTrigger className="w-full">

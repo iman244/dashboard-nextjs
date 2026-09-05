@@ -20,6 +20,7 @@ import { Spinner } from "@/components/ui/spinner";
 import DeleteSaderatBankHealthMonitoringExcelDialog from "./_delete-excel-dialog/dialog";
 import Link from "next/link";
 import { useList_SBHM_API } from "@/data/saderat-bank-health-monitoring/api";
+import { useIsStaff } from "@/data/user/fetches/me";
 import {
   SBHM_ListSerializer,
   SBHM_TYPE_LABEL_KEY,
@@ -35,6 +36,7 @@ const SaderatBankHealthMonitoringPage = (
     SBHM_ListSerializer[number] | null
   >(null);
   const { data, isPending, error } = useList_SBHM_API();
+  const isStaff = useIsStaff();
   const tDictionary = useTranslations("common.Dictionary");
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
   const tStep = useTranslations("common.SBHM_Step");
@@ -64,16 +66,20 @@ const SaderatBankHealthMonitoringPage = (
             <Button variant={"ghost"} asChild>
               <Link
                 href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
+                aria-label={t("ViewDataset")}
               >
                 <Table2 />
               </Link>
             </Button>
-            <Button
-              variant={"ghost"}
-              onClick={() => setDeleteRow(row.original)}
-            >
-              <Trash />
-            </Button>
+            {isStaff && (
+              <Button
+                variant={"ghost"}
+                onClick={() => setDeleteRow(row.original)}
+                aria-label={tDictionary("Delete")}
+              >
+                <Trash />
+              </Button>
+            )}
           </div>
         ),
       }),
@@ -104,28 +110,41 @@ const SaderatBankHealthMonitoringPage = (
     );
   }
 
-  if (data === undefined) {
+  // `isPending` above already covers `data === undefined`, so this branch has
+  // to test the genuinely-empty list or it can never render.
+  if (!data || data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-3">
         <Inbox className="h-12 w-12 text-muted-foreground" />
         <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
         <p className="text-sm text-muted-foreground">
-          {t("EmptyStateDescription")}
+          {/* only staff can act on the empty state, so a viewer is told the
+              list is empty rather than being asked to upload */}
+          {isStaff ? t("EmptyStateDescription") : t("EmptyStateDescriptionDetail")}
         </p>
+        {isStaff && (
+          <UploadSaderatBankHealthMonitoringExcelDialog
+            trigger={<Button>{t("UploadExcel")}</Button>}
+          />
+        )}
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <UploadSaderatBankHealthMonitoringExcelDialog
-        trigger={<Button>{t("UploadExcel")}</Button>}
-      />
-      <DeleteSaderatBankHealthMonitoringExcelDialog
-        data={deleteRow || undefined}
-        open={!!deleteRow}
-        onOpenChange={(open) => setDeleteRow(open ? deleteRow : null)}
-      />
+      {isStaff && (
+        <>
+          <UploadSaderatBankHealthMonitoringExcelDialog
+            trigger={<Button>{t("UploadExcel")}</Button>}
+          />
+          <DeleteSaderatBankHealthMonitoringExcelDialog
+            data={deleteRow || undefined}
+            open={!!deleteRow}
+            onOpenChange={(open) => setDeleteRow(open ? deleteRow : null)}
+          />
+        </>
+      )}
       <div className="rounded-md border overflow-hidden">
         <Table>
           <TableHeader>

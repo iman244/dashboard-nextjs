@@ -12,7 +12,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ReactTable } from "@tanstack/react-table";
 import { type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
@@ -34,10 +34,18 @@ export const EHRTablePagination = ({
   showPageSizeSelector = true,
 }: EHRTablePaginationProps) => {
   const t = useTranslations("/console/electronic-health-record.EHRTable");
+  const locale = useLocale();
+  // Pagination arrows must follow reading direction: "first page" points
+  // toward the start of the text flow, which is right in RTL and left in LTR.
+  const isRtl = locale === "fa";
+  const FirstIcon = isRtl ? ChevronsRight : ChevronsLeft;
+  const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
+  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
+  const LastIcon = isRtl ? ChevronsLeft : ChevronsRight;
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center space-x-2 space-x-reverse">
+      <div className="flex items-center gap-2">
         <p className="text-sm text-muted-foreground">
           {t("pagination.showing", {
             start: formatNumber(
@@ -57,9 +65,9 @@ export const EHRTablePagination = ({
         </p>
       </div>
 
-      <div className="flex items-center space-x-4 space-x-reverse">
+      <div className="flex items-center gap-4">
         {showPageSizeSelector && (
-          <div className="flex items-center space-x-2 space-x-reverse">
+          <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{t("pagination.rowsPerPage")}</p>
             <Select
               value={`${table.state.pagination.pageSize}`}
@@ -89,7 +97,7 @@ export const EHRTablePagination = ({
         )}
 
         {/* Custom RTL Pagination */}
-        <div className="flex items-center space-x-1 space-x-reverse">
+        <div className="flex items-center gap-1">
           {/* First Page Button */}
           <Button
             variant="outline"
@@ -99,7 +107,7 @@ export const EHRTablePagination = ({
             className="h-8 w-8 p-0"
           >
             <span className="sr-only">{t("pagination.firstPage")}</span>
-            <ChevronsRight className="h-4 w-4" />
+            <FirstIcon className="h-4 w-4" />
           </Button>
 
           {/* Previous Page Button */}
@@ -111,7 +119,7 @@ export const EHRTablePagination = ({
             className="h-8 w-8 p-0"
           >
             <span className="sr-only">{t("pagination.previousPage")}</span>
-            <ChevronRight className="h-4 w-4" />
+            <PrevIcon className="h-4 w-4" />
           </Button>
 
           {/* Page Numbers */}
@@ -165,7 +173,7 @@ export const EHRTablePagination = ({
             className="h-8 w-8 p-0"
           >
             <span className="sr-only">{t("pagination.nextPage")}</span>
-            <ChevronLeft className="h-4 w-4" />
+            <NextIcon className="h-4 w-4" />
           </Button>
 
           {/* Last Page Button */}
@@ -177,11 +185,11 @@ export const EHRTablePagination = ({
             className="h-8 w-8 p-0"
           >
             <span className="sr-only">{t("pagination.lastPage")}</span>
-            <ChevronsLeft className="h-4 w-4" />
+            <LastIcon className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="flex items-center space-x-2 space-x-reverse">
+        <div className="flex items-center gap-2">
           <p className="text-sm font-medium">
             {t("pagination.page", {
               current: formatNumber(table.state.pagination.pageIndex + 1),

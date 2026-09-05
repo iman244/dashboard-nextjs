@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ReactTable, ColumnDef, RowData } from "@tanstack/react-table";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
@@ -20,9 +21,11 @@ interface DataTableProps<TData extends RowData, TValue> {
 export const DataTable = <TData extends RowData, TValue = unknown>({ 
   table, 
   columns, 
-  noDataMessage = "هیچ داده‌ای موجود نیست",
+  noDataMessage,
   className = ""
 }: DataTableProps<TData, TValue>) => {
+  const t = useTranslations("common.Dictionary");
+  const emptyMessage = noDataMessage ?? t("NoResults");
 
   return (
     <div className={`rounded-md border overflow-hidden ${className}`}>
@@ -36,12 +39,12 @@ export const DataTable = <TData extends RowData, TValue = unknown>({
                   className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
                   onClick={header.column.getToggleSortingHandler()}
                 >
-                  <div className="flex items-center gap-2 space-x-reverse">
+                  <div className="flex items-center gap-2">
                     {header.isPlaceholder
                       ? null
                       : <table.FlexRender header={header} />}
                     {header.column.getCanSort() && (
-                      <span className="ml-2 text-muted-foreground">
+                      <span className="ms-2 text-muted-foreground">
                         {{
                           asc: <ArrowUp className="h-3 w-3" />,
                           desc: <ArrowDown className="h-3 w-3" />,
@@ -73,7 +76,7 @@ export const DataTable = <TData extends RowData, TValue = unknown>({
                 colSpan={columns.length}
                 className="h-24 text-center"
               >
-                {noDataMessage}
+                {emptyMessage}
               </TableCell>
             </TableRow>
           )}
