@@ -572,5 +572,71 @@
         }
       }
     }
+  },
+  "metadata": {
+    "app": {
+      "name": "Infirmary Dashboard",
+      "description": "Electronic health records, periodical reporting and workplace health monitoring in one place."
+    },
+    "home": {
+      "title": "Welcome",
+      "description": "Reach health records, reports and health monitoring."
+    },
+    "authentication": {
+      "title": "Sign In",
+      "description": "Sign in to your account to reach the dashboard."
+    },
+    "console": {
+      "title": "Dashboard",
+      "description": "Choose a section to get started."
+    },
+    "electronicHealthRecord": {
+      "title": "Electronic Health Record",
+      "description": "Search and browse patient health records."
+    },
+    "periodicalReports": {
+      "title": "Periodical Reports",
+      "description": "Generate comprehensive reports for time periods."
+    },
+    "patientReports": {
+      "title": "Patient Reports",
+      "description": "Generate comprehensive reports for patients."
+    },
+    "saderatBankHealthMonitoring": {
+      "title": "Saderat Bank Health Monitoring",
+      "description": "Uploaded datasets and their step reports."
+    },
+    "sbhmStep1": {
+      "title": "Step 1 Report",
+      "description": "Statistical report for a step 1 monitoring dataset."
+    },
+    "sbhmStep2": {
+      "title": "Step 2 Report",
+      "description": "Statistical report for a step 2 monitoring dataset."
+    },
+    "sbhmPerson": {
+      "title": "Personnel Health Record",
+      "description": "One person’s findings within a monitoring dataset."
+    },
+    "formSabtPayesh": {
+      "title": "Form Sabt Payesh",
+      "description": "Register monitoring data with the online form."
+    },
+    "patientSignIn": {
+      "title": "Patient Sign In",
+      "description": "Sign in with your national ID to see your health records."
+    },
+    "patientRecords": {
+      "title": "My Health Records",
+      "description": "Your own electronic health records."
+    },
+    "loading": {
+      "title": "Loading",
+      "description": "Loading."
+    },
+    "redirecting": {
+      "title": "Redirecting",
+      "description": "Taking you to the right page."
+    }
   }
 }

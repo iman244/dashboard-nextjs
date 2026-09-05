@@ -253,6 +253,29 @@ VIS-09, 13, 14, 17 are typechecked and built but visually unverified.
   on axis ticks and tooltips, so English renders Persian digits. Our own charts do the same —
   it is a codebase-wide pattern, not a regression, and it belongs to UX-01 (English locale),
   which is a deferred track.
+- 2026-09-05 — **Page metadata, localised.** Every title and description in the app was a
+  hardcoded English literal, so a Persian tab read "Console" and the meta description just
+  repeated the product name — and **12 of 18 routes had no metadata at all**. All 17
+  reachable routes now resolve through `src/lib/metadata.ts` and the `metadata` namespace,
+  in both locales, following next-intl's documented `generateMetadata` +
+  `getTranslations({locale, …})` form (the locale is forwarded, which is what keeps the
+  metadata statically renderable).
+  - Nine pages are client components and cannot export metadata, so they take it from a
+    sibling server layout — six of which are new and exist only for that.
+  - The root layout owns the `%s | <product>` template. **Two attempts to get the
+    inheritance right:** a layout's plain-string title becomes the new fallback for its
+    children *without* carrying a template, so step-1, step-2 and the person pages silently
+    lost the suffix; re-declaring the template with the suffix also baked into `default`
+    then rendered it twice, because the parent template still applies to `default`. Hence
+    two helpers: `pageMetadata` for leaves and `sectionMetadata` for a layout that has both
+    a title and titled descendants.
+  - `robots: { index: false, follow: false }` is declared once on the console and patient
+    layouts and inherited by everything under them, plus on the two redirect interstitials,
+    which were crawlable pages telling anonymous visitors they were signed in.
+  - `scripts/check-metadata.mjs` prints the resolved title/description/robots for every
+    route in both locales. It needs the dev server, so it is a manual check, not a gate.
+- 2026-09-05 — `defaultLocale` was **already** `fa` in `src/i18n/routing.ts`; verified `/`
+  and `/console` both 307 to the `/fa` equivalents. Nothing to change.
 - 2026-09-05 — **`locale === "fa"` is now 20 occurrences across 14 files**, up from 16 —
   main's new work added three more. The `useDirection()` hook is overdue; still not done.
 - 2026-09-05 — **Not** done, deliberately, and still open: the two interstitial route files

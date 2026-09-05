@@ -1,11 +1,16 @@
 import { Metadata } from "next";
 import React from "react";
 import { Client } from "./client";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Patient sign in",
-  description: "Sign in with your national ID to see your health records",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "patientSignIn");
+}
 
 const Page = () => {
   return <Client />;

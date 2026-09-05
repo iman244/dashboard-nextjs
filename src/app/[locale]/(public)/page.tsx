@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { pageMetadata } from "@/lib/metadata";
 import { isRtlLocale } from "@/lib/direction";
 import ButtonsSection from "./_components/ButtonsSection";
 import { DarkModeToggle } from "@/components/app/theme-toggle";
@@ -12,13 +14,11 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
-}) {
+}): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "/.Metadata" });
-
-  return {
-    title: t("title"),
-  };
+  // Was the route-local "/.Metadata" namespace with a title and no description;
+  // it now reads from the one place every other route reads from.
+  return pageMetadata(locale, "home");
 }
 
 export default async function LandingPage() {
