@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { useTable } from "@tanstack/react-table";
 import { appTableFeatures } from "@/components/app/table-features";
 import { Button } from "@/components/ui/button";
@@ -16,11 +17,11 @@ import { EHRDetailModal } from "@/data/electronic health record/components/EHRDe
 import { formatNumber, formatDate } from "@/lib/utils";
 import { useElectronicHealthRecord } from "./provider";
 import { Badge } from "@/components/ui/badge";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 
 const Client = () => {
   const t = useTranslations("/console/electronic-health-record.EHRTable");
+  const fmt = useLocaleDigits();
   const tPatientTypes = useTranslations("/console/electronic-health-record.PatientTypes");
   const locale = useLocale();
   const {
@@ -124,7 +125,7 @@ const Client = () => {
               <XIcon className="w-4 h-4" />
               <span>بازه تاریخ:</span>
               <span>
-                {digitsEnToFa(
+                {fmt(
                   `${formatDate(
                     filters.dateRange?.from,
                     locale

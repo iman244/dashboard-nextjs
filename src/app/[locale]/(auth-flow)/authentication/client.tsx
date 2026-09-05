@@ -21,7 +21,8 @@ import { Input } from "@/components/ui/input";
 import { AuthShell, AuthSubmitButton } from "@/components/app/auth-shell";
 import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useDirection } from "@/lib/use-direction";
 
 // Define the form schema. Built from `t` rather than at module scope so the
 // validation messages reach the user in their own language; these render through
@@ -37,9 +38,7 @@ type LoginFormData = z.infer<ReturnType<typeof makeLoginSchema>>;
 export function Client() {
   const [apiError, setApiError] = useState<JwtCreateApiError | null>(null);
   const t = useTranslations("/authentication.SignInPage");
-
-  const locale = useLocale();
-  const dir = locale === "fa" ? "rtl" : "ltr";
+  const dir = useDirection();
 
   const { onLogin } = useOnLogin();
 

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { usePatientReports } from "./provider";
 import { PatientReportsForm } from "./_form/patient-reports-form";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,7 +31,6 @@ import {
   ChartConfig,
 } from "@/components/ui/chart";
 import { Line, XAxis, YAxis, CartesianGrid, ReferenceArea, ComposedChart } from "recharts";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { format, newDate } from "date-fns-jalali";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 import { PageHeader } from "@/components/app/page-header";
@@ -106,6 +106,7 @@ export const ServiceDetailsTable: React.FC<{
   selectedService: string;
 }> = ({ data, selectedService }) => {
   const locale = useLocale();
+  const fmt = useLocaleDigits();
   const tDictionary = useTranslations("common.dictionary");
 
   const detailsColumnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
@@ -209,13 +210,13 @@ export const ServiceDetailsTable: React.FC<{
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="formattedDate"
-                tickFormatter={(value) => digitsEnToFa(value)}
+                tickFormatter={fmt}
                 textAnchor="middle"
                 fontSize={CHART_TICK_FONT_SIZE}
                 tickMargin={12}
               />
               <YAxis
-                tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                tickFormatter={fmt}
                 fontSize={CHART_TICK_FONT_SIZE}
                 tickMargin={24}
               />
@@ -224,7 +225,7 @@ export const ServiceDetailsTable: React.FC<{
                   <ChartTooltipContent
                     labelFormatter={(value) => (
                       <span className="font-medium">
-                        تاریخ: {digitsEnToFa(value as string)}
+                        تاریخ: {fmt(value as string)}
                       </span>
                     )}
                     formatter={(value, name) => {
@@ -234,7 +235,7 @@ export const ServiceDetailsTable: React.FC<{
                           : name === "normalRangeMin"
                           ? "حد پایین نرمال"
                           : "حد بالای نرمال";
-                      return [digitsEnToFa(String(value ?? "")), " ", label];
+                      return [fmt(value), " ", label];
                     }}
                   />
                 }

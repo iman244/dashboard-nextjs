@@ -1,5 +1,11 @@
 {
   "common": {
+    "DateRangePicker": {
+      "placeholder": "Select a date range",
+      "sinceYear": "Since the start of {year}",
+      "sinceThisYear": "Since the start of this year",
+      "sinceMonth": "Since the start of {month}"
+    },
     "Application": {
       "copy": "Copy to clipboard",
       "copied": "Copied!"

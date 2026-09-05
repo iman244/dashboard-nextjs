@@ -14,7 +14,7 @@ import {
 import { useRouter } from "@/i18n/navigation";
 import { format, subYears } from "date-fns-jalali";
 import { useElectronicHealthRecord } from "../provider";
-import { useLocale } from "next-intl";
+import { useIsRtl } from "@/lib/use-direction";
 
 const columnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
 
@@ -33,7 +33,7 @@ export const useEHRColumns = ({
 }) => {
   const router = useRouter();
   const { filters } = useElectronicHealthRecord();
-  const isRtl = locale === "fa";
+  const isRtl = useIsRtl();
 
   const handlePatientReport = React.useCallback(
     (record: ElectronicHealthRecord) => {

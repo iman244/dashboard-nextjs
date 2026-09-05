@@ -1,5 +1,11 @@
 {
   "common": {
+    "DateRangePicker": {
+      "placeholder": "انتخاب بازه تاریخ",
+      "sinceYear": "از ابتدای سال {year}",
+      "sinceThisYear": "از ابتدای امسال",
+      "sinceMonth": "از ابتدای {month}"
+    },
     "Application": {
       "copy": "کپی به کلیپبورد",
       "copied": "کپی شد!"

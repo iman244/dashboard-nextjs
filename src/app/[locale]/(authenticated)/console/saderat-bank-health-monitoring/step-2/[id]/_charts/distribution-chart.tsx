@@ -2,11 +2,11 @@
 
 import React from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { LocaleChartTooltip } from "../../../_charts/locale-tooltip";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import type { DistributionDatum } from "../_data/use-step2-report";
 
 const chartConfig = { value: { label: "value" } };
@@ -24,6 +24,8 @@ export const DistributionChart = ({
   data: DistributionDatum[];
   onBarClick?: (name: string) => void;
 }) => {
+  const fmt = useLocaleDigits();
+
   if (data.length === 0) return null;
 
   return (
@@ -37,12 +39,12 @@ export const DistributionChart = ({
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="name"
-              tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+              tickFormatter={fmt}
               fontSize={CHART_TICK_FONT_SIZE}
             />
             <YAxis
               tickMargin={24}
-              tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+              tickFormatter={fmt}
               fontSize={CHART_TICK_FONT_SIZE}
             />
             <ChartTooltip content={<LocaleChartTooltip />} />

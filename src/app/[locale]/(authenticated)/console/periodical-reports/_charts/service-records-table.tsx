@@ -260,7 +260,7 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
             رکوردهای خدمت: {selectedService}
           </h3>
           <Badge variant="secondary">
-            {digitsEnToFa(filteredRecords.length.toString())} رکورد
+            {fmt(filteredRecords.length.toString())} رکورد
           </Badge>
         </div>
         <div className="text-sm text-muted-foreground">

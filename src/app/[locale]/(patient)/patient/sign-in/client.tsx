@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
+import { useDirection } from "@/lib/use-direction";
 import { digitsFaToEn } from "@persian-tools/persian-tools";
 import { localeDigits } from "@/lib/utils";
 import {
@@ -30,7 +31,7 @@ import { signInProbeParams } from "../../_data/ehr-params";
 export function Client() {
   const t = useTranslations("/patient/sign-in.SignInPage");
   const locale = useLocale();
-  const dir = locale === "fa" ? "rtl" : "ltr";
+  const dir = useDirection();
   const router = useRouter();
   const { signIn } = usePatientSession();
   const [formError, setFormError] = React.useState<string | null>(null);

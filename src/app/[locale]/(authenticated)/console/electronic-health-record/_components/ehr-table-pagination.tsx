@@ -12,7 +12,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIsRtl } from "@/lib/use-direction";
 import { ReactTable } from "@tanstack/react-table";
 import { type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
@@ -34,10 +35,9 @@ export const EHRTablePagination = ({
   showPageSizeSelector = true,
 }: EHRTablePaginationProps) => {
   const t = useTranslations("/console/electronic-health-record.EHRTable");
-  const locale = useLocale();
   // Pagination arrows must follow reading direction: "first page" points
   // toward the start of the text flow, which is right in RTL and left in LTR.
-  const isRtl = locale === "fa";
+  const isRtl = useIsRtl();
   const FirstIcon = isRtl ? ChevronsRight : ChevronsLeft;
   const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
   const NextIcon = isRtl ? ChevronLeft : ChevronRight;

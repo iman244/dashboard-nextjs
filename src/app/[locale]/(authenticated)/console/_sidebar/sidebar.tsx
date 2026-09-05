@@ -12,7 +12,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useDirection, useIsRtl } from "@/lib/use-direction";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NavUser } from "./nav-user";
 import { DarkModeToggle } from "@/components/app/theme-toggle";
@@ -22,9 +23,10 @@ export function AppSidebar() {
 
   const t = useTranslations("/console.ConsoleSidebar");
   const tTheme = useTranslations("common.Theme");
-  const locale = useLocale();
-  const side = locale === "fa" ? "right" : "left";
-  const dir = locale === "fa" ? "rtl" : "ltr";
+  const isRtl = useIsRtl();
+  // The sidebar sits on the reading-start edge.
+  const side = isRtl ? "right" : "left";
+  const dir = useDirection();
 
   const items = [
     {

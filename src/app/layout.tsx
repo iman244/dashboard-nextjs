@@ -4,6 +4,7 @@ import "./globals.css";
 import { Provider } from "./provider";
 import { headers } from "next/headers";
 import { Locale } from "next-intl";
+import { directionOf, fontClassOf } from "@/lib/direction";
 import { getLocale } from "next-intl/server";
 
 const geistSans = Geist({
@@ -33,8 +34,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
-  const fontClass = locale === "fa" ? "font-persian" : "font-english";
-  const dir = locale === "fa" ? "rtl" : "ltr";
+  const fontClass = fontClassOf(locale);
+  const dir = directionOf(locale);
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>

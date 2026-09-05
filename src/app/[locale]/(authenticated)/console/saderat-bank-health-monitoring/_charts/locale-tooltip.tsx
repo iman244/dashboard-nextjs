@@ -1,9 +1,11 @@
+"use client";
+
 import React from "react";
 import { ChartTooltipContent } from "@/components/ui/chart";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 
 /**
- * Tooltip that renders counts in Persian digits.
+ * Tooltip that renders counts in the reader's own digits.
  *
  * Declared at module scope on purpose. The step-1 page defines its equivalent
  * inside the page component, which makes React treat it as a new component
@@ -12,9 +14,7 @@ import { digitsEnToFa } from "@persian-tools/persian-tools";
  */
 export const LocaleChartTooltip = (
   props: React.ComponentProps<typeof ChartTooltipContent>
-) => (
-  <ChartTooltipContent
-    {...props}
-    formatter={(value) => digitsEnToFa(String(value ?? ""))}
-  />
-);
+) => {
+  const fmt = useLocaleDigits();
+  return <ChartTooltipContent {...props} formatter={fmt} />;
+};

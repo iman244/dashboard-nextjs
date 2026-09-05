@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { isRtlLocale } from "@/lib/direction";
 import ButtonsSection from "./_components/ButtonsSection";
 import { DarkModeToggle } from "@/components/app/theme-toggle";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -23,7 +24,7 @@ export async function generateMetadata({
 export default async function LandingPage() {
   const t = await getTranslations("/.HomePage");
   const locale = await getLocale();
-  const isRTL = locale === "fa";
+  const isRTL = isRtlLocale(locale);
   const Chevron = isRTL ? ChevronLeft : ChevronRight;
   return (
     <div className="min-h-screen bg-background flex flex-col">

@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLocale, useTranslations } from "next-intl";
+import { useIsRtl } from "@/lib/use-direction";
 
 const columnHelper = createColumnHelper<
   AppTableFeatures,
@@ -39,7 +40,7 @@ export const usePatientRecordColumns = ({
 }) => {
   const t = useTranslations("/patient/records.PatientRecords");
   const locale = useLocale();
-  const isRtl = locale === "fa";
+  const isRtl = useIsRtl();
 
   return React.useMemo(
     () =>

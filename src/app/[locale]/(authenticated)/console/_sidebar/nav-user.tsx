@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronsUpDown, LogOut, User as UserIcon } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIsRtl } from "@/lib/use-direction";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,8 +23,7 @@ import { useMe_API } from "@/data/user/fetches/me";
 
 export function NavUser() {
   const t = useTranslations("/console.ConsoleSidebar");
-  const locale = useLocale();
-  const isRtl = locale === "fa";
+  const isRtl = useIsRtl();
   const { isMobile } = useSidebar();
   const { unauthenticateUser } = useAuth();
 

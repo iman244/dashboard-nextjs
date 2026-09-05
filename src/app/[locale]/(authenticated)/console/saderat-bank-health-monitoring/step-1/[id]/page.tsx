@@ -2,6 +2,7 @@
 import { SBHM_RetrieveSerializer } from "@/data/saderat-bank-health-monitoring/types";
 import { localeDigits } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
 import React from "react";
 import { useMonitoringIdRouteContext } from "./route-context";
 import { Button } from "@/components/ui/button";
@@ -35,7 +36,6 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 const MonitoringPage = (
@@ -43,6 +43,7 @@ const MonitoringPage = (
 ) => {
   const { id: monitoring_id } = React.use(props.params);
   const locale = useLocale();
+  const fmt = useLocaleDigits();
   const { monitoring_query } = useMonitoringIdRouteContext();
   const [isSearchSheetOpen, setIsSearchSheetOpen] = React.useState(false);
   const [activeFilter, setActiveFilter] = React.useState<{
@@ -471,12 +472,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -516,7 +517,7 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                     // Unrotated with the default centred anchor. `textAnchor="end"`
                     // resolves against the inline-base direction, so under the
@@ -527,7 +528,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -567,12 +568,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -621,12 +622,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -666,12 +667,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -711,12 +712,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -756,12 +757,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -801,12 +802,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -846,12 +847,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -891,12 +892,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -936,12 +937,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -981,12 +982,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1026,12 +1027,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1071,12 +1072,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1116,12 +1117,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1161,12 +1162,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1206,12 +1207,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1251,12 +1252,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1296,12 +1297,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1341,12 +1342,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1386,12 +1387,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1431,12 +1432,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1476,12 +1477,12 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />
@@ -1521,7 +1522,7 @@ const MonitoringPage = (
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="name"
-                    tickFormatter={(value) => digitsEnToFa(value)}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                     // See the BMI chart above: rotated Persian ticks anchored to
                     // the wrong edge under RTL. Centred and unrotated instead.
@@ -1530,7 +1531,7 @@ const MonitoringPage = (
                   />
                   <YAxis
                     tickMargin={24}
-                    tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
+                    tickFormatter={fmt}
                     fontSize={CHART_TICK_FONT_SIZE}
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />

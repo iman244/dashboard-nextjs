@@ -225,7 +225,31 @@ VIS-09, 13, 14, 17 are typechecked and built but visually unverified.
     horizontal scroll — it clips the far columns unreachably. Now `overflow-x-auto`, plus
     `tabular-nums` on its cells. The other two new tables already delegate to `DataTable`
     and needed nothing.
-- 2026-09-05 — **Deliberately not fixed:** the new charts call `digitsEnToFa` unconditionally
+- 2026-09-05 — **Both deferred items closed.**
+  - **`useDirection()`.** `locale === "fa"` was copied into 20 places across 14 files, and
+    three had already drifted. Now `src/lib/direction.ts` (pure: `isRtlLocale`,
+    `directionOf`, `fontClassOf` — no `"use client"`, so the root layout, the locale layout
+    and the console layout can all call it) plus `src/lib/use-direction.ts` (`useDirection`,
+    `useIsRtl`) for client components. `lib/utils.ts`'s four locale branches route through
+    the same predicate, so a second RTL locale is one line. **Zero occurrences left.**
+    The hook doc says to prefer logical CSS over branching, and to reach for it only where
+    a *value* depends on direction — a Radix `side`, a mirrored icon.
+  - **Locale-aware digits.** 88 direct `digitsEnToFa` calls rendered Persian numerals to
+    English readers. Now `useLocaleDigits()`, a memoised formatter that drops straight into
+    recharts' `tickFormatter`/`formatter`. **Zero direct calls left outside `lib/`.**
+    Verified behind a stubbed login: `/fa` shows 4 Persian digits and 0 Latin, `/en` shows
+    4 Latin and 0 Persian, no console errors in either.
+  - Fixing the digits exposed that `date-range-picker.tsx` also hardcoded its five preset
+    labels in Persian, so English read "از ابتدای سال 1404". Moved to `common.DateRangePicker`
+    with `{year}`/`{month}` interpolation; its `useCallback` also had an empty dep list while
+    closing over locale-bound values, which froze the labels at whichever locale rendered
+    first. Jalali month and year names are kept in both locales on purpose — the calendar the
+    control opens is Jalali, so a Gregorian label would name a different range than it selects.
+  - Lint went **33 errors / 36 warnings → 33 / 32**: errors at baseline, four fewer warnings,
+    because the refactor removed dead imports and bindings. One genuine bug was caught by
+    `react-hooks/rules-of-hooks` on the way — the codemod put `useIsRtl()` into
+    `(public)/page.tsx`, which is an async server component; it takes `isRtlLocale(locale)`.
+- 2026-09-05 — ~~**Deliberately not fixed:**~~ *(closed above)* the new charts call `digitsEnToFa` unconditionally
   on axis ticks and tooltips, so English renders Persian digits. Our own charts do the same —
   it is a codebase-wide pattern, not a regression, and it belongs to UX-01 (English locale),
   which is a deferred track.

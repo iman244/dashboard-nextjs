@@ -2,8 +2,9 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useLocaleDigits } from "@/lib/use-locale-digits";
+import { useIsRtl } from "@/lib/use-direction";
 import { CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
-import { digitsEnToFa } from "@persian-tools/persian-tools";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +36,8 @@ export const EhrTrendDialog = ({
     "/console/saderat-bank-health-monitoring.Ehr"
   );
   const locale = useLocale();
-  const isFa = locale === "fa";
+  const fmt = useLocaleDigits();
+  const isRtl = useIsRtl();
 
   const chartConfig = React.useMemo<ChartConfig>(
     () => ({
@@ -103,13 +105,13 @@ export const EhrTrendDialog = ({
                     dataKey="date"
                     fontSize={12}
                     tickMargin={8}
-                    tickFormatter={(v) => (isFa ? digitsEnToFa(String(v)) : String(v))}
+                    tickFormatter={(v) => (isRtl ? fmt(v) : String(v))}
                   />
                   <YAxis
                     fontSize={12}
                     width={48}
                     tickFormatter={(v) =>
-                      isFa ? digitsEnToFa(String(v ?? "")) : String(v ?? "")
+                      isRtl ? fmt(v) : String(v ?? "")
                     }
                   />
                   <ChartTooltip content={<LocaleChartTooltip />} />

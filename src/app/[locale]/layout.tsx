@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
 import { Geist, Geist_Mono, Vazirmatn } from "next/font/google";
+import { fontClassOf } from "@/lib/direction";
 import { GlobalProvider } from "../_global";
 
 const geistSans = Geist({
@@ -40,7 +41,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <div className={locale === "fa" ? "font-persian" : "font-english"}>
+    <div className={fontClassOf(locale)}>
       <NextIntlClientProvider>
         <GlobalProvider>{children}</GlobalProvider>
       </NextIntlClientProvider>
