@@ -188,6 +188,17 @@
   },
   "/form-sabt-payesh": {},
   "/console": {
+    "ConsoleHome": {
+      "title": "داشبورد",
+      "subtitle": "برای شروع، یکی از بخش‌های زیر را انتخاب کنید.",
+      "descriptions": {
+        "electronicHealthRecord": "جستجو و مرور سوابق پزشکی بیماران",
+        "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
+        "patientReports": "تولید گزارشات جامع برای بیماران",
+        "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
+        "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
+      }
+    },
     "ConsoleSidebar": {
       "dashboard": "داشبورد",
       "electronicHealthRecord": "سوابق پزشکی الکترونیکی",

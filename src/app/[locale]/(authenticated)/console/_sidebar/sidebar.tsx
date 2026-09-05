@@ -1,6 +1,5 @@
 "use client";
 
-import { BarChart, FileText, SquareActivity, User } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +15,7 @@ import { useTranslations } from "next-intl";
 import { useDirection, useIsRtl } from "@/lib/use-direction";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NavUser } from "./nav-user";
+import { CONSOLE_NAV_ITEMS } from "../_nav/items";
 import { DarkModeToggle } from "@/components/app/theme-toggle";
 
 export function AppSidebar() {
@@ -28,33 +28,6 @@ export function AppSidebar() {
   const side = isRtl ? "right" : "left";
   const dir = useDirection();
 
-  const items = [
-    {
-      title: t("electronicHealthRecord"),
-      url: "/console/electronic-health-record",
-      icon: FileText,
-    },
-    {
-      title: t("periodicalReports"),
-      url: "/console/periodical-reports",
-      icon: BarChart,
-    },
-    {
-      title: t("patientReports"),
-      url: "/console/patient-reports",
-      icon: User,
-    },
-    {
-      title: t("saderatBankHealthMonitoring"),
-      url: "/console/saderat-bank-health-monitoring",
-      icon: SquareActivity,
-    },
-    {
-      title: t("formSabtPayesh"),
-      url: "/form-sabt-payesh",
-      icon: SquareActivity,
-    },
-  ];
 
   return (
     <Sidebar side={side}>
@@ -63,12 +36,12 @@ export function AppSidebar() {
           <SidebarGroupLabel>{t("dashboard")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {CONSOLE_NAV_ITEMS.map((item) => (
+                <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
                     <Link href={item.url}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span>{t(item.titleKey)}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

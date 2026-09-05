@@ -188,6 +188,17 @@
   },
   "/form-sabt-payesh": {},
   "/console": {
+    "ConsoleHome": {
+      "title": "Dashboard",
+      "subtitle": "Choose a section to get started.",
+      "descriptions": {
+        "electronicHealthRecord": "Search and browse patient health records",
+        "periodicalReports": "Generate comprehensive reports for time periods",
+        "patientReports": "Generate comprehensive reports for patients",
+        "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
+        "formSabtPayesh": "Register monitoring data with the online form"
+      }
+    },
     "ConsoleSidebar": {
       "dashboard": "Dashboard",
       "electronicHealthRecord": "Electronic Health Record",
