@@ -3,8 +3,13 @@
 import * as React from 'react'
 import { getDefaultClassNames, type DayButton, type Locale } from 'react-day-picker'
 
-import { DayPicker } from '@daypicker/react'
-import { faIR } from '@daypicker/react/locale'
+// The Jalali calendar lives in its own package. @daypicker/react + the faIR
+// locale only translates Gregorian month names into Persian script (ژانویه,
+// فوریه, …) — the grid, the month boundaries and the day numbers stay
+// Gregorian. @daypicker/persian swaps the whole date library for
+// date-fns-jalali and defaults to rtl + arabext numerals.
+// https://daypicker.dev/localization/persian
+import { DayPicker, faIR } from '@daypicker/persian'
 import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from 'lucide-react'
@@ -35,11 +40,7 @@ function Calendar({
       )}
       captionLayout={captionLayout}
       locale={locale}
-      formatters={{
-        formatMonthDropdown: (date) =>
-          date.toLocaleString(locale?.code, { month: 'short' }),
-        ...formatters,
-      }}
+      formatters={formatters}
       classNames={{
         root: cn('w-fit', defaultClassNames.root),
         months: cn('relative flex flex-col gap-4 md:flex-row', defaultClassNames.months),

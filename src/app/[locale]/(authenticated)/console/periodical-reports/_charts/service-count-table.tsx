@@ -26,10 +26,35 @@ interface ServiceCountTableProps {
 
 interface ServiceCountData {
   serviceName: string;
-  totalTests: number;
+  /** How many times this service was delivered in the period. */
+  serviceCount: number;
   normalResults: number;
   abnormalResults: number;
+  /**
+   * Records for this service that carried both a result and a reference range.
+   * Zero for services that are not lab tests (visits, imaging, ECG); those rows
+   * still belong in the report, they just have nothing to classify.
+   */
+  resultCount: number;
 }
+
+/**
+ * A normal/abnormal count only means something for a service that produced lab
+ * results. Printing "۰" for an ultrasound or a visit would read as "nothing
+ * abnormal" when in truth nothing was measured, so those cells get an em dash.
+ */
+const renderResultCount = (
+  value: number,
+  resultCount: number,
+  noResultLabel: string
+) =>
+  resultCount > 0 ? (
+    <span>{localeDigits(value.toString(), "fa")}</span>
+  ) : (
+    <span className="text-muted-foreground" aria-label={noResultLabel}>
+      &mdash;
+    </span>
+  );
 
 const columnHelper = createColumnHelper<AppTableFeatures, ServiceCountData>();
 
@@ -43,7 +68,14 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
   const tSCT = useTranslations("/console/periodical-reports.ServiceCountTable");
   const tDictionary = useTranslations("common.Dictionary");
 
-  // Process data to create aggregated service counts
+  // Process data to create aggregated service counts.
+  //
+  // Every service delivered belongs in this table, not just the lab tests. The
+  // EHR endpoint returns one row per delivered service, and only lab work
+  // carries جواب (result) + نرمال رنج (reference range) — a visit, an ECG
+  // or an ultrasound has neither. Grouping only the records that had both hid
+  // every non-lab service, and showed "no service found" for a period whose
+  // records were real but contained no lab work.
   const aggregatedData = useMemo(() => {
     if (!data || data.length === 0) return [];
 
@@ -70,15 +102,9 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
       return !value || value.trim() === "";
     };
 
-    // Filter valid data
-    const validData = data.filter((record) => {
-      const testResult = record["جواب"];
-      const normalRange = record["نرمال رنج"];
-      return !isEmpty(testResult) && !isEmpty(normalRange);
-    });
-
-    // Group by service name and count results
-    const serviceGroups = validData.reduce((acc, record) => {
+    // Group by service name, counting every record and classifying the ones
+    // that carry a result against their reference range.
+    const serviceGroups = data.reduce((acc, record) => {
       const serviceName = record["نام خدمت"];
       const testResult = record["جواب"];
       const normalRange = record["نرمال رنج"];
@@ -89,11 +115,16 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
         acc[serviceName] = {
           normalCount: 0,
           abnormalCount: 0,
+          resultCount: 0,
           totalCount: 0,
         };
       }
 
       acc[serviceName].totalCount++;
+
+      if (isEmpty(testResult) || isEmpty(normalRange)) return acc;
+
+      acc[serviceName].resultCount++;
 
       if (isWithinNormalRange(testResult || "", normalRange || "")) {
         acc[serviceName].normalCount++;
@@ -102,47 +133,57 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
       }
 
       return acc;
-    }, {} as Record<string, { normalCount: number; abnormalCount: number; totalCount: number }>);
+    }, {} as Record<string, { normalCount: number; abnormalCount: number; resultCount: number; totalCount: number }>);
 
     // Convert to array format for table
     return Object.entries(serviceGroups).map(([serviceName, counts]) => ({
       serviceName,
-      totalTests: counts.totalCount,
+      serviceCount: counts.totalCount,
       normalResults: counts.normalCount,
       abnormalResults: counts.abnormalCount,
+      resultCount: counts.resultCount,
     }));
   }, [data]);
 
   const columns = useMemo(
     () => columnHelper.columns([
       columnHelper.accessor("serviceName", {
-        header: "نام خدمت",
+        header: tSCT("columnServiceName"),
         cell: (info) => <span className="font-medium">{info.getValue()}</span>,
       }),
-      columnHelper.accessor((row) => row.totalTests, {
-        id: "totalTests",
-        header: "کل آزمایش‌ها",
+      columnHelper.accessor((row) => row.serviceCount, {
+        id: "serviceCount",
+        header: tSCT("columnServiceCount"),
         cell: (info) => (
           <span>{localeDigits(info.getValue().toString(), "fa")}</span>
         ),
       }),
       columnHelper.accessor((row) => row.normalResults, {
         id: "normalResults",
-        header: "تعداد جواب‌های طبیعی",
-        cell: (info) => (
-          <span>{localeDigits(info.getValue().toString(), "fa")}</span>
-        ),
+        header: tSCT("columnNormalResults"),
+        cell: (info) =>
+          renderResultCount(
+            info.getValue(),
+            info.row.original.resultCount,
+            tSCT("noLabResult")
+          ),
       }),
       columnHelper.accessor((row) => row.abnormalResults, {
         id: "abnormalResults",
-        header: "تعداد جواب‌های غیرطبیعی",
-        cell: (info) => (
-          <span>{localeDigits(info.getValue().toString(), "fa")}</span>
-        ),
+        header: tSCT("columnAbnormalResults"),
+        cell: (info) =>
+          renderResultCount(
+            info.getValue(),
+            info.row.original.resultCount,
+            tSCT("noLabResult")
+          ),
       }),
       columnHelper.display({
         id: "actions",
-        header: "عملیات",
+        header: tSCT("columnActions"),
+        // The sheet lists this service's individual records, which every
+        // service has — unlike the patient report's chart, it stays available
+        // for services with no measured result.
         cell: (info) => (
           <div className="flex items-center gap-2">
             <Button
@@ -162,8 +203,6 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
     ]),
     [tSCT]
   );
-
-  console.log({ aggregatedData });
 
   const table = useTable({
     features: appTableFeatures,

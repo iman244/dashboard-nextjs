@@ -39,6 +39,16 @@ export const TablePagination = <T extends RowData,>({
   const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
   const NextIcon = isRtl ? ChevronLeft : ChevronRight;
   const LastIcon = isRtl ? ChevronsLeft : ChevronsRight;
+
+  // An empty table has no first row and no pages, but the naive arithmetic
+  // (pageIndex * pageSize + 1, getPageCount()) still claims a row 1 and a
+  // page 0 — "showing 1 to 0 of 0" on "page 1 of 0". Clamp both.
+  const totalRows = table.getFilteredRowModel().rows.length;
+  const { pageIndex, pageSize } = table.state.pagination;
+  const firstRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
+  const lastRow = Math.min((pageIndex + 1) * pageSize, totalRows);
+  const pageCount = Math.max(table.getPageCount(), 1);
+
   return (
     // flex-wrap: at narrow widths the row's two halves together exceed the
     // container and used to push past it. Wrapping costs nothing wherever they
@@ -47,24 +57,9 @@ export const TablePagination = <T extends RowData,>({
       <div className="flex items-center gap-2">
         <p className="text-sm text-muted-foreground">
           {t("Showing", {
-            start: localeDigits(
-              table.state.pagination.pageIndex *
-                table.state.pagination.pageSize +
-                1,
-              locale
-            ),
-            end: localeDigits(
-              Math.min(
-                (table.state.pagination.pageIndex + 1) *
-                  table.state.pagination.pageSize,
-                table.getFilteredRowModel().rows.length
-              ),
-              locale
-            ),
-            total: localeDigits(
-              table.getFilteredRowModel().rows.length,
-              locale
-            ),
+            start: localeDigits(firstRow, locale),
+            end: localeDigits(lastRow, locale),
+            total: localeDigits(totalRows, locale),
           })}
         </p>
       </div>
@@ -74,26 +69,23 @@ export const TablePagination = <T extends RowData,>({
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{t("Rows per page")}</p>
             <Select
-              value={`${table.state.pagination.pageSize}`}
+              value={`${pageSize}`}
               onValueChange={(value) => {
                 table.setPageSize(Number(value));
               }}
             >
               <SelectTrigger className="h-8 w-[70px]">
                 <SelectValue
-                  placeholder={localeDigits(
-                    table.state.pagination.pageSize,
-                    locale
-                  )}
+                  placeholder={localeDigits(pageSize, locale)}
                 />
               </SelectTrigger>
               <SelectContent side="top">
                 {Array.from(
                   { length: 5 },
                   (_, i) => (i + 1) * pageIncrement
-                ).map((pageSize) => (
-                  <SelectItem key={pageSize} value={`${pageSize}`}>
-                    {localeDigits(pageSize, locale)}
+                ).map((size) => (
+                  <SelectItem key={size} value={`${size}`}>
+                    {localeDigits(size, locale)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -130,7 +122,7 @@ export const TablePagination = <T extends RowData,>({
           {/* Page Numbers */}
           {Array.from({ length: table.getPageCount() }, (_, i) => {
             const pageNumber = i + 1;
-            const currentPage = table.state.pagination.pageIndex + 1;
+            const currentPage = pageIndex + 1;
 
             // Show first page, last page, current page, and pages around current page
             if (
@@ -197,11 +189,8 @@ export const TablePagination = <T extends RowData,>({
         <div className="flex items-center gap-2">
           <p className="text-sm font-medium">
             {t("Page", {
-              current: localeDigits(
-                table.state.pagination.pageIndex + 1,
-                locale
-              ),
-              total: localeDigits(table.getPageCount(), locale),
+              current: localeDigits(pageIndex + 1, locale),
+              total: localeDigits(pageCount, locale),
             })}
           </p>
         </div>

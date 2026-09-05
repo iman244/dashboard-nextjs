@@ -11,9 +11,10 @@ import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { DataTable } from "@/components/app";
+import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, FileText, XIcon, ChartArea } from "lucide-react";
+import { Search, FileText, XIcon, ChartArea, Eye } from "lucide-react";
 import { TablePagination } from "@/components/app/table-pagination";
 import {
   Sheet,
@@ -35,10 +36,42 @@ import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 
 interface ServiceCountData {
   serviceName: string;
-  totalTests: number;
+  /** How many times the patient received this service in the period. */
+  serviceCount: number;
   normalResults: number;
   abnormalResults: number;
+  /**
+   * Records for this service that carried both a result and a reference range.
+   * Zero for services that are not lab tests (visits, imaging, ECG); those rows
+   * still belong in the report, they just have nothing to classify.
+   */
+  resultCount: number;
+  /**
+   * The first record behind this row. A row is an aggregated service, but the
+   * detail modal takes one record — for a service delivered several times this
+   * opens the earliest of them.
+   */
+  record: ElectronicHealthRecord;
 }
+
+/**
+ * A normal/abnormal count only means something for a service that produced lab
+ * results. Printing "۰" for an ultrasound or a visit would read as "nothing
+ * abnormal" when in truth nothing was measured, so those cells get an em dash.
+ */
+const renderResultCount = (
+  value: number,
+  resultCount: number,
+  locale: string,
+  noResultLabel: string
+) =>
+  resultCount > 0 ? (
+    <span>{localeDigits(value.toString(), locale)}</span>
+  ) : (
+    <span className="text-muted-foreground" aria-label={noResultLabel}>
+      &mdash;
+    </span>
+  );
 
 const columnHelper = createColumnHelper<AppTableFeatures, ServiceCountData>();
 
@@ -276,7 +309,17 @@ const Client = (props: {
   const t = useTranslations("/console/patient-reports.PatientReports");
   const tData = useTranslations("common.data");
   const tDictionary = useTranslations("common.Dictionary");
-  const { ehrByNationalNumber_m, filters } = usePatientReports();
+  const {
+    ehrByNationalNumber_m,
+    mobileLaboratoryByNationalNumber_m,
+    mobileXRayByNationalNumber_m,
+    mobileNumberByNationalNumber_m,
+    filters,
+    selectedRecord,
+    setSelectedRecord,
+    isDetailModalOpen,
+    setIsDetailModalOpen,
+  } = usePatientReports();
   const { data, isPending } = ehrByNationalNumber_m;
   const locale = useLocale();
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -285,7 +328,16 @@ const Client = (props: {
   );
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
-  // Process data to create aggregated service counts
+  // Process data to create aggregated service counts.
+  //
+  // Every service the patient received belongs in this table, not just the lab
+  // tests. The endpoint returns one row per delivered service, and only lab
+  // work carries جواب (result) + نرمال رنج (reference range) — a visit, an
+  // ECG or an ultrasound has neither. Grouping only the records that had both
+  // meant a patient whose period contained no lab work saw "no data found"
+  // under a header naming them, while the API had in fact returned their
+  // services. So group everything, and classify normal/abnormal over the
+  // subset that can actually be classified.
   const aggregatedData = React.useMemo(() => {
     if (!data || data.length === 0) return [];
 
@@ -312,15 +364,9 @@ const Client = (props: {
       return !value || value.trim() === "";
     };
 
-    // Filter valid data
-    const validData = data.filter((record) => {
-      const testResult = record["جواب"];
-      const normalRange = record["نرمال رنج"];
-      return !isEmpty(testResult) && !isEmpty(normalRange);
-    });
-
-    // Group by service name and count results
-    const serviceGroups = validData.reduce((acc, record) => {
+    // Group by service name, counting every record and classifying the ones
+    // that carry a result against their reference range.
+    const serviceGroups = data.reduce((acc, record) => {
       const serviceName = record["نام خدمت"];
       const testResult = record["جواب"];
       const normalRange = record["نرمال رنج"];
@@ -331,11 +377,17 @@ const Client = (props: {
         acc[serviceName] = {
           normalCount: 0,
           abnormalCount: 0,
+          resultCount: 0,
           totalCount: 0,
+          record,
         };
       }
 
       acc[serviceName].totalCount++;
+
+      if (isEmpty(testResult) || isEmpty(normalRange)) return acc;
+
+      acc[serviceName].resultCount++;
 
       if (isWithinNormalRange(testResult || "", normalRange || "")) {
         acc[serviceName].normalCount++;
@@ -344,14 +396,16 @@ const Client = (props: {
       }
 
       return acc;
-    }, {} as Record<string, { normalCount: number; abnormalCount: number; totalCount: number }>);
+    }, {} as Record<string, { normalCount: number; abnormalCount: number; resultCount: number; totalCount: number; record: ElectronicHealthRecord }>);
 
     // Convert to array format for table
     return Object.entries(serviceGroups).map(([serviceName, counts]) => ({
       serviceName,
-      totalTests: counts.totalCount,
+      serviceCount: counts.totalCount,
       normalResults: counts.normalCount,
       abnormalResults: counts.abnormalCount,
+      resultCount: counts.resultCount,
+      record: counts.record,
     }));
   }, [data]);
 
@@ -361,48 +415,72 @@ const Client = (props: {
         header: tData("serviceName"),
         cell: (info) => <span className="font-medium">{info.getValue()}</span>,
       }),
-      columnHelper.accessor((row) => row.totalTests, {
-        id: "totalTests",
-        header: "کل آزمایش‌ها",
+      columnHelper.accessor((row) => row.serviceCount, {
+        id: "serviceCount",
+        header: t("columnServiceCount"),
         cell: (info) => (
           <span>{localeDigits(info.getValue().toString(), locale)}</span>
         ),
       }),
       columnHelper.accessor((row) => row.normalResults, {
         id: "normalResults",
-        header: "تعداد جواب‌های طبیعی",
-        cell: (info) => (
-          <span>{localeDigits(info.getValue().toString(), locale)}</span>
-        ),
+        header: t("columnNormalResults"),
+        cell: (info) =>
+          renderResultCount(
+            info.getValue(),
+            info.row.original.resultCount,
+            locale,
+            t("noLabResult")
+          ),
       }),
       columnHelper.accessor((row) => row.abnormalResults, {
         id: "abnormalResults",
-        header: "تعداد جواب‌های غیرطبیعی",
-        cell: (info) => (
-          <span>{localeDigits(info.getValue().toString(), locale)}</span>
-        ),
+        header: t("columnAbnormalResults"),
+        cell: (info) =>
+          renderResultCount(
+            info.getValue(),
+            info.row.original.resultCount,
+            locale,
+            t("noLabResult")
+          ),
       }),
       columnHelper.display({
         id: "actions",
-        header: "عملیات",
+        header: t("columnActions"),
         cell: (info) => (
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => {
-                setSelectedService(info.row.original.serviceName);
-                setIsSheetOpen(true);
+                setSelectedRecord(info.row.original.record);
+                setIsDetailModalOpen(true);
               }}
-              aria-label={t("viewServiceChart")}
+              aria-label={t("viewRecordDetails")}
             >
-              <ChartArea className="h-4 w-4" />
+              <Eye className="h-4 w-4" />
             </Button>
+            {/* Nothing to plot for a service with no measured results, so that
+                row gets no chart button rather than one that opens an empty
+                chart. The detail button above stays on every row. */}
+            {info.row.original.resultCount > 0 && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setSelectedService(info.row.original.serviceName);
+                  setIsSheetOpen(true);
+                }}
+                aria-label={t("viewServiceChart")}
+              >
+                <ChartArea className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         ),
       }),
     ]),
-    [t, tData, locale]
+    [t, tData, locale, setSelectedRecord, setIsDetailModalOpen]
   );
 
   const table = useTable({
@@ -535,6 +613,20 @@ const Client = (props: {
           )}
         </SheetContent>
       </Sheet>
+
+      <EHRDetailModal
+        record={selectedRecord}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedRecord(null);
+        }}
+        actions={{
+          mobileLaboratoryByNationalNumber_m,
+          mobileXRayByNationalNumber_m,
+          mobileNumberByNationalNumber_m,
+        }}
+      />
     </div>
   );
 };

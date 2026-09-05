@@ -251,7 +251,13 @@
         "patientTypeRequired": "Patient type is required",
         "dateRangeInvalid": "End date must be after start date"
       },
-      "viewServiceChart": "View service chart"
+      "viewServiceChart": "View service chart",
+      "columnServiceCount": "Times recorded",
+      "columnNormalResults": "Normal results",
+      "columnAbnormalResults": "Abnormal results",
+      "columnActions": "Actions",
+      "noLabResult": "No lab result",
+      "viewRecordDetails": "View details"
     }
   },
   "/console/periodical-reports": {
@@ -310,7 +316,13 @@
       "viewPatientReport": "View patient report"
     },
     "ServiceCountTable": {
-      "viewServiceRecords": "View service records"
+      "viewServiceRecords": "View service records",
+      "columnServiceName": "Service Name",
+      "columnServiceCount": "Times recorded",
+      "columnNormalResults": "Normal results",
+      "columnAbnormalResults": "Abnormal results",
+      "columnActions": "Actions",
+      "noLabResult": "No lab result"
     }
   },
   "/console/saderat-bank-health-monitoring": {
