@@ -52,6 +52,9 @@ export function SearchPersonnelSheet({
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage"
   );
+  // "Actions" is a shared column header, not an SBHM string — it lives in
+  // common.Dictionary, which the monitoring index page already reads it from.
+  const tDictionary = useTranslations("common.Dictionary");
   const locale = useLocale();
   const [searchTerm, setSearchTerm] = React.useState("");
 
@@ -77,7 +80,7 @@ export function SearchPersonnelSheet({
         }),
         columnHelper.display({
           id: "actions",
-          header: t("Actions"),
+          header: tDictionary("Actions"),
           cell: ({ row }) => {
             const nationalId = String(row.original["کد ملی"] ?? "");
             // the route keys on national id; a row without one has nowhere to go
@@ -95,7 +98,7 @@ export function SearchPersonnelSheet({
           },
         }),
       ]),
-    [locale, monitoringId, onOpenChange, t]
+    [locale, monitoringId, onOpenChange, tDictionary]
   );
 
   const table = useTable({
