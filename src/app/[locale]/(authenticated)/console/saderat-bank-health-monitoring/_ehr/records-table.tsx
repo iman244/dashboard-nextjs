@@ -2,21 +2,24 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { AlertCircle, ChartLine, Eye, Inbox } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DataTable, TablePagination } from "@/components/app";
+import {
+  appTableFeatures,
+  type AppTableFeatures,
+} from "@/components/app/table-features";
 import type { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { cn, localeDigits } from "@/lib/utils";
 import { STATUS_STYLES, StatusIcon } from "./status-icon";
-import type { LabSeries, PersonEhr } from "./use-person-ehr";
+import type { EhrEventItem, LabSeries, PersonEhr } from "./use-person-ehr";
+
+/** One result, flattened out of the date it arrived on. */
+type RecordRow = EhrEventItem & { date: string; sortKey: number };
+
+const columnHelper = createColumnHelper<AppTableFeatures, RecordRow>();
 
 /**
  * Every electronic result for this person, newest first.
@@ -27,6 +30,10 @@ import type { LabSeries, PersonEhr } from "./use-person-ehr";
  * live in a tooltip. The table states each of them outright.
  *
  * Every column is a field the response carries; nothing here is derived.
+ *
+ * Paginated and sortable like every other table in the console: this lists a
+ * person's whole history across four patientType branches over three years,
+ * so it has no natural bound and cannot render in full.
  *
  * Owns the pending and error states because it is the only thing left in the
  * card: without them a failed fetch would render an empty card, which reads
@@ -49,15 +56,109 @@ export const EhrRecordsTable = ({
   const tDictionary = useTranslations("common.dictionary");
   const locale = useLocale();
 
-  const rows = React.useMemo(
+  const rows = React.useMemo<RecordRow[]>(
     () =>
-      [...ehr.events]
-        .sort((a, b) => b.sortKey - a.sortKey)
-        .flatMap((event) =>
-          event.items.map((item) => ({ ...item, date: event.date }))
-        ),
+      ehr.events.flatMap((event) =>
+        event.items.map((item) => ({
+          ...item,
+          date: event.date,
+          sortKey: event.sortKey,
+        }))
+      ),
     [ehr.events]
   );
+
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        // sorts on the Jalali sort key, displays the date as written — sorting
+        // the `yyyy/MM/dd` string directly would order Persian digits, not dates
+        columnHelper.accessor((row) => row.sortKey, {
+          id: "date",
+          header: tDictionary("date"),
+          cell: (info) => (
+            <span className="whitespace-nowrap tabular-nums">
+              {localeDigits(info.row.original.date, locale)}
+            </span>
+          ),
+        }),
+        columnHelper.accessor("service", {
+          header: tDictionary("serviceName"),
+          cell: (info) => (
+            <span className="break-words">{info.getValue()}</span>
+          ),
+        }),
+        columnHelper.accessor("value", {
+          header: tDictionary("answer"),
+          cell: (info) => {
+            const { status, value } = info.row.original;
+            return (
+              <span className="flex items-baseline gap-1.5">
+                {status && <StatusIcon status={status} />}
+                <span
+                  className={cn(
+                    "tabular-nums",
+                    status && STATUS_STYLES[status].text
+                  )}
+                >
+                  {localeDigits(value, locale) || "—"}
+                </span>
+              </span>
+            );
+          },
+        }),
+        columnHelper.accessor("range", {
+          header: tDictionary("normalRange"),
+          cell: (info) => (
+            <span className="whitespace-nowrap tabular-nums text-muted-foreground">
+              {info.getValue() ? localeDigits(info.getValue(), locale) : "—"}
+            </span>
+          ),
+        }),
+        columnHelper.display({
+          id: "actions",
+          header: t("tableActions"),
+          cell: ({ row }) => (
+            <span className="flex items-center gap-1">
+              {row.original.kind === "lab" && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={`${t("viewTrend")} — ${row.original.service}`}
+                  onClick={() => {
+                    const series = ehr.labs.find(
+                      (l) => l.service === row.original.service
+                    );
+                    if (series) onSelectSeries(series);
+                  }}
+                >
+                  <ChartLine aria-hidden="true" className="h-4 w-4" />
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={`${t("viewDetails")} — ${row.original.service}`}
+                onClick={() => onViewRecord(row.original.raw)}
+              >
+                <Eye aria-hidden="true" className="h-4 w-4" />
+              </Button>
+            </span>
+          ),
+        }),
+      ]),
+    [t, tDictionary, locale, ehr.labs, onSelectSeries, onViewRecord]
+  );
+
+  const table = useTable({
+    features: appTableFeatures,
+    columns,
+    data: rows,
+    initialState: {
+      sorting: [{ id: "date", desc: true }],
+      pagination: { pageIndex: 0, pageSize: 10 },
+    },
+  });
 
   if (ehr.isPending) {
     return <Skeleton className="h-24 w-full" />;
@@ -82,73 +183,9 @@ export const EhrRecordsTable = ({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>{tDictionary("date")}</TableHead>
-            <TableHead>{tDictionary("serviceName")}</TableHead>
-            <TableHead>{tDictionary("answer")}</TableHead>
-            <TableHead>{tDictionary("normalRange")}</TableHead>
-            <TableHead>{t("tableActions")}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rows.map((row, i) => (
-            <TableRow key={`${row.date}-${row.service}-${i}`}>
-              <TableCell className="whitespace-nowrap tabular-nums">
-                {localeDigits(row.date, locale)}
-              </TableCell>
-              <TableCell className="max-w-[16rem] break-words">
-                {row.service}
-              </TableCell>
-              <TableCell className="max-w-[20rem] break-words">
-                <span className="flex items-baseline gap-1.5">
-                  {row.status && <StatusIcon status={row.status} />}
-                  <span
-                    className={cn(
-                      "tabular-nums",
-                      row.status && STATUS_STYLES[row.status].text
-                    )}
-                  >
-                    {localeDigits(row.value, locale) || "—"}
-                  </span>
-                </span>
-              </TableCell>
-              <TableCell className="whitespace-nowrap tabular-nums text-muted-foreground">
-                {row.range ? localeDigits(row.range, locale) : "—"}
-              </TableCell>
-              <TableCell>
-                <span className="flex items-center gap-1">
-                  {row.kind === "lab" && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      aria-label={`${t("viewTrend")} — ${row.service}`}
-                      onClick={() => {
-                        const series = ehr.labs.find(
-                          (l) => l.service === row.service
-                        );
-                        if (series) onSelectSeries(series);
-                      }}
-                    >
-                      <ChartLine aria-hidden="true" className="h-4 w-4" />
-                    </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`${t("viewDetails")} — ${row.service}`}
-                    onClick={() => onViewRecord(row.raw)}
-                  >
-                    <Eye aria-hidden="true" className="h-4 w-4" />
-                  </Button>
-                </span>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="space-y-4">
+      <DataTable table={table} columns={columns} noDataMessage={t("noRecords")} />
+      <TablePagination table={table} />
     </div>
   );
 };
