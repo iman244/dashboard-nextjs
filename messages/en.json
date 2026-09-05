@@ -455,8 +455,12 @@
   },
   "/patient/sign-in": {
     "SignInPage": {
+      "eyebrow": "Health Record",
       "title": "Patient sign in",
       "description": "Enter your national ID to see your own health records.",
+      "status": {
+        "signedIn": "Signed in successfully."
+      },
       "form": {
         "nationalId": {
           "label": "National ID",

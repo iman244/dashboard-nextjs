@@ -455,8 +455,12 @@
   },
   "/patient/sign-in": {
     "SignInPage": {
+      "eyebrow": "پرونده سلامت",
       "title": "ورود بیمار",
       "description": "برای مشاهده سوابق سلامت خود، کد ملی را وارد کنید.",
+      "status": {
+        "signedIn": "با موفقیت وارد شدید."
+      },
       "form": {
         "nationalId": {
           "label": "کد ملی",

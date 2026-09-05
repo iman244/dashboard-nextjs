@@ -18,19 +18,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { DarkModeToggle } from "@/components/app/theme-toggle";
+import { AuthShell, AuthSubmitButton } from "@/components/app/auth-shell";
 import { useOnLogin } from "./_side-effects/on-login";
 import { useMutation } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 // Define the form schema. Built from `t` rather than at module scope so the
 // validation messages reach the user in their own language; these render through
@@ -72,11 +63,11 @@ export function Client() {
     },
   });
 
-  // There is no interstitial after sign-in any more — this card is what the user
-  // watches while the console loads. So the busy state has to outlive the
-  // mutation: on `isPending` alone the button would snap back to "Sign in" the
-  // instant the request resolved, then sit there looking idle and clickable
-  // through the whole navigation.
+  // There is no interstitial after sign-in — this card is what the user watches
+  // while the console loads. So the busy state has to outlive the mutation: on
+  // `isPending` alone the button would snap back to "Sign in" the instant the
+  // request resolved, then sit there looking idle and clickable through the
+  // whole navigation.
   const isBusy = isPending || isSuccess;
 
   const onSubmit = React.useCallback(
@@ -88,149 +79,77 @@ export function Client() {
   );
 
   return (
-    <main
-      className="relative min-h-dvh flex items-center justify-center overflow-hidden px-4 py-24"
-      dir={dir}
-    >
-      {/* Ambient ground: two very low-chroma orbs, no hard edges. Fixed and
-          pointer-events-none so they never repaint with scrolling content. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 -z-10"
-        style={{
-          // Both orbs stay in the brand hue family. An earlier version used
-          // --chart-7, which is a saturated cyan in dark mode and cast the whole
-          // lower corner green.
-          background:
-            "radial-gradient(60rem 40rem at 18% 8%, color-mix(in oklab, var(--primary) 9%, transparent), transparent 65%)," +
-            "radial-gradient(48rem 34rem at 84% 92%, color-mix(in oklab, var(--chart-5) 6%, transparent), transparent 62%)",
-        }}
-      />
-
-      {/* Theme control sits in the page corner, clear of the card, so it reads as
-          chrome rather than part of the sign-in form. */}
-      <div className="absolute end-4 top-4 z-10">
-        <DarkModeToggle />
-      </div>
-
-      {/* Double-bezel: an outer tray holding an inner plate, with concentric radii. */}
-      <div className="w-full max-w-[26rem] rounded-[2rem] bg-foreground/[0.035] p-1.5 ring-1 ring-foreground/[0.07] backdrop-blur-sm">
-        {/* gap-0 py-0 disables Card's own rhythm so spacing is set once, here,
-            rather than stacking three systems on top of each other. */}
-        <Card className="gap-0 rounded-[1.625rem] border-0 bg-card py-0 text-center shadow-[0_1px_2px_rgba(0,0,0,0.03),0_12px_32px_-12px_rgba(0,0,0,0.10),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_16px_40px_-12px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.05)]">
-        <CardHeader className="gap-0 px-7 pb-0 pt-10">
-          <span className="mx-auto mb-4 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-primary">
-            {t("description")}
-          </span>
-          <CardTitle className="text-center! text-[1.75rem] font-bold leading-[1.15] tracking-[-0.02em]">
-            {t("title")}
-          </CardTitle>
-          <CardDescription className="sr-only">
-            {t("description")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="px-7 pb-10 pt-8">
-          <Form {...form}>
-            {/* Two groups, not four equal siblings: the credential pair sits
-                tight (16px), then a generous break before the submit act. */}
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="space-y-4 text-start">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.username.label")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t("form.username.placeholder")}
-                        {...field}
-                        autoComplete="username"
-                        disabled={isBusy}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.password.label")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder={t("form.password.placeholder")}
-                        {...field}
-                        autoComplete="current-password"
-                        disabled={isBusy}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              </div>
-
-              {apiError && (
-                <div
-                  role="alert"
-                  className="mt-5 rounded-xl bg-destructive/10 px-4 py-3 text-start text-sm text-destructive"
-                >
-                  {apiError.response?.data.detail}
-                </div>
+    <AuthShell dir={dir} eyebrow={t("description")} title={t("title")}>
+      <Form {...form}>
+        {/* Two groups, not four equal siblings: the credential pair sits
+            tight (16px), then a generous break before the submit act. */}
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-4 text-start">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("form.username.label")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t("form.username.placeholder")}
+                      {...field}
+                      autoComplete="username"
+                      disabled={isBusy}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
+            />
 
-              {/* Success has no visual frame of its own now — the card simply
-                  stays put until the console arrives. Sighted users read that
-                  from the button; this is the same news for everyone else.
-                  Nothing else announces it: the redirect is a client navigation
-                  the route announcer only picks up once the URL actually flips. */}
-              <p role="status" aria-live="polite" className="sr-only">
-                {isSuccess ? t("status.signedIn") : ""}
-              </p>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("form.password.label")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder={t("form.password.placeholder")}
+                      {...field}
+                      autoComplete="current-password"
+                      disabled={isBusy}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-              <Button
-                type="submit"
-                disabled={isBusy}
-                className="group mt-7 h-12 w-full rounded-full text-[15px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.10),0_8px_20px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_1px_2px_rgba(0,0,0,0.12),0_12px_28px_-8px_color-mix(in_oklab,var(--primary)_65%,transparent)] active:scale-[0.985]"
-              >
-                <span className="flex w-full items-center justify-center gap-3">
-                  {isBusy ? t("buttons.signingIn") : t("buttons.signIn")}
-                  {/* One trailing slot whose contents swap. The spinner used to
-                      render on the leading side while the arrow sat trailing, so
-                      the label jumped sideways on click — ux-guidelines #19,
-                      keep async states in a stable container. */}
-                  <span
-                    aria-hidden="true"
-                    className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5"
-                  >
-                    {isBusy ? (
-                      <Spinner className="size-3.5" />
-                    ) : (
-                      <svg viewBox="0 0 16 16" fill="none" className="size-3.5 rtl:rotate-180">
-                        <path
-                          d="M2.5 8h10M9 4.5 12.5 8 9 11.5"
-                          stroke="currentColor"
-                          strokeWidth="1.25"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </span>
-                </span>
-              </Button>
-            </form>
-          </Form>
+          {apiError && (
+            <div
+              role="alert"
+              className="mt-5 rounded-xl bg-destructive/10 px-4 py-3 text-start text-sm text-destructive"
+            >
+              {apiError.response?.data.detail}
+            </div>
+          )}
 
-        </CardContent>
-        </Card>
-      </div>
-    </main>
+          {/* Success has no visual frame of its own — the card simply stays put
+              until the console arrives. Sighted users read that from the button;
+              this is the same news for everyone else. Nothing else announces it:
+              the redirect is a client navigation the route announcer only picks
+              up once the URL actually flips. */}
+          <p role="status" aria-live="polite" className="sr-only">
+            {isSuccess ? t("status.signedIn") : ""}
+          </p>
+
+          <AuthSubmitButton
+            busy={isBusy}
+            idleLabel={t("buttons.signIn")}
+            busyLabel={t("buttons.signingIn")}
+          />
+        </form>
+      </Form>
+    </AuthShell>
   );
 }

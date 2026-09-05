@@ -3,6 +3,7 @@
 import React from "react";
 import UploadSaderatBankHealthMonitoringExcelDialog from "./_upload-excel-dialog/dialog";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/app/page-header";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import {
@@ -87,9 +88,31 @@ const SaderatBankHealthMonitoringPage = (
     data: data || [],
   });
 
+  // One header for every state. The title and the upload action used to exist
+  // only on the populated table, so loading, error and empty each rendered a
+  // page with no heading at all — three of the four states a user can land on.
+  const withHeader = (body: React.ReactNode) => (
+    <div className="space-y-4">
+      <PageHeader
+        title={t("PageTitle")}
+        actions={
+          isStaff ? (
+            <UploadSaderatBankHealthMonitoringExcelDialog
+              trigger={<Button>{t("UploadExcel")}</Button>}
+            />
+          ) : undefined
+        }
+      />
+      {body}
+    </div>
+  );
+
   if (isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[400px]">
+    return withHeader(
+      <div
+        aria-busy="true"
+        className="flex flex-col items-center justify-center h-[400px]"
+      >
         <div className="flex items-center flex-col gap-3">
           <Spinner className="h-8 w-8" />
           <span className="text-muted-foreground">{t("Loading")}</span>
@@ -99,8 +122,11 @@ const SaderatBankHealthMonitoringPage = (
   }
 
   if (error) {
-    return (
-      <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
+    return withHeader(
+      <div
+        role="alert"
+        className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10"
+      >
         <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
         <div className="flex flex-col gap-1">
           <p className="font-semibold text-destructive">{t("ErrorTitle")}</p>
@@ -113,7 +139,7 @@ const SaderatBankHealthMonitoringPage = (
   // `isPending` above already covers `data === undefined`, so this branch has
   // to test the genuinely-empty list or it can never render.
   if (!data || data.length === 0) {
-    return (
+    return withHeader(
       <div className="flex flex-col items-center justify-center py-12 gap-3">
         <Inbox className="h-12 w-12 text-muted-foreground" />
         <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
@@ -122,28 +148,20 @@ const SaderatBankHealthMonitoringPage = (
               list is empty rather than being asked to upload */}
           {isStaff ? t("EmptyStateDescription") : t("EmptyStateDescriptionDetail")}
         </p>
-        {isStaff && (
-          <UploadSaderatBankHealthMonitoringExcelDialog
-            trigger={<Button>{t("UploadExcel")}</Button>}
-          />
-        )}
+        {/* The upload control lives in the header on every state, so it is in
+            one place rather than moving into the middle of the page here. */}
       </div>
     );
   }
 
-  return (
-    <div className="space-y-4">
+  return withHeader(
+    <>
       {isStaff && (
-        <>
-          <UploadSaderatBankHealthMonitoringExcelDialog
-            trigger={<Button>{t("UploadExcel")}</Button>}
-          />
-          <DeleteSaderatBankHealthMonitoringExcelDialog
-            data={deleteRow || undefined}
-            open={!!deleteRow}
-            onOpenChange={(open) => setDeleteRow(open ? deleteRow : null)}
-          />
-        </>
+        <DeleteSaderatBankHealthMonitoringExcelDialog
+          data={deleteRow || undefined}
+          open={!!deleteRow}
+          onOpenChange={(open) => setDeleteRow(open ? deleteRow : null)}
+        />
       )}
       <div className="rounded-md border overflow-hidden">
         <Table>
@@ -186,7 +204,7 @@ const SaderatBankHealthMonitoringPage = (
           </TableBody>
         </Table>
       </div>
-    </div>
+    </>
   );
 };
 

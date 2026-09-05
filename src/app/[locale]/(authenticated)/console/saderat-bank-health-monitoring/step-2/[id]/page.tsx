@@ -5,6 +5,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, Inbox } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/app/page-header";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+} from "@/components/ui/breadcrumb";
 import { Link } from "@/i18n/navigation";
 import { localeDigits, formatDate } from "@/lib/utils";
 import { useRetrieve_SBHM_API } from "@/data/saderat-bank-health-monitoring/api/retrieve";
@@ -118,22 +125,41 @@ const Step2MonitoringPage = (
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-2xl font-bold">
-          {localeDigits(data.name, locale)}
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          {localeDigits(formatDate(new Date(data.created_at), locale), locale)}
-          {" · "}
-          {tReport("recordCount", {
-            count: localeDigits(report.totalRecords, locale),
-          })}
-        </p>
-      </div>
+      {/* Was a bare h2 with a sibling p: no h1 on the page at all, and the
+          section headings below jumped from h2 straight to h3. Routed through
+          PageHeader so this reads as a sibling of step-1 rather than a second
+          way of titling the same kind of page. */}
+      <PageHeader
+        breadcrumbs={
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/console/saderat-bank-health-monitoring">
+                    {t("PageTitle")}
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        }
+        title={localeDigits(data.name, locale)}
+        description={
+          <>
+            {localeDigits(formatDate(new Date(data.created_at), locale), locale)}
+            {" · "}
+            {tReport("recordCount", {
+              count: localeDigits(report.totalRecords, locale),
+            })}
+          </>
+        }
+      />
 
       {STEP2_CHART_SECTIONS.map((section) => (
         <section key={section.titleKey} className="space-y-3">
-          <h3 className="text-lg font-semibold">{tReport(section.titleKey)}</h3>
+          {/* h2, not h3: PageHeader now owns the page h1, so sections sit one level
+              below it rather than skipping a level (#39). */}
+          <h2 className="text-lg font-semibold">{tReport(section.titleKey)}</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {section.charts.map((chart) => (
               <DistributionChart

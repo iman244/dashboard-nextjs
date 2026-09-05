@@ -178,6 +178,32 @@ VIS-09, 13, 14, 17 are typechecked and built but visually unverified.
   link landed the browser on `example.com` after a real sign-in; now blocked, including the
   `//host` form), and `src/settings.ts` was dumping backend addresses and token keys to every
   visitor's console on every page load.
+- 2026-09-05 — **Rebased onto `main` @ 44b7d83** (PRs #8 patient-portal, #9 report-tables,
+  #5 sbhm-step-2, #10 patient-nav — 53 commits). Three conflicts, all trivially additive:
+  both catalogues (kept both sides), `table.tsx` (kept our logical `pe-0` over main's
+  `pr-0`), `settings.ts` (kept main's `PATIENT_SESSION_KEY`, dropped the console dump).
+  Git followed the `[id]/` → `step-1/[id]/` rename on its own, so the PageHeader work
+  landed on the renamed file.
+- 2026-09-05 — **Aligned main's new surfaces to this wave.** Audited them first: **zero**
+  physical CSS properties and **zero** hardcoded colours in the new work, so the palette and
+  the logical-property rule were already respected. What was not:
+  - Two sign-in screens in one product, one designed and one a stock shadcn card. Extracted
+    `components/app/auth-shell.tsx` (`AuthShell` + `AuthSubmitButton`) and put **both**
+    through it, rather than copying the staff card into the patient one. Measured after:
+    identical tray radius (32px), card radius (26px), 7 shadow layers, 48px pill, orbs,
+    theme toggle, live-region count, card box — at 1440 and 390.
+  - `saderat-bank-health-monitoring/page.tsx` had no heading on **any** state, and the
+    upload action only existed on the populated table. One `PageHeader` now wraps all four.
+  - `step-2/[id]/page.tsx` titled itself with a bare `h2` and put sections at `h3` — no `h1`
+    on the page and a skipped level. Now `PageHeader` + `h2` sections, matching step-1.
+  - `(patient)/patient/records/client.tsx` hand-rolled an `h1`+`p` at different values.
+    Now `PageHeader`; `min-h-screen` → `min-h-dvh`; and the theme toggle moved into its
+    action slot, because that route group has no sidebar and patients could not reach it.
+  - `sidebar.tsx` `outline` variant used the stock `hsl(var(--sidebar-border))`, which is
+    invalid against oklch tokens so the ring silently never painted. Latent (nothing passes
+    that variant yet), fixed anyway.
+- 2026-09-05 — **`locale === "fa"` is now 20 occurrences across 14 files**, up from 16 —
+  main's new work added three more. The `useDirection()` hook is overdue; still not done.
 - 2026-09-05 — **Not** done, deliberately, and still open: the two interstitial route files
   are no longer rendered but still live in `(public)/`, so `/fa/auth-authenticated` remains a
   crawlable page that tells an anonymous visitor they are signed in; and `jwt_verify` failing
