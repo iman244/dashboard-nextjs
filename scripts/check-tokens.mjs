@@ -102,6 +102,21 @@ const CONTRAST_PAIRS = [
   ["border", "background", 1.2],
   ...CHART_CAT.map((c) => [c, "background", 3.0]),
   ...CHART_CAT.map((c) => [c, "card", 3.0]),
+  // The two ends of the diverging ramp, and `success`, carry the EHR low/normal/
+  // high status labels as running text — not only as chart marks. Text answers to
+  // WCAG 1.4.3 (4.5:1), not the 3:1 of 1.4.11 that the categorical marks above
+  // are held to, so they are listed separately at the higher bar.
+  ["chart-div-1", "background", 4.5],
+  ["chart-div-1", "card", 4.5],
+  ["chart-div-5", "background", 4.5],
+  ["chart-div-5", "card", 4.5],
+  ["success", "background", 4.5],
+  ["success", "card", 4.5],
+  // `text-destructive` is running text too — form messages, the sign-in error
+  // block, out-of-range cells — not only a button fill. It was never checked
+  // against a surface, only against its own foreground.
+  ["destructive", "background", 4.5],
+  ["destructive", "card", 4.5],
 ];
 
 /* ---------------------------------------------------------------------------

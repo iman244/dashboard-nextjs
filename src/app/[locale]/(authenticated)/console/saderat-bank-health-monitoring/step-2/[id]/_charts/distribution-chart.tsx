@@ -6,6 +6,7 @@ import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { LocaleChartTooltip } from "../../../_charts/locale-tooltip";
+import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 import type { DistributionDatum } from "../_data/use-step2-report";
 
 const chartConfig = { value: { label: "value" } };
@@ -17,12 +18,10 @@ const chartConfig = { value: { label: "value" } };
 export const DistributionChart = ({
   title,
   data,
-  color,
   onBarClick,
 }: {
   title: string;
   data: DistributionDatum[];
-  color: 1 | 2 | 3 | 4 | 5;
   onBarClick?: (name: string) => void;
 }) => {
   if (data.length === 0) return null;
@@ -39,17 +38,22 @@ export const DistributionChart = ({
             <XAxis
               dataKey="name"
               tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-              fontSize={12}
+              fontSize={CHART_TICK_FONT_SIZE}
             />
             <YAxis
               tickMargin={24}
               tickFormatter={(value) => digitsEnToFa(String(value ?? ""))}
-              fontSize={12}
+              fontSize={CHART_TICK_FONT_SIZE}
             />
             <ChartTooltip content={<LocaleChartTooltip />} />
             <Bar
               dataKey="value"
-              fill={`var(--chart-${color})`}
+              // One hue for every distribution, matching step-1. Each chart is a
+              // single series, so colour carries no information here — the bars
+              // are already told apart by the axis. Cycling chart-1..5 across
+              // twenty charts implied a relationship between them that does not
+              // exist, which is the pattern VIS-17 removed from step-1.
+              fill="var(--chart-1)"
               barSize={40}
               onClick={(_, index) => onBarClick?.(data[index].name)}
               style={{ cursor: onBarClick ? "pointer" : undefined }}

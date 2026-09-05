@@ -166,7 +166,6 @@ const Step2MonitoringPage = (
                 key={chart.field}
                 title={tReport(chart.titleKey)}
                 data={report.distributions[chart.field] ?? []}
-                color={chart.color}
                 onBarClick={(name) =>
                   showPersonnelFor(chart.field, name, tReport(chart.titleKey))
                 }

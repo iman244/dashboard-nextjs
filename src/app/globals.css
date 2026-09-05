@@ -192,7 +192,7 @@
   --accent-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */
   --ring: oklch(0.754 0.139 232.7); /* #38BDF8 */
 
-  --destructive: oklch(0.637 0.208 25.3); /* #EF4444 */
+  --destructive: oklch(0.652 0.208 25.3); /* #F54A49 — lifted from #EF4444: as text on the dark card it measured 4.34:1, under the 4.5 that WCAG 1.4.3 asks of running text */
   --destructive-foreground: oklch(0.193 0.064 25.5); /* #2B0505 */
   --success: oklch(0.8 0.182 151.7); /* #4ADE80 */
   --success-foreground: oklch(0.266 0.065 151.2); /* #052E14 */
@@ -223,7 +223,7 @@
   --chart-div-2: oklch(0.566 0.099 234.9); /* #2F7FA8 */
   --chart-div-3: oklch(0.356 0.035 236.2); /* #2A3F4C */
   --chart-div-4: oklch(0.399 0.063 22.9); /* #653A38 */
-  --chart-div-5: oklch(0.637 0.208 25.3); /* #EF4444 */
+  --chart-div-5: oklch(0.652 0.208 25.3); /* #F54A49 — lifted from #EF4444: as text on the dark card it measured 4.34:1, under the 4.5 that WCAG 1.4.3 asks of running text */
 
   --sidebar: oklch(0.168 0.025 245.6); /* #061019 */
   --sidebar-foreground: oklch(0.951 0.025 236.8); /* #E0F2FE */

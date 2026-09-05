@@ -163,7 +163,11 @@ const SaderatBankHealthMonitoringPage = (
           onOpenChange={(open) => setDeleteRow(open ? deleteRow : null)}
         />
       )}
-      <div className="rounded-md border overflow-hidden">
+      {/* overflow-x-auto, not overflow-hidden: this is the only raw table left
+          outside DataTable, and `hidden` does not merely omit the scroll — it
+          clips the far columns with no way to reach them on a narrow viewport
+          (ux-guidelines #71). */}
+      <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -185,7 +189,10 @@ const SaderatBankHealthMonitoringPage = (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getAllCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    // tabular-nums so the Persian digits in the name and the
+                    // created-at column line up down the table, as they do in
+                    // DataTable everywhere else.
+                    <TableCell key={cell.id} className="tabular-nums">
                       <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}

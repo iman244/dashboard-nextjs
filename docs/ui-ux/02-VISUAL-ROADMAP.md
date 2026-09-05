@@ -202,6 +202,33 @@ VIS-09, 13, 14, 17 are typechecked and built but visually unverified.
   - `sidebar.tsx` `outline` variant used the stock `hsl(var(--sidebar-border))`, which is
     invalid against oklch tokens so the ring silently never painted. Latent (nothing passes
     that variant yet), fixed anyway.
+- 2026-09-05 — **Applied the wave's own decisions to main's new work** (the alignment above
+  was structural; this is the content).
+  - `_ehr/status-icon.tsx` rendered `low` and `high` in the same `destructive` red — the
+    exact defect Wave 1 had to patch with an icon, reintroduced. Its comment explained why:
+    it was written when the palette was one sky hue plus `destructive`. VIS-01 changed that.
+    Now the two ends of the diverging ramp (`chart-div-1` cool / `chart-div-5` warm) with
+    `success` for in-range, which is what that ramp exists for.
+  - Making those into *text* colours moved them from WCAG 1.4.11 (3:1, marks) to 1.4.3
+    (4.5:1, running text), so `chart-div-1`, `chart-div-5`, `success` and `destructive`
+    were added to `CONTRAST_PAIRS`. **The validator immediately failed**: dark
+    `chart-div-5`/`destructive` (#EF4444) on the dark card measured **4.33:1**. Lifted both
+    to `oklch(0.652 …)` / #F54A49 — the smallest bump that clears it (4.61:1). Note this was
+    a **pre-existing** failure: `text-destructive` on a card in dark mode had always been
+    below 4.5, it had simply never been checked against a surface, only against its own
+    foreground. 37/37 pairs pass in both themes now.
+  - `step-2/_charts/distribution-chart.tsx` cycled `--chart-1..5` across ~20 single-series
+    bar charts — VIS-17's exact pattern, reintroduced. One hue (`--chart-1`) now, matching
+    step-1; the `color` field is gone from the config. Axis ticks moved from `fontSize={12}`
+    to `CHART_TICK_FONT_SIZE` so they scale with the browser's text setting (WCAG 1.4.4).
+  - The SBHM index table wrapper was `overflow-hidden`, which does not merely omit
+    horizontal scroll — it clips the far columns unreachably. Now `overflow-x-auto`, plus
+    `tabular-nums` on its cells. The other two new tables already delegate to `DataTable`
+    and needed nothing.
+- 2026-09-05 — **Deliberately not fixed:** the new charts call `digitsEnToFa` unconditionally
+  on axis ticks and tooltips, so English renders Persian digits. Our own charts do the same —
+  it is a codebase-wide pattern, not a regression, and it belongs to UX-01 (English locale),
+  which is a deferred track.
 - 2026-09-05 — **`locale === "fa"` is now 20 occurrences across 14 files**, up from 16 —
   main's new work added three more. The `useDirection()` hook is overdue; still not done.
 - 2026-09-05 — **Not** done, deliberately, and still open: the two interstitial route files
