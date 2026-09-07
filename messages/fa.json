@@ -29,6 +29,10 @@
       "current": "حالت {theme}",
       "label": "نمایش"
     },
+    "Language": {
+      "label": "زبان",
+      "switchTo": "تغییر زبان به {language}"
+    },
     "NetworkErrorDialog": {
       "AlertDialogTitle": "خطای شبکه",
       "AlertDialogDescription": "ارتباط با شبکه اینترنت قطع شده است",

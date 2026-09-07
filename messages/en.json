@@ -29,6 +29,10 @@
       "current": "{theme} theme",
       "label": "Appearance"
     },
+    "Language": {
+      "label": "Language",
+      "switchTo": "Switch to {language}"
+    },
     "NetworkErrorDialog": {
       "AlertDialogTitle": "Network Error",
       "AlertDialogDescription": "Connection to the server is lost. Please reload the page.",

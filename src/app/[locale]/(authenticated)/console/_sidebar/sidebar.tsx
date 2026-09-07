@@ -16,13 +16,11 @@ import { useDirection, useIsRtl } from "@/lib/use-direction";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NavUser } from "./nav-user";
 import { CONSOLE_NAV_ITEMS } from "../_nav/items";
-import { DarkModeToggle } from "@/components/app/theme-toggle";
 
 export function AppSidebar() {
   const pathname = usePathname();
 
   const t = useTranslations("/console.ConsoleSidebar");
-  const tTheme = useTranslations("common.Theme");
   const isRtl = useIsRtl();
   // The sidebar sits on the reading-start edge.
   const side = isRtl ? "right" : "left";
@@ -50,13 +48,13 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      {/* Language and appearance used to sit here as a labelled pair. They
+          live in the account menu now: a signed-in user looks for their own
+          preferences under their own name, and a menu row can report which
+          language and theme are currently active — a bare toggle button cannot
+          say whether its label is the current state or the destination. The
+          footer also stops competing with the nav for vertical space. */}
       <SidebarFooter dir={dir}>
-        {/* Hidden when the sidebar collapses to icons — the trigger is a fixed
-            36px control and would overflow the rail. */}
-        <div className="flex items-center justify-between gap-2 px-1 group-data-[collapsible=icon]:hidden">
-          <span className="text-xs text-muted-foreground">{tTheme("label")}</span>
-          <DarkModeToggle />
-        </div>
         <NavUser />
       </SidebarFooter>
     </Sidebar>
