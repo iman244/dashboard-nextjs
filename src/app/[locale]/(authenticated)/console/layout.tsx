@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import React, { use } from "react";
+import { useTranslations } from "next-intl";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_sidebar/sidebar";
 import { directionOf } from "@/lib/direction";
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 const Layout: React.FC<React.PropsWithChildren<{ params: Promise<{ locale: string }> }>> = ({ children, params }) => {
   const {locale} = use(params);
   const dir = directionOf(locale);
+  const t = useTranslations("common.Navigation");
   return (
     <SidebarProvider dir={dir}>
       <AppSidebar />
@@ -27,7 +29,7 @@ const Layout: React.FC<React.PropsWithChildren<{ params: Promise<{ locale: strin
           viewport and the wide children scroll inside their own
           overflow-x-auto containers, which is where the scrolling belongs. */}
       <main className="flex flex-col flex-1 min-w-0 p-4 min-h-[100dvh]" dir={dir}>
-        <SidebarTrigger  />
+        <SidebarTrigger label={t("toggleSidebar")} />
         {children}
       </main>
     </SidebarProvider>

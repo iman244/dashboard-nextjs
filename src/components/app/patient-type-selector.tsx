@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 import {
   Select,
@@ -17,17 +18,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-interface PatientTypeOption {
-  value: string;
-  label: string;
-}
-
 interface PatientTypeSelectorProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > {
   control: Control<TFieldValues>;
   name: TName;
+  /** Supplied by the caller from its own route namespace. */
   label?: string;
   placeholder?: string;
   className?: string;
@@ -44,15 +41,25 @@ export enum PatientType {
   PARACLINICAL = "25",
 }
 
-const PATIENT_TYPE_OPTIONS: PatientTypeOption[] = [
-  { value: PatientType.INFORMATION, label: "اطلاعات بستري" },
-  { value: PatientType.LAB, label: "آزمايشگاه" },
-  { value: PatientType.IMAGE, label: "تصويربرداري" },
-  { value: PatientType.PATHOLOGY, label: "پاتولوژي" },
-  { value: PatientType.HOSPITAL, label: "درمانگاه" },
-  { value: PatientType.ORTHOPEDIC, label: "اورژانس" },
-  { value: PatientType.DRUG, label: "نسخ دارو و تجهيزات" },
-  { value: PatientType.PARACLINICAL, label: "بيماران پاراكلينيك" },
+/**
+ * Render order. The names themselves come from `common.PatientTypes`, keyed by
+ * these same ids.
+ *
+ * They used to be an array of hardcoded Persian labels here, which meant the
+ * eight names existed twice: once in this file and once in the message
+ * bundles, where they were already translated into English. The bundle copy
+ * was the one nobody rendered — this selector appears on four routes, so every
+ * one of them showed Persian in the English UI.
+ */
+const PATIENT_TYPE_ORDER: PatientType[] = [
+  PatientType.INFORMATION,
+  PatientType.LAB,
+  PatientType.IMAGE,
+  PatientType.PATHOLOGY,
+  PatientType.HOSPITAL,
+  PatientType.ORTHOPEDIC,
+  PatientType.DRUG,
+  PatientType.PARACLINICAL,
 ];
 
 export function PatientTypeSelector<
@@ -61,10 +68,15 @@ export function PatientTypeSelector<
 >({
   control,
   name,
-  label = "نوع بیمار",
-  placeholder = "انتخاب نوع بیمار",
+  label,
+  placeholder,
   className,
 }: PatientTypeSelectorProps<TFieldValues, TName>) {
+  // No Persian fallbacks for `label`/`placeholder`: all four call sites pass
+  // their own translated strings, so the defaults only ever shipped an
+  // untranslatable copy waiting to be rendered by mistake.
+  const tTypes = useTranslations("common.PatientTypes");
+
   return (
     <FormField
       control={control}
@@ -88,9 +100,9 @@ export function PatientTypeSelector<
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {PATIENT_TYPE_OPTIONS.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
+              {PATIENT_TYPE_ORDER.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {tTypes(value)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -101,6 +113,3 @@ export function PatientTypeSelector<
     />
   );
 }
-
-// Export the options for use in other components
-export { PATIENT_TYPE_OPTIONS };

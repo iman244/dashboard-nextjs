@@ -1,7 +1,8 @@
 {
   "common": {
     "Navigation": {
-      "backToHome": "Back to home"
+      "backToHome": "Back to home",
+      "toggleSidebar": "Toggle sidebar"
     },
     "Loading": {
       "default": "Loading…",
@@ -101,7 +102,21 @@
       "serviceName": "Service Name",
       "treatingPhysician": "Treating Physician",
       "answer": "Answer",
-      "normalRange": "Normal Range"
+      "normalRange": "Normal Range",
+      "patientFullName": "Patient Name",
+      "nationalId": "National ID",
+      "location": "Location",
+      "patientType": "Patient Type"
+    },
+    "PatientTypes": {
+      "1": "Inpatient Information",
+      "2": "Laboratory",
+      "3": "Imaging",
+      "4": "Pathology",
+      "5": "Clinic",
+      "6": "Emergency",
+      "7": "Prescription & Equipment",
+      "25": "Telemedicine Patients"
     },
     "Dictionary": {
       "Name": "Name",
@@ -244,7 +259,8 @@
         "lastPage": "Last page",
         "noData": "No data found",
         "loading": "Loading…"
-      }
+      },
+      "loadError": "Failed to load data: {message}"
     },
     "EHRFilter": {
       "title": "Filters",
@@ -260,16 +276,6 @@
       "validation": {
         "patientTypeRequired": "Patient type is required"
       }
-    },
-    "PatientTypes": {
-      "1": "Inpatient Information",
-      "2": "Laboratory",
-      "3": "Imaging",
-      "4": "Pathology",
-      "5": "Clinic",
-      "6": "Emergency",
-      "7": "Prescription & Equipment",
-      "25": "Telemedicine Patients"
     }
   },
   "/console/form-sabt-payesh": {},

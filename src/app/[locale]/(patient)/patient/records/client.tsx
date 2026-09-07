@@ -22,9 +22,7 @@ import { RecordsTable } from "./_components/records-table";
 
 const Client = () => {
   const t = useTranslations("/patient/records.PatientRecords");
-  const tPatientTypes = useTranslations(
-    "/console/electronic-health-record.PatientTypes"
-  );
+  const tPatientTypes = useTranslations("common.PatientTypes");
   const locale = useLocale();
   const router = useRouter();
   const { signOut } = usePatientSession();

@@ -34,6 +34,11 @@ export const useEHRColumns = ({
 }) => {
   const router = useRouter();
   const tDictionary = useTranslations("common.Dictionary");
+  // Note the case: `common.Dictionary` is the shared table vocabulary
+  // (Actions, …) and `common.dictionary` is the EHR payload's field names.
+  // Two namespaces one letter apart — using the wrong one renders the literal
+  // key on screen and still passes tsc and lint.
+  const tField = useTranslations("common.dictionary");
   const { filters } = useElectronicHealthRecord();
   const isRtl = useIsRtl();
 
@@ -70,7 +75,7 @@ export const useEHRColumns = ({
   return React.useMemo(
     () => columnHelper.columns([
       columnHelper.accessor("نام بيمار", {
-        header: "نام و نام خانوادگی بیمار",
+        header: tField("patientFullName"),
         cell: (info) =>
           formatCellValue(
             `${info.getValue()} ${
@@ -80,16 +85,16 @@ export const useEHRColumns = ({
           ),
       }),
       columnHelper.accessor("كدملي", {
-        header: "کد ملی",
+        header: tField("nationalId"),
         cell: (info) => formatCellValue(info.getValue(), locale),
       }),
       columnHelper.accessor("تاريخ", {
-        header: "تاریخ",
+        header: tField("date"),
         cell: (info) => formatCellValue(info.getValue(), locale),
         enableSorting: true,
       }),
       columnHelper.accessor("نام خدمت", {
-        header: "نام خدمت",
+        header: tField("serviceName"),
         cell: (info) => (
           <div className="whitespace-normal break-words max-w-xs">
             {formatCellValue(info.getValue(), locale)}
@@ -97,15 +102,15 @@ export const useEHRColumns = ({
         ),
       }),
       columnHelper.accessor("نام پزشك معالج", {
-        header: "نام پزشک معالج",
+        header: tField("treatingPhysician"),
         cell: (info) => formatCellValue(info.getValue(), locale),
       }),
       columnHelper.accessor("مكان", {
-        header: "مکان",
+        header: tField("location"),
         cell: (info) => formatCellValue(info.getValue(), locale),
       }),
       columnHelper.accessor("PatientType", {
-        header: "نوع بیمار",
+        header: tField("patientType"),
         cell: (info) => formatCellValue(info.getValue(), locale),
       }),
       // Actions column
@@ -144,6 +149,6 @@ export const useEHRColumns = ({
         },
       }),
     ]),
-    [locale, onViewDetails, handlePatientReport, isRtl, tDictionary]
+    [locale, onViewDetails, handlePatientReport, isRtl, tDictionary, tField]
   );
 };

@@ -69,7 +69,7 @@ export const EHRTable = ({ table, columns, isLoading, isError, error }: EHRTable
                 {/* text-destructive rather than a hardcoded text-red-500, so the
                     error tracks the theme in both light and dark. */}
                 <span className="text-destructive">
-                  خطا در بارگذاری داده‌ها: {error?.message}
+                  {t("loadError", { message: error?.message ?? "" })}
                 </span>
               </TableCell>
             </TableRow>

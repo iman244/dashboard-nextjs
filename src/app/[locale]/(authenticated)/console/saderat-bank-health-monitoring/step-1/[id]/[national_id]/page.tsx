@@ -179,9 +179,12 @@ const PersonMonitoringPage = (
 
   React.useEffect(() => {
     if (ehr_error) {
-      toast.error("خطا در دریافت جزییات آزمایش‌ها: " + ehr_error.message);
+      // `Ehr.loadError` already named this failure — the records table on this
+      // same page renders it. A second, hardcoded sentence for one error meant
+      // the page could describe the same problem two different ways.
+      toast.error(`${tEhr("loadError")} ${ehr_error.message}`);
     }
-  }, [ehr_error]);
+  }, [ehr_error, tEhr]);
 
   const labData = React.useMemo(() => {
     return ehr_query.data || [];
