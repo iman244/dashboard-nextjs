@@ -16,8 +16,8 @@ import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { TablePagination } from "../table-pagination";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { FileSearchCorner, Search } from "lucide-react";
+import { FileUser, Search } from "lucide-react";
+import { RowAction } from "@/components/app";
 import { Input } from "@/components/ui/input";
 import {
   Sheet,
@@ -48,7 +48,20 @@ export function SearchPersonnelSheet({
   filterDescription,
 }: SearchPersonnelSheetProps) {
   const locale = useLocale();
+  const tDictionary = useTranslations("common.Dictionary");
   const [searchTerm, setSearchTerm] = React.useState("");
+
+  // Cleared on close, in the event rather than an effect: setState inside an
+  // effect trips react-hooks and causes a second render pass. Without this the
+  // sheet reopened still filtered by the last term, silently narrowing a new
+  // result set — the header said one count and the table showed another.
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      if (!next) setSearchTerm("");
+      onOpenChange(next);
+    },
+    [onOpenChange]
+  );
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
 
   // Apply filter if provided
@@ -80,17 +93,14 @@ export function SearchPersonnelSheet({
         },
       }),
       columnHelper.display({
-        header: "عملیات",
+        header: tDictionary("Actions"),
         cell: ({ row }) => (
-          <Button variant={"ghost"} asChild size="sm">
-            <Link
-              href={`/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${row.original["personel.کد ملی"]}`}
-              onClick={() => onOpenChange(false)}
-              aria-label={t("ViewPersonRecord")}
-            >
-              <FileSearchCorner className="h-4 w-4" />
-            </Link>
-          </Button>
+          <RowAction
+            icon={FileUser}
+            label={tDictionary("PatientRecord")}
+            href={`/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${row.original["personel.کد ملی"]}`}
+            onClick={() => onOpenChange(false)}
+          />
         ),
       }),
     ]),
@@ -122,7 +132,7 @@ export function SearchPersonnelSheet({
   });
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent side="bottom" className="h-[80vh] flex flex-col p-4">
         <SheetHeader>
           <SheetTitle>{t("SearchPersonnel")}</SheetTitle>

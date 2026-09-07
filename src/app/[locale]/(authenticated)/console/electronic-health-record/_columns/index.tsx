@@ -15,6 +15,7 @@ import { useRouter } from "@/i18n/navigation";
 import { format, subYears } from "date-fns-jalali";
 import { useElectronicHealthRecord } from "../provider";
 import { useIsRtl } from "@/lib/use-direction";
+import { useTranslations } from "next-intl";
 
 const columnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
 
@@ -32,6 +33,12 @@ export const useEHRColumns = ({
   onViewDetails?: (record: ElectronicHealthRecord) => void;
 }) => {
   const router = useRouter();
+  const tDictionary = useTranslations("common.Dictionary");
+  // Note the case: `common.Dictionary` is the shared table vocabulary
+  // (Actions, …) and `common.dictionary` is the EHR payload's field names.
+  // Two namespaces one letter apart — using the wrong one renders the literal
+  // key on screen and still passes tsc and lint.
+  const tField = useTranslations("common.dictionary");
   const { filters } = useElectronicHealthRecord();
   const isRtl = useIsRtl();
 
@@ -68,7 +75,7 @@ export const useEHRColumns = ({
   return React.useMemo(
     () => columnHelper.columns([
       columnHelper.accessor("نام بيمار", {
-        header: "نام و نام خانوادگی بیمار",
+        header: tField("patientFullName"),
         cell: (info) =>
           formatCellValue(
             `${info.getValue()} ${
@@ -78,16 +85,16 @@ export const useEHRColumns = ({
           ),
       }),
       columnHelper.accessor("كدملي", {
-        header: "کد ملی",
+        header: tField("nationalId"),
         cell: (info) => formatCellValue(info.getValue(), locale),
       }),
       columnHelper.accessor("تاريخ", {
-        header: "تاریخ",
+        header: tField("date"),
         cell: (info) => formatCellValue(info.getValue(), locale),
         enableSorting: true,
       }),
       columnHelper.accessor("نام خدمت", {
-        header: "نام خدمت",
+        header: tField("serviceName"),
         cell: (info) => (
           <div className="whitespace-normal break-words max-w-xs">
             {formatCellValue(info.getValue(), locale)}
@@ -95,21 +102,21 @@ export const useEHRColumns = ({
         ),
       }),
       columnHelper.accessor("نام پزشك معالج", {
-        header: "نام پزشک معالج",
+        header: tField("treatingPhysician"),
         cell: (info) => formatCellValue(info.getValue(), locale),
       }),
       columnHelper.accessor("مكان", {
-        header: "مکان",
+        header: tField("location"),
         cell: (info) => formatCellValue(info.getValue(), locale),
       }),
       columnHelper.accessor("PatientType", {
-        header: "نوع بیمار",
+        header: tField("patientType"),
         cell: (info) => formatCellValue(info.getValue(), locale),
       }),
       // Actions column
       columnHelper.display({
         id: "actions",
-        header: "عملیات",
+        header: tDictionary("Actions"),
         cell: ({ row }) => {
           const record = row.original;
 
@@ -117,7 +124,7 @@ export const useEHRColumns = ({
             <DropdownMenu dir={isRtl ? "rtl" : "ltr"}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">باز کردن منو</span>
+                  <span className="sr-only">{tDictionary("OpenMenu")}</span>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -126,15 +133,15 @@ export const useEHRColumns = ({
                   onClick={() => onViewDetails?.(record)}
                   className="cursor-pointer"
                 >
-                  <Eye className="me-2 h-4 w-4" />
-                  مشاهده جزئیات
+                  <Eye aria-hidden="true" className="me-2 h-4 w-4" />
+                  {tDictionary("ViewDetails")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handlePatientReport(record)}
                   className="cursor-pointer"
                 >
-                  <BarChart3 className="me-2 h-4 w-4" />
-                  گزارش بیمار
+                  <BarChart3 aria-hidden="true" className="me-2 h-4 w-4" />
+                  {tDictionary("PatientReport")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -142,6 +149,6 @@ export const useEHRColumns = ({
         },
       }),
     ]),
-    [locale, onViewDetails, handlePatientReport, isRtl]
+    [locale, onViewDetails, handlePatientReport, isRtl, tDictionary, tField]
   );
 };

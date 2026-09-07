@@ -4,6 +4,7 @@ import { pageMetadata } from "@/lib/metadata";
 import { isRtlLocale } from "@/lib/direction";
 import ButtonsSection from "./_components/ButtonsSection";
 import { DarkModeToggle } from "@/components/app/theme-toggle";
+import { LanguageSwitcher } from "@/components/app/language-switcher";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -28,8 +29,10 @@ export default async function LandingPage() {
   const Chevron = isRTL ? ChevronLeft : ChevronRight;
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header with dark mode toggle */}
-      <header className="w-full flex justify-start p-6">
+      {/* Viewing preferences — language and theme are the same kind of control,
+          so they sit together in the corner users already scan for settings. */}
+      <header className="w-full flex items-center justify-start gap-2 p-6">
+        <LanguageSwitcher />
         <DarkModeToggle />
       </header>
 

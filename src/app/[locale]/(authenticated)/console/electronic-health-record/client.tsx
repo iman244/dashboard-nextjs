@@ -22,7 +22,7 @@ import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 const Client = () => {
   const t = useTranslations("/console/electronic-health-record.EHRTable");
   const fmt = useLocaleDigits();
-  const tPatientTypes = useTranslations("/console/electronic-health-record.PatientTypes");
+  const tPatientTypes = useTranslations("common.PatientTypes");
   const locale = useLocale();
   const {
     filters,

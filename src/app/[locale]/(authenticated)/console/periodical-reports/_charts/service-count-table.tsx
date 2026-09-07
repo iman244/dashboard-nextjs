@@ -8,7 +8,8 @@ import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FileText, XIcon, Search } from "lucide-react";
+import { ClipboardList, XIcon, Search } from "lucide-react";
+import { RowAction, RowActions } from "@/components/app";
 import {
   Sheet,
   SheetClose,
@@ -179,28 +180,25 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
       }),
       columnHelper.display({
         id: "actions",
-        header: tSCT("columnActions"),
+        header: tDictionary("Actions"),
         // The sheet lists this service's individual records, which every
         // service has — unlike the patient report's chart, it stays available
         // for services with no measured result.
         cell: (info) => (
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
+          <RowActions>
+            <RowAction
+              icon={ClipboardList}
+              label={tDictionary("ServiceRecords")}
               onClick={() => {
                 setSelectedService(info.row.original.serviceName);
                 setIsSheetOpen(true);
               }}
-              aria-label={tSCT("viewServiceRecords")}
-            >
-              <FileText className="h-4 w-4" />
-            </Button>
-          </div>
+            />
+          </RowActions>
         ),
       }),
     ]),
-    [tSCT]
+    [tSCT, tDictionary]
   );
 
   const table = useTable({

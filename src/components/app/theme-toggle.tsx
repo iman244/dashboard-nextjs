@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, Moon, Sun } from "lucide-react"
+import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl"
 
@@ -9,21 +9,58 @@ import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
-export function DarkModeToggle() {
-  const { setTheme, resolvedTheme, theme } = useTheme()
+/**
+ * What the interface is set to now, for a trigger that wants to say so.
+ *
+ * "System" stays "system" rather than resolving to the light or dark it
+ * currently produces: the user chose to follow the machine, and reporting
+ * "dark" back to them would hide that choice.
+ */
+export function useThemeLabel() {
+  const { resolvedTheme, theme } = useTheme()
   const t = useTranslations("common.Theme")
 
-  const themeLabel = React.useMemo(() => {
+  return React.useMemo(() => {
     const current = theme === "system" ? "system" : resolvedTheme
     if (current === "light") return t("light")
     if (current === "dark") return t("dark")
     return t("system")
   }, [resolvedTheme, theme, t])
+}
+
+/**
+ * The theme choices, for a menu that already has a trigger of its own.
+ *
+ * Radio items rather than plain items with a hand-drawn check: this is one
+ * choice out of three, so `role="menuitemradio"` lets a screen reader announce
+ * which is current instead of leaving the mark purely visual.
+ */
+export function ThemeMenuItems() {
+  const { setTheme, theme } = useTheme()
+  const t = useTranslations("common.Theme")
+
+  return (
+    <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+      <DropdownMenuRadioItem value="light">{t("light")}</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="dark">{t("dark")}</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="system">{t("system")}</DropdownMenuRadioItem>
+    </DropdownMenuRadioGroup>
+  )
+}
+
+/**
+ * The standalone control, for surfaces with no account menu to put it in.
+ * Inside the console's profile menu the same choices appear as a submenu.
+ */
+export function DarkModeToggle() {
+  const t = useTranslations("common.Theme")
+  const themeLabel = useThemeLabel()
 
   return (
     <DropdownMenu>
@@ -40,29 +77,7 @@ export function DarkModeToggle() {
         <TooltipContent sideOffset={6}>{t("current", { theme: themeLabel })}</TooltipContent>
       </Tooltip>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}
-          className="flex items-center gap-2">
-          <span className="inline-flex size-3 items-center justify-center">
-            {resolvedTheme === "light" && theme !== "system" ? (
-              <Check className="h-3 w-3" />
-            ) : null}
-          </span>
-          {t("light")}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")} className="flex items-center gap-2">
-          <span className="inline-flex size-3 items-center justify-center">
-            {resolvedTheme === "dark" && theme !== "system" ? (
-              <Check className="h-3 w-3" />
-            ) : null}
-          </span>
-          {t("dark")}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")} className="flex items-center gap-2">
-          <span className="inline-flex size-3 items-center justify-center">
-            {theme === "system" ? <Check className="h-3 w-3" /> : null}
-          </span>
-          {t("system")}
-        </DropdownMenuItem>
+        <ThemeMenuItems />
       </DropdownMenuContent>
     </DropdownMenu>
   )

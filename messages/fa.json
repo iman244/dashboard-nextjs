@@ -1,7 +1,8 @@
 {
   "common": {
     "Navigation": {
-      "backToHome": "بازگشت به صفحه اصلی"
+      "backToHome": "بازگشت به صفحه اصلی",
+      "toggleSidebar": "باز و بستن نوار کناری"
     },
     "Loading": {
       "default": "در حال بارگذاری…",
@@ -29,10 +30,14 @@
       "current": "حالت {theme}",
       "label": "نمایش"
     },
+    "Language": {
+      "label": "زبان",
+      "switchTo": "تغییر زبان به {language}"
+    },
     "NetworkErrorDialog": {
-      "AlertDialogTitle": "خطای شبکه",
-      "AlertDialogDescription": "ارتباط با شبکه اینترنت قطع شده است",
-      "AlertDialogAction": "بازیابی صفحه"
+      "title": "خطای شبکه",
+      "description": "ارتباط با سرور برقرار نشد. لطفاً صفحه را بازیابی کنید.",
+      "action": "بازیابی صفحه"
     },
     "EHRDetailModal": {
       "title": "جزئیات پرونده الکترونیک سلامت",
@@ -97,7 +102,21 @@
       "serviceName": "نام خدمت",
       "treatingPhysician": "نام پزشک معالج",
       "answer": "جواب",
-      "normalRange": "نرمال رنج"
+      "normalRange": "نرمال رنج",
+      "patientFullName": "نام و نام خانوادگی بیمار",
+      "nationalId": "کد ملی",
+      "location": "مکان",
+      "patientType": "نوع بیمار"
+    },
+    "PatientTypes": {
+      "1": "اطلاعات بستري",
+      "2": "آزمايشگاه",
+      "3": "تصويربرداري",
+      "4": "پاتولوژي",
+      "5": "درمانگاه",
+      "6": "اورژانس",
+      "7": "نسخ دارو و تجهيزات",
+      "25": "بيماران پاراكلينيك"
     },
     "Dictionary": {
       "Name": "نام",
@@ -113,7 +132,14 @@
       "Previous page": "صفحه قبلی",
       "Next page": "صفحه بعدی",
       "Last page": "صفحه آخر",
-      "Close": "بستن"
+      "Close": "بستن",
+      "ViewDetails": "مشاهده جزئیات",
+      "PatientRecord": "پرونده بیمار",
+      "PatientReport": "گزارش بیمار",
+      "TrendChart": "نمودار روند",
+      "ServiceRecords": "رکوردهای خدمت",
+      "OpenReport": "مشاهده گزارش",
+      "OpenMenu": "باز کردن منو"
     },
     "SBHM_Step": {
       "Label": "مرحله",
@@ -233,7 +259,8 @@
         "lastPage": "صفحه آخر",
         "noData": "هیچ داده‌ای یافت نشد",
         "loading": "در حال بارگذاری…"
-      }
+      },
+      "loadError": "خطا در بارگذاری داده‌ها: {message}"
     },
     "EHRFilter": {
       "title": "فیلترها",
@@ -249,16 +276,6 @@
       "validation": {
         "patientTypeRequired": "انتخاب نوع بیمار الزامی است"
       }
-    },
-    "PatientTypes": {
-      "1": "اطلاعات بستري",
-      "2": "آزمايشگاه",
-      "3": "تصويربرداري",
-      "4": "پاتولوژي",
-      "5": "درمانگاه",
-      "6": "اورژانس",
-      "7": "نسخ دارو و تجهيزات",
-      "25": "بيماران پاراكلينيك"
     }
   },
   "/console/form-sabt-payesh": {},
@@ -288,13 +305,10 @@
         "patientTypeRequired": "انتخاب نوع بیمار الزامی است",
         "dateRangeInvalid": "تاریخ پایان باید پس از تاریخ شروع باشد"
       },
-      "viewServiceChart": "مشاهده نمودار خدمت",
       "columnServiceCount": "تعداد دفعات",
       "columnNormalResults": "تعداد جواب‌های طبیعی",
       "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
-      "columnActions": "عملیات",
-      "noLabResult": "بدون نتیجه آزمایشگاهی",
-      "viewRecordDetails": "مشاهده جزئیات"
+      "noLabResult": "بدون نتیجه آزمایشگاهی"
     }
   },
   "/console/periodical-reports": {
@@ -348,17 +362,13 @@
       "normal": "طبیعی",
       "abnormal": "غیرطبیعی",
       "answerStatus": "وضعیت جواب",
-      "actions": "عملیات",
-      "viewRecordDetails": "مشاهده جزئیات پرونده",
-      "viewPatientReport": "مشاهده گزارش بیمار"
+      "actions": "عملیات"
     },
     "ServiceCountTable": {
-      "viewServiceRecords": "مشاهده پرونده‌های خدمت",
       "columnServiceName": "نام خدمت",
       "columnServiceCount": "تعداد دفعات",
       "columnNormalResults": "تعداد جواب‌های طبیعی",
       "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
-      "columnActions": "عملیات",
       "noLabResult": "بدون نتیجه آزمایشگاهی"
     }
   },
@@ -389,17 +399,16 @@
       "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
       "EmptyStateDescriptionDetail": "هیچ رکوردی برای نمایش وجود ندارد",
       "ReportTitle": "گزارش آماری",
-      "SearchPersonnel": "جستجوی پرسنل",
-      "SearchPersonnelDescription": "جستجو و مشاهده جزئیات پرسنل",
-      "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی…",
+      "SearchPersonnel": "جست و جوی بیماران",
+      "SearchPersonnelDescription": "جست و جو و مشاهده جزئیات بیماران",
+      "SearchPlaceholder": "جست و جو در نام، نام خانوادگی یا کد ملی…",
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
       "NoResults": "نتیجه‌ای یافت نشد",
-      "ViewDataset": "مشاهده مجموعه داده",
-      "ViewPersonRecord": "مشاهده پرونده سلامت",
       "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
       "WrongStepAction": "مشاهده در نمای درست",
-      "PageTitle": "پایش سلامت بانک صادرات"
+      "PageTitle": "پایش سلامت بانک صادرات",
+      "MatchCount": "{count} بیمار"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} یافته غیرطبیعی",
@@ -454,10 +463,7 @@
       "chartMax": "حد بالا",
       "measurementCount": "{count} اندازه‌گیری",
       "notEnoughPoints": "برای رسم نمودار به بیش از یک اندازه‌گیری نیاز است.",
-      "viewDetails": "مشاهده جزئیات",
-      "viewTrend": "نمودار روند",
-      "noRecords": "سابقه الکترونیکی برای این فرد یافت نشد.",
-      "tableActions": "عملیات"
+      "noRecords": "سابقه الکترونیکی برای این فرد یافت نشد."
     },
     "Detail": {
       "notFound": "رکوردی با این کد ملی در این پایش یافت نشد.",
@@ -536,12 +542,7 @@
         "service": "نام خدمت",
         "doctor": "پزشک معالج",
         "place": "مکان",
-        "patientType": "نوع سابقه",
-        "actions": "عملیات"
-      },
-      "actions": {
-        "openMenu": "باز کردن منو",
-        "viewDetails": "مشاهده جزئیات"
+        "patientType": "نوع سابقه"
       },
       "table": {
         "error": "بارگذاری سوابق ناموفق بود: {message}",

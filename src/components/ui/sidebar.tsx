@@ -256,8 +256,24 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  label = "Toggle Sidebar",
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & {
+  /**
+   * Accessible name for the trigger.
+   *
+   * A prop rather than a `useTranslations` call, because nothing under
+   * `components/ui` imports next-intl and this file should not be the first:
+   * these are vendored primitives, kept close enough to upstream that they can
+   * be re-pulled. The caller knows the locale; this only knows it needs words.
+   *
+   * The English default is the upstream string, and it is what a caller that
+   * forgets to pass one gets — this button is the only visible control on a
+   * collapsed console page, and it was announcing "Toggle Sidebar" to Persian
+   * screen-reader users on every route.
+   */
+  label?: string
+}) {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -274,7 +290,7 @@ function SidebarTrigger({
       {...props}
     >
       <PanelLeftIcon className="rtl:-scale-x-100" />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">{label}</span>
     </Button>
   )
 }

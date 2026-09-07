@@ -18,8 +18,8 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { formatDate, localeDigits } from "@/lib/utils";
 import { Table2, Trash, AlertCircle, Inbox } from "lucide-react";
+import { RowAction, RowActions } from "@/components/app";
 import DeleteSaderatBankHealthMonitoringExcelDialog from "./_delete-excel-dialog/dialog";
-import Link from "next/link";
 import { useList_SBHM_API } from "@/data/saderat-bank-health-monitoring/api";
 import { useIsStaff } from "@/data/user/fetches/me";
 import {
@@ -64,25 +64,20 @@ const SaderatBankHealthMonitoringPage = (
       columnHelper.display({
         header: tDictionary("Actions"),
         cell: ({ row }) => (
-          <div className="flex gap-2 items-center">
-            <Button variant={"ghost"} asChild>
-              <Link
-                href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
-                aria-label={t("ViewDataset")}
-              >
-                <Table2 />
-              </Link>
-            </Button>
+          <RowActions>
+            <RowAction
+              icon={Table2}
+              label={tDictionary("OpenReport")}
+              href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
+            />
             {isStaff && (
-              <Button
-                variant={"ghost"}
+              <RowAction
+                icon={Trash}
+                label={tDictionary("Delete")}
                 onClick={() => setDeleteRow(row.original)}
-                aria-label={tDictionary("Delete")}
-              >
-                <Trash />
-              </Button>
+              />
             )}
-          </div>
+          </RowActions>
         ),
       }),
     ]),
