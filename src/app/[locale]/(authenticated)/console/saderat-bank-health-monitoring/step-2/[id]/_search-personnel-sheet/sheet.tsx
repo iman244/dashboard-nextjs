@@ -58,6 +58,18 @@ export function SearchPersonnelSheet({
   const locale = useLocale();
   const [searchTerm, setSearchTerm] = React.useState("");
 
+  // Cleared on close, in the event rather than an effect: setState inside an
+  // effect trips react-hooks and causes a second render pass. Without this the
+  // sheet reopened still filtered by the last term, silently narrowing a new
+  // result set — the header said one count and the table showed another.
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      if (!next) setSearchTerm("");
+      onOpenChange(next);
+    },
+    [onOpenChange]
+  );
+
   const filtered = React.useMemo(
     () => (filter ? data.filter(filter.filterFn) : data),
     [data, filter]
@@ -121,19 +133,27 @@ export function SearchPersonnelSheet({
   });
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent side="bottom" className="h-[80vh] flex flex-col p-4">
         <SheetHeader>
           <SheetTitle>{t("SearchPersonnel")}</SheetTitle>
           <SheetDescription className="flex items-center gap-2">
             {filter ? (
-              <Badge variant="secondary">{filter.description}</Badge>
+              <>
+                <Badge variant="secondary">{filter.description}</Badge>
+                {/* How many the clicked bar matched. Only shown with a filter:
+                    it counts before the search box narrows things, so beside a
+                    search it contradicted the pagination line below. Was also
+                    a bare digit with no label. */}
+                <span className="text-muted-foreground">
+                  {t("MatchCount", {
+                    count: localeDigits(filtered.length, locale),
+                  })}
+                </span>
+              </>
             ) : (
               t("SearchPersonnelDescription")
             )}
-            <span className="text-muted-foreground">
-              {localeDigits(filtered.length, locale)}
-            </span>
           </SheetDescription>
         </SheetHeader>
 

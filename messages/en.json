@@ -389,9 +389,9 @@
       "EmptyStateDescription": "Please upload an Excel file",
       "EmptyStateDescriptionDetail": "No records available to display",
       "ReportTitle": "Statistical Report",
-      "SearchPersonnel": "Search Personnel",
-      "SearchPersonnelDescription": "Search and view personnel details",
-      "SearchPlaceholder": "Search by name, last name or national ID…",
+      "SearchPersonnel": "Search Patients",
+      "SearchPersonnelDescription": "Search and view patient details",
+      "SearchPlaceholder": "Search by first name, surname or national ID…",
       "ClearSearch": "Clear",
       "NoSearchResults": "No results found",
       "NoResults": "No results found",
@@ -399,7 +399,8 @@
       "ViewPersonRecord": "View health record",
       "WrongStepTitle": "This record belongs to a different step.",
       "WrongStepAction": "Open it in the right view",
-      "PageTitle": "Saderat Bank Health Monitoring"
+      "PageTitle": "Saderat Bank Health Monitoring",
+      "MatchCount": "{count} patients"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} abnormal findings",

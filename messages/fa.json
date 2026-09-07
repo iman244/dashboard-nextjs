@@ -389,9 +389,9 @@
       "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
       "EmptyStateDescriptionDetail": "هیچ رکوردی برای نمایش وجود ندارد",
       "ReportTitle": "گزارش آماری",
-      "SearchPersonnel": "جستجوی پرسنل",
-      "SearchPersonnelDescription": "جستجو و مشاهده جزئیات پرسنل",
-      "SearchPlaceholder": "جستجو در نام، نام خانوادگی یا کد ملی…",
+      "SearchPersonnel": "جست و جوی بیماران",
+      "SearchPersonnelDescription": "جست و جو و مشاهده جزئیات بیماران",
+      "SearchPlaceholder": "جست و جو در نام، نام خانوادگی یا کد ملی…",
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
       "NoResults": "نتیجه‌ای یافت نشد",
@@ -399,7 +399,8 @@
       "ViewPersonRecord": "مشاهده پرونده سلامت",
       "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
       "WrongStepAction": "مشاهده در نمای درست",
-      "PageTitle": "پایش سلامت بانک صادرات"
+      "PageTitle": "پایش سلامت بانک صادرات",
+      "MatchCount": "{count} بیمار"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} یافته غیرطبیعی",

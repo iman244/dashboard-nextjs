@@ -49,6 +49,18 @@ export function SearchPersonnelSheet({
 }: SearchPersonnelSheetProps) {
   const locale = useLocale();
   const [searchTerm, setSearchTerm] = React.useState("");
+
+  // Cleared on close, in the event rather than an effect: setState inside an
+  // effect trips react-hooks and causes a second render pass. Without this the
+  // sheet reopened still filtered by the last term, silently narrowing a new
+  // result set — the header said one count and the table showed another.
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      if (!next) setSearchTerm("");
+      onOpenChange(next);
+    },
+    [onOpenChange]
+  );
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
 
   // Apply filter if provided
@@ -122,7 +134,7 @@ export function SearchPersonnelSheet({
   });
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent side="bottom" className="h-[80vh] flex flex-col p-4">
         <SheetHeader>
           <SheetTitle>{t("SearchPersonnel")}</SheetTitle>

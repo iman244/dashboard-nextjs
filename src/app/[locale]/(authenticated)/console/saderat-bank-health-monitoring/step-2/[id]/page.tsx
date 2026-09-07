@@ -4,7 +4,7 @@ import { LoadingState } from "@/components/app/loading-state";
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertCircle, Inbox } from "lucide-react";
+import { AlertCircle, Inbox, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
 import {
@@ -149,6 +149,19 @@ const Step2MonitoringPage = (
               count: localeDigits(report.totalRecords, locale),
             })}
           </>
+        }
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setActiveFilter(undefined);
+              setIsSheetOpen(true);
+            }}
+          >
+            <Users className="h-4 w-4 ms-2" />
+            {t("SearchPersonnel")}
+          </Button>
         }
       />
 
