@@ -7,8 +7,8 @@ import { DataTable } from "@/components/app";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { useLocale, useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
 import { BarChart3, Eye } from "lucide-react";
+import { RowAction, RowActions } from "@/components/app";
 import { formatNumber, localeDigits } from "@/lib/utils";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { usePeriodicalReports } from "../provider";
@@ -203,25 +203,18 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
         id: "actions",
         header: tDictionary("Actions"),
         cell: (info) => (
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
+          <RowActions>
+            <RowAction
+              icon={Eye}
+              label={tDictionary("ViewDetails")}
               onClick={() => setSelectedRecord(info.row.original)}
-              aria-label={tDictionary("ViewDetails")}
-            >
-              <Eye aria-hidden="true" className="h-4 w-4" />
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
+            />
+            <RowAction
+              icon={BarChart3}
+              label={tDictionary("PatientReport")}
               onClick={() => handlePatientReport(info.row.original)}
-              aria-label={tDictionary("PatientReport")}
-            >
-              <BarChart3 aria-hidden="true" className="h-4 w-4" />
-            </Button>
-          </div>
+            />
+          </RowActions>
         ),
       }),
     ]),

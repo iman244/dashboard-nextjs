@@ -3,6 +3,7 @@
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { FileUser, Search, XIcon } from "lucide-react";
+import { RowAction } from "@/components/app";
 import {
   Sheet,
   SheetContent,
@@ -17,7 +18,6 @@ import { DataTable, TablePagination } from "@/components/app";
 import { appTableFeatures } from "@/components/app/table-features";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { localeDigits } from "@/lib/utils";
-import { Link } from "@/i18n/navigation";
 import type { SBHM_Step2Record } from "@/data/saderat-bank-health-monitoring/types";
 
 const columnHelper = createColumnHelper<
@@ -98,15 +98,12 @@ export function SearchPersonnelSheet({
             // the route keys on national id; a row without one has nowhere to go
             if (!nationalId) return null;
             return (
-              <Button variant="ghost" size="sm" asChild>
-                <Link
-                  href={`/console/saderat-bank-health-monitoring/step-2/${monitoringId}/${nationalId}`}
-                  onClick={() => onOpenChange(false)}
-                  aria-label={tDictionary("PatientRecord")}
-                >
-                  <FileUser aria-hidden="true" className="h-4 w-4" />
-                </Link>
-              </Button>
+              <RowAction
+                icon={FileUser}
+                label={tDictionary("PatientRecord")}
+                href={`/console/saderat-bank-health-monitoring/step-2/${monitoringId}/${nationalId}`}
+                onClick={() => onOpenChange(false)}
+              />
             );
           },
         }),

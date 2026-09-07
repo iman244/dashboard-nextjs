@@ -4,7 +4,7 @@ import React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { AlertCircle, ChartLine, Eye, Inbox } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { RowAction, RowActions } from "@/components/app";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataTable, TablePagination } from "@/components/app";
 import {
@@ -122,31 +122,25 @@ export const EhrRecordsTable = ({
           id: "actions",
           header: tActions("Actions"),
           cell: ({ row }) => (
-            <span className="flex items-center gap-1">
+            <RowActions>
               {row.original.kind === "lab" && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label={`${tActions("TrendChart")} — ${row.original.service}`}
+                <RowAction
+                  icon={ChartLine}
+                  label={tActions("TrendChart")}
                   onClick={() => {
                     const series = ehr.labs.find(
                       (l) => l.service === row.original.service
                     );
                     if (series) onSelectSeries(series);
                   }}
-                >
-                  <ChartLine aria-hidden="true" className="h-4 w-4" />
-                </Button>
+                />
               )}
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label={`${tActions("ViewDetails")} — ${row.original.service}`}
+              <RowAction
+                icon={Eye}
+                label={tActions("ViewDetails")}
                 onClick={() => onViewRecord(row.original.raw)}
-              >
-                <Eye aria-hidden="true" className="h-4 w-4" />
-              </Button>
-            </span>
+              />
+            </RowActions>
           ),
         }),
       ]),

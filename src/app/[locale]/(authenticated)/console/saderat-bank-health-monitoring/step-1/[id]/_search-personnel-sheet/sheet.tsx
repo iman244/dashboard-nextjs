@@ -16,8 +16,8 @@ import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { TablePagination } from "../table-pagination";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { FileUser, Search } from "lucide-react";
+import { RowAction } from "@/components/app";
 import { Input } from "@/components/ui/input";
 import {
   Sheet,
@@ -95,15 +95,12 @@ export function SearchPersonnelSheet({
       columnHelper.display({
         header: tDictionary("Actions"),
         cell: ({ row }) => (
-          <Button variant={"ghost"} asChild size="sm">
-            <Link
-              href={`/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${row.original["personel.کد ملی"]}`}
-              onClick={() => onOpenChange(false)}
-              aria-label={tDictionary("PatientRecord")}
-            >
-              <FileUser aria-hidden="true" className="h-4 w-4" />
-            </Link>
-          </Button>
+          <RowAction
+            icon={FileUser}
+            label={tDictionary("PatientRecord")}
+            href={`/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${row.original["personel.کد ملی"]}`}
+            onClick={() => onOpenChange(false)}
+          />
         ),
       }),
     ]),

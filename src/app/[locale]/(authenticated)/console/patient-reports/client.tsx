@@ -16,6 +16,7 @@ import { EHRDetailModal } from "@/data/electronic health record/components/EHRDe
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, FileText, XIcon, ChartLine, Eye } from "lucide-react";
+import { RowAction, RowActions } from "@/components/app";
 import { TablePagination } from "@/components/app/table-pagination";
 import {
   Sheet,
@@ -451,35 +452,29 @@ const Client = (props: {
         id: "actions",
         header: tDictionary("Actions"),
         cell: (info) => (
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
+          <RowActions>
+            <RowAction
+              icon={Eye}
+              label={tDictionary("ViewDetails")}
               onClick={() => {
                 setSelectedRecord(info.row.original.record);
                 setIsDetailModalOpen(true);
               }}
-              aria-label={tDictionary("ViewDetails")}
-            >
-              <Eye aria-hidden="true" className="h-4 w-4" />
-            </Button>
+            />
             {/* Nothing to plot for a service with no measured results, so that
                 row gets no chart button rather than one that opens an empty
                 chart. The detail button above stays on every row. */}
             {info.row.original.resultCount > 0 && (
-              <Button
-                variant="ghost"
-                size="icon"
+              <RowAction
+                icon={ChartLine}
+                label={tDictionary("TrendChart")}
                 onClick={() => {
                   setSelectedService(info.row.original.serviceName);
                   setIsSheetOpen(true);
                 }}
-                aria-label={tDictionary("TrendChart")}
-              >
-                <ChartLine aria-hidden="true" className="h-4 w-4" />
-              </Button>
+              />
             )}
-          </div>
+          </RowActions>
         ),
       }),
     ]),

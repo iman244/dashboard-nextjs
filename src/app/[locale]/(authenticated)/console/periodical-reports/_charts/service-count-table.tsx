@@ -9,6 +9,7 @@ import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ClipboardList, XIcon, Search } from "lucide-react";
+import { RowAction, RowActions } from "@/components/app";
 import {
   Sheet,
   SheetClose,
@@ -184,19 +185,16 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
         // service has — unlike the patient report's chart, it stays available
         // for services with no measured result.
         cell: (info) => (
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
+          <RowActions>
+            <RowAction
+              icon={ClipboardList}
+              label={tDictionary("ServiceRecords")}
               onClick={() => {
                 setSelectedService(info.row.original.serviceName);
                 setIsSheetOpen(true);
               }}
-              aria-label={tDictionary("ServiceRecords")}
-            >
-              <ClipboardList aria-hidden="true" className="h-4 w-4" />
-            </Button>
-          </div>
+            />
+          </RowActions>
         ),
       }),
     ]),
