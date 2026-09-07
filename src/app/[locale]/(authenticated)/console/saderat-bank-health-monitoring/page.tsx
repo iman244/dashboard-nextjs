@@ -68,9 +68,9 @@ const SaderatBankHealthMonitoringPage = (
             <Button variant={"ghost"} asChild>
               <Link
                 href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
-                aria-label={t("ViewDataset")}
+                aria-label={tDictionary("OpenReport")}
               >
-                <Table2 />
+                <Table2 aria-hidden="true" />
               </Link>
             </Button>
             {isStaff && (
@@ -79,7 +79,7 @@ const SaderatBankHealthMonitoringPage = (
                 onClick={() => setDeleteRow(row.original)}
                 aria-label={tDictionary("Delete")}
               >
-                <Trash />
+                <Trash aria-hidden="true" />
               </Button>
             )}
           </div>

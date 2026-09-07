@@ -113,7 +113,14 @@
       "Previous page": "صفحه قبلی",
       "Next page": "صفحه بعدی",
       "Last page": "صفحه آخر",
-      "Close": "بستن"
+      "Close": "بستن",
+      "ViewDetails": "مشاهده جزئیات",
+      "PatientRecord": "پرونده بیمار",
+      "PatientReport": "گزارش بیمار",
+      "TrendChart": "نمودار روند",
+      "ServiceRecords": "رکوردهای خدمت",
+      "OpenReport": "مشاهده گزارش",
+      "OpenMenu": "باز کردن منو"
     },
     "SBHM_Step": {
       "Label": "مرحله",
@@ -288,13 +295,10 @@
         "patientTypeRequired": "انتخاب نوع بیمار الزامی است",
         "dateRangeInvalid": "تاریخ پایان باید پس از تاریخ شروع باشد"
       },
-      "viewServiceChart": "مشاهده نمودار خدمت",
       "columnServiceCount": "تعداد دفعات",
       "columnNormalResults": "تعداد جواب‌های طبیعی",
       "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
-      "columnActions": "عملیات",
-      "noLabResult": "بدون نتیجه آزمایشگاهی",
-      "viewRecordDetails": "مشاهده جزئیات"
+      "noLabResult": "بدون نتیجه آزمایشگاهی"
     }
   },
   "/console/periodical-reports": {
@@ -348,17 +352,13 @@
       "normal": "طبیعی",
       "abnormal": "غیرطبیعی",
       "answerStatus": "وضعیت جواب",
-      "actions": "عملیات",
-      "viewRecordDetails": "مشاهده جزئیات پرونده",
-      "viewPatientReport": "مشاهده گزارش بیمار"
+      "actions": "عملیات"
     },
     "ServiceCountTable": {
-      "viewServiceRecords": "مشاهده پرونده‌های خدمت",
       "columnServiceName": "نام خدمت",
       "columnServiceCount": "تعداد دفعات",
       "columnNormalResults": "تعداد جواب‌های طبیعی",
       "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
-      "columnActions": "عملیات",
       "noLabResult": "بدون نتیجه آزمایشگاهی"
     }
   },
@@ -395,8 +395,6 @@
       "ClearSearch": "پاک کردن",
       "NoSearchResults": "نتیجه‌ای یافت نشد",
       "NoResults": "نتیجه‌ای یافت نشد",
-      "ViewDataset": "مشاهده مجموعه داده",
-      "ViewPersonRecord": "مشاهده پرونده سلامت",
       "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
       "WrongStepAction": "مشاهده در نمای درست",
       "PageTitle": "پایش سلامت بانک صادرات",
@@ -455,10 +453,7 @@
       "chartMax": "حد بالا",
       "measurementCount": "{count} اندازه‌گیری",
       "notEnoughPoints": "برای رسم نمودار به بیش از یک اندازه‌گیری نیاز است.",
-      "viewDetails": "مشاهده جزئیات",
-      "viewTrend": "نمودار روند",
-      "noRecords": "سابقه الکترونیکی برای این فرد یافت نشد.",
-      "tableActions": "عملیات"
+      "noRecords": "سابقه الکترونیکی برای این فرد یافت نشد."
     },
     "Detail": {
       "notFound": "رکوردی با این کد ملی در این پایش یافت نشد.",
@@ -537,12 +532,7 @@
         "service": "نام خدمت",
         "doctor": "پزشک معالج",
         "place": "مکان",
-        "patientType": "نوع سابقه",
-        "actions": "عملیات"
-      },
-      "actions": {
-        "openMenu": "باز کردن منو",
-        "viewDetails": "مشاهده جزئیات"
+        "patientType": "نوع سابقه"
       },
       "table": {
         "error": "بارگذاری سوابق ناموفق بود: {message}",

@@ -1,6 +1,5 @@
 "use client";
 import Script from 'next/script';
-import { useEffect, useRef } from "react";
 
 export default function FormAfzar() {
   return (

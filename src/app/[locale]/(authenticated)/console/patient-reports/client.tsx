@@ -15,7 +15,7 @@ import { DataTable } from "@/components/app";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, FileText, XIcon, ChartArea, Eye } from "lucide-react";
+import { Search, FileText, XIcon, ChartLine, Eye } from "lucide-react";
 import { TablePagination } from "@/components/app/table-pagination";
 import {
   Sheet,
@@ -449,7 +449,7 @@ const Client = (props: {
       }),
       columnHelper.display({
         id: "actions",
-        header: t("columnActions"),
+        header: tDictionary("Actions"),
         cell: (info) => (
           <div className="flex items-center gap-2">
             <Button
@@ -459,9 +459,9 @@ const Client = (props: {
                 setSelectedRecord(info.row.original.record);
                 setIsDetailModalOpen(true);
               }}
-              aria-label={t("viewRecordDetails")}
+              aria-label={tDictionary("ViewDetails")}
             >
-              <Eye className="h-4 w-4" />
+              <Eye aria-hidden="true" className="h-4 w-4" />
             </Button>
             {/* Nothing to plot for a service with no measured results, so that
                 row gets no chart button rather than one that opens an empty
@@ -474,16 +474,16 @@ const Client = (props: {
                   setSelectedService(info.row.original.serviceName);
                   setIsSheetOpen(true);
                 }}
-                aria-label={t("viewServiceChart")}
+                aria-label={tDictionary("TrendChart")}
               >
-                <ChartArea className="h-4 w-4" />
+                <ChartLine aria-hidden="true" className="h-4 w-4" />
               </Button>
             )}
           </div>
         ),
       }),
     ]),
-    [t, tData, locale, setSelectedRecord, setIsDetailModalOpen]
+    [t, tData, tDictionary, locale, setSelectedRecord, setIsDetailModalOpen]
   );
 
   const table = useTable({

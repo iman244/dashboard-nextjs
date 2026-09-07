@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { FileSearch, Search, XIcon } from "lucide-react";
+import { FileUser, Search, XIcon } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -102,8 +102,9 @@ export function SearchPersonnelSheet({
                 <Link
                   href={`/console/saderat-bank-health-monitoring/step-2/${monitoringId}/${nationalId}`}
                   onClick={() => onOpenChange(false)}
+                  aria-label={tDictionary("PatientRecord")}
                 >
-                  <FileSearch className="h-4 w-4" />
+                  <FileUser aria-hidden="true" className="h-4 w-4" />
                 </Link>
               </Button>
             );

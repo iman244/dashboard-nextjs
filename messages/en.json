@@ -113,7 +113,14 @@
       "Previous page": "Previous page",
       "Next page": "Next page",
       "Last page": "Last page",
-      "Close": "Close"
+      "Close": "Close",
+      "ViewDetails": "View details",
+      "PatientRecord": "Patient record",
+      "PatientReport": "Patient report",
+      "TrendChart": "Trend chart",
+      "ServiceRecords": "Service records",
+      "OpenReport": "Open report",
+      "OpenMenu": "Open menu"
     },
     "SBHM_Step": {
       "Label": "Step",
@@ -288,13 +295,10 @@
         "patientTypeRequired": "Patient type is required",
         "dateRangeInvalid": "End date must be after start date"
       },
-      "viewServiceChart": "View service chart",
       "columnServiceCount": "Times recorded",
       "columnNormalResults": "Normal results",
       "columnAbnormalResults": "Abnormal results",
-      "columnActions": "Actions",
-      "noLabResult": "No lab result",
-      "viewRecordDetails": "View details"
+      "noLabResult": "No lab result"
     }
   },
   "/console/periodical-reports": {
@@ -348,17 +352,13 @@
       "answerStatus": "Answer Status",
       "normal": "Normal",
       "abnormal": "Abnormal",
-      "actions": "Actions",
-      "viewRecordDetails": "View record details",
-      "viewPatientReport": "View patient report"
+      "actions": "Actions"
     },
     "ServiceCountTable": {
-      "viewServiceRecords": "View service records",
       "columnServiceName": "Service Name",
       "columnServiceCount": "Times recorded",
       "columnNormalResults": "Normal results",
       "columnAbnormalResults": "Abnormal results",
-      "columnActions": "Actions",
       "noLabResult": "No lab result"
     }
   },
@@ -395,8 +395,6 @@
       "ClearSearch": "Clear",
       "NoSearchResults": "No results found",
       "NoResults": "No results found",
-      "ViewDataset": "View dataset",
-      "ViewPersonRecord": "View health record",
       "WrongStepTitle": "This record belongs to a different step.",
       "WrongStepAction": "Open it in the right view",
       "PageTitle": "Saderat Bank Health Monitoring",
@@ -455,10 +453,7 @@
       "chartMax": "Upper bound",
       "measurementCount": "{count} measurements",
       "notEnoughPoints": "A trend needs more than one measurement.",
-      "viewDetails": "View details",
-      "viewTrend": "Trend chart",
-      "noRecords": "No electronic records found for this person.",
-      "tableActions": "Actions"
+      "noRecords": "No electronic records found for this person."
     },
     "Detail": {
       "notFound": "No record with this national ID in this monitoring.",
@@ -537,12 +532,7 @@
         "service": "Service",
         "doctor": "Doctor",
         "place": "Location",
-        "patientType": "Record type",
-        "actions": "Actions"
-      },
-      "actions": {
-        "openMenu": "Open menu",
-        "viewDetails": "View details"
+        "patientType": "Record type"
       },
       "table": {
         "error": "Could not load your records: {message}",

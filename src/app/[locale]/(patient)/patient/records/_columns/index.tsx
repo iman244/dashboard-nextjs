@@ -39,6 +39,7 @@ export const usePatientRecordColumns = ({
   onViewDetails: (record: ElectronicHealthRecord) => void;
 }) => {
   const t = useTranslations("/patient/records.PatientRecords");
+  const tDictionary = useTranslations("common.Dictionary");
   const locale = useLocale();
   const isRtl = useIsRtl();
 
@@ -72,13 +73,13 @@ export const usePatientRecordColumns = ({
         }),
         columnHelper.display({
           id: "actions",
-          header: t("columns.actions"),
+          header: tDictionary("Actions"),
           cell: ({ row }) => (
             <DropdownMenu dir={isRtl ? "rtl" : "ltr"}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">{t("actions.openMenu")}</span>
-                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">{tDictionary("OpenMenu")}</span>
+                  <MoreHorizontal aria-hidden="true" className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -86,14 +87,14 @@ export const usePatientRecordColumns = ({
                   onClick={() => onViewDetails(row.original)}
                   className="cursor-pointer"
                 >
-                  <Eye className="me-2 h-4 w-4" />
-                  {t("actions.viewDetails")}
+                  <Eye aria-hidden="true" className="me-2 h-4 w-4" />
+                  {tDictionary("ViewDetails")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ),
         }),
       ]),
-    [t, locale, isRtl, onViewDetails]
+    [t, locale, isRtl, onViewDetails, tDictionary]
   );
 };

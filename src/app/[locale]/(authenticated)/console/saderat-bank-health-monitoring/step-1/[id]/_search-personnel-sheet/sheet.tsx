@@ -17,7 +17,7 @@ import React from "react";
 import { TablePagination } from "../table-pagination";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FileSearchCorner, Search } from "lucide-react";
+import { FileUser, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Sheet,
@@ -48,6 +48,7 @@ export function SearchPersonnelSheet({
   filterDescription,
 }: SearchPersonnelSheetProps) {
   const locale = useLocale();
+  const tDictionary = useTranslations("common.Dictionary");
   const [searchTerm, setSearchTerm] = React.useState("");
 
   // Cleared on close, in the event rather than an effect: setState inside an
@@ -92,15 +93,15 @@ export function SearchPersonnelSheet({
         },
       }),
       columnHelper.display({
-        header: "عملیات",
+        header: tDictionary("Actions"),
         cell: ({ row }) => (
           <Button variant={"ghost"} asChild size="sm">
             <Link
               href={`/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${row.original["personel.کد ملی"]}`}
               onClick={() => onOpenChange(false)}
-              aria-label={t("ViewPersonRecord")}
+              aria-label={tDictionary("PatientRecord")}
             >
-              <FileSearchCorner className="h-4 w-4" />
+              <FileUser aria-hidden="true" className="h-4 w-4" />
             </Link>
           </Button>
         ),

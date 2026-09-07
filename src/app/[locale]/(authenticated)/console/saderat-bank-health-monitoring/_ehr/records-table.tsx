@@ -54,6 +54,9 @@ export const EhrRecordsTable = ({
   // patient-reports service table reads the same keys. Naming them anything
   // else here would invent a second vocabulary for one set of fields.
   const tDictionary = useTranslations("common.dictionary");
+  // Two namespaces, one letter apart: `common.dictionary` holds the payload's
+  // field names, `common.Dictionary` the shared table vocabulary.
+  const tActions = useTranslations("common.Dictionary");
   const locale = useLocale();
 
   const rows = React.useMemo<RecordRow[]>(
@@ -117,14 +120,14 @@ export const EhrRecordsTable = ({
         }),
         columnHelper.display({
           id: "actions",
-          header: t("tableActions"),
+          header: tActions("Actions"),
           cell: ({ row }) => (
             <span className="flex items-center gap-1">
               {row.original.kind === "lab" && (
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label={`${t("viewTrend")} — ${row.original.service}`}
+                  aria-label={`${tActions("TrendChart")} — ${row.original.service}`}
                   onClick={() => {
                     const series = ehr.labs.find(
                       (l) => l.service === row.original.service
@@ -138,7 +141,7 @@ export const EhrRecordsTable = ({
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label={`${t("viewDetails")} — ${row.original.service}`}
+                aria-label={`${tActions("ViewDetails")} — ${row.original.service}`}
                 onClick={() => onViewRecord(row.original.raw)}
               >
                 <Eye aria-hidden="true" className="h-4 w-4" />
@@ -147,7 +150,7 @@ export const EhrRecordsTable = ({
           ),
         }),
       ]),
-    [t, tDictionary, locale, ehr.labs, onSelectSeries, onViewRecord]
+    [tDictionary, tActions, locale, ehr.labs, onSelectSeries, onViewRecord]
   );
 
   const table = useTable({
