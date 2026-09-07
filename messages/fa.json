@@ -35,9 +35,9 @@
       "switchTo": "تغییر زبان به {language}"
     },
     "NetworkErrorDialog": {
-      "AlertDialogTitle": "خطای شبکه",
-      "AlertDialogDescription": "ارتباط با شبکه اینترنت قطع شده است",
-      "AlertDialogAction": "بازیابی صفحه"
+      "title": "خطای شبکه",
+      "description": "ارتباط با سرور برقرار نشد. لطفاً صفحه را بازیابی کنید.",
+      "action": "بازیابی صفحه"
     },
     "EHRDetailModal": {
       "title": "جزئیات پرونده الکترونیک سلامت",

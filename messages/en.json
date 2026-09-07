@@ -35,9 +35,9 @@
       "switchTo": "Switch to {language}"
     },
     "NetworkErrorDialog": {
-      "AlertDialogTitle": "Network Error",
-      "AlertDialogDescription": "Connection to the server is lost. Please reload the page.",
-      "AlertDialogAction": "Reload"
+      "title": "Network Error",
+      "description": "Couldn't reach the server. Please reload the page.",
+      "action": "Reload"
     },
     "EHRDetailModal": {
       "title": "Electronic Health Record Details",
