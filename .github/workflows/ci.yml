@@ -1,0 +1,100 @@
+# Check, then deploy — in that order, in one workflow.
+#
+# These were two files, and review caught the flaw: two workflows triggered by
+# the same push run in parallel, so a merge that failed the type-check deployed
+# anyway. That matters more here than elsewhere — deploying stops the running
+# container before building, so a broken commit took the front end down and
+# then failed. One workflow with `needs` makes the ordering structural.
+#
+# The deployment logic itself lives in mainreport-platform/deploy.sh; the job
+# below hands over the NEXT_PUBLIC_* values and names the service.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # Superseded pull request runs are worth cancelling; a deploy is not. Killing
+  # one mid-flight can strand the front end: deploy.sh traps the signal and
+  # restores the container, but relying on that is worse than not cancelling.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      # Matches the Dockerfile's node:20.9-alpine, so a dependency that breaks
+      # on the version actually deployed fails here rather than on the server.
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '20.9'
+          cache: npm
+
+      # `npm ci` rather than `npm install`, so a lockfile that has drifted out
+      # of sync fails here. Note this is stricter than the image build, whose
+      # Dockerfile does not copy package-lock.json and runs `npm install` — so
+      # server builds re-resolve dependencies and are not reproducible. Worth
+      # fixing separately; this at least keeps the lockfile honest.
+      - run: npm ci
+
+      # tsconfig pulls in .next/types, where Next generates the PageProps and
+      # route types the app pages annotate themselves with. A clean checkout
+      # has no .next, so tsc alone fails here while passing on a machine that
+      # has built before. typegen writes those types without a full build.
+      - name: Generate route types
+        run: npx --no-install next typegen
+
+      # --no-install, or npx may fetch an unrelated registry package named
+      # `tsc` instead of the compiler npm ci just installed.
+      - name: Type-check
+        run: npx --no-install tsc --noEmit
+
+      # Not blocking, and not an oversight: main carries 33 pre-existing eslint
+      # errors. Gating on them would make every pull request red on arrival,
+      # which teaches people to ignore CI rather than to read it. The output is
+      # here to be read; make this blocking once the backlog is cleared.
+      - name: Lint (advisory)
+        run: npm run lint
+        continue-on-error: true
+
+      # No NEXT_PUBLIC_* here on purpose: this proves the build compiles, not
+      # that it is configured. src/settings.ts has a fallback for every one of
+      # them, and the values that reach users are baked in on the server.
+      - name: Build
+        run: npm run build
+
+  deploy:
+    needs: check
+    # Never from a pull request, and never from a branch: a manual run on a
+    # feature branch would otherwise deploy that branch over production.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.2.5
+        env:
+          NEXT_PUBLIC_DJANGO_ADDRESS: ${{ secrets.NEXT_PUBLIC_DJANGO_ADDRESS }}
+          NEXT_PUBLIC_DJANGO_API_PATH: ${{ secrets.NEXT_PUBLIC_DJANGO_API_PATH }}
+          NEXT_PUBLIC_5_160_115_210_ADDRESS: ${{ secrets.NEXT_PUBLIC_5_160_115_210_ADDRESS }}
+          NEXT_PUBLIC_5_160_115_210_API_PATH: ${{ secrets.NEXT_PUBLIC_5_160_115_210_API_PATH }}
+          NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME: ${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME }}
+          NEXT_PUBLIC_ACCESS_TOKEN_KEY: ${{ secrets.NEXT_PUBLIC_ACCESS_TOKEN_KEY }}
+          NEXT_PUBLIC_REFRESH_TOKEN_KEY: ${{ secrets.NEXT_PUBLIC_REFRESH_TOKEN_KEY }}
+          NEXT_PUBLIC_LOCALE_COOKIE_NAME: ${{ secrets.NEXT_PUBLIC_LOCALE_COOKIE_NAME }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          # Forwarded into the remote shell, where deploy.sh writes them into
+          # /app/.env. build.sh reads them from there as --build-arg values,
+          # which is the only way NEXT_PUBLIC_* reaches the browser bundle.
+          envs: NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME
+          # A full `npm install` and `next build` on a two-core VM.
+          command_timeout: 40m
+          script: /app/deploy.sh nextjs
