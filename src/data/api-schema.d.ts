@@ -240,6 +240,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/saderat-bank-health-monitoring/monitoring-types/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List monitoring types */
+        get: operations["saderat_bank_health_monitoring_monitoring_types_list"];
+        put?: never;
+        /** Create a monitoring type */
+        post: operations["saderat_bank_health_monitoring_monitoring_types_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/saderat-bank-health-monitoring/monitoring-types/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve a monitoring type */
+        get: operations["saderat_bank_health_monitoring_monitoring_types_retrieve"];
+        /** Replace a monitoring type */
+        put: operations["saderat_bank_health_monitoring_monitoring_types_update"];
+        post?: never;
+        /** Delete a monitoring type */
+        delete: operations["saderat_bank_health_monitoring_monitoring_types_destroy"];
+        options?: never;
+        head?: never;
+        /** Update a monitoring type */
+        patch: operations["saderat_bank_health_monitoring_monitoring_types_partial_update"];
+        trace?: never;
+    };
     "/api/saderat-bank-health-monitoring/monitorings/": {
         parameters: {
             query?: never;
@@ -303,6 +341,17 @@ export interface components {
             uid: string;
             token: string;
         };
+        MonitoringType: {
+            readonly id: number;
+            slug: string;
+            name_en: string;
+            name_fa: string;
+        };
+        MonitoringTypeRequest: {
+            slug: string;
+            name_en: string;
+            name_fa: string;
+        };
         PasswordResetConfirm: {
             uid: string;
             token: string;
@@ -313,9 +362,14 @@ export interface components {
             token: string;
             new_password: string;
         };
+        PatchedMonitoringTypeRequest: {
+            slug?: string;
+            name_en?: string;
+            name_fa?: string;
+        };
         PatchedSaderatBankHealthMonitoringListRequest: {
             name?: string;
-            type?: components["schemas"]["TypeEnum"];
+            type?: string;
         };
         PatchedUserRequest: {
             /** Email address */
@@ -324,25 +378,25 @@ export interface components {
         SaderatBankHealthMonitoringList: {
             readonly id: number;
             name: string;
-            type: components["schemas"]["TypeEnum"];
+            type: string;
             /** Format: date-time */
             readonly created_at: string;
         };
         SaderatBankHealthMonitoringListRequest: {
             name: string;
-            type: components["schemas"]["TypeEnum"];
+            type: string;
         };
         SaderatBankHealthMonitoringRetrieve: {
             readonly id: number;
+            type: string;
             name: string;
-            type: components["schemas"]["TypeEnum"];
             /** Format: date-time */
             readonly created_at: string;
             json?: unknown;
         };
         SaderatBankHealthMonitoringUploadExcelRequest: {
             name: string;
-            type: components["schemas"]["TypeEnum"];
+            type: string;
             /** Format: binary */
             file: string;
         };
@@ -395,12 +449,6 @@ export interface components {
         TokenVerifyRequest: {
             token: string;
         };
-        /**
-         * @description * `step_1` - Step 1
-         *     * `step_2` - Step 2
-         * @enum {string}
-         */
-        TypeEnum: "step_1" | "step_2";
         UploadExcelResponse: {
             message: string;
         };
@@ -957,6 +1005,156 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SetUsername"];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_monitoring_types_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MonitoringType"][];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_monitoring_types_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MonitoringTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["MonitoringTypeRequest"];
+                "multipart/form-data": components["schemas"]["MonitoringTypeRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MonitoringType"];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_monitoring_types_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this monitoring type. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MonitoringType"];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_monitoring_types_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this monitoring type. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MonitoringTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["MonitoringTypeRequest"];
+                "multipart/form-data": components["schemas"]["MonitoringTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MonitoringType"];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_monitoring_types_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this monitoring type. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The type is still used by monitoring reports. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saderat_bank_health_monitoring_monitoring_types_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this monitoring type. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedMonitoringTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedMonitoringTypeRequest"];
+                "multipart/form-data": components["schemas"]["PatchedMonitoringTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MonitoringType"];
                 };
             };
         };
