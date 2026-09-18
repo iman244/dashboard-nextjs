@@ -1,91 +1,53 @@
-name: Deploy medical-dashboard-nextjs App
+# Deploys the dashboard by running the platform repo's deploy.sh over SSH.
+#
+# The deployment logic lives in mainreport-platform, not here, so this file
+# stays a caller: it hands over the configuration this repository owns and
+# names the service. See that repo's README, "Deployment".
+#
+# There is deliberately no pull_request trigger. The workflow this replaced had
+# one, which would have deployed every pull request over production.
+#
+# Note that deploying this service stops the running container first: a
+# `next build` does not fit in the server's spare memory alongside it. The
+# front end is down for the length of the build; deploy.sh restores the
+# previous container if the build fails.
+name: Deploy
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
+
+# Per-repository, so it cannot serialise against dashboard-django — deploy.sh
+# takes a lock on the server for that. This only collapses a burst of merges
+# here into a single deploy of the newest commit.
+concurrency:
+  group: deploy
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_KEY }}
-        script: |
-          # Set up environment variables
-          export NEXT_PUBLIC_DJANGO_ADDRESS="${{ secrets.NEXT_PUBLIC_DJANGO_ADDRESS }}"
-          export NEXT_PUBLIC_DJANGO_API_PATH="${{ secrets.NEXT_PUBLIC_DJANGO_API_PATH }}"
-          export NEXT_PUBLIC_5_160_115_210_ADDRESS="${{ secrets.NEXT_PUBLIC_5_160_115_210_ADDRESS }}"
-          export NEXT_PUBLIC_5_160_115_210_API_PATH="${{ secrets.NEXT_PUBLIC_5_160_115_210_API_PATH }}"
-          export NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME="${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME }}"
-          export NEXT_PUBLIC_ACCESS_TOKEN_KEY="${{ secrets.NEXT_PUBLIC_ACCESS_TOKEN_KEY }}"
-          export NEXT_PUBLIC_REFRESH_TOKEN_KEY="${{ secrets.NEXT_PUBLIC_REFRESH_TOKEN_KEY }}"
-          export NEXT_PUBLIC_LOCALE_COOKIE_NAME="${{ secrets.NEXT_PUBLIC_LOCALE_COOKIE_NAME }}"
-          export NODE_ENV=production
-          
-          # Create app directory
-          APP_DIR="/opt/medical-dashboard-nextjs"
-          mkdir -p $APP_DIR
-          cd $APP_DIR
-          
-          # Stop existing containers
-          echo "🛑 Stopping existing containers..."
-          docker compose down || true
-          
-          # Clone or update repository
-          if [ -d ".git" ]; then
-            echo "📥 Pulling latest changes..."
-            git pull origin main
-          else
-            echo "📥 Cloning repository..."
-            git clone https://github.com/iman244/dashboard-nextjs.git .
-          fi
-          
-          # Build and start containers with environment variables
-          echo "🔨 Building and starting containers..."
-          docker compose build --build-arg NEXT_PUBLIC_DJANGO_ADDRESS="${{ secrets.NEXT_PUBLIC_DJANGO_ADDRESS }}" \
-          --build-arg NEXT_PUBLIC_DJANGO_API_PATH="${{ secrets.NEXT_PUBLIC_DJANGO_API_PATH }}" \
-          --build-arg NEXT_PUBLIC_5_160_115_210_ADDRESS="${{ secrets.NEXT_PUBLIC_5_160_115_210_ADDRESS }}" \
-          --build-arg NEXT_PUBLIC_5_160_115_210_API_PATH="${{ secrets.NEXT_PUBLIC_5_160_115_210_API_PATH }}" \
-          --build-arg NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME="${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME }}" \
-          --build-arg NEXT_PUBLIC_ACCESS_TOKEN_KEY="${{ secrets.NEXT_PUBLIC_ACCESS_TOKEN_KEY }}" \
-          --build-arg NEXT_PUBLIC_REFRESH_TOKEN_KEY="${{ secrets.NEXT_PUBLIC_REFRESH_TOKEN_KEY }}" \
-          --build-arg NEXT_PUBLIC_LOCALE_COOKIE_NAME="${{ secrets.NEXT_PUBLIC_LOCALE_COOKIE_NAME }}"
-          
-          docker compose up -d --quiet-pull
-          
-          # Wait for application to be ready
-          echo "⏳ Waiting for application to be ready..."
-          sleep 30
-          
-          # Check if application container is running
-          echo "🔍 Checking application container status..."
-          if docker compose ps | grep -q "Up"; then
-            echo "✅ Application container is running successfully!"
-          else
-            echo "❌ Application container is not running"
-            echo "📋 Container logs:"
-            docker compose logs --tail=20
-            exit 1
-          fi
-          
-          # Show running containers
-          echo "📊 Checking container status..."
-          docker compose ps
-          
-          # Show recent logs
-          echo "📋 Recent application logs:"
-          docker compose logs --tail=10
-          
-          echo "✅ Deployment completed successfully!"
-          echo "🌐 Your app should be available at: http://$(hostname -I | awk '{print $1}'):3000"
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.2.5
+        env:
+          NEXT_PUBLIC_DJANGO_ADDRESS: ${{ secrets.NEXT_PUBLIC_DJANGO_ADDRESS }}
+          NEXT_PUBLIC_DJANGO_API_PATH: ${{ secrets.NEXT_PUBLIC_DJANGO_API_PATH }}
+          NEXT_PUBLIC_5_160_115_210_ADDRESS: ${{ secrets.NEXT_PUBLIC_5_160_115_210_ADDRESS }}
+          NEXT_PUBLIC_5_160_115_210_API_PATH: ${{ secrets.NEXT_PUBLIC_5_160_115_210_API_PATH }}
+          NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME: ${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME }}
+          NEXT_PUBLIC_ACCESS_TOKEN_KEY: ${{ secrets.NEXT_PUBLIC_ACCESS_TOKEN_KEY }}
+          NEXT_PUBLIC_REFRESH_TOKEN_KEY: ${{ secrets.NEXT_PUBLIC_REFRESH_TOKEN_KEY }}
+          NEXT_PUBLIC_LOCALE_COOKIE_NAME: ${{ secrets.NEXT_PUBLIC_LOCALE_COOKIE_NAME }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          # Forwarded into the remote shell, where deploy.sh writes them into
+          # /app/.env. build.sh reads them from there as --build-arg values,
+          # which is the only way NEXT_PUBLIC_* reaches the browser bundle.
+          envs: NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME
+          # A full `npm install` and `next build` on a two-core VM.
+          command_timeout: 40m
+          script: /app/deploy.sh nextjs
