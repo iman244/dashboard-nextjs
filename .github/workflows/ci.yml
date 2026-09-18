@@ -87,6 +87,7 @@ jobs:
           NEXT_PUBLIC_ACCESS_TOKEN_KEY: ${{ secrets.NEXT_PUBLIC_ACCESS_TOKEN_KEY }}
           NEXT_PUBLIC_REFRESH_TOKEN_KEY: ${{ secrets.NEXT_PUBLIC_REFRESH_TOKEN_KEY }}
           NEXT_PUBLIC_LOCALE_COOKIE_NAME: ${{ secrets.NEXT_PUBLIC_LOCALE_COOKIE_NAME }}
+          NEXT_PUBLIC_PATIENT_SESSION_KEY: ${{ secrets.NEXT_PUBLIC_PATIENT_SESSION_KEY }}
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
@@ -94,7 +95,7 @@ jobs:
           # Forwarded into the remote shell, where deploy.sh writes them into
           # /app/.env. build.sh reads them from there as --build-arg values,
           # which is the only way NEXT_PUBLIC_* reaches the browser bundle.
-          envs: NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME
+          envs: NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME,NEXT_PUBLIC_PATIENT_SESSION_KEY
           # A full `npm install` and `next build` on a two-core VM.
           command_timeout: 40m
           script: /app/deploy.sh nextjs

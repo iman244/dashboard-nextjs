@@ -5,11 +5,15 @@ FROM node:20.9-alpine AS builder
 WORKDIR /app
 
 # 3. Copy package.json and package-lock.json
-COPY package.json ./
-# COPY package-lock.json ./
+COPY package.json package-lock.json ./
 
-# 4. Install dependencies
-RUN npm install
+# 4. Install dependencies.
+# `npm ci` from the committed lockfile, not `npm install`: this used to skip the
+# lockfile entirely and re-resolve every range, so two builds of the same commit
+# could contain different versions and the <date>-<commit> image tag could not
+# honestly identify what was in an image. NODE_ENV=production is set below
+# rather than above so devDependencies are still installed for the build.
+RUN npm ci
 
 # 5. Copy the rest of the application code
 COPY . .
@@ -26,6 +30,7 @@ ARG NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME
 ARG NEXT_PUBLIC_ACCESS_TOKEN_KEY
 ARG NEXT_PUBLIC_REFRESH_TOKEN_KEY
 ARG NEXT_PUBLIC_LOCALE_COOKIE_NAME
+ARG NEXT_PUBLIC_PATIENT_SESSION_KEY
 
 # Set the build-time args as environment variables for the build
 ENV NEXT_PUBLIC_DJANGO_ADDRESS=$NEXT_PUBLIC_DJANGO_ADDRESS
@@ -36,6 +41,7 @@ ENV NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME=$NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME
 ENV NEXT_PUBLIC_ACCESS_TOKEN_KEY=$NEXT_PUBLIC_ACCESS_TOKEN_KEY
 ENV NEXT_PUBLIC_REFRESH_TOKEN_KEY=$NEXT_PUBLIC_REFRESH_TOKEN_KEY
 ENV NEXT_PUBLIC_LOCALE_COOKIE_NAME=$NEXT_PUBLIC_LOCALE_COOKIE_NAME
+ENV NEXT_PUBLIC_PATIENT_SESSION_KEY=$NEXT_PUBLIC_PATIENT_SESSION_KEY
 
 # 7. Build the Next.js app
 RUN npm run build
