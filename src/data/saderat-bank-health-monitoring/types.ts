@@ -3,11 +3,17 @@ import type { components } from "@/data/api-schema";
 type Schemas = components["schemas"];
 
 /**
- * `step_1` | `step_2`, generated from the Django model's TextChoices.
- * Adding a step on the backend and regenerating makes SBHM_TYPES below
- * fail to compile until the new value is handled here too.
+ * The monitoring types this dashboard knows how to render.
+ *
+ * Types are rows in a backend table now (MonitoringType, managed through
+ * /monitoring-types/), so the generated schema types `type` as a plain
+ * string rather than the enum it used to be — an enum would claim a fixed
+ * set the backend no longer guarantees. This union is therefore declared
+ * here, and is the dashboard's own claim: a type created through the API
+ * that is not listed below has no route and no label, so its reports are
+ * not reachable in the UI until it is added here.
  */
-export type SBHM_Type = Schemas["TypeEnum"];
+export type SBHM_Type = "step_1" | "step_2";
 
 const SBHM_TYPE_LABEL_KEYS = {
   step_1: "Step1",
@@ -46,14 +52,28 @@ export const SBHM_DETAIL_PATH = (type: SBHM_Type, id: number) =>
  * as a deliberate follow-up; see SBHM_Retrieve_ByType below for the shape
  * step_2 UI should be written against.
  */
-export type SaderatBankHealthMonitoring = Omit<
-  Schemas["SaderatBankHealthMonitoringRetrieve"],
-  "json"
+/**
+ * Narrows the API's open `type` string back to SBHM_Type.
+ *
+ * The backend can now hold a type this dashboard has no route or label for,
+ * so the schema is right to call `type` a string and this is an assertion,
+ * not a guarantee. It is the same assumption the pages already made while
+ * `type` was an enum, kept in one place: if the dashboard ever has to render
+ * types it does not know, this alias is what stops compiling.
+ */
+type WithKnownType<T extends { type: string }> = Omit<T, "type"> & {
+  type: SBHM_Type;
+};
+
+export type SaderatBankHealthMonitoring = WithKnownType<
+  Omit<Schemas["SaderatBankHealthMonitoringRetrieve"], "json">
 > & {
   json: SBHM_Step1Record[];
 };
 
-export type SBHM_ListSerializer = Schemas["SaderatBankHealthMonitoringList"][];
+export type SBHM_ListSerializer = WithKnownType<
+  Schemas["SaderatBankHealthMonitoringList"]
+>[];
 export type SBHM_RetrieveSerializer = SaderatBankHealthMonitoring;
 export type SBHM_CreateSerializer =
   Schemas["SaderatBankHealthMonitoringListRequest"];
