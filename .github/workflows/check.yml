@@ -35,8 +35,10 @@ jobs:
       # fixing separately; this at least keeps the lockfile honest.
       - run: npm ci
 
+      # --no-install, or npx may fetch an unrelated registry package named
+      # `tsc` instead of the compiler npm ci just installed.
       - name: Type-check
-        run: npx tsc --noEmit
+        run: npx --no-install tsc --noEmit
 
       # Not blocking, and not an oversight: main carries 33 pre-existing eslint
       # errors. Gating on them would make every pull request red on arrival,

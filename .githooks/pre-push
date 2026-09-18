@@ -14,7 +14,7 @@ set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
 echo "pre-push: type-checking"
-npx tsc --noEmit
+npx --no-install tsc --noEmit
 
 echo "pre-push: building"
 npm run build
