@@ -13,6 +13,10 @@ set -euo pipefail
 
 cd "$(git rev-parse --show-toplevel)"
 
+# tsconfig includes .next/types; without them every page fails on PageProps.
+echo "pre-push: generating route types"
+npx --no-install next typegen
+
 echo "pre-push: type-checking"
 npx --no-install tsc --noEmit
 

@@ -35,6 +35,13 @@ jobs:
       # fixing separately; this at least keeps the lockfile honest.
       - run: npm ci
 
+      # tsconfig pulls in .next/types, where Next generates the PageProps and
+      # route types the app pages annotate themselves with. A clean checkout
+      # has no .next, so tsc alone fails here while passing on a machine that
+      # has built before. typegen writes those types without a full build.
+      - name: Generate route types
+        run: npx --no-install next typegen
+
       # --no-install, or npx may fetch an unrelated registry package named
       # `tsc` instead of the compiler npm ci just installed.
       - name: Type-check
