@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Runs the blocking half of the `check` job in .github/workflows/ci.yml.
+#
+# Enable with:  git config core.hooksPath .githooks
+#
+# This is feedback, not a gate — it lives in your clone, not the repository,
+# and `git push --no-verify` skips it. ci.yml is what actually protects
+# main; this only saves you the round trip.
+#
+# Pre-push rather than pre-commit: `next build` takes a minute or two, which is
+# tolerable once per push and miserable once per commit.
+set -euo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+# tsconfig includes .next/types; without them every page fails on PageProps.
+echo "pre-push: generating route types"
+npx --no-install next typegen
+
+echo "pre-push: type-checking"
+npx --no-install tsc --noEmit
+
+echo "pre-push: building"
+npm run build
