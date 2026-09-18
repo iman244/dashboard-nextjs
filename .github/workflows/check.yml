@@ -28,6 +28,11 @@ jobs:
           node-version: '20.9'
           cache: npm
 
+      # `npm ci` rather than `npm install`, so a lockfile that has drifted out
+      # of sync fails here. Note this is stricter than the image build, whose
+      # Dockerfile does not copy package-lock.json and runs `npm install` — so
+      # server builds re-resolve dependencies and are not reproducible. Worth
+      # fixing separately; this at least keeps the lockfile honest.
       - run: npm ci
 
       - name: Type-check
