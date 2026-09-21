@@ -4,16 +4,23 @@ FROM node:20.9-alpine AS builder
 # 2. Set working directory
 WORKDIR /app
 
-# 3. Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+# 3. Copy package.json
+# The lockfile is deliberately not copied. Copying it changes this layer's
+# hash, which invalidates the cached install below and forces a real fetch from
+# registry.npmjs.org -- and this server cannot reach it, so the build dies on
+# ETIMEDOUT after five minutes. Leaving it out keeps the layer identical and
+# the install cached.
+COPY package.json ./
 
 # 4. Install dependencies.
-# `npm ci` from the committed lockfile, not `npm install`: this used to skip the
-# lockfile entirely and re-resolve every range, so two builds of the same commit
-# could contain different versions and the <date>-<commit> image tag could not
-# honestly identify what was in an image. NODE_ENV=production is set below
-# rather than above so devDependencies are still installed for the build.
-RUN npm ci
+# `npm install`, not `npm ci`: ci always deletes node_modules and refetches
+# everything, so it can never be served from the layer cache. The cost is that
+# builds are not reproducible -- every cache miss re-resolves the ranges, so
+# the <date>-<commit> tag identifies the source but not reliably the image.
+# That is accepted here because the registry is not reliably reachable.
+# NODE_ENV=production is set below rather than above so devDependencies are
+# still installed for the build.
+RUN npm install
 
 # 5. Copy the rest of the application code
 COPY . .
