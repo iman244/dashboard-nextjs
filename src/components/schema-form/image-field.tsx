@@ -3,106 +3,129 @@
 import * as React from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { Trash2 } from "lucide-react";
+import { CircleCheck, CircleAlert, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { localeDigits } from "@/lib/utils";
-import { isMultiple, labelOf, type SchemaField } from "./types";
+import {
+  IMAGE_ACCEPT,
+  isMultiple,
+  labelOf,
+  type SchemaField,
+} from "./types";
 
 /**
- * One attached image, however it got there.
+ * Where one image is in its journey.
  *
- * `url` may be a presigned S3 link (the operator's form) or a blob: URL from
- * the browser (the builder's preview). The component neither knows nor cares.
+ * `pending`   picked, held in the browser, nothing sent yet
+ * `uploading` on its way to storage, with a progress figure
+ * `done`      in storage; `key` is set
+ * `failed`    the upload was refused or never arrived; `error` says why
  */
+export type ImageStatus = "pending" | "uploading" | "done" | "failed";
+
 export type AttachedImage = {
+  /** Stable client-side handle; survives the upload. */
   id: string;
   name: string;
+  /** A blob: preview before upload, a presigned read link after. */
   url?: string;
-  /** Carried from the real upload. Django HEADs the object and compares the
-   *  size, so guessing here would fail every save. The preview omits them. */
+  /** Held until uploaded, then dropped. */
+  file?: File;
+  /** The object's key in storage, once it is there. */
+  key?: string;
   contentType?: string;
   size?: number;
+  status: ImageStatus;
+  progress?: number;
+  error?: string;
 };
 
+const newId = () =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `img-${Math.random().toString(36).slice(2)}`;
+
 /**
- * Picks images for one `image` field.
+ * Picks images for one `image` field. Picking only queues them.
  *
- * Uploading is injected, not assumed: the operator's form hands in a function
- * that presigns and PUTs to S3, while the schema builder's preview hands in
- * one that just makes a blob URL. That is why this file has no S3 import --
- * it is the same component in both places, which is the point of the preview.
+ * Nothing is uploaded here. The form uploads the queue on submit, one image
+ * at a time, and this component draws each one's progress and outcome. So
+ * the operator can pick, change their mind and remove, all without sending
+ * anything -- and the schema builder's preview uses this same component with
+ * no upload path at all.
  */
 export const ImageField = ({
   field,
   value,
   onChange,
-  onAdd,
   disabled,
-  disabledHint,
   showErrors,
 }: {
   field: SchemaField;
   value: AttachedImage[];
   onChange: (next: AttachedImage[]) => void;
-  onAdd: (file: File, onProgress: (percent: number) => void) => Promise<AttachedImage>;
   disabled?: boolean;
-  /** Why the picker is disabled, shown in place of silence. */
-  disabledHint?: string;
   showErrors?: boolean;
 }) => {
   const t = useTranslations("common.SchemaForm");
   const locale = useLocale();
-  const [progress, setProgress] = React.useState<Record<string, number>>({});
-  const [error, setError] = React.useState<string | null>(null);
+  const [pickError, setPickError] = React.useState<string | null>(null);
 
   const many = isMultiple(field);
   const limit = field.max_count ?? (many ? undefined : 1);
   const atCapacity = limit !== undefined && value.length >= limit;
 
-  const onPick = React.useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const picked = Array.from(event.target.files ?? []);
-      // Cleared straight away, so choosing the same file twice still fires.
-      event.target.value = "";
-      if (picked.length === 0) return;
-      setError(null);
+  const onPick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const picked = Array.from(event.target.files ?? []);
+    // Cleared straight away, so choosing the same file twice still fires.
+    event.target.value = "";
+    if (picked.length === 0) return;
 
-      let next = value;
-      for (const file of picked) {
-        if (limit !== undefined && next.length >= limit) {
-          setError(t("TooManyImages", { n: localeDigits(limit, locale) }));
-          break;
-        }
-        if (field.max_size_mb && file.size > field.max_size_mb * 1024 * 1024) {
-          setError(
-            t("ImageTooLarge", {
-              name: file.name,
-              size: localeDigits(field.max_size_mb, locale),
-            })
-          );
-          continue;
-        }
-        try {
-          const attached = await onAdd(file, (percent) =>
-            setProgress((current) => ({ ...current, [file.name]: percent }))
-          );
-          next = [...next, attached];
-          onChange(next);
-        } catch {
-          setError(t("UploadFailed", { name: file.name }));
-        } finally {
-          setProgress((current) => {
-            const remaining = { ...current };
-            delete remaining[file.name];
-            return remaining;
-          });
-        }
+    const problems: string[] = [];
+    const queued: AttachedImage[] = [];
+
+    for (const file of picked) {
+      if (limit !== undefined && value.length + queued.length >= limit) {
+        problems.push(t("TooManyImages", { n: localeDigits(limit, locale) }));
+        break;
       }
-    },
-    [field.max_size_mb, limit, locale, onAdd, onChange, t, value]
-  );
+      // Checked here as well as by `accept`: a dragged file or an iPhone HEIC
+      // gets past the picker's filter, and would otherwise fail only at the
+      // server, after everything else had been filled in.
+      if (!(IMAGE_ACCEPT as readonly string[]).includes(file.type)) {
+        problems.push(t("NotAnImage", { name: file.name }));
+        continue;
+      }
+      if (field.max_size_mb && file.size > field.max_size_mb * 1024 * 1024) {
+        problems.push(
+          t("ImageTooLarge", {
+            name: file.name,
+            size: localeDigits(field.max_size_mb, locale),
+          })
+        );
+        continue;
+      }
+      queued.push({
+        id: newId(),
+        name: file.name,
+        url: URL.createObjectURL(file),
+        file,
+        contentType: file.type,
+        size: file.size,
+        status: "pending",
+      });
+    }
+
+    setPickError(problems.length > 0 ? problems.join(" ") : null);
+    if (queued.length > 0) onChange([...value, ...queued]);
+  };
+
+  const remove = (image: AttachedImage) => {
+    if (image.url?.startsWith("blob:")) URL.revokeObjectURL(image.url);
+    onChange(value.filter((item) => item.id !== image.id));
+  };
 
   return (
     <div className="space-y-2">
@@ -118,7 +141,7 @@ export const ImageField = ({
       <Input
         id={field.key}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept={IMAGE_ACCEPT.join(",")}
         multiple={many}
         disabled={disabled || atCapacity}
         onChange={onPick}
@@ -137,13 +160,9 @@ export const ImageField = ({
           : ""}
       </p>
 
-      {disabled && disabledHint ? (
-        <p className="text-muted-foreground text-xs">{disabledHint}</p>
-      ) : null}
-
-      {error ? (
+      {pickError ? (
         <p className="text-destructive text-xs" role="alert">
-          {error}
+          {pickError}
         </p>
       ) : showErrors && field.required && value.length === 0 ? (
         <p className="text-destructive text-xs" role="alert">
@@ -152,49 +171,114 @@ export const ImageField = ({
       ) : null}
 
       {value.length > 0 ? (
-        <ul className="flex flex-wrap gap-3">
+        <ul className="space-y-2">
           {value.map((image) => (
-            <li
+            <ImageRow
               key={image.id}
-              className="border-border relative h-24 w-24 overflow-hidden rounded-md border"
-            >
-              {image.url ? (
-                <Image
-                  src={image.url}
-                  alt={image.name}
-                  fill
-                  sizes="96px"
-                  unoptimized
-                  className="object-cover"
-                />
-              ) : (
-                <span className="text-muted-foreground flex h-full items-center justify-center p-1 text-center text-[10px]">
-                  {image.name}
-                </span>
-              )}
-              <Button
-                type="button"
-                variant="secondary"
-                size="icon"
-                className="absolute end-1 top-1 size-6"
-                aria-label={t("RemoveImage", { name: image.name })}
-                disabled={disabled}
-                onClick={() =>
-                  onChange(value.filter((item) => item.id !== image.id))
-                }
-              >
-                <Trash2 className="size-3" aria-hidden="true" />
-              </Button>
-            </li>
+              image={image}
+              disabled={disabled}
+              onRemove={() => remove(image)}
+            />
           ))}
         </ul>
       ) : null}
-
-      {Object.entries(progress).map(([name, percent]) => (
-        <p key={name} className="text-muted-foreground text-xs">
-          {name} — {localeDigits(percent, locale)}%
-        </p>
-      ))}
     </div>
+  );
+};
+
+/** One queued or stored image: thumbnail, name, and where it has got to. */
+const ImageRow = ({
+  image,
+  disabled,
+  onRemove,
+}: {
+  image: AttachedImage;
+  disabled?: boolean;
+  onRemove: () => void;
+}) => {
+  const t = useTranslations("common.SchemaForm");
+  const locale = useLocale();
+  const percent = image.status === "done" ? 100 : (image.progress ?? 0);
+
+  return (
+    <li className="border-border flex items-center gap-3 rounded-md border p-2">
+      <div className="bg-muted relative size-12 shrink-0 overflow-hidden rounded">
+        {image.url ? (
+          <Image
+            src={image.url}
+            alt=""
+            fill
+            sizes="48px"
+            unoptimized
+            className="object-cover"
+          />
+        ) : null}
+      </div>
+
+      <div className="min-w-0 flex-1 space-y-1">
+        <p className="truncate text-sm" dir="ltr" title={image.name}>
+          {image.name}
+        </p>
+
+        {image.status === "uploading" || image.status === "done" ? (
+          <div
+            className="bg-muted h-1.5 w-full overflow-hidden rounded-full"
+            role="progressbar"
+            aria-label={image.name}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={percent}
+          >
+            {/* inline-size, not width: in RTL it fills from the right. */}
+            <div
+              className={
+                image.status === "done"
+                  ? "h-full bg-green-600 transition-[inline-size]"
+                  : "bg-primary h-full transition-[inline-size]"
+              }
+              style={{ inlineSize: `${percent}%` }}
+            />
+          </div>
+        ) : null}
+
+        <p
+          className={
+            image.status === "failed"
+              ? "text-destructive flex items-center gap-1 text-xs"
+              : image.status === "done"
+                ? "flex items-center gap-1 text-xs text-green-700 dark:text-green-500"
+                : "text-muted-foreground text-xs"
+          }
+          role={image.status === "failed" ? "alert" : undefined}
+        >
+          {image.status === "failed" ? (
+            <>
+              <CircleAlert className="size-3 shrink-0" aria-hidden="true" />
+              {image.error ?? t("UploadFailedShort")}
+            </>
+          ) : image.status === "done" ? (
+            <>
+              <CircleCheck className="size-3 shrink-0" aria-hidden="true" />
+              {t("Uploaded")}
+            </>
+          ) : image.status === "uploading" ? (
+            t("Uploading", { percent: localeDigits(percent, locale) })
+          ) : (
+            t("Queued")
+          )}
+        </p>
+      </div>
+
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        aria-label={t("RemoveImage", { name: image.name })}
+        disabled={disabled || image.status === "uploading"}
+        onClick={onRemove}
+      >
+        <Trash2 className="size-4" aria-hidden="true" />
+      </Button>
+    </li>
   );
 };

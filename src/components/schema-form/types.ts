@@ -64,6 +64,14 @@ export const asFieldSchema = (value: unknown): FieldSchema => {
   };
 };
 
+/** What an image field takes. Mirrors IMAGE_ACCEPT in Django's schema.py. */
+export const IMAGE_ACCEPT = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+] as const;
+
 /** Images default to many; a single-image field must say so explicitly. */
 export const isMultiple = (field: SchemaField) =>
   field.multiple ?? field.type === IMAGE;

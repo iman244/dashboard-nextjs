@@ -165,8 +165,12 @@
       "MaxSize": "حداکثر {size} مگابایت برای هر تصویر.",
       "TooManyImages": "حداکثر {n} تصویر مجاز است.",
       "ImageTooLarge": "حجم «{name}» بیش از {size} مگابایت است.",
-      "UploadFailed": "آپلود «{name}» انجام نشد.",
-      "RemoveImage": "حذف {name}"
+      "RemoveImage": "حذف {name}",
+      "Queued": "با ذخیره آپلود می‌شود",
+      "Uploading": "در حال آپلود… {percent}٪",
+      "Uploaded": "آپلود شد",
+      "UploadFailedShort": "آپلود ناموفق",
+      "NotAnImage": "«{name}» تصویر پشتیبانی‌شده نیست (JPEG، PNG، WebP یا GIF)."
     }
   },
   "/": {
@@ -610,8 +614,12 @@
       "NationalId": "کد ملی",
       "NationalIdPlaceholder": "مثلاً ۰۰۱۲۳۴۵۶۷۸",
       "NationalIdRequired": "کد ملی بیمار را وارد کنید.",
-      "EnterNationalIdFirst": "ابتدا کد ملی را وارد کنید؛ تصاویر ذیل آن ذخیره می‌شوند.",
-      "RecordNotFound": "این رکورد پیدا نشد."
+      "RecordNotFound": "این رکورد پیدا نشد.",
+      "NationalIdHint": "{n} رقم.",
+      "UploadingProgress": "در حال آپلود {done} از {total}…",
+      "Saving": "در حال ذخیره…",
+      "UploadsFailed": "آپلود {n} تصویر انجام نشد. چیزی ذخیره نشد؛ دوباره تلاش کنید یا آن‌ها را حذف کنید.",
+      "StorageUnreachable": "اتصال به فضای ذخیره‌سازی برقرار نشد."
     }
   },
   "/patient/sign-in": {

@@ -1,14 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { useTranslations } from "next-intl";
-import { digitsFaToEn } from "@persian-tools/persian-tools";
+import { useLocale, useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
+import { localeDigits } from "@/lib/utils";
 import type { MonitoringType } from "@/data/monitoring-type/types";
 import type { PatientEntry } from "@/data/patient-entry/types";
 import { uploadToField } from "@/data/patient-entry/upload";
@@ -18,12 +18,15 @@ import {
   SchemaForm,
   asFieldSchema,
   formProblems,
+  toDigits,
   type AttachedImage,
-  type SchemaField,
   type SchemaFormValues,
 } from "@/components/schema-form";
 
-/** Every string in a DRF error body, flattened, for a toast description. */
+/** An Iranian national ID is ten digits; Django stores at most ten. */
+const NATIONAL_ID_LENGTH = 10;
+
+/** Every string in a DRF error body, flattened. */
 const serverMessages = (data: unknown): string[] => {
   if (!data || typeof data !== "object") return [];
   return Object.values(data as Record<string, unknown>).flatMap((value) =>
@@ -35,6 +38,24 @@ const serverMessages = (data: unknown): string[] => {
   );
 };
 
+/**
+ * Why an upload failed, as precisely as the error allows.
+ *
+ * A response means Django or storage answered and said no -- pass its words
+ * on. No response means the request never arrived, which on these networks is
+ * usually storage being unreachable, and saying so is more use than a generic
+ * "failed".
+ */
+const uploadError = (
+  error: unknown,
+  unreachable: string
+): string => {
+  const response = (error as { response?: { data?: unknown } })?.response;
+  if (!response) return unreachable;
+  const messages = serverMessages(response.data);
+  return messages.length > 0 ? messages.join(" ") : unreachable;
+};
+
 const initialValues = (entry?: PatientEntry): SchemaFormValues => {
   const images: Record<string, AttachedImage[]> = {};
   for (const file of entry?.files ?? []) {
@@ -42,10 +63,12 @@ const initialValues = (entry?: PatientEntry): SchemaFormValues => {
       ...(images[file.field_key] ?? []),
       {
         id: file.key,
+        key: file.key,
         name: file.original_name,
         url: file.url ?? undefined,
         contentType: file.content_type,
         size: file.size,
+        status: "done",
       },
     ];
   }
@@ -58,12 +81,11 @@ const initialValues = (entry?: PatientEntry): SchemaFormValues => {
 /**
  * One patient's record, on a page of its own.
  *
- * Create and edit share this component. On create, every field is visible
- * from the start and the image pickers are disabled until there is a national
- * ID to file uploads under. Nothing is looked up while the ID is being typed:
- * the previous version queried on every keystroke and rebuilt the form each
- * time, so the fields flashed in and out. An ID that already has a record is
- * caught by the server's 409 on save, which then opens that record instead.
+ * Picking an image only queues it. On submit the queue is uploaded one image
+ * at a time -- sequentially, so a slow link carries one file at full speed
+ * rather than five at a crawl, and each bar means something -- and the record
+ * is saved only once every image has arrived. If any fail, nothing is saved:
+ * the failures say why, and submitting again retries only those.
  */
 export const RecordForm = ({
   monitoring,
@@ -79,6 +101,7 @@ export const RecordForm = ({
   onExisting: (id: number) => void;
 }) => {
   const t = useTranslations("/console/monitorings.Records");
+  const locale = useLocale();
   const queryClient = useQueryClient();
 
   const schema = React.useMemo(
@@ -86,60 +109,49 @@ export const RecordForm = ({
     [monitoring]
   );
 
+  // Digits only and never longer than ten, enforced as it is typed: the
+  // server caps it at ten, and a longer value used to fail only at upload.
   const [nationalId, setNationalId] = React.useState(entry?.national_id ?? "");
   const [values, setValues] = React.useState<SchemaFormValues>(() =>
     initialValues(entry)
   );
   const [attempted, setAttempted] = React.useState(false);
-
-  // Folded before use: a Persian keyboard types ۰۱۲, Django stores 012.
-  const folded = digitsFaToEn(nationalId).replace(/[^0-9]/g, "");
+  const [phase, setPhase] = React.useState<"idle" | "uploading" | "saving">(
+    "idle"
+  );
+  const [uploaded, setUploaded] = React.useState({ done: 0, total: 0 });
 
   const create = useCreate_PatientEntry_API();
   const update = useUpdate_PatientEntry_API();
-  const saving = create.isPending || update.isPending;
+  const busy = phase !== "idle";
 
-  const onAddImage = React.useCallback(
-    async (
-      field: SchemaField,
-      file: File,
-      onProgress: (percent: number) => void
-    ): Promise<AttachedImage> => {
-      const descriptor = await uploadToField({
-        monitoring: monitoring.id,
-        nationalId: folded,
-        fieldKey: field.key,
-        file,
-        onProgress,
-      });
-      return {
-        id: descriptor.key,
-        name: descriptor.original_name,
-        url: URL.createObjectURL(file),
-        contentType: descriptor.content_type,
-        size: descriptor.size,
-      };
-    },
-    [folded, monitoring.id]
+  /** Merge a change into one image, wherever it sits. */
+  const patchImage = React.useCallback(
+    (fieldKey: string, id: string, patch: Partial<AttachedImage>) =>
+      setValues((current) => ({
+        ...current,
+        images: {
+          ...current.images,
+          [fieldKey]: (current.images[fieldKey] ?? []).map((image) =>
+            image.id === id ? { ...image, ...patch } : image
+          ),
+        },
+      })),
+    []
   );
 
-  const onSubmit = React.useCallback(
-    (event: React.FormEvent) => {
-      event.preventDefault();
-      setAttempted(true);
-      if (!folded || formProblems(schema, values).length > 0) {
-        toast.error(t("FixErrors"));
-        return;
-      }
-
-      const files = Object.entries(values.images).flatMap(([fieldKey, list]) =>
-        list.map((image) => ({
-          field_key: fieldKey,
-          key: image.id,
-          original_name: image.name,
-          content_type: image.contentType ?? "application/octet-stream",
-          size: image.size ?? 0,
-        }))
+  const save = React.useCallback(
+    (images: SchemaFormValues["images"]) => {
+      const files = Object.entries(images).flatMap(([fieldKey, list]) =>
+        list
+          .filter((image) => image.status === "done" && image.key)
+          .map((image) => ({
+            field_key: fieldKey,
+            key: image.key as string,
+            original_name: image.name,
+            content_type: image.contentType ?? "application/octet-stream",
+            size: image.size ?? 0,
+          }))
       );
 
       const done = () => {
@@ -150,6 +162,7 @@ export const RecordForm = ({
       const failed = (error: {
         response?: { status?: number; data?: unknown };
       }) => {
+        setPhase("idle");
         const data = error.response?.data as { id?: number } | undefined;
         if (error.response?.status === 409 && data?.id) {
           toast.info(t("AlreadyExists"));
@@ -161,6 +174,7 @@ export const RecordForm = ({
         });
       };
 
+      setPhase("saving");
       if (entry) {
         update.mutate(
           { id: entry.id, payload: { values: values.digits, files } },
@@ -171,7 +185,7 @@ export const RecordForm = ({
           {
             payload: {
               monitoring: monitoring.id,
-              national_id: folded,
+              national_id: nationalId,
               values: values.digits,
               files,
             },
@@ -183,19 +197,96 @@ export const RecordForm = ({
     [
       create,
       entry,
-      folded,
       monitoring.id,
+      nationalId,
       onExisting,
       onSaved,
       queryClient,
-      schema,
       t,
       update,
-      values,
+      values.digits,
     ]
   );
 
-  const nationalIdMissing = attempted && !folded;
+  const onSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (busy) return;
+    setAttempted(true);
+    if (!nationalId || formProblems(schema, values).length > 0) {
+      toast.error(t("FixErrors"));
+      return;
+    }
+
+    // Everything not yet in storage -- the new picks, and any that failed
+    // last time. Already-uploaded images are never sent twice.
+    const queue = Object.entries(values.images).flatMap(([fieldKey, list]) =>
+      list
+        .filter((image) => image.status !== "done" && image.file)
+        .map((image) => ({ fieldKey, image }))
+    );
+
+    // The final state is built alongside the React state, because the state
+    // updates below are not visible inside this function until it returns.
+    const final: SchemaFormValues["images"] = Object.fromEntries(
+      Object.entries(values.images).map(([key, list]) => [key, [...list]])
+    );
+    let failures = 0;
+
+    if (queue.length > 0) {
+      setPhase("uploading");
+      setUploaded({ done: 0, total: queue.length });
+    }
+
+    for (const [index, { fieldKey, image }] of queue.entries()) {
+      patchImage(fieldKey, image.id, {
+        status: "uploading",
+        progress: 0,
+        error: undefined,
+      });
+      try {
+        const descriptor = await uploadToField({
+          monitoring: monitoring.id,
+          nationalId,
+          fieldKey,
+          file: image.file as File,
+          onProgress: (percent) =>
+            patchImage(fieldKey, image.id, { progress: percent }),
+        });
+        const result: Partial<AttachedImage> = {
+          status: "done",
+          progress: 100,
+          key: descriptor.key,
+          contentType: descriptor.content_type,
+          size: descriptor.size,
+          file: undefined,
+        };
+        patchImage(fieldKey, image.id, result);
+        final[fieldKey] = final[fieldKey].map((item) =>
+          item.id === image.id ? { ...item, ...result } : item
+        );
+      } catch (error) {
+        failures += 1;
+        patchImage(fieldKey, image.id, {
+          status: "failed",
+          error: uploadError(error, t("StorageUnreachable")),
+        });
+      }
+      setUploaded({ done: index + 1, total: queue.length });
+    }
+
+    if (failures > 0) {
+      setPhase("idle");
+      toast.error(
+        t("UploadsFailed", { n: localeDigits(failures, locale) })
+      );
+      return;
+    }
+
+    save(final);
+  };
+
+  const nationalIdProblem =
+    attempted && !nationalId ? t("NationalIdRequired") : null;
 
   return (
     <form onSubmit={onSubmit} className="max-w-2xl space-y-8" noValidate>
@@ -212,18 +303,27 @@ export const RecordForm = ({
           className="text-start"
           inputMode="numeric"
           autoComplete="off"
-          value={nationalId}
-          // Fixed once a record exists: it is the record's identity, and the
-          // uploads already made are filed under it.
+          value={localeDigits(nationalId, locale)}
+          // Fixed once a record exists: it is the record's identity, and its
+          // images are already filed under it.
           readOnly={Boolean(entry)}
-          disabled={saving}
+          disabled={busy}
           placeholder={t("NationalIdPlaceholder")}
-          aria-invalid={nationalIdMissing ? true : undefined}
-          onChange={(event) => setNationalId(event.target.value)}
+          aria-invalid={nationalIdProblem ? true : undefined}
+          onChange={(event) =>
+            setNationalId(
+              toDigits(event.target.value).slice(0, NATIONAL_ID_LENGTH)
+            )
+          }
         />
-        {nationalIdMissing ? (
+        <p className="text-muted-foreground text-xs">
+          {t("NationalIdHint", {
+            n: localeDigits(NATIONAL_ID_LENGTH, locale),
+          })}
+        </p>
+        {nationalIdProblem ? (
           <p className="text-destructive text-xs" role="alert">
-            {t("NationalIdRequired")}
+            {nationalIdProblem}
           </p>
         ) : null}
       </div>
@@ -232,15 +332,22 @@ export const RecordForm = ({
         schema={schema}
         values={values}
         onChange={setValues}
-        onAddImage={onAddImage}
-        disabled={saving}
+        disabled={busy}
         showErrors={attempted}
-        imagesDisabledHint={folded ? undefined : t("EnterNationalIdFirst")}
       />
 
-      <Button type="submit" disabled={saving}>
-        {saving ? <Spinner className="me-2 size-4" /> : null}
-        {entry ? t("SaveChanges") : t("AddRecord")}
+      <Button type="submit" disabled={busy}>
+        {busy ? <Spinner className="me-2 size-4" /> : null}
+        {phase === "uploading"
+          ? t("UploadingProgress", {
+              done: localeDigits(uploaded.done, locale),
+              total: localeDigits(uploaded.total, locale),
+            })
+          : phase === "saving"
+            ? t("Saving")
+            : entry
+              ? t("SaveChanges")
+              : t("AddRecord")}
       </Button>
     </form>
   );

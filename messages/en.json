@@ -165,8 +165,12 @@
       "MaxSize": "Max {size} MB each.",
       "TooManyImages": "At most {n} images.",
       "ImageTooLarge": "“{name}” is larger than {size} MB.",
-      "UploadFailed": "“{name}” could not be uploaded.",
-      "RemoveImage": "Remove {name}"
+      "RemoveImage": "Remove {name}",
+      "Queued": "Ready to upload on save",
+      "Uploading": "Uploading… {percent}%",
+      "Uploaded": "Uploaded",
+      "UploadFailedShort": "Upload failed",
+      "NotAnImage": "“{name}” is not a supported image (JPEG, PNG, WebP or GIF)."
     }
   },
   "/": {
@@ -610,8 +614,12 @@
       "NationalId": "National ID",
       "NationalIdPlaceholder": "e.g. 0012345678",
       "NationalIdRequired": "Enter the patient's national ID.",
-      "EnterNationalIdFirst": "Enter the national ID first; images are filed under it.",
-      "RecordNotFound": "This record was not found."
+      "RecordNotFound": "This record was not found.",
+      "NationalIdHint": "{n} digits.",
+      "UploadingProgress": "Uploading {done} of {total}…",
+      "Saving": "Saving…",
+      "UploadsFailed": "{n} image(s) failed to upload. Nothing was saved — retry or remove them.",
+      "StorageUnreachable": "Storage could not be reached."
     }
   },
   "/patient/sign-in": {
