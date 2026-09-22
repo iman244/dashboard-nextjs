@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { CircleCheck, CircleAlert, Trash2 } from "lucide-react";
+import { Check, CircleAlert, CloudUpload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -171,9 +171,9 @@ export const ImageField = ({
       ) : null}
 
       {value.length > 0 ? (
-        <ul className="space-y-2">
+        <ul className="flex flex-wrap gap-3">
           {value.map((image) => (
-            <ImageRow
+            <ImageTile
               key={image.id}
               image={image}
               disabled={disabled}
@@ -182,12 +182,91 @@ export const ImageField = ({
           ))}
         </ul>
       ) : null}
+
+      {/* Why each failure failed, in words. The tile only has room for an
+          icon, and "failed" alone gives the operator nothing to act on. */}
+      {value.some((image) => image.status === "failed") ? (
+        <ul className="text-destructive space-y-1 text-xs" role="alert">
+          {value
+            .filter((image) => image.status === "failed")
+            .map((image) => (
+              <li key={image.id}>
+                <span dir="ltr">{image.name}</span>
+                {": "}
+                {image.error ?? t("UploadFailedShort")}
+              </li>
+            ))}
+        </ul>
+      ) : null}
     </div>
   );
 };
 
-/** One queued or stored image: thumbnail, name, and where it has got to. */
-const ImageRow = ({
+/** Ring geometry, in the SVG's own 40x40 coordinate space. */
+const RING_RADIUS = 16;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+
+/**
+ * A circular progress indicator drawn over the photo.
+ *
+ * The fill is `stroke-dashoffset`, eased linearly over 150ms between updates.
+ * Upload progress arrives in bursts; without the short transition the ring
+ * would jump in visible steps. Linear, because this is progress, not a
+ * gesture -- an ease curve would make it appear to hesitate at each update.
+ *
+ * It fills clockwise from the top in both directions. Like a clock face,
+ * circular progress is not mirrored for RTL.
+ */
+const ProgressRing = ({
+  percent,
+  label,
+}: {
+  percent: number;
+  label: string;
+}) => (
+  <svg
+    viewBox="0 0 40 40"
+    className="size-11 -rotate-90"
+    role="progressbar"
+    aria-label={label}
+    aria-valuemin={0}
+    aria-valuemax={100}
+    aria-valuenow={percent}
+  >
+    <circle
+      cx="20"
+      cy="20"
+      r={RING_RADIUS}
+      fill="none"
+      strokeWidth="3.5"
+      className="stroke-white/30"
+    />
+    <circle
+      cx="20"
+      cy="20"
+      r={RING_RADIUS}
+      fill="none"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+      className="stroke-white transition-[stroke-dashoffset] duration-150 ease-linear motion-reduce:transition-none"
+      strokeDasharray={RING_CIRCUMFERENCE}
+      strokeDashoffset={RING_CIRCUMFERENCE * (1 - percent / 100)}
+    />
+  </svg>
+);
+
+/**
+ * One image as a square tile: the photo itself, with its state drawn on it.
+ *
+ * queued    photo under a light scrim, an upload glyph in an empty ring
+ * uploading darker scrim, the ring filling, the percentage at its centre
+ * done      scrim fades away, a check badge settles into the corner
+ * failed    red-tinted scrim and an alert glyph; the reason is listed below
+ *
+ * The scrim is what makes the ring legible on any photo -- white on an
+ * X-ray and white on a bright scan need the same dark ground beneath them.
+ */
+const ImageTile = ({
   image,
   disabled,
   onRemove,
@@ -200,85 +279,110 @@ const ImageRow = ({
   const locale = useLocale();
   const percent = image.status === "done" ? 100 : (image.progress ?? 0);
 
+  const statusText =
+    image.status === "failed"
+      ? (image.error ?? t("UploadFailedShort"))
+      : image.status === "done"
+        ? t("Uploaded")
+        : image.status === "uploading"
+          ? t("Uploading", { percent: localeDigits(percent, locale) })
+          : t("Queued");
+
+  // Strong ease-out: the state change should be felt immediately, then settle.
+  const settle =
+    "duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-opacity";
+
   return (
-    <li className="border-border flex items-center gap-3 rounded-md border p-2">
-      <div className="bg-muted relative size-12 shrink-0 overflow-hidden rounded">
+    <li className="w-24 space-y-1">
+      <div
+        className="bg-muted relative size-24 overflow-hidden rounded-lg"
+        title={`${image.name} — ${statusText}`}
+      >
         {image.url ? (
           <Image
             src={image.url}
-            alt=""
+            alt={image.name}
             fill
-            sizes="48px"
+            sizes="96px"
             unoptimized
             className="object-cover"
           />
         ) : null}
-      </div>
 
-      <div className="min-w-0 flex-1 space-y-1">
-        <p className="truncate text-sm" dir="ltr" title={image.name}>
-          {image.name}
-        </p>
+        {/* Scrim. Always mounted, so leaving a state fades rather than cuts. */}
+        <div
+          aria-hidden="true"
+          className={[
+            "absolute inset-0 transition-[opacity,background-color]",
+            settle,
+            image.status === "done"
+              ? "bg-black/0 opacity-0"
+              : image.status === "failed"
+                ? "bg-red-900/60 opacity-100"
+                : image.status === "uploading"
+                  ? "bg-black/55 opacity-100"
+                  : "bg-black/35 opacity-100",
+          ].join(" ")}
+        />
 
-        {image.status === "uploading" || image.status === "done" ? (
-          <div
-            className="bg-muted h-1.5 w-full overflow-hidden rounded-full"
-            role="progressbar"
-            aria-label={image.name}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={percent}
-          >
-            {/* inline-size, not width: in RTL it fills from the right. */}
-            <div
-              className={
-                image.status === "done"
-                  ? "h-full bg-green-600 transition-[inline-size]"
-                  : "bg-primary h-full transition-[inline-size]"
-              }
-              style={{ inlineSize: `${percent}%` }}
-            />
+        {/* Centre: ring while it matters, alert glyph on failure. */}
+        {image.status === "pending" || image.status === "uploading" ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <ProgressRing percent={percent} label={image.name} />
+            <span className="absolute text-[11px] font-semibold text-white tabular-nums">
+              {image.status === "uploading" ? (
+                localeDigits(percent, locale)
+              ) : (
+                <CloudUpload className="size-4" aria-hidden="true" />
+              )}
+            </span>
+          </div>
+        ) : image.status === "failed" ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <CircleAlert className="size-7 text-white" aria-hidden="true" />
           </div>
         ) : null}
 
-        <p
-          className={
-            image.status === "failed"
-              ? "text-destructive flex items-center gap-1 text-xs"
-              : image.status === "done"
-                ? "flex items-center gap-1 text-xs text-green-700 dark:text-green-500"
-                : "text-muted-foreground text-xs"
-          }
-          role={image.status === "failed" ? "alert" : undefined}
+        {/* Done: a check that scales in from 0.9, never from nothing. */}
+        <span
+          aria-hidden="true"
+          className={[
+            "absolute bottom-1 end-1 flex size-5 items-center justify-center rounded-full bg-green-600 text-white shadow transition-[opacity,transform]",
+            settle,
+            image.status === "done"
+              ? "scale-100 opacity-100"
+              : "scale-90 opacity-0",
+          ].join(" ")}
         >
-          {image.status === "failed" ? (
-            <>
-              <CircleAlert className="size-3 shrink-0" aria-hidden="true" />
-              {image.error ?? t("UploadFailedShort")}
-            </>
-          ) : image.status === "done" ? (
-            <>
-              <CircleCheck className="size-3 shrink-0" aria-hidden="true" />
-              {t("Uploaded")}
-            </>
-          ) : image.status === "uploading" ? (
-            t("Uploading", { percent: localeDigits(percent, locale) })
-          ) : (
-            t("Queued")
-          )}
-        </p>
+          <Check className="size-3" strokeWidth={3} />
+        </span>
+
+        {image.status !== "uploading" ? (
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            className="bg-background/85 absolute end-1 top-1 size-6 rounded-full backdrop-blur-sm transition-transform duration-150 ease-out active:scale-95"
+            aria-label={t("RemoveImage", { name: image.name })}
+            disabled={disabled}
+            onClick={onRemove}
+          >
+            <X className="size-3.5" aria-hidden="true" />
+          </Button>
+        ) : null}
+
+        <span className="sr-only" aria-live="polite">
+          {statusText}
+        </span>
       </div>
 
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        aria-label={t("RemoveImage", { name: image.name })}
-        disabled={disabled || image.status === "uploading"}
-        onClick={onRemove}
+      <p
+        className="text-muted-foreground truncate text-[11px]"
+        dir="ltr"
+        title={image.name}
       >
-        <Trash2 className="size-4" aria-hidden="true" />
-      </Button>
+        {image.name}
+      </p>
     </li>
   );
 };
