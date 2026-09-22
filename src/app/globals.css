@@ -260,13 +260,21 @@
 }
 
 /*
- * Sonner ships `font-family: ui-sans-serif, system-ui, ...` on its own root,
- * which beats anything inherited -- so toasts rendered inside a Persian page
- * came out in the system face while every other word was Vazirmatn. Inherit
- * instead, and the toast follows whichever font class `body` is carrying.
+ * Toasts follow the page font -- Vazirmatn in Persian, Geist in English.
+ *
+ * Sonner sets `font-family: ui-sans-serif, system-ui, ...` on
+ * `[data-sonner-toaster]`, and it injects that stylesheet into <head> at
+ * runtime, after this file. A rule here with the same specificity therefore
+ * loses on order: the first attempt at this fix, a bare `[data-sonner-toaster]`
+ * selector, did exactly that, and its `*` half only made the children inherit
+ * the system font from a root that had already lost.
+ *
+ * `html body` lifts the specificity from (0,1,0) to (0,1,2), which wins
+ * regardless of load order. `inherit` then takes the font from `body`, which
+ * carries the locale's font class.
  */
-[data-sonner-toaster],
-[data-sonner-toaster] * {
+html body [data-sonner-toaster],
+html body [data-sonner-toaster] * {
   font-family: inherit;
 }
 
