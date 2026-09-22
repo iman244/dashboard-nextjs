@@ -26,6 +26,10 @@ import {
 /**
  * One patient's entry, rendered from the monitoring type's schema.
  *
+ * Lives here rather than beside a route because two screens use it: the
+ * dedicated recording page, and the shortcut dialog on the monitoring list
+ * where the batch is already chosen.
+ *
  * The same `SchemaForm` the builder previews. The only thing this screen adds
  * is where the bytes go: `uploadToField` presigns and PUTs to object storage,
  * where the preview merely made a blob URL.

@@ -252,6 +252,7 @@
         "electronicHealthRecord": "Search and browse patient health records",
         "periodicalReports": "Generate comprehensive reports for time periods",
         "patientReports": "Generate comprehensive reports for patients",
+        "patientEntries": "Record one patient's monitoring information against a batch",
         "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
         "monitoringTypes": "The report types uploads can be filed under",
         "formSabtPayesh": "Register monitoring data with the online form"
@@ -262,6 +263,7 @@
       "electronicHealthRecord": "Electronic Health Record",
       "periodicalReports": "Periodical Reports",
       "patientReports": "Patient Reports",
+      "patientEntries": "Patient Entries",
       "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
       "monitoringTypes": "Monitoring Types",
       "formSabtPayesh": "Form Sabt Payesh",
@@ -598,6 +600,18 @@
       "InvalidFieldKey": "A field key must start with a letter and use only a-z, 0-9 and _."
     }
   },
+  "/console/patient-entries": {
+    "PageTitle": "Patient Entries",
+    "PageDescription": "Record one patient's monitoring information against a batch.",
+    "Monitoring": "Monitoring batch",
+    "MonitoringPlaceholder": "Choose a batch",
+    "ChooseMonitoring": "Choose a monitoring batch to begin.",
+    "TypeHasNoFields": "This batch collects no form fields",
+    "TypeHasNoFieldsHint": "Its monitoring type declares no fields yet. Add some under Monitoring Types, or upload an Excel file instead.",
+    "NoMonitorings": "No monitoring batches yet",
+    "NoMonitoringsHint": "A batch must exist before information can be recorded against it.",
+    "LoadFailed": "The batches could not be loaded."
+  },
   "/patient/sign-in": {
     "SignInPage": {
       "eyebrow": "Health Record",
@@ -732,6 +746,10 @@
     "monitoringTypes": {
       "title": "Monitoring Types",
       "description": "The report types uploads can be filed under."
+    },
+    "patientEntries": {
+      "title": "Patient Entries",
+      "description": "Record a patient's monitoring information."
     },
     "sbhmStep1": {
       "title": "Step 1 Report",

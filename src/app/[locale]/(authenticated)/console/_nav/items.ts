@@ -2,6 +2,7 @@ import {
   BarChart,
   ClipboardList,
   FileText,
+  NotebookPen,
   SquareActivity,
   Tags,
   User,
@@ -60,6 +61,14 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     descriptionKey: "saderatBankHealthMonitoring",
     url: "/console/saderat-bank-health-monitoring",
     icon: SquareActivity,
+  },
+  {
+    titleKey: "patientEntries",
+    descriptionKey: "patientEntries",
+    url: "/console/patient-entries",
+    // Recording, not reading -- distinct from the report sections above and
+    // from ClipboardList, which the external Sabt Payesh form already owns.
+    icon: NotebookPen,
   },
   {
     titleKey: "monitoringTypes",

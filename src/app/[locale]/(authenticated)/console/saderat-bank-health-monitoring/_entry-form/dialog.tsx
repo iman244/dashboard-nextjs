@@ -11,7 +11,7 @@ import {
 import { localeDigits } from "@/lib/utils";
 import { useList_MonitoringType_API } from "@/data/monitoring-type/api/list";
 import { SBHM_ListSerializer } from "@/data/saderat-bank-health-monitoring/types";
-import { EntryForm } from "./entry-form";
+import { EntryForm } from "@/components/app/patient-entry-form";
 
 /**
  * The per-patient upload form for one monitoring.

@@ -252,6 +252,7 @@
         "electronicHealthRecord": "جستجو و مرور سوابق پزشکی بیماران",
         "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
         "patientReports": "تولید گزارشات جامع برای بیماران",
+        "patientEntries": "ثبت اطلاعات پایش یک بیمار ذیل یک مجموعه",
         "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
         "monitoringTypes": "انواعی که گزارش‌های بارگذاری‌شده زیر آن‌ها ثبت می‌شوند",
         "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
@@ -262,6 +263,7 @@
       "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
       "periodicalReports": "گزارشات دوره‌ای",
       "patientReports": "گزارشات بیمار",
+      "patientEntries": "ثبت اطلاعات بیمار",
       "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
       "monitoringTypes": "انواع پایش",
       "formSabtPayesh": "فرم ثبت پایش",
@@ -598,6 +600,18 @@
       "InvalidFieldKey": "کلید فیلد باید با حرف شروع شود و فقط شامل a-z ، 0-9 و _ باشد."
     }
   },
+  "/console/patient-entries": {
+    "PageTitle": "ثبت اطلاعات بیمار",
+    "PageDescription": "اطلاعات پایش یک بیمار را ذیل یک مجموعه ثبت کنید.",
+    "Monitoring": "مجموعهٔ پایش",
+    "MonitoringPlaceholder": "یک مجموعه را انتخاب کنید",
+    "ChooseMonitoring": "برای شروع، یک مجموعهٔ پایش انتخاب کنید.",
+    "TypeHasNoFields": "این مجموعه فیلدی برای تکمیل ندارد",
+    "TypeHasNoFieldsHint": "نوع پایش آن هنوز فیلدی تعریف نکرده است. از بخش «انواع پایش» فیلد اضافه کنید یا فایل اکسل بارگذاری کنید.",
+    "NoMonitorings": "هنوز مجموعهٔ پایشی ثبت نشده است",
+    "NoMonitoringsHint": "پیش از ثبت اطلاعات، باید یک مجموعه وجود داشته باشد.",
+    "LoadFailed": "بارگذاری مجموعه‌ها انجام نشد."
+  },
   "/patient/sign-in": {
     "SignInPage": {
       "eyebrow": "پرونده سلامت",
@@ -732,6 +746,10 @@
     "monitoringTypes": {
       "title": "انواع پایش",
       "description": "انواعی که گزارش‌های بارگذاری‌شده زیر آن‌ها ثبت می‌شوند."
+    },
+    "patientEntries": {
+      "title": "ثبت اطلاعات بیمار",
+      "description": "ثبت اطلاعات پایش یک بیمار."
     },
     "sbhmStep1": {
       "title": "گزارش مرحله ۱",
