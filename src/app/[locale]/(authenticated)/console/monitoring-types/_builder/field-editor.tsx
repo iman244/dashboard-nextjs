@@ -48,6 +48,9 @@ export const FieldEditor = ({
   const locale = useLocale();
   const [advanced, setAdvanced] = React.useState(false);
   const sections = schema.sections ?? [];
+  // Element ids come from the stable handle, not the editable key, so a label
+  // never points at an input that has just been renamed out from under it.
+  const uid = field._id ?? field.key;
 
   return (
     <div className="border-border space-y-3 rounded-md border p-3">
@@ -88,17 +91,17 @@ export const FieldEditor = ({
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1">
-          <Label htmlFor={`${field.key}-label-fa`}>{t("LabelFa")}</Label>
+          <Label htmlFor={`${uid}-label-fa`}>{t("LabelFa")}</Label>
           <Input
-            id={`${field.key}-label-fa`}
+            id={`${uid}-label-fa`}
             value={field.label_fa}
             onChange={(event) => onChange({ label_fa: event.target.value })}
           />
         </div>
         <div className="space-y-1">
-          <Label htmlFor={`${field.key}-label-en`}>{t("LabelEn")}</Label>
+          <Label htmlFor={`${uid}-label-en`}>{t("LabelEn")}</Label>
           <Input
-            id={`${field.key}-label-en`}
+            id={`${uid}-label-en`}
             dir="ltr"
             value={field.label_en}
             onChange={(event) => onChange({ label_en: event.target.value })}
@@ -109,17 +112,17 @@ export const FieldEditor = ({
       <div className="flex flex-wrap items-center gap-6">
         <div className="flex items-center gap-2">
           <Switch
-            id={`${field.key}-required`}
+            id={`${uid}-required`}
             checked={Boolean(field.required)}
             onCheckedChange={(checked) => onChange({ required: checked })}
           />
-          <Label htmlFor={`${field.key}-required`}>{t("Required")}</Label>
+          <Label htmlFor={`${uid}-required`}>{t("Required")}</Label>
         </div>
 
         {field.type === IMAGE ? (
           <div className="flex items-center gap-2">
             <Switch
-              id={`${field.key}-multiple`}
+              id={`${uid}-multiple`}
               checked={isMultiple(field)}
               onCheckedChange={(checked) =>
                 onChange({
@@ -129,20 +132,20 @@ export const FieldEditor = ({
                 })
               }
             />
-            <Label htmlFor={`${field.key}-multiple`}>{t("AllowMany")}</Label>
+            <Label htmlFor={`${uid}-multiple`}>{t("AllowMany")}</Label>
           </div>
         ) : null}
 
         {sections.length > 0 ? (
           <div className="flex items-center gap-2">
-            <Label htmlFor={`${field.key}-section`}>{t("Section")}</Label>
+            <Label htmlFor={`${uid}-section`}>{t("Section")}</Label>
             <Select
               value={field.section ?? "__none__"}
               onValueChange={(value) =>
                 onChange({ section: value === "__none__" ? undefined : value })
               }
             >
-              <SelectTrigger id={`${field.key}-section`} className="w-44">
+              <SelectTrigger id={`${uid}-section`} className="w-44">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -175,9 +178,9 @@ export const FieldEditor = ({
           {field.type === DIGIT_STRING ? (
             <>
               <div className="space-y-1">
-                <Label htmlFor={`${field.key}-min`}>{t("MinLength")}</Label>
+                <Label htmlFor={`${uid}-min`}>{t("MinLength")}</Label>
                 <Input
-                  id={`${field.key}-min`}
+                  id={`${uid}-min`}
                   inputMode="numeric"
                   dir="ltr"
                   value={
@@ -191,9 +194,9 @@ export const FieldEditor = ({
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor={`${field.key}-max`}>{t("MaxLength")}</Label>
+                <Label htmlFor={`${uid}-max`}>{t("MaxLength")}</Label>
                 <Input
-                  id={`${field.key}-max`}
+                  id={`${uid}-max`}
                   inputMode="numeric"
                   dir="ltr"
                   value={
@@ -210,9 +213,9 @@ export const FieldEditor = ({
           ) : (
             <>
               <div className="space-y-1">
-                <Label htmlFor={`${field.key}-size`}>{t("MaxSizeMb")}</Label>
+                <Label htmlFor={`${uid}-size`}>{t("MaxSizeMb")}</Label>
                 <Input
-                  id={`${field.key}-size`}
+                  id={`${uid}-size`}
                   inputMode="numeric"
                   dir="ltr"
                   value={
@@ -229,9 +232,9 @@ export const FieldEditor = ({
               </div>
               {isMultiple(field) ? (
                 <div className="space-y-1">
-                  <Label htmlFor={`${field.key}-count`}>{t("MaxCount")}</Label>
+                  <Label htmlFor={`${uid}-count`}>{t("MaxCount")}</Label>
                   <Input
-                    id={`${field.key}-count`}
+                    id={`${uid}-count`}
                     inputMode="numeric"
                     dir="ltr"
                     value={
@@ -251,9 +254,9 @@ export const FieldEditor = ({
           )}
 
           <div className="space-y-1">
-            <Label htmlFor={`${field.key}-key`}>{t("FieldKey")}</Label>
+            <Label htmlFor={`${uid}-key`}>{t("FieldKey")}</Label>
             <Input
-              id={`${field.key}-key`}
+              id={`${uid}-key`}
               dir="ltr"
               value={field.key}
               onChange={(event) =>

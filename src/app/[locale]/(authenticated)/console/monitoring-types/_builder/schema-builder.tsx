@@ -130,14 +130,18 @@ export const SchemaBuilder = ({
         ) : (
           schema.fields.map((field) => (
             <FieldEditor
-              key={field.key}
+              // `_id`, not `key`: the key is editable, and keying on it
+              // would remount this row on every keystroke.
+              key={field._id}
               field={field}
               schema={schema}
               onChange={(patch) =>
-                onChange(updateField(schema, field.key, patch))
+                onChange(updateField(schema, field._id ?? "", patch))
               }
-              onRemove={() => onChange(removeField(schema, field.key))}
-              onMove={(delta) => onChange(moveField(schema, field.key, delta))}
+              onRemove={() => onChange(removeField(schema, field._id ?? ""))}
+              onMove={(delta) =>
+                onChange(moveField(schema, field._id ?? "", delta))
+              }
             />
           ))
         )}

@@ -22,6 +22,19 @@ import {
  * a key for every field, they are assigned and stay editable in the advanced
  * row for anyone who wants a meaningful name in the stored data.
  */
+export const newId = () =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `id-${Math.random().toString(36).slice(2)}`;
+
+/** Give every field a stable `_id`, for schemas arriving from the API. */
+export const withIds = (schema: FieldSchema): FieldSchema => ({
+  ...schema,
+  fields: schema.fields.map((field) =>
+    field._id ? field : { ...field, _id: newId() }
+  ),
+});
+
 export const nextKey = (existing: string[], prefix: string) => {
   let index = existing.length + 1;
   while (existing.includes(`${prefix}_${index}`)) index += 1;
@@ -40,6 +53,7 @@ export const addField = (
   const field: SchemaField =
     type === DIGIT_STRING
       ? {
+          _id: newId(),
           key,
           type: DIGIT_STRING,
           label_en: "",
@@ -48,6 +62,7 @@ export const addField = (
           ...(section ? { section } : {}),
         }
       : {
+          _id: newId(),
           key,
           type: IMAGE,
           label_en: "",
@@ -64,26 +79,26 @@ export const addField = (
 
 export const updateField = (
   schema: FieldSchema,
-  key: string,
+  id: string,
   patch: Partial<SchemaField>
 ): FieldSchema => ({
   ...schema,
   fields: schema.fields.map((field) =>
-    field.key === key ? ({ ...field, ...patch } as SchemaField) : field
+    field._id === id ? ({ ...field, ...patch } as SchemaField) : field
   ),
 });
 
-export const removeField = (schema: FieldSchema, key: string): FieldSchema => ({
+export const removeField = (schema: FieldSchema, id: string): FieldSchema => ({
   ...schema,
-  fields: schema.fields.filter((field) => field.key !== key),
+  fields: schema.fields.filter((field) => field._id !== id),
 });
 
 export const moveField = (
   schema: FieldSchema,
-  key: string,
+  id: string,
   delta: number
 ): FieldSchema => {
-  const index = schema.fields.findIndex((field) => field.key === key);
+  const index = schema.fields.findIndex((field) => field._id === id);
   const target = index + delta;
   if (index < 0 || target < 0 || target >= schema.fields.length) return schema;
   const fields = [...schema.fields];
@@ -143,6 +158,14 @@ export const draftProblems = (schema: FieldSchema) => {
     }
   }
 
+  const keys = schema.fields.map((field) => field.key);
+  if (new Set(keys).size !== keys.length) {
+    problems.push({ key: "DuplicateFieldKey" });
+  }
+  if (schema.fields.some((field) => !/^[a-z][a-z0-9_]*$/.test(field.key))) {
+    problems.push({ key: "InvalidFieldKey" });
+  }
+
   for (const field of schema.fields) {
     if (
       field.type === DIGIT_STRING &&
@@ -165,5 +188,9 @@ export const toPayload = (schema: FieldSchema) =>
     : {
         version: 1 as const,
         sections: schema.sections ?? [],
-        fields: schema.fields,
+        // `_id` is a client-side handle; it has no business in the database.
+        fields: schema.fields.map(({ _id, ...field }) => {
+          void _id;
+          return field;
+        }),
       };

@@ -593,7 +593,9 @@
       "NationalIdNote": "Always present. It identifies the patient and is not a field you add.",
       "SectionNeedsTitles": "Every section needs both a Persian and an English title.",
       "FieldNeedsLabels": "Every field needs both a Persian and an English label.",
-      "MinAboveMax": "“{field}” has a minimum longer than its maximum."
+      "MinAboveMax": "“{field}” has a minimum longer than its maximum.",
+      "DuplicateFieldKey": "Two fields share the same key. Keys must be unique.",
+      "InvalidFieldKey": "A field key must start with a letter and use only a-z, 0-9 and _."
     }
   },
   "/patient/sign-in": {

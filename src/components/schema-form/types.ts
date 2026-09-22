@@ -13,6 +13,14 @@ export type SchemaSection = {
 };
 
 export type SchemaField = {
+  /**
+   * Stable client-side identity, never persisted.
+   *
+   * `key` is editable, so it cannot be the React key: changing it would
+   * remount the row on every keystroke and throw away its local state (and
+   * the caret). `toPayload` strips this before the schema is saved.
+   */
+  _id?: string;
   key: string;
   type: FieldType;
   label_en: string;

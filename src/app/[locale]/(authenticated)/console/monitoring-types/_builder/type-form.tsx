@@ -24,7 +24,7 @@ import {
 } from "@/components/schema-form";
 import { SchemaBuilder } from "./schema-builder";
 import { SchemaPreview } from "./preview";
-import { draftProblems, toPayload } from "./draft";
+import { draftProblems, toPayload, withIds } from "./draft";
 
 const LIST_PATH = "/console/monitoring-types";
 
@@ -63,7 +63,9 @@ export const TypeForm = ({ id }: { id?: number }) => {
       initialNameFa={existing?.name_fa ?? ""}
       initialNameEn={existing?.name_en ?? ""}
       initialSchema={
-        existing ? asFieldSchema(existing.field_schema) : EMPTY_SCHEMA
+        // Fields arriving from the API carry no `_id`; assign one so the
+        // editor rows have a stable identity to be keyed on.
+        existing ? withIds(asFieldSchema(existing.field_schema)) : EMPTY_SCHEMA
       }
       onDone={() => {
         queryClient.invalidateQueries({
