@@ -37,6 +37,29 @@ There is **no runtime validation, deliberately.** The upload is loose
 third-party data; the types describe what we have seen, not a contract. A
 column rename upstream compiles fine and renders blank. That is accepted.
 
+### The type list is no longer closed
+
+Monitoring types are rows in a Django table now, managed at
+`/console/monitoring-types`. `SBHM_Type` is this dashboard's own claim about
+which of them it can render, not a description of what exists — staff can
+create a type that has no entry in `SBHM_TYPE_LABEL_KEYS` and none in
+`SBHM_TYPE_SEGMENTS`.
+
+Both helpers return `undefined` for such a type, and neither fails loudly: the
+label reaches next-intl as a missing key, and `SBHM_DETAIL_PATH` builds
+`/console/.../undefined/12`. So guard before calling either:
+
+```ts
+import { isKnownSBHM_Type } from "@/data/saderat-bank-health-monitoring/types";
+
+isKnownSBHM_Type(type) ? tStep(SBHM_TYPE_LABEL_KEY(type)) : type
+```
+
+Adding a step is still the same two-line change — a `SBHM_TYPE_LABEL_KEYS`
+entry and a `SBHM_TYPE_SEGMENTS` entry, both held to `SBHM_Type` by
+`satisfies` — plus the route itself. The management UI does not remove that
+step; it just means the backend can get ahead of it.
+
 ### A known unsoundness
 
 `SBHM_RetrieveSerializer.json` is typed as `SBHM_Step1Record[]` for *both*

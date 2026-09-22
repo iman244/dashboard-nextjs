@@ -10,7 +10,8 @@
       "datasets": "Loading datasets…",
       "report": "Building the report…",
       "record": "Loading the health record…",
-      "records": "Loading records…"
+      "records": "Loading records…",
+      "monitoringTypes": "Loading monitoring types…"
     },
     "DateRangePicker": {
       "placeholder": "Select a date range",
@@ -139,7 +140,10 @@
       "TrendChart": "Trend chart",
       "ServiceRecords": "Service records",
       "OpenReport": "Open report",
-      "OpenMenu": "Open menu"
+      "OpenMenu": "Open menu",
+      "Edit": "Edit",
+      "Save": "Save",
+      "Create": "Create"
     },
     "SBHM_Step": {
       "Label": "Step",
@@ -232,6 +236,7 @@
         "periodicalReports": "Generate comprehensive reports for time periods",
         "patientReports": "Generate comprehensive reports for patients",
         "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
+        "monitoringTypes": "The report types uploads can be filed under",
         "formSabtPayesh": "Register monitoring data with the online form"
       }
     },
@@ -241,6 +246,7 @@
       "periodicalReports": "Periodical Reports",
       "patientReports": "Patient Reports",
       "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
+      "monitoringTypes": "Monitoring Types",
       "formSabtPayesh": "Form Sabt Payesh",
       "account": "Account",
       "logout": "Log out"
@@ -486,6 +492,57 @@
       }
     }
   },
+  "/console/monitoring-types": {
+    "MonitoringTypesPage": {
+      "PageTitle": "Monitoring Types",
+      "PageDescription": "The types a monitoring report can be filed under. Uploads choose from this list.",
+      "CreateType": "New type",
+      "SlugColumn": "Slug",
+      "NameEnColumn": "Name (English)",
+      "NameFaColumn": "Name (Persian)",
+      "NoViewBadge": "No view",
+      "ErrorTitle": "Error loading monitoring types",
+      "EmptyStateTitle": "No monitoring types",
+      "EmptyStateDescription": "Create one before uploading a report.",
+      "EmptyStateDescriptionDetail": "No monitoring types have been defined yet."
+    },
+    "MonitoringTypeFormDialog": {
+      "CreateTitle": "New monitoring type",
+      "CreateDescription": "Reports filed under this type only get a detail page if the dashboard has a view for its slug.",
+      "EditTitle": "Edit monitoring type",
+      "EditDescription": "Changes apply to every report already filed under this type.",
+      "CreatedMessage": "Monitoring type created",
+      "UpdatedMessage": "Monitoring type updated",
+      "ErrorTitle": "Could not save",
+      "ErrorMessage": "Something went wrong. Please try again.",
+      "SlugRenameWarningTitle": "This slug has a view in the dashboard",
+      "SlugRenameWarning": "Reports filed under “{slug}” open a detail page keyed on that slug. Renaming it leaves them with no detail page until the dashboard is updated to match.",
+      "Form": {
+        "SlugLabel": "Slug",
+        "SlugPlaceholder": "step_3",
+        "SlugHelp": "Letters, numbers, hyphens and underscores. This is what the API and the dashboard's routes use.",
+        "SlugRequired": "A slug is required.",
+        "SlugTooLong": "At most {max} characters.",
+        "SlugPattern": "Use only letters, numbers, hyphens and underscores.",
+        "NameEnLabel": "Name (English)",
+        "NameEnPlaceholder": "Step 3",
+        "NameEnRequired": "An English name is required.",
+        "NameFaLabel": "Name (Persian)",
+        "NameFaPlaceholder": "مرحله ۳",
+        "NameFaRequired": "A Persian name is required.",
+        "NameTooLong": "At most {max} characters."
+      }
+    },
+    "DeleteMonitoringTypeDialog": {
+      "DialogTitle": "Delete this monitoring type?",
+      "DialogDescription": "“{name}” will be removed. This cannot be undone.",
+      "SuccessMessage": "Monitoring type deleted",
+      "ErrorMessage": "Could not delete: {message}",
+      "InUseTitle": "Still in use",
+      "InUseDescription": "{count} monitoring reports are filed under this type. Delete them first, or rename this type instead.",
+      "InUseDescriptionUnknown": "Monitoring reports are still filed under this type. Delete them first, or rename this type instead."
+    }
+  },
   "/patient/sign-in": {
     "SignInPage": {
       "eyebrow": "Health Record",
@@ -616,6 +673,10 @@
     "saderatBankHealthMonitoring": {
       "title": "Saderat Bank Health Monitoring",
       "description": "Uploaded datasets and their step reports."
+    },
+    "monitoringTypes": {
+      "title": "Monitoring Types",
+      "description": "The report types uploads can be filed under."
     },
     "sbhmStep1": {
       "title": "Step 1 Report",

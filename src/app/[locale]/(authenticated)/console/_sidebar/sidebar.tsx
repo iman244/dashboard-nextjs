@@ -15,10 +15,11 @@ import { useTranslations } from "next-intl";
 import { useDirection, useIsRtl } from "@/lib/use-direction";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NavUser } from "./nav-user";
-import { CONSOLE_NAV_ITEMS } from "../_nav/items";
+import { useConsoleNavItems } from "../_nav/use-console-nav-items";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const navItems = useConsoleNavItems();
 
   const t = useTranslations("/console.ConsoleSidebar");
   const isRtl = useIsRtl();
@@ -34,7 +35,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>{t("dashboard")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {CONSOLE_NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
                     <Link href={item.url}>

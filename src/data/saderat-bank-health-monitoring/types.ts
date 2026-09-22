@@ -22,6 +22,23 @@ const SBHM_TYPE_LABEL_KEYS = {
 
 export const SBHM_TYPES = Object.keys(SBHM_TYPE_LABEL_KEYS) as SBHM_Type[];
 
+/**
+ * Whether this dashboard can render a type the API returned.
+ *
+ * Needed because types are rows in a table now and staff can create one
+ * through /console/monitoring-types. A type created there has no entry in
+ * SBHM_TYPE_LABEL_KEYS and none in SBHM_TYPE_SEGMENTS, so calling either
+ * helper with it returns `undefined` -- which reaches the UI as a missing
+ * translation key and as an href of `/console/.../undefined/12`. Neither
+ * fails loudly.
+ *
+ * `type` is declared as SBHM_Type on every serializer via WithKnownType, and
+ * that is an assertion, not a guarantee. This is the runtime check that makes
+ * the assertion safe to act on.
+ */
+export const isKnownSBHM_Type = (slug: string): slug is SBHM_Type =>
+  (SBHM_TYPES as readonly string[]).includes(slug);
+
 export const SBHM_TYPE_LABEL_KEY = (type: SBHM_Type) =>
   SBHM_TYPE_LABEL_KEYS[type];
 

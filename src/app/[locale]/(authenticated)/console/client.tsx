@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { PageHeader } from "@/components/app/page-header";
-import { CONSOLE_NAV_ITEMS } from "./_nav/items";
+import { useConsoleNavItems } from "./_nav/use-console-nav-items";
 
 /**
  * The console front door.
@@ -15,13 +15,15 @@ import { CONSOLE_NAV_ITEMS } from "./_nav/items";
  * trigger, so signing in landed the user on a genuinely blank screen with no
  * visible way forward.
  *
- * A list, not a grid of cards: five destinations do not need three columns, and
+ * A list, not a grid of cards: a handful of destinations do not need three
+ * columns, and
  * a full-width row is a better target on a phone than a third of one. The rows
  * are the same on both, so there is no layout to re-learn between devices.
  */
 const Client = () => {
   const t = useTranslations("/console.ConsoleHome");
   const tNav = useTranslations("/console.ConsoleSidebar");
+  const navItems = useConsoleNavItems();
 
   return (
     <div className="space-y-6">
@@ -29,7 +31,7 @@ const Client = () => {
 
       <nav aria-label={t("title")} className="max-w-3xl">
         <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
-          {CONSOLE_NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <li key={item.url}>
               <Link
                 href={item.url}

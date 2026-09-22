@@ -28,13 +28,10 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { LIST_SBHM_QUERY_KEY } from "@/data/saderat-bank-health-monitoring/api";
 import { useUploadExcelApi } from "@/data/saderat-bank-health-monitoring/api/upload-excel";
-import {
-  SBHM_TYPES,
-  SBHM_TYPE_LABEL_KEY,
-} from "@/data/saderat-bank-health-monitoring/types";
+import { useList_MonitoringType_API } from "@/data/monitoring-type/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -42,7 +39,7 @@ import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string(),
-  type: z.enum(SBHM_TYPES),
+  type: z.string().min(1),
   file: z.instanceof(File),
 });
 
@@ -57,6 +54,11 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
   const queryClient = useQueryClient();
   const t = useTranslations("/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog");
   const tStep = useTranslations("common.SBHM_Step");
+  const locale = useLocale();
+  const tLoading = useTranslations("common.Loading");
+  const tTypes = useTranslations("/console/monitoring-types.MonitoringTypesPage");
+  const { data: monitoringTypes, isPending: typesPending, error: typesError } =
+    useList_MonitoringType_API({ enabled: open });
 
   const { mutate: uploadExcel, isPending } = useUploadExcelApi();
   const form = useForm<FormValues>({
@@ -162,7 +164,8 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                   <FormLabel>{tStep("Label")}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value ?? ""}
+                    disabled={typesPending || !!typesError || !monitoringTypes?.length}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -170,13 +173,18 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {SBHM_TYPES.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {tStep(SBHM_TYPE_LABEL_KEY(type))}
+                      {monitoringTypes?.map((type) => (
+                        <SelectItem key={type.id} value={type.slug}>
+                          {locale === "fa" ? type.name_fa : type.name_en}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  {typesPending && <p role="status">{tLoading("monitoringTypes")}</p>}
+                  {typesError && <p role="alert">{tTypes("ErrorTitle")}</p>}
+                  {!typesPending && !typesError && !monitoringTypes?.length && (
+                    <p role="status">{tTypes("EmptyStateDescriptionDetail")}</p>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -199,7 +207,7 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending} aria-busy={isPending}>
+            <Button type="submit" disabled={isPending || typesPending || !!typesError || !monitoringTypes?.length} aria-busy={isPending}>
               {isPending && <Spinner />}
               {t("Form.UploadButton")}
             </Button>

@@ -3,6 +3,7 @@ import {
   ClipboardList,
   FileText,
   SquareActivity,
+  Tags,
   User,
   type LucideIcon,
 } from "lucide-react";
@@ -25,6 +26,14 @@ export type ConsoleNavItem = {
   descriptionKey: string;
   url: string;
   icon: LucideIcon;
+  /**
+   * Hide from the sidebar and the console home unless the user is staff.
+   *
+   * Not a security boundary — the backend decides that, and it lets any
+   * signed-in user read this one. It keeps a page whose every control is
+   * disabled for most users out of everyone else's way.
+   */
+  staffOnly?: boolean;
 };
 
 export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
@@ -51,6 +60,14 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     descriptionKey: "saderatBankHealthMonitoring",
     url: "/console/saderat-bank-health-monitoring",
     icon: SquareActivity,
+  },
+  {
+    titleKey: "monitoringTypes",
+    descriptionKey: "monitoringTypes",
+    url: "/console/monitoring-types",
+    icon: Tags,
+    // Configures the section above it; only staff may change it.
+    staffOnly: true,
   },
   {
     titleKey: "formSabtPayesh",

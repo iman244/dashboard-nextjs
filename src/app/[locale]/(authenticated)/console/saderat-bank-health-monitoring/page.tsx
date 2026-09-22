@@ -26,13 +26,12 @@ import {
   SBHM_ListSerializer,
   SBHM_TYPE_LABEL_KEY,
   SBHM_DETAIL_PATH,
+  isKnownSBHM_Type,
 } from "@/data/saderat-bank-health-monitoring/types";
 
 const columnHelper = createColumnHelper<AppTableFeatures, SBHM_ListSerializer[number]>();
 
-const SaderatBankHealthMonitoringPage = (
-  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring">
-) => {
+const SaderatBankHealthMonitoringPage = () => {
   const [deleteRow, setDeleteRow] = React.useState<
     SBHM_ListSerializer[number] | null
   >(null);
@@ -54,7 +53,17 @@ const SaderatBankHealthMonitoringPage = (
       // a name is only unique per step now, so the step has to be visible
       columnHelper.accessor("type", {
         header: tStep("Label"),
-        cell: (info) => tStep(SBHM_TYPE_LABEL_KEY(info.getValue())),
+        cell: (info) => {
+          // Typed SBHM_Type by WithKnownType, which is an assertion rather
+          // than a guarantee: staff can create a type in
+          // /console/monitoring-types that has no entry in the label map, and
+          // tStep() on a missing key renders an error placeholder. Widened to
+          // string so the guard can actually narrow it.
+          const type: string = info.getValue();
+          return isKnownSBHM_Type(type)
+            ? tStep(SBHM_TYPE_LABEL_KEY(type))
+            : type;
+        },
       }),
       columnHelper.accessor("created_at", {
         header: tDictionary("CreatedAt"),
@@ -65,11 +74,17 @@ const SaderatBankHealthMonitoringPage = (
         header: tDictionary("Actions"),
         cell: ({ row }) => (
           <RowActions>
-            <RowAction
-              icon={Table2}
-              label={tDictionary("OpenReport")}
-              href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
-            />
+            {/* Only a type this dashboard routes has a report to open.
+                SBHM_DETAIL_PATH looks the segment up in a map keyed on the
+                same closed set, so an unknown type would build
+                `/console/.../undefined/12` and 404 on click. */}
+            {isKnownSBHM_Type(row.original.type) && (
+              <RowAction
+                icon={Table2}
+                label={tDictionary("OpenReport")}
+                href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
+              />
+            )}
             {isStaff && (
               <RowAction
                 icon={Trash}

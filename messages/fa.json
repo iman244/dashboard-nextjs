@@ -10,7 +10,8 @@
       "datasets": "در حال بارگذاری مجموعه‌داده‌ها…",
       "report": "در حال ساخت گزارش…",
       "record": "در حال بارگذاری پرونده سلامت…",
-      "records": "در حال بارگذاری سوابق…"
+      "records": "در حال بارگذاری سوابق…",
+      "monitoringTypes": "در حال بارگذاری انواع پایش…"
     },
     "DateRangePicker": {
       "placeholder": "انتخاب بازه تاریخ",
@@ -139,7 +140,10 @@
       "TrendChart": "نمودار روند",
       "ServiceRecords": "رکوردهای خدمت",
       "OpenReport": "مشاهده گزارش",
-      "OpenMenu": "باز کردن منو"
+      "OpenMenu": "باز کردن منو",
+      "Edit": "ویرایش",
+      "Save": "ذخیره",
+      "Create": "ایجاد"
     },
     "SBHM_Step": {
       "Label": "مرحله",
@@ -232,6 +236,7 @@
         "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
         "patientReports": "تولید گزارشات جامع برای بیماران",
         "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
+        "monitoringTypes": "انواعی که گزارش‌های بارگذاری‌شده زیر آن‌ها ثبت می‌شوند",
         "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
       }
     },
@@ -241,6 +246,7 @@
       "periodicalReports": "گزارشات دوره‌ای",
       "patientReports": "گزارشات بیمار",
       "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
+      "monitoringTypes": "انواع پایش",
       "formSabtPayesh": "فرم ثبت پایش",
       "account": "حساب کاربری",
       "logout": "خروج"
@@ -486,6 +492,57 @@
       }
     }
   },
+  "/console/monitoring-types": {
+    "MonitoringTypesPage": {
+      "PageTitle": "انواع پایش",
+      "PageDescription": "انواعی که یک گزارش پایش می‌تواند زیر آن ثبت شود. بارگذاری‌ها از همین فهرست انتخاب می‌کنند.",
+      "CreateType": "نوع جدید",
+      "SlugColumn": "شناسه",
+      "NameEnColumn": "نام (انگلیسی)",
+      "NameFaColumn": "نام (فارسی)",
+      "NoViewBadge": "بدون نما",
+      "ErrorTitle": "خطا در بارگذاری انواع پایش",
+      "EmptyStateTitle": "هیچ نوع پایشی وجود ندارد",
+      "EmptyStateDescription": "پیش از بارگذاری گزارش، یک نوع بسازید.",
+      "EmptyStateDescriptionDetail": "هنوز هیچ نوع پایشی تعریف نشده است."
+    },
+    "MonitoringTypeFormDialog": {
+      "CreateTitle": "نوع پایش جدید",
+      "CreateDescription": "گزارش‌هایی که زیر این نوع ثبت می‌شوند تنها در صورتی صفحه جزئیات دارند که داشبورد برای شناسه آن نمایی داشته باشد.",
+      "EditTitle": "ویرایش نوع پایش",
+      "EditDescription": "تغییرات روی همه گزارش‌هایی که پیش‌تر زیر این نوع ثبت شده‌اند اعمال می‌شود.",
+      "CreatedMessage": "نوع پایش ساخته شد",
+      "UpdatedMessage": "نوع پایش به‌روزرسانی شد",
+      "ErrorTitle": "ذخیره نشد",
+      "ErrorMessage": "مشکلی پیش آمد. دوباره تلاش کنید.",
+      "SlugRenameWarningTitle": "این شناسه در داشبورد نما دارد",
+      "SlugRenameWarning": "گزارش‌های ثبت‌شده زیر «{slug}» صفحه جزئیاتی دارند که بر پایه همین شناسه ساخته می‌شود. با تغییر نام، تا زمانی که داشبورد هماهنگ نشود این گزارش‌ها صفحه جزئیات نخواهند داشت.",
+      "Form": {
+        "SlugLabel": "شناسه",
+        "SlugPlaceholder": "step_3",
+        "SlugHelp": "حروف، اعداد، خط تیره و زیرخط. مسیرهای داشبورد و API از همین استفاده می‌کنند.",
+        "SlugRequired": "وارد کردن شناسه الزامی است.",
+        "SlugTooLong": "حداکثر {max} نویسه.",
+        "SlugPattern": "تنها از حروف، اعداد، خط تیره و زیرخط استفاده کنید.",
+        "NameEnLabel": "نام (انگلیسی)",
+        "NameEnPlaceholder": "Step 3",
+        "NameEnRequired": "وارد کردن نام انگلیسی الزامی است.",
+        "NameFaLabel": "نام (فارسی)",
+        "NameFaPlaceholder": "مرحله ۳",
+        "NameFaRequired": "وارد کردن نام فارسی الزامی است.",
+        "NameTooLong": "حداکثر {max} نویسه."
+      }
+    },
+    "DeleteMonitoringTypeDialog": {
+      "DialogTitle": "این نوع پایش حذف شود؟",
+      "DialogDescription": "«{name}» حذف خواهد شد. این کار برگشت‌پذیر نیست.",
+      "SuccessMessage": "نوع پایش حذف شد",
+      "ErrorMessage": "حذف نشد: {message}",
+      "InUseTitle": "هنوز در حال استفاده است",
+      "InUseDescription": "{count} گزارش پایش زیر این نوع ثبت شده است. ابتدا آن‌ها را حذف کنید، یا به‌جای حذف این نوع را تغییر نام دهید.",
+      "InUseDescriptionUnknown": "هنوز گزارش‌هایی زیر این نوع ثبت شده‌اند. ابتدا آن‌ها را حذف کنید، یا به‌جای حذف این نوع را تغییر نام دهید."
+    }
+  },
   "/patient/sign-in": {
     "SignInPage": {
       "eyebrow": "پرونده سلامت",
@@ -616,6 +673,10 @@
     "saderatBankHealthMonitoring": {
       "title": "پایش سلامت بانک صادرات",
       "description": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای."
+    },
+    "monitoringTypes": {
+      "title": "انواع پایش",
+      "description": "انواعی که گزارش‌های بارگذاری‌شده زیر آن‌ها ثبت می‌شوند."
     },
     "sbhmStep1": {
       "title": "گزارش مرحله ۱",
