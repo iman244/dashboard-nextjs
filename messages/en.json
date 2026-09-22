@@ -490,6 +490,21 @@
         "administrative": "Administrative",
         "followUp": "Follow-up"
       }
+    },
+    "PatientEntryDialog": {
+      "RowAction": "Files",
+      "DialogTitle": "Patient files",
+      "DialogDescription": "Attach files for a patient in “{name}”.",
+      "NationalId": "National ID",
+      "NationalIdPlaceholder": "e.g. 0012345678",
+      "EnterNationalId": "Enter a national ID to attach files.",
+      "NoFields": "This monitoring type does not declare any file fields yet.",
+      "Save": "Save",
+      "Saved": "Files saved.",
+      "SaveFailed": "The files could not be saved.",
+      "UploadFailed": "“{name}” could not be uploaded.",
+      "MaxSize": "Up to {size} MB per file.",
+      "RemoveFile": "Remove {name}"
     }
   },
   "/console/monitoring-types": {

@@ -490,6 +490,21 @@
         "administrative": "اطلاعات اداری",
         "followUp": "پیگیری"
       }
+    },
+    "PatientEntryDialog": {
+      "RowAction": "فایل‌ها",
+      "DialogTitle": "فایل‌های بیمار",
+      "DialogDescription": "برای یک بیمار در «{name}» فایل پیوست کنید.",
+      "NationalId": "کد ملی",
+      "NationalIdPlaceholder": "مثلاً ۰۰۱۲۳۴۵۶۷۸",
+      "EnterNationalId": "برای پیوست کردن فایل، کد ملی را وارد کنید.",
+      "NoFields": "این نوع پایش هنوز هیچ فیلد فایلی تعریف نکرده است.",
+      "Save": "ذخیره",
+      "Saved": "فایل‌ها ذخیره شد.",
+      "SaveFailed": "ذخیره‌سازی فایل‌ها انجام نشد.",
+      "UploadFailed": "آپلود «{name}» انجام نشد.",
+      "MaxSize": "حداکثر {size} مگابایت برای هر فایل.",
+      "RemoveFile": "حذف {name}"
     }
   },
   "/console/monitoring-types": {
