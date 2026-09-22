@@ -329,6 +329,102 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/saderat-bank-health-monitoring/patient-entries/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List patient entries
+         * @description Per-patient entries against a monitoring's field_schema.
+         *
+         *     Nothing here reads `SaderatBankHealthMonitoring.json`. Entries and the
+         *     Excel blob are independent stores that share a key.
+         */
+        get: operations["saderat_bank_health_monitoring_patient_entries_list"];
+        put?: never;
+        /**
+         * Create a patient entry
+         * @description Per-patient entries against a monitoring's field_schema.
+         *
+         *     Nothing here reads `SaderatBankHealthMonitoring.json`. Entries and the
+         *     Excel blob are independent stores that share a key.
+         */
+        post: operations["saderat_bank_health_monitoring_patient_entries_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/saderat-bank-health-monitoring/patient-entries/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieve a patient entry
+         * @description Per-patient entries against a monitoring's field_schema.
+         *
+         *     Nothing here reads `SaderatBankHealthMonitoring.json`. Entries and the
+         *     Excel blob are independent stores that share a key.
+         */
+        get: operations["saderat_bank_health_monitoring_patient_entries_retrieve"];
+        /**
+         * @description Per-patient entries against a monitoring's field_schema.
+         *
+         *     Nothing here reads `SaderatBankHealthMonitoring.json`. Entries and the
+         *     Excel blob are independent stores that share a key.
+         */
+        put: operations["saderat_bank_health_monitoring_patient_entries_update"];
+        post?: never;
+        /**
+         * Delete a patient entry
+         * @description Per-patient entries against a monitoring's field_schema.
+         *
+         *     Nothing here reads `SaderatBankHealthMonitoring.json`. Entries and the
+         *     Excel blob are independent stores that share a key.
+         */
+        delete: operations["saderat_bank_health_monitoring_patient_entries_destroy"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a patient entry
+         * @description Per-patient entries against a monitoring's field_schema.
+         *
+         *     Nothing here reads `SaderatBankHealthMonitoring.json`. Entries and the
+         *     Excel blob are independent stores that share a key.
+         */
+        patch: operations["saderat_bank_health_monitoring_patient_entries_partial_update"];
+        trace?: never;
+    };
+    "/api/saderat-bank-health-monitoring/patient-entries/presign/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign an upload for one file field
+         * @description Per-patient entries against a monitoring's field_schema.
+         *
+         *     Nothing here reads `SaderatBankHealthMonitoring.json`. Entries and the
+         *     Excel blob are independent stores that share a key.
+         */
+        post: operations["saderat_bank_health_monitoring_patient_entries_presign_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -346,11 +442,13 @@ export interface components {
             slug: string;
             name_en: string;
             name_fa: string;
+            field_schema?: unknown;
         };
         MonitoringTypeRequest: {
             slug: string;
             name_en: string;
             name_fa: string;
+            field_schema?: unknown;
         };
         PasswordResetConfirm: {
             uid: string;
@@ -366,6 +464,13 @@ export interface components {
             slug?: string;
             name_en?: string;
             name_fa?: string;
+            field_schema?: unknown;
+        };
+        PatchedPatientEntryRequest: {
+            monitoring?: number;
+            national_id?: string;
+            values?: unknown;
+            files?: components["schemas"]["PatientEntryFileRequest"][];
         };
         PatchedSaderatBankHealthMonitoringListRequest: {
             name?: string;
@@ -374,6 +479,60 @@ export interface components {
         PatchedUserRequest: {
             /** Email address */
             email?: string;
+        };
+        PatientEntry: {
+            readonly id: number;
+            monitoring: number;
+            national_id: string;
+            values?: unknown;
+            files?: components["schemas"]["PatientEntryFile"][];
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: date-time */
+            readonly updated_at: string;
+        };
+        /** @description A stored object. `url` is minted per read and expires. */
+        PatientEntryFile: {
+            readonly id: number;
+            field_key: string;
+            key: string;
+            original_name: string;
+            content_type: string;
+            /** Format: int64 */
+            size: number;
+            readonly url: string | null;
+        };
+        /** @description A stored object. `url` is minted per read and expires. */
+        PatientEntryFileRequest: {
+            field_key: string;
+            key: string;
+            original_name: string;
+            content_type: string;
+            /** Format: int64 */
+            size: number;
+        };
+        PatientEntryRequest: {
+            monitoring: number;
+            national_id: string;
+            values?: unknown;
+            files?: components["schemas"]["PatientEntryFileRequest"][];
+        };
+        /** @description What the browser must state before Django will sign anything. */
+        PresignRequestRequest: {
+            monitoring: number;
+            national_id: string;
+            field_key: string;
+            filename: string;
+            content_type: string;
+            size: number;
+        };
+        PresignResponse: {
+            upload_url: string;
+            key: string;
+            headers: {
+                [key: string]: unknown;
+            };
+            expires_in: number;
         };
         SaderatBankHealthMonitoringList: {
             readonly id: number;
@@ -1322,6 +1481,195 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["UploadExcelResponse"];
                 };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_entries_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientEntry"][];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_entries_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PatientEntryRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatientEntryRequest"];
+                "multipart/form-data": components["schemas"]["PatientEntryRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientEntry"];
+                };
+            };
+            /** @description This patient already has an entry here. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_entries_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this patient entry. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientEntry"];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_entries_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this patient entry. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PatientEntryRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatientEntryRequest"];
+                "multipart/form-data": components["schemas"]["PatientEntryRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientEntry"];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_entries_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this patient entry. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_entries_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A unique integer value identifying this patient entry. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPatientEntryRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPatientEntryRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPatientEntryRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientEntry"];
+                };
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_entries_presign_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PresignRequestRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PresignRequestRequest"];
+                "multipart/form-data": components["schemas"]["PresignRequestRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PresignResponse"];
+                };
+            };
+            /** @description The schema does not permit this upload. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Object storage unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
