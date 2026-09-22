@@ -1,0 +1,11 @@
+# Host node_modules are darwin binaries; COPY . . would clobber the Linux
+# ones npm install builds inside the image.
+node_modules
+.next
+.git
+.github
+.env
+.env.*
+npm-debug.log*
+tsconfig.tsbuildinfo
+.DS_Store
