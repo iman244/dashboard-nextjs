@@ -14,6 +14,7 @@ on:
   pull_request:
   push:
     branches: [main]
+    tags: ['**']
   workflow_dispatch:
 
 concurrency:
@@ -71,14 +72,14 @@ jobs:
 
   deploy:
     needs: check
-    # Never from a pull request, and never from a branch: a manual run on a
-    # feature branch would otherwise deploy that branch over production.
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    # Only pushed tags deploy. Branch pushes, PRs and manual runs check only.
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.5
         env:
+          DEPLOY_SHA: ${{ github.sha }}
           NEXT_PUBLIC_DJANGO_ADDRESS: ${{ secrets.NEXT_PUBLIC_DJANGO_ADDRESS }}
           NEXT_PUBLIC_DJANGO_API_PATH: ${{ secrets.NEXT_PUBLIC_DJANGO_API_PATH }}
           NEXT_PUBLIC_5_160_115_210_ADDRESS: ${{ secrets.NEXT_PUBLIC_5_160_115_210_ADDRESS }}
@@ -95,7 +96,7 @@ jobs:
           # Forwarded into the remote shell, where deploy.sh writes them into
           # /app/.env. build.sh reads them from there as --build-arg values,
           # which is the only way NEXT_PUBLIC_* reaches the browser bundle.
-          envs: NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME,NEXT_PUBLIC_PATIENT_SESSION_KEY
+          envs: DEPLOY_SHA,NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME,NEXT_PUBLIC_PATIENT_SESSION_KEY
           # A full `npm install` and `next build` on a two-core VM.
           command_timeout: 40m
           # /app is a clone of mainreport-platform, where deploy.sh lives. Nothing
