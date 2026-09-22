@@ -118,3 +118,22 @@ export const groupFields = (schema: FieldSchema) => {
     })),
   };
 };
+
+/**
+ * Field keys that would make Django reject this submission.
+ *
+ * Checked before sending so the operator sees every problem at once, beside
+ * the field it belongs to, instead of one server message at a time.
+ */
+export const formProblems = (
+  schema: FieldSchema,
+  values: { digits: Record<string, string>; images: Record<string, unknown[]> }
+): string[] =>
+  schema.fields
+    .filter((field) =>
+      field.type === DIGIT_STRING
+        ? digitStringProblem(field, values.digits[field.key] ?? "") !== null
+        : Boolean(field.required) &&
+          (values.images[field.key] ?? []).length === 0
+    )
+    .map((field) => field.key);

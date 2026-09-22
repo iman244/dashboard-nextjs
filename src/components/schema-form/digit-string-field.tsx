@@ -25,18 +25,21 @@ export const DigitStringField = ({
   value,
   onChange,
   disabled,
+  showErrors,
 }: {
   field: SchemaField;
   value: string;
   onChange: (next: string) => void;
   disabled?: boolean;
+  /** Set after a submit attempt, so untouched required fields speak up too. */
+  showErrors?: boolean;
 }) => {
   const t = useTranslations("common.SchemaForm");
   const locale = useLocale();
   const [touched, setTouched] = React.useState(false);
 
   const problem = digitStringProblem(field, value);
-  const showProblem = touched && problem;
+  const showProblem = (touched || showErrors) && problem;
   const describedBy = showProblem ? `${field.key}-error` : undefined;
 
   return (

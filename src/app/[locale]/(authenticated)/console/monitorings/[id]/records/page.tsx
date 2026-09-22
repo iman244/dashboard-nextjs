@@ -3,7 +3,7 @@
 import * as React from "react";
 import { use } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertCircle, ArrowLeft, Inbox, Plus, Trash } from "lucide-react";
+import { AlertCircle, ArrowLeft, Inbox, Pencil, Plus, Trash } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +23,6 @@ import { useList_PatientEntry_API } from "@/data/patient-entry/api/list";
 import { asFieldSchema } from "@/components/schema-form";
 import { formatDate, localeDigits } from "@/lib/utils";
 import type { PatientEntry } from "@/data/patient-entry/types";
-import { RecordDialog } from "./_record-dialog";
 import { DeleteRecordDialog } from "./_delete-dialog";
 
 /**
@@ -42,8 +41,6 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const tLoading = useTranslations("common.Loading");
   const locale = useLocale();
 
-  const [adding, setAdding] = React.useState(false);
-  const [editing, setEditing] = React.useState<PatientEntry | null>(null);
   const [deleting, setDeleting] = React.useState<PatientEntry | null>(null);
 
   const types = useList_MonitoringType_API();
@@ -136,9 +133,9 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
                 <TableCell>
                   <RowActions>
                     <RowAction
-                      icon={Plus}
+                      icon={Pencil}
                       label={t("EditRecord")}
-                      onClick={() => setEditing(record)}
+                      href={`/console/monitorings/${monitoringId}/records/${record.id}/edit`}
                     />
                     <RowAction
                       icon={Trash}
@@ -172,9 +169,13 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
               </Link>
             </Button>
             {declaresFields ? (
-              <Button onClick={() => setAdding(true)}>
-                <Plus className="size-4" aria-hidden="true" />
-                {t("AddRecord")}
+              // A page, not a dialog: a form with sections and image uploads
+              // needs the room, and the URL can be shared or reopened.
+              <Button asChild>
+                <Link href={`/console/monitorings/${monitoringId}/records/new`}>
+                  <Plus className="size-4" aria-hidden="true" />
+                  {t("AddRecord")}
+                </Link>
               </Button>
             ) : null}
           </div>
@@ -185,21 +186,6 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
       {monitoring ? (
         <>
-          <RecordDialog
-            monitoring={monitoring}
-            open={adding || editing !== null}
-            onOpenChange={(open) => {
-              if (!open) {
-                setAdding(false);
-                setEditing(null);
-              }
-            }}
-            onSaved={() => {
-              records.refetch();
-              setAdding(false);
-              setEditing(null);
-            }}
-          />
           <DeleteRecordDialog
             record={deleting ?? undefined}
             open={deleting !== null}

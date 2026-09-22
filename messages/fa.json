@@ -507,21 +507,6 @@
         "administrative": "اطلاعات اداری",
         "followUp": "پیگیری"
       }
-    },
-    "PatientEntryDialog": {
-      "RowAction": "فایل‌ها",
-      "DialogTitle": "فایل‌های بیمار",
-      "DialogDescription": "برای یک بیمار در «{name}» فایل پیوست کنید.",
-      "NationalId": "کد ملی",
-      "NationalIdPlaceholder": "مثلاً ۰۰۱۲۳۴۵۶۷۸",
-      "EnterNationalId": "برای پیوست کردن فایل، کد ملی را وارد کنید.",
-      "NoFields": "این نوع پایش هنوز هیچ فیلد فایلی تعریف نکرده است.",
-      "Save": "ذخیره",
-      "Saved": "فایل‌ها ذخیره شد.",
-      "SaveFailed": "ذخیره‌سازی فایل‌ها انجام نشد.",
-      "UploadFailed": "آپلود «{name}» انجام نشد.",
-      "MaxSize": "حداکثر {size} مگابایت برای هر فایل.",
-      "RemoveFile": "حذف {name}"
     }
   },
   "/console/monitorings": {
@@ -602,8 +587,6 @@
       "PageDescription": "بیماران ثبت‌شده ذیل «{name}».",
       "AddRecord": "افزودن رکورد",
       "EditRecord": "ویرایش رکورد",
-      "DialogTitle": "رکورد",
-      "DialogDescription": "اطلاعات یک بیمار را برای «{name}» وارد کنید.",
       "NationalIdColumn": "کد ملی",
       "FilesColumn": "تصاویر",
       "UpdatedColumn": "آخرین به‌روزرسانی",
@@ -617,7 +600,18 @@
       "DeleteDescription": "رکورد {nationalId} حذف می‌شود. تصاویر آپلودشده از فضای ذخیره‌سازی پاک نمی‌شوند.",
       "Deleted": "رکورد حذف شد.",
       "DeleteFailed": "حذف رکورد انجام نشد.",
-      "BackToMonitorings": "بازگشت به پایش‌ها"
+      "BackToMonitorings": "بازگشت به پایش‌ها",
+      "BackToRecords": "بازگشت به رکوردها",
+      "SaveChanges": "ذخیرهٔ تغییرات",
+      "Saved": "رکورد ذخیره شد.",
+      "SaveFailed": "ذخیرهٔ رکورد انجام نشد.",
+      "AlreadyExists": "این بیمار از قبل رکورد دارد؛ همان باز می‌شود.",
+      "FixErrors": "برخی فیلدها نیاز به اصلاح دارند.",
+      "NationalId": "کد ملی",
+      "NationalIdPlaceholder": "مثلاً ۰۰۱۲۳۴۵۶۷۸",
+      "NationalIdRequired": "کد ملی بیمار را وارد کنید.",
+      "EnterNationalIdFirst": "ابتدا کد ملی را وارد کنید؛ تصاویر ذیل آن ذخیره می‌شوند.",
+      "RecordNotFound": "این رکورد پیدا نشد."
     }
   },
   "/patient/sign-in": {

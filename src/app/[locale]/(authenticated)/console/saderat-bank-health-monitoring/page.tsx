@@ -17,10 +17,9 @@ import {
 } from "@/components/ui/table";
 import { useLocale, useTranslations } from "next-intl";
 import { formatDate, localeDigits } from "@/lib/utils";
-import { Table2, Trash, AlertCircle, Inbox, Paperclip } from "lucide-react";
+import { Table2, Trash, AlertCircle, Inbox } from "lucide-react";
 import { RowAction, RowActions } from "@/components/app";
 import DeleteSaderatBankHealthMonitoringExcelDialog from "./_delete-excel-dialog/dialog";
-import PatientEntryDialog from "./_entry-form/dialog";
 import { useList_SBHM_API } from "@/data/saderat-bank-health-monitoring/api";
 import { useIsStaff } from "@/data/user/fetches/me";
 import {
@@ -36,18 +35,12 @@ const SaderatBankHealthMonitoringPage = () => {
   const [deleteRow, setDeleteRow] = React.useState<
     SBHM_ListSerializer[number] | null
   >(null);
-  const [entryRow, setEntryRow] = React.useState<
-    SBHM_ListSerializer[number] | null
-  >(null);
   const { data, isPending, error } = useList_SBHM_API();
   const isStaff = useIsStaff();
   const tDictionary = useTranslations("common.Dictionary");
   const tLoading = useTranslations("common.Loading");
   const t = useTranslations("/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage");
   const tStep = useTranslations("common.SBHM_Step");
-  const tEntry = useTranslations(
-    "/console/saderat-bank-health-monitoring.PatientEntryDialog"
-  );
   const locale = useLocale();
 
   const table = useTable({
@@ -92,15 +85,6 @@ const SaderatBankHealthMonitoringPage = () => {
                 href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
               />
             )}
-            {/* Attaching files is per-patient work an operator does, not an
-                administrative act, so this is not gated on isStaff the way
-                deletion is. The dialog itself says so when the type declares
-                no file fields. */}
-            <RowAction
-              icon={Paperclip}
-              label={tEntry("RowAction")}
-              onClick={() => setEntryRow(row.original)}
-            />
             {isStaff && (
               <RowAction
                 icon={Trash}
@@ -182,11 +166,6 @@ const SaderatBankHealthMonitoringPage = () => {
           onOpenChange={(open) => setDeleteRow(open ? deleteRow : null)}
         />
       )}
-      <PatientEntryDialog
-        data={entryRow || undefined}
-        open={!!entryRow}
-        onOpenChange={(open) => setEntryRow(open ? entryRow : null)}
-      />
       {/* overflow-x-auto, not overflow-hidden: this is the only raw table left
           outside DataTable, and `hidden` does not merely omit the scroll — it
           clips the far columns with no way to reach them on a narrow viewport

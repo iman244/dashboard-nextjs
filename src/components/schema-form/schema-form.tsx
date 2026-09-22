@@ -32,6 +32,8 @@ export const SchemaForm = ({
   onChange,
   onAddImage,
   disabled,
+  imagesDisabledHint,
+  showErrors,
 }: {
   schema: FieldSchema;
   values: SchemaFormValues;
@@ -42,6 +44,14 @@ export const SchemaForm = ({
     onProgress: (percent: number) => void
   ) => Promise<AttachedImage>;
   disabled?: boolean;
+  /**
+   * When set, image pickers are disabled with this explanation while every
+   * other field stays usable. Uploads are filed under the patient, so they
+   * cannot start before there is one. Disabled, never hidden: a field that
+   * appears and disappears as someone types is the bug this replaced.
+   */
+  imagesDisabledHint?: string;
+  showErrors?: boolean;
 }) => {
   const t = useTranslations("common.SchemaForm");
   const locale = useLocale();
@@ -53,6 +63,7 @@ export const SchemaForm = ({
         key={field.key}
         field={field}
         disabled={disabled}
+        showErrors={showErrors}
         value={values.digits[field.key] ?? ""}
         onChange={(next) =>
           onChange({
@@ -65,7 +76,9 @@ export const SchemaForm = ({
       <ImageField
         key={field.key}
         field={field}
-        disabled={disabled}
+        disabled={disabled || Boolean(imagesDisabledHint)}
+        disabledHint={imagesDisabledHint}
+        showErrors={showErrors}
         value={values.images[field.key] ?? []}
         onChange={(next) =>
           onChange({

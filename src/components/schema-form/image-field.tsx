@@ -40,12 +40,17 @@ export const ImageField = ({
   onChange,
   onAdd,
   disabled,
+  disabledHint,
+  showErrors,
 }: {
   field: SchemaField;
   value: AttachedImage[];
   onChange: (next: AttachedImage[]) => void;
   onAdd: (file: File, onProgress: (percent: number) => void) => Promise<AttachedImage>;
   disabled?: boolean;
+  /** Why the picker is disabled, shown in place of silence. */
+  disabledHint?: string;
+  showErrors?: boolean;
 }) => {
   const t = useTranslations("common.SchemaForm");
   const locale = useLocale();
@@ -132,9 +137,17 @@ export const ImageField = ({
           : ""}
       </p>
 
+      {disabled && disabledHint ? (
+        <p className="text-muted-foreground text-xs">{disabledHint}</p>
+      ) : null}
+
       {error ? (
         <p className="text-destructive text-xs" role="alert">
           {error}
+        </p>
+      ) : showErrors && field.required && value.length === 0 ? (
+        <p className="text-destructive text-xs" role="alert">
+          {t("Required")}
         </p>
       ) : null}
 

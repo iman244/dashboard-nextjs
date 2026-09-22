@@ -507,21 +507,6 @@
         "administrative": "Administrative",
         "followUp": "Follow-up"
       }
-    },
-    "PatientEntryDialog": {
-      "RowAction": "Files",
-      "DialogTitle": "Patient files",
-      "DialogDescription": "Attach files for a patient in “{name}”.",
-      "NationalId": "National ID",
-      "NationalIdPlaceholder": "e.g. 0012345678",
-      "EnterNationalId": "Enter a national ID to attach files.",
-      "NoFields": "This monitoring type does not declare any file fields yet.",
-      "Save": "Save",
-      "Saved": "Files saved.",
-      "SaveFailed": "The files could not be saved.",
-      "UploadFailed": "“{name}” could not be uploaded.",
-      "MaxSize": "Up to {size} MB per file.",
-      "RemoveFile": "Remove {name}"
     }
   },
   "/console/monitorings": {
@@ -602,8 +587,6 @@
       "PageDescription": "Patients recorded under {name}.",
       "AddRecord": "Add record",
       "EditRecord": "Edit record",
-      "DialogTitle": "Record",
-      "DialogDescription": "Enter a patient's information for {name}.",
       "NationalIdColumn": "National ID",
       "FilesColumn": "Images",
       "UpdatedColumn": "Last updated",
@@ -617,7 +600,18 @@
       "DeleteDescription": "The record for {nationalId} will be removed. Uploaded images are not deleted from storage.",
       "Deleted": "Record deleted.",
       "DeleteFailed": "The record could not be deleted.",
-      "BackToMonitorings": "Back to monitorings"
+      "BackToMonitorings": "Back to monitorings",
+      "BackToRecords": "Back to records",
+      "SaveChanges": "Save changes",
+      "Saved": "Record saved.",
+      "SaveFailed": "The record could not be saved.",
+      "AlreadyExists": "This patient already has a record here. Opening it.",
+      "FixErrors": "Some fields need attention.",
+      "NationalId": "National ID",
+      "NationalIdPlaceholder": "e.g. 0012345678",
+      "NationalIdRequired": "Enter the patient's national ID.",
+      "EnterNationalIdFirst": "Enter the national ID first; images are filed under it.",
+      "RecordNotFound": "This record was not found."
     }
   },
   "/patient/sign-in": {
