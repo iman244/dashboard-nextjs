@@ -259,6 +259,17 @@
   direction: rtl;
 }
 
+/*
+ * Sonner ships `font-family: ui-sans-serif, system-ui, ...` on its own root,
+ * which beats anything inherited -- so toasts rendered inside a Persian page
+ * came out in the system face while every other word was Vazirmatn. Inherit
+ * instead, and the toast follows whichever font class `body` is carrying.
+ */
+[data-sonner-toaster],
+[data-sonner-toaster] * {
+  font-family: inherit;
+}
+
 .font-english ol.toaster {
   direction: ltr;
 }

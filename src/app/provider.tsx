@@ -4,7 +4,10 @@ import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { AuthProvider } from "./_auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "sonner";
+// The local wrapper, not sonner's own export: it carries the theme binding,
+// the status icons and the popover colour variables. Importing straight from
+// "sonner" silently dropped all three.
+import { Toaster } from "@/components/ui/sonner";
 import { Direction } from "radix-ui";
 
 function ThemeProvider({
