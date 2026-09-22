@@ -252,9 +252,8 @@
         "electronicHealthRecord": "جستجو و مرور سوابق پزشکی بیماران",
         "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
         "patientReports": "تولید گزارشات جامع برای بیماران",
-        "patientEntries": "ثبت اطلاعات پایش یک بیمار ذیل یک مجموعه",
         "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
-        "monitoringTypes": "انواعی که گزارش‌های بارگذاری‌شده زیر آن‌ها ثبت می‌شوند",
+        "monitorings": "پایش‌هایی که اطلاعات ذیل آن‌ها ثبت می‌شود و فیلدهای هر کدام",
         "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
       }
     },
@@ -263,9 +262,8 @@
       "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
       "periodicalReports": "گزارشات دوره‌ای",
       "patientReports": "گزارشات بیمار",
-      "patientEntries": "ثبت اطلاعات بیمار",
       "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
-      "monitoringTypes": "انواع پایش",
+      "monitorings": "پایش‌ها",
       "formSabtPayesh": "فرم ثبت پایش",
       "account": "حساب کاربری",
       "logout": "خروج"
@@ -526,7 +524,7 @@
       "RemoveFile": "حذف {name}"
     }
   },
-  "/console/monitoring-types": {
+  "/console/monitorings": {
     "MonitoringTypesPage": {
       "PageTitle": "انواع پایش",
       "PageDescription": "انواعی که یک گزارش پایش می‌تواند زیر آن ثبت شود. بارگذاری‌ها از همین فهرست انتخاب می‌کنند.",
@@ -598,19 +596,29 @@
       "MinAboveMax": "حداقل «{field}» از حداکثر آن بیشتر است.",
       "DuplicateFieldKey": "دو فیلد کلید یکسان دارند. کلیدها باید یکتا باشند.",
       "InvalidFieldKey": "کلید فیلد باید با حرف شروع شود و فقط شامل a-z ، 0-9 و _ باشد."
+    },
+    "Records": {
+      "PageTitle": "رکوردها",
+      "PageDescription": "بیماران ثبت‌شده ذیل «{name}».",
+      "AddRecord": "افزودن رکورد",
+      "EditRecord": "ویرایش رکورد",
+      "DialogTitle": "رکورد",
+      "DialogDescription": "اطلاعات یک بیمار را برای «{name}» وارد کنید.",
+      "NationalIdColumn": "کد ملی",
+      "FilesColumn": "تصاویر",
+      "UpdatedColumn": "آخرین به‌روزرسانی",
+      "NoRecords": "هنوز رکوردی ثبت نشده است",
+      "NoRecordsHint": "اولین رکورد این پایش را اضافه کنید.",
+      "LoadFailed": "بارگذاری رکوردها انجام نشد.",
+      "TypeHasNoFields": "این پایش فیلدی برای تکمیل ندارد",
+      "TypeHasNoFieldsHint": "هنوز فیلدی تعریف نکرده است. برای افزودن، آن را ویرایش کنید.",
+      "DeleteRecord": "حذف رکورد",
+      "DeleteTitle": "این رکورد حذف شود؟",
+      "DeleteDescription": "رکورد {nationalId} حذف می‌شود. تصاویر آپلودشده از فضای ذخیره‌سازی پاک نمی‌شوند.",
+      "Deleted": "رکورد حذف شد.",
+      "DeleteFailed": "حذف رکورد انجام نشد.",
+      "BackToMonitorings": "بازگشت به پایش‌ها"
     }
-  },
-  "/console/patient-entries": {
-    "PageTitle": "ثبت اطلاعات بیمار",
-    "PageDescription": "اطلاعات پایش یک بیمار را ذیل یک مجموعه ثبت کنید.",
-    "Monitoring": "مجموعهٔ پایش",
-    "MonitoringPlaceholder": "یک مجموعه را انتخاب کنید",
-    "ChooseMonitoring": "برای شروع، یک مجموعهٔ پایش انتخاب کنید.",
-    "TypeHasNoFields": "این مجموعه فیلدی برای تکمیل ندارد",
-    "TypeHasNoFieldsHint": "نوع پایش آن هنوز فیلدی تعریف نکرده است. از بخش «انواع پایش» فیلد اضافه کنید یا فایل اکسل بارگذاری کنید.",
-    "NoMonitorings": "هنوز مجموعهٔ پایشی ثبت نشده است",
-    "NoMonitoringsHint": "پیش از ثبت اطلاعات، باید یک مجموعه وجود داشته باشد.",
-    "LoadFailed": "بارگذاری مجموعه‌ها انجام نشد."
   },
   "/patient/sign-in": {
     "SignInPage": {
@@ -743,13 +751,9 @@
       "title": "پایش سلامت بانک صادرات",
       "description": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای."
     },
-    "monitoringTypes": {
-      "title": "انواع پایش",
-      "description": "انواعی که گزارش‌های بارگذاری‌شده زیر آن‌ها ثبت می‌شوند."
-    },
-    "patientEntries": {
-      "title": "ثبت اطلاعات بیمار",
-      "description": "ثبت اطلاعات پایش یک بیمار."
+    "monitorings": {
+      "title": "پایش‌ها",
+      "description": "تعریف پایش‌ها و فیلدهایی که ثبت می‌کنند."
     },
     "sbhmStep1": {
       "title": "گزارش مرحله ۱",

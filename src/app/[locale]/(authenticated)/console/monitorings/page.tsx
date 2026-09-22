@@ -14,7 +14,7 @@ import { MonitoringType } from "@/data/monitoring-type/types";
 import { isKnownSBHM_Type } from "@/data/saderat-bank-health-monitoring/types";
 import { useIsStaff } from "@/data/user/fetches/me";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
-import { AlertCircle, Inbox, Pencil, Trash } from "lucide-react";
+import { AlertCircle, ClipboardList, Inbox, Pencil, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React from "react";
 import DeleteMonitoringTypeDialog from "./_delete-dialog/dialog";
@@ -33,9 +33,10 @@ const MonitoringTypesPage = () => {
   const { data, isPending, error } = useList_MonitoringType_API();
   const isStaff = useIsStaff();
 
-  const t = useTranslations("/console/monitoring-types.MonitoringTypesPage");
+  const t = useTranslations("/console/monitorings.MonitoringTypesPage");
   const tDictionary = useTranslations("common.Dictionary");
   const tLoading = useTranslations("common.Loading");
+  const tRecords = useTranslations("/console/monitorings.Records");
 
   const [deleteRow, setDeleteRow] = React.useState<MonitoringType | null>(null);
 
@@ -74,34 +75,42 @@ const MonitoringTypesPage = () => {
           header: t("NameFaColumn"),
           cell: (info) => <span dir="rtl">{info.getValue()}</span>,
         }),
-        ...(isStaff
-          ? [
-              columnHelper.display({
-                id: "actions",
-                header: tDictionary("Actions"),
-                enableSorting: false,
-                cell: ({ row }) => (
-                  <RowActions>
-                    {/* A link, not a dialog: the schema builder needs a page
-                        of its own, and editing must reach the same one that
-                        created the type. */}
-                    <RowAction
-                      icon={Pencil}
-                      label={tDictionary("Edit")}
-                      href={`/console/monitoring-types/${row.original.id}/edit`}
-                    />
-                    <RowAction
-                      icon={Trash}
-                      label={tDictionary("Delete")}
-                      onClick={() => setDeleteRow(row.original)}
-                    />
-                  </RowActions>
-                ),
-              }),
-            ]
-          : []),
+        // The column itself is never gated: recording against a monitoring is
+        // an operator's job, and Records is how they reach it. Only the
+        // administrative controls inside it check `isStaff`.
+        columnHelper.display({
+          id: "actions",
+          header: tDictionary("Actions"),
+          enableSorting: false,
+          cell: ({ row }) => (
+            <RowActions>
+              <RowAction
+                icon={ClipboardList}
+                label={tRecords("PageTitle")}
+                href={`/console/monitorings/${row.original.id}/records`}
+              />
+              {isStaff && (
+                <>
+                  {/* A link, not a dialog: the schema builder needs a page of
+                      its own, and editing must reach the same one that
+                      created the monitoring. */}
+                  <RowAction
+                    icon={Pencil}
+                    label={tDictionary("Edit")}
+                    href={`/console/monitorings/${row.original.id}/edit`}
+                  />
+                  <RowAction
+                    icon={Trash}
+                    label={tDictionary("Delete")}
+                    onClick={() => setDeleteRow(row.original)}
+                  />
+                </>
+              )}
+            </RowActions>
+          ),
+        }),
       ]),
-    [t, tDictionary, isStaff]
+    [t, tDictionary, tRecords, isStaff]
   );
 
   const table = useTable({
@@ -125,7 +134,7 @@ const MonitoringTypesPage = () => {
         actions={
           isStaff ? (
             <Button asChild>
-              <Link href="/console/monitoring-types/new">{t("CreateType")}</Link>
+              <Link href="/console/monitorings/new">{t("CreateType")}</Link>
             </Button>
           ) : undefined
         }

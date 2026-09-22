@@ -162,9 +162,12 @@ const EntryFields = ({
 export const EntryForm = ({
   monitoring,
   type,
+  onSaved,
 }: {
   monitoring: number;
   type?: MonitoringType;
+  /** Called after a successful save, so a dialog can close and a list refresh. */
+  onSaved?: () => void;
 }) => {
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.PatientEntryDialog"
@@ -216,7 +219,10 @@ export const EntryForm = ({
           nationalId={folded}
           schema={schema}
           entry={entry}
-          onSaved={() => lookup.refetch()}
+          onSaved={() => {
+            lookup.refetch();
+            onSaved?.();
+          }}
         />
       )}
     </div>

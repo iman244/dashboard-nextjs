@@ -26,7 +26,7 @@ import { SchemaBuilder } from "./schema-builder";
 import { SchemaPreview } from "./preview";
 import { draftProblems, toPayload, withIds } from "./draft";
 
-const LIST_PATH = "/console/monitoring-types";
+const LIST_PATH = "/console/monitorings";
 
 /**
  * The create and edit screens for a monitoring type.
@@ -36,7 +36,7 @@ const LIST_PATH = "/console/monitoring-types";
  * mistyped label into a reason to make a whole new type.
  */
 export const TypeForm = ({ id }: { id?: number }) => {
-  const t = useTranslations("/console/monitoring-types.Builder");
+  const t = useTranslations("/console/monitorings.Builder");
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -93,7 +93,7 @@ const TypeFormBody = ({
   initialNameEn: string;
   initialSchema: FieldSchema;
   onDone: () => void;
-  t: ReturnType<typeof useTranslations<"/console/monitoring-types.Builder">>;
+  t: ReturnType<typeof useTranslations<"/console/monitorings.Builder">>;
 }) => {
   const [slug, setSlug] = React.useState(initialSlug);
   const [nameFa, setNameFa] = React.useState(initialNameFa);

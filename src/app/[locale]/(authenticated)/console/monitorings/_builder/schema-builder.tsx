@@ -30,7 +30,7 @@ export const SchemaBuilder = ({
   schema: FieldSchema;
   onChange: (next: FieldSchema) => void;
 }) => {
-  const t = useTranslations("/console/monitoring-types.Builder");
+  const t = useTranslations("/console/monitorings.Builder");
   const sections = schema.sections ?? [];
 
   return (

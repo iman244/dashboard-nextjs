@@ -2,7 +2,6 @@ import {
   BarChart,
   ClipboardList,
   FileText,
-  NotebookPen,
   SquareActivity,
   Tags,
   User,
@@ -63,20 +62,13 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     icon: SquareActivity,
   },
   {
-    titleKey: "patientEntries",
-    descriptionKey: "patientEntries",
-    url: "/console/patient-entries",
-    // Recording, not reading -- distinct from the report sections above and
-    // from ClipboardList, which the external Sabt Payesh form already owns.
-    icon: NotebookPen,
-  },
-  {
-    titleKey: "monitoringTypes",
-    descriptionKey: "monitoringTypes",
-    url: "/console/monitoring-types",
+    titleKey: "monitorings",
+    descriptionKey: "monitorings",
+    url: "/console/monitorings",
     icon: Tags,
-    // Configures the section above it; only staff may change it.
-    staffOnly: true,
+    // NOT staffOnly, though it once was: records now live under a monitoring,
+    // and recording is an operator's job. The page gates its own create, edit
+    // and delete controls on `isStaff`; reaching the list is not gated.
   },
   {
     titleKey: "formSabtPayesh",

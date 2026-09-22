@@ -40,7 +40,7 @@ column rename upstream compiles fine and renders blank. That is accepted.
 ### The type list is no longer closed
 
 Monitoring types are rows in a Django table now, managed at
-`/console/monitoring-types`. `SBHM_Type` is this dashboard's own claim about
+`/console/monitorings`. `SBHM_Type` is this dashboard's own claim about
 which of them it can render, not a description of what exists — staff can
 create a type that has no entry in `SBHM_TYPE_LABEL_KEYS` and none in
 `SBHM_TYPE_SEGMENTS`.

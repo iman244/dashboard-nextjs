@@ -47,7 +47,7 @@ const DeleteMonitoringTypeDialog = ({
   onOpenChange: (open: boolean) => void;
 }) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("/console/monitoring-types.DeleteMonitoringTypeDialog");
+  const t = useTranslations("/console/monitorings.DeleteMonitoringTypeDialog");
   const tDictionary = useTranslations("common.Dictionary");
   const locale = useLocale();
 

@@ -23,7 +23,7 @@ import {
  * the digits-only filtering and the length messages, behaves for real.
  */
 export const SchemaPreview = ({ schema }: { schema: FieldSchema }) => {
-  const t = useTranslations("/console/monitoring-types.Builder");
+  const t = useTranslations("/console/monitorings.Builder");
   const [values, setValues] = React.useState<SchemaFormValues>(emptyValues);
   const urls = React.useRef<string[]>([]);
 

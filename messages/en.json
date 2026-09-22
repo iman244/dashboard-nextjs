@@ -252,9 +252,8 @@
         "electronicHealthRecord": "Search and browse patient health records",
         "periodicalReports": "Generate comprehensive reports for time periods",
         "patientReports": "Generate comprehensive reports for patients",
-        "patientEntries": "Record one patient's monitoring information against a batch",
         "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
-        "monitoringTypes": "The report types uploads can be filed under",
+        "monitorings": "The monitorings you record against, and the fields each one collects",
         "formSabtPayesh": "Register monitoring data with the online form"
       }
     },
@@ -263,9 +262,8 @@
       "electronicHealthRecord": "Electronic Health Record",
       "periodicalReports": "Periodical Reports",
       "patientReports": "Patient Reports",
-      "patientEntries": "Patient Entries",
       "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
-      "monitoringTypes": "Monitoring Types",
+      "monitorings": "Monitorings",
       "formSabtPayesh": "Form Sabt Payesh",
       "account": "Account",
       "logout": "Log out"
@@ -526,7 +524,7 @@
       "RemoveFile": "Remove {name}"
     }
   },
-  "/console/monitoring-types": {
+  "/console/monitorings": {
     "MonitoringTypesPage": {
       "PageTitle": "Monitoring Types",
       "PageDescription": "The types a monitoring report can be filed under. Uploads choose from this list.",
@@ -598,19 +596,29 @@
       "MinAboveMax": "“{field}” has a minimum longer than its maximum.",
       "DuplicateFieldKey": "Two fields share the same key. Keys must be unique.",
       "InvalidFieldKey": "A field key must start with a letter and use only a-z, 0-9 and _."
+    },
+    "Records": {
+      "PageTitle": "Records",
+      "PageDescription": "Patients recorded under {name}.",
+      "AddRecord": "Add record",
+      "EditRecord": "Edit record",
+      "DialogTitle": "Record",
+      "DialogDescription": "Enter a patient's information for {name}.",
+      "NationalIdColumn": "National ID",
+      "FilesColumn": "Images",
+      "UpdatedColumn": "Last updated",
+      "NoRecords": "No records yet",
+      "NoRecordsHint": "Add the first record for this monitoring.",
+      "LoadFailed": "The records could not be loaded.",
+      "TypeHasNoFields": "This monitoring collects no form fields",
+      "TypeHasNoFieldsHint": "It declares no fields yet. Edit it to add some.",
+      "DeleteRecord": "Delete record",
+      "DeleteTitle": "Delete this record?",
+      "DeleteDescription": "The record for {nationalId} will be removed. Uploaded images are not deleted from storage.",
+      "Deleted": "Record deleted.",
+      "DeleteFailed": "The record could not be deleted.",
+      "BackToMonitorings": "Back to monitorings"
     }
-  },
-  "/console/patient-entries": {
-    "PageTitle": "Patient Entries",
-    "PageDescription": "Record one patient's monitoring information against a batch.",
-    "Monitoring": "Monitoring batch",
-    "MonitoringPlaceholder": "Choose a batch",
-    "ChooseMonitoring": "Choose a monitoring batch to begin.",
-    "TypeHasNoFields": "This batch collects no form fields",
-    "TypeHasNoFieldsHint": "Its monitoring type declares no fields yet. Add some under Monitoring Types, or upload an Excel file instead.",
-    "NoMonitorings": "No monitoring batches yet",
-    "NoMonitoringsHint": "A batch must exist before information can be recorded against it.",
-    "LoadFailed": "The batches could not be loaded."
   },
   "/patient/sign-in": {
     "SignInPage": {
@@ -743,13 +751,9 @@
       "title": "Saderat Bank Health Monitoring",
       "description": "Uploaded datasets and their step reports."
     },
-    "monitoringTypes": {
-      "title": "Monitoring Types",
-      "description": "The report types uploads can be filed under."
-    },
-    "patientEntries": {
-      "title": "Patient Entries",
-      "description": "Record a patient's monitoring information."
+    "monitorings": {
+      "title": "Monitorings",
+      "description": "Define monitorings and the fields they collect."
     },
     "sbhmStep1": {
       "title": "Step 1 Report",

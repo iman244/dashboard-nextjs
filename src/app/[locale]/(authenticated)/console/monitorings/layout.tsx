@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  return sectionMetadata(locale, "patientEntries");
+  return sectionMetadata(locale, "monitorings");
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
