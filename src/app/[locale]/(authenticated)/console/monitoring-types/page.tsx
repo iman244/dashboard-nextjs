@@ -18,7 +18,7 @@ import { AlertCircle, Inbox, Pencil, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React from "react";
 import DeleteMonitoringTypeDialog from "./_delete-dialog/dialog";
-import MonitoringTypeFormDialog from "./_form-dialog/dialog";
+import { Link } from "@/i18n/navigation";
 
 const columnHelper = createColumnHelper<AppTableFeatures, MonitoringType>();
 
@@ -37,10 +37,6 @@ const MonitoringTypesPage = () => {
   const tDictionary = useTranslations("common.Dictionary");
   const tLoading = useTranslations("common.Loading");
 
-  // `undefined` = closed. A row = editing it. `null` = creating.
-  const [formRow, setFormRow] = React.useState<
-    MonitoringType | null | undefined
-  >(undefined);
   const [deleteRow, setDeleteRow] = React.useState<MonitoringType | null>(null);
 
   const columns = React.useMemo(
@@ -86,10 +82,13 @@ const MonitoringTypesPage = () => {
                 enableSorting: false,
                 cell: ({ row }) => (
                   <RowActions>
+                    {/* A link, not a dialog: the schema builder needs a page
+                        of its own, and editing must reach the same one that
+                        created the type. */}
                     <RowAction
                       icon={Pencil}
                       label={tDictionary("Edit")}
-                      onClick={() => setFormRow(row.original)}
+                      href={`/console/monitoring-types/${row.original.id}/edit`}
                     />
                     <RowAction
                       icon={Trash}
@@ -125,23 +124,18 @@ const MonitoringTypesPage = () => {
         description={t("PageDescription")}
         actions={
           isStaff ? (
-            <Button onClick={() => setFormRow(null)}>{t("CreateType")}</Button>
+            <Button asChild>
+              <Link href="/console/monitoring-types/new">{t("CreateType")}</Link>
+            </Button>
           ) : undefined
         }
       />
       {isStaff && (
-        <>
-          <MonitoringTypeFormDialog
-            data={formRow ?? undefined}
-            open={formRow !== undefined}
-            onOpenChange={(open) => setFormRow(open ? formRow : undefined)}
-          />
-          <DeleteMonitoringTypeDialog
-            data={deleteRow ?? undefined}
-            open={!!deleteRow}
-            onOpenChange={(open) => setDeleteRow(open ? deleteRow : null)}
-          />
-        </>
+        <DeleteMonitoringTypeDialog
+          data={deleteRow ?? undefined}
+          open={!!deleteRow}
+          onOpenChange={(open) => setDeleteRow(open ? deleteRow : null)}
+        />
       )}
       {body}
     </div>
