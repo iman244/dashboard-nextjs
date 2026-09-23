@@ -68,8 +68,11 @@ export const TypeForm = ({ id }: { id?: number }) => {
         existing ? withIds(asFieldSchema(existing.field_schema)) : EMPTY_SCHEMA
       }
       onDone={() => {
+        // "all": the list is not mounted on this page, and with refetchOnMount
+        // off it would otherwise come back with the old names and schema.
         queryClient.invalidateQueries({
           queryKey: LIST_MONITORING_TYPE_QUERY_KEY(),
+          refetchType: "all",
         });
         router.push(LIST_PATH);
       }}

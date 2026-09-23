@@ -154,8 +154,18 @@ export const RecordForm = ({
           }))
       );
 
-      const done = () => {
-        queryClient.invalidateQueries({ queryKey: ["patient-entries"] });
+      const done = (saved: PatientEntry) => {
+        // "all", not the default "active": the pages that show these queries
+        // are not mounted while this form is, and the app turns refetchOnMount
+        // off, so a merely-stale list would come back showing the old rows.
+        queryClient.invalidateQueries({
+          queryKey: ["patient-entries"],
+          refetchType: "all",
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["patient-entry", saved.id],
+          refetchType: "all",
+        });
         toast.success(t("Saved"));
         onSaved();
       };
