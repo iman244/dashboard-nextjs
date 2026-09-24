@@ -46,6 +46,20 @@ import { formatDate, localeDigits } from "@/lib/utils";
 type Viewing = { files: PatientEntryFile[]; index: number; title: string };
 
 /**
+ * The ten-digit form of a national ID as a page happens to hold it.
+ *
+ * Iranian national IDs are always ten digits, but a spreadsheet column read
+ * as a number drops the leading zeros -- step 2's Excel turns 0849290351 into
+ * 849290351 -- so eight or nine digits can only mean zeros were lost.
+ */
+const fullNationalId = (raw: string | null | undefined) => {
+  const digits = toDigits(raw ?? "");
+  return digits.length >= 8 && digits.length < 10
+    ? digits.padStart(10, "0")
+    : digits;
+};
+
+/**
  * What operators recorded for one patient through the monitoring forms: the
  * digit fields and the images, one block per monitoring.
  *
@@ -60,7 +74,7 @@ export const PatientRecordsSection = ({
   authorized: boolean;
 }) => {
   const t = useTranslations("common.PatientRecordsSection");
-  const id = toDigits(nationalId ?? "");
+  const id = fullNationalId(nationalId);
   const valid = id.length === 10;
   const records = useList_PatientRecord_API({ nationalId: id, authorized });
   const [viewing, setViewing] = React.useState<Viewing | null>(null);
