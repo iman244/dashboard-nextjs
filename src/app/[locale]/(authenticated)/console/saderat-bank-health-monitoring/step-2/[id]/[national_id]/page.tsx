@@ -38,6 +38,7 @@ import { noteKeyFor } from "../_detail/notes";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrRecordsTable } from "../../../_ehr/records-table";
+import { PatientRecordsSection } from "@/components/app/patient-records-section";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 
 /** One step_2 record, laid out the way the step-1 person page lays out its own. */
@@ -290,6 +291,8 @@ const Step2PersonPage = (
           />
         </CardContent>
       </Card>
+
+      <PatientRecordsSection nationalId={national_id} authorized />
 
       {matches.map((record, i) => (
         <div key={i} className="space-y-6">

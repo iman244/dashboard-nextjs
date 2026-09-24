@@ -171,6 +171,21 @@
       "Uploaded": "آپلود شد",
       "UploadFailedShort": "آپلود ناموفق",
       "NotAnImage": "«{name}» تصویر پشتیبانی‌شده نیست (JPEG، PNG، WebP یا GIF)."
+    },
+    "PatientRecordsSection": {
+      "Title": "اطلاعات و تصاویر ثبت‌شده",
+      "Description": "آنچه اپراتورها در فرم‌های پایش برای این بیمار ثبت کرده‌اند.",
+      "Loading": "در حال بارگذاری اطلاعات ثبت‌شده…",
+      "LoadFailed": "بارگذاری اطلاعات ثبت‌شده انجام نشد.",
+      "Empty": "هنوز چیزی برای این بیمار ثبت نشده است.",
+      "UpdatedAt": "به‌روزرسانی {date}",
+      "Edit": "ویرایش",
+      "Unavailable": "تصویر در دسترس نیست",
+      "OpenImage": "باز کردن تصویر {name}",
+      "Position": "{index} از {count}",
+      "Previous": "تصویر قبلی",
+      "Next": "تصویر بعدی",
+      "OpenOriginal": "باز کردن فایل اصلی"
     }
   },
   "/": {

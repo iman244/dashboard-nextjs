@@ -19,6 +19,7 @@ import { usePatientRecords } from "./provider";
 import { usePatientRecordColumns } from "./_columns";
 import { RecordsFilter } from "./_components/records-filter";
 import { RecordsTable } from "./_components/records-table";
+import { PatientRecordsSection } from "@/components/app/patient-records-section";
 
 const Client = () => {
   const t = useTranslations("/patient/records.PatientRecords");
@@ -147,6 +148,10 @@ const Client = () => {
       </div>
 
       <TablePagination table={table} />
+
+      {/* No staff token: the portal has no Django session, and the endpoint
+          answers anonymous reads (rate-limited). */}
+      <PatientRecordsSection nationalId={nationalId} authorized={false} />
 
       {/* No mobileNumberByNationalNumber_m: the patient's phone number has no
           business being looked up on the patient's own page, and omitting the

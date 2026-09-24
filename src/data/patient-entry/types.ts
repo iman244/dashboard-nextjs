@@ -5,6 +5,8 @@ type Schemas = components["schemas"];
 
 export type PatientEntry = Schemas["PatientEntry"];
 export type PatientEntryFile = Schemas["PatientEntryFile"];
+/** An entry with its monitoring inlined, as the patient-records endpoint returns it. */
+export type PatientRecord = Schemas["PatientRecord"];
 export type PatientEntry_CreateSerializer = Schemas["PatientEntryRequest"];
 export type PatientEntry_PatchSerializer =
   Schemas["PatchedPatientEntryRequest"];

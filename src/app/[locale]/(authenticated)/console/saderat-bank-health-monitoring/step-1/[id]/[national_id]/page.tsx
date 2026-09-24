@@ -36,6 +36,7 @@ import { toast } from "sonner";
 import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrRecordsTable } from "../../../_ehr/records-table";
+import { PatientRecordsSection } from "@/components/app/patient-records-section";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { Button } from "@/components/ui/button";
@@ -397,6 +398,8 @@ const PersonMonitoringPage = (
           </CardContent>
         </Card>
       )}
+
+      <PatientRecordsSection nationalId={national_id} authorized />
 
       {/* Abnormal findings summary. The classification already existed and drove
           only badge colour; this is the question a clinician opens the record to

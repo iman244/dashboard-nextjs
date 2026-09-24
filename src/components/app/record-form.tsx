@@ -166,6 +166,10 @@ export const RecordForm = ({
           queryKey: ["patient-entry", saved.id],
           refetchType: "all",
         });
+        queryClient.invalidateQueries({
+          queryKey: ["patient-records"],
+          refetchType: "all",
+        });
         toast.success(t("Saved"));
         onSaved();
       };

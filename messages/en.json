@@ -171,6 +171,21 @@
       "Uploaded": "Uploaded",
       "UploadFailedShort": "Upload failed",
       "NotAnImage": "“{name}” is not a supported image (JPEG, PNG, WebP or GIF)."
+    },
+    "PatientRecordsSection": {
+      "Title": "Recorded information and images",
+      "Description": "What operators recorded for this patient in the monitoring forms.",
+      "Loading": "Loading recorded information…",
+      "LoadFailed": "The recorded information could not be loaded.",
+      "Empty": "Nothing has been recorded for this patient yet.",
+      "UpdatedAt": "Updated {date}",
+      "Edit": "Edit",
+      "Unavailable": "Image unavailable",
+      "OpenImage": "Open image {name}",
+      "Position": "{index} of {count}",
+      "Previous": "Previous image",
+      "Next": "Next image",
+      "OpenOriginal": "Open original"
     }
   },
   "/": {
