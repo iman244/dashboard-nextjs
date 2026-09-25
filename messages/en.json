@@ -649,6 +649,7 @@
       "Deleted": "Record deleted.",
       "DeleteFailed": "The record could not be deleted.",
       "BackToMonitorings": "Back to monitorings",
+      "BackToRecordMonitoring": "Choose a monitoring type",
       "BackToRecords": "Back to records",
       "SaveChanges": "Save changes",
       "Saved": "Record saved.",
