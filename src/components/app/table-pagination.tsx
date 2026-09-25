@@ -65,17 +65,23 @@ export const TablePagination = <T extends RowData,>({
         </p>
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* On a phone the controls that repeat something the page numbers
+          already say -- first/last, "page X of Y" -- are hidden, the page
+          size keeps its selector but not its caption, and everything wraps
+          rather than pushing past the edge, down to a 320px screen. */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         {showPageSizeSelector && (
           <div className="flex items-center gap-2">
-            <p className="text-sm font-medium">{t("Rows per page")}</p>
+            <p className="sr-only text-sm font-medium sm:not-sr-only">
+              {t("Rows per page")}
+            </p>
             <Select
               value={`${pageSize}`}
               onValueChange={(value) => {
                 table.setPageSize(Number(value));
               }}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger className="h-8 w-[70px]" aria-label={t("Rows per page")}>
                 <SelectValue
                   placeholder={localeDigits(pageSize, locale)}
                 />
@@ -95,14 +101,14 @@ export const TablePagination = <T extends RowData,>({
         )}
 
         {/* Custom RTL Pagination */}
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1">
           {/* First Page Button */}
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className="h-8 w-8 p-0"
+            className="hidden h-8 w-8 p-0 sm:inline-flex"
           >
             <span className="sr-only">{t("First page")}</span>
             <FirstIcon className="h-4 w-4" />
@@ -180,14 +186,14 @@ export const TablePagination = <T extends RowData,>({
             size="sm"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
-            className="h-8 w-8 p-0"
+            className="hidden h-8 w-8 p-0 sm:inline-flex"
           >
             <span className="sr-only">{t("Last page")}</span>
             <LastIcon className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 sm:flex">
           <p className="text-sm font-medium">
             {t("Page", {
               current: localeDigits(pageIndex + 1, locale),

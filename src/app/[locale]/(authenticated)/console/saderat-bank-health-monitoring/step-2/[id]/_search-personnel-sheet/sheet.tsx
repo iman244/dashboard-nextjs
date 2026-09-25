@@ -19,6 +19,7 @@ import { appTableFeatures } from "@/components/app/table-features";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { localeDigits } from "@/lib/utils";
 import type { SBHM_Step2Record } from "@/data/saderat-bank-health-monitoring/types";
+import { PersonnelList } from "../../../_personnel/personnel-list";
 
 const columnHelper = createColumnHelper<
   typeof appTableFeatures,
@@ -132,7 +133,9 @@ export function SearchPersonnelSheet({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetContent side="bottom" className="h-[80vh] flex flex-col p-4">
+      {/* dvh, not vh: on a phone vh counts the space under the browser's
+          toolbar, which pushed the pagination off screen. */}
+      <SheetContent side="bottom" className="h-[85dvh] flex flex-col p-4">
         <SheetHeader>
           <SheetTitle>{t("SearchPersonnel")}</SheetTitle>
           <SheetDescription className="flex items-center gap-2">
@@ -175,7 +178,26 @@ export function SearchPersonnelSheet({
           )}
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto sm:hidden">
+          <PersonnelList
+            items={table.getRowModel().rows.map((row) => {
+              const nationalId = String(row.original["کد ملی"] ?? "");
+              return {
+                key: row.id,
+                name: `${row.original["نام"] ?? ""} ${row.original["نام خانوادگی"] ?? ""}`.trim(),
+                nationalId: localeDigits(nationalId, locale),
+                href: nationalId
+                  ? `/console/saderat-bank-health-monitoring/step-2/${monitoringId}/${nationalId}`
+                  : null,
+              };
+            })}
+            openLabel={tDictionary("PatientRecord")}
+            emptyMessage={t("NoSearchResults")}
+            onNavigate={() => onOpenChange(false)}
+          />
+        </div>
+
+        <div className="hidden flex-1 overflow-auto sm:block">
           <DataTable
             table={table}
             columns={columns}

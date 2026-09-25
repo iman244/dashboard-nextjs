@@ -14,7 +14,7 @@ import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { useLocale, useTranslations } from "next-intl";
 import React from "react";
-import { TablePagination } from "../table-pagination";
+import { TablePagination } from "@/components/app";
 import { Button } from "@/components/ui/button";
 import { FileUser, Search } from "lucide-react";
 import { RowAction } from "@/components/app";
@@ -26,6 +26,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
+import { PersonnelList } from "../../../_personnel/personnel-list";
 
 const columnHelper =
   createColumnHelper<AppTableFeatures, SBHM_RetrieveSerializer["json"][number]>();
@@ -133,7 +134,9 @@ export function SearchPersonnelSheet({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetContent side="bottom" className="h-[80vh] flex flex-col p-4">
+      {/* dvh, not vh: on a phone vh counts the space under the browser's
+          toolbar, which pushed the pagination off screen. */}
+      <SheetContent side="bottom" className="h-[85dvh] flex flex-col p-4">
         <SheetHeader>
           <SheetTitle>{t("SearchPersonnel")}</SheetTitle>
           <SheetDescription>
@@ -141,30 +144,50 @@ export function SearchPersonnelSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex-1 overflow-auto space-y-4 mt-4">
-          {/* Search Input */}
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder={t("SearchPlaceholder")}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pe-10"
-              />
-            </div>
-            {searchTerm && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSearchTerm("")}
-              >
-                {t("ClearSearch")}
-              </Button>
-            )}
+        {/* Search stays put and pagination stays at the bottom; only the
+            rows scroll -- as in the step-2 sheet. */}
+        <div className="mt-4 flex items-center gap-2">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder={t("SearchPlaceholder")}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pe-10"
+            />
+          </div>
+          {searchTerm && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSearchTerm("")}
+            >
+              {t("ClearSearch")}
+            </Button>
+          )}
+        </div>
+
+        <div className="mt-4 min-h-0 flex-1 overflow-auto">
+          <div className="sm:hidden">
+            <PersonnelList
+              items={table.getRowModel().rows.map((row) => {
+                const nationalId = String(row.original["personel.کد ملی"] ?? "");
+                return {
+                  key: row.id,
+                  name: `${row.original["نام"] ?? ""} ${row.original["نام خانوادگی"] ?? ""}`.trim(),
+                  nationalId: localeDigits(nationalId, locale),
+                  href: nationalId
+                    ? `/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${nationalId}`
+                    : null,
+                };
+              })}
+              openLabel={tDictionary("PatientRecord")}
+              emptyMessage={t("NoResults")}
+              onNavigate={() => onOpenChange(false)}
+            />
           </div>
 
-          <div className="border rounded-md overflow-hidden">
+          <div className="hidden sm:block border rounded-md overflow-hidden">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -205,7 +228,9 @@ export function SearchPersonnelSheet({
               </TableBody>
             </Table>
           </div>
+        </div>
 
+        <div className="mt-4">
           <TablePagination table={table} />
         </div>
       </SheetContent>
