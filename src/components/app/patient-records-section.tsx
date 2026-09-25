@@ -4,8 +4,6 @@ import * as React from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import {
-  ChevronLeft,
-  ChevronRight,
   ExternalLink,
   ImageOff,
   Pencil,
@@ -27,6 +25,14 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import {
   DIGIT_STRING,
   IMAGE,
   asFieldSchema,
@@ -37,11 +43,13 @@ import {
   type SchemaField,
 } from "@/components/schema-form/types";
 import { useList_PatientRecord_API } from "@/data/patient-entry/api/records";
+import { useIsStaff } from "@/data/user/fetches/me";
 import type {
   PatientEntryFile,
   PatientRecord,
 } from "@/data/patient-entry/types";
 import { formatDate, localeDigits } from "@/lib/utils";
+import { useDirection } from "@/lib/use-direction";
 
 type Viewing = { files: PatientEntryFile[]; index: number; title: string };
 
@@ -113,7 +121,7 @@ export const PatientRecordsSection = ({
         )}
       </CardContent>
 
-      <Viewer viewing={viewing} onChange={setViewing} />
+      <Viewer viewing={viewing} onClose={() => setViewing(null)} />
     </Card>
   );
 };
@@ -182,16 +190,9 @@ const RecordBlock = ({
             })}
           </p>
         </div>
-        {editable ? (
-          <Button asChild variant="ghost" size="sm">
-            <Link
-              href={`/console/monitorings/${record.monitoring.id}/records/${record.id}/edit`}
-            >
-              <Pencil className="size-4" />
-              {t("Edit")}
-            </Link>
-          </Button>
-        ) : null}
+        {/* Mounted only on staff pages: the portal has no Django session, so
+            asking who the user is there would only fail. */}
+        {editable ? <EditLink record={record} /> : null}
       </div>
 
       {groups.map((group) => (
@@ -225,6 +226,7 @@ const RecordBlock = ({
             .filter((field) => field.type === IMAGE)
             .map((field) => {
               const files = filesOf(record, field.key);
+              const viewable = files.filter((file) => file.url);
               const title = labelOf(field, locale);
               return (
                 <div key={field.key} className="space-y-2">
@@ -235,11 +237,17 @@ const RecordBlock = ({
                     </span>
                   </p>
                   <ul className="flex flex-wrap gap-3">
-                    {files.map((file, index) => (
+                    {files.map((file) => (
                       <li key={file.id}>
                         <Thumbnail
                           file={file}
-                          onOpen={() => onOpen({ files, index, title })}
+                          onOpen={() =>
+                            onOpen({
+                              files: viewable,
+                              index: viewable.indexOf(file),
+                              title,
+                            })
+                          }
                         />
                       </li>
                     ))}
@@ -250,6 +258,23 @@ const RecordBlock = ({
         </div>
       ))}
     </section>
+  );
+};
+
+/** Editing is staff-only, as Django enforces; others see no link. */
+const EditLink = ({ record }: { record: PatientRecord }) => {
+  const t = useTranslations("common.PatientRecordsSection");
+  const isStaff = useIsStaff();
+  if (!isStaff) return null;
+  return (
+    <Button asChild variant="ghost" size="sm">
+      <Link
+        href={`/console/monitorings/${record.monitoring.id}/records/${record.id}/edit`}
+      >
+        <Pencil className="size-4" />
+        {t("Edit")}
+      </Link>
+    </Button>
   );
 };
 
@@ -297,104 +322,119 @@ const Thumbnail = ({
   );
 };
 
-/** One image at a time, with its siblings from the same field a step away. */
+/**
+ * The field's images as a carousel, opened on the one that was clicked.
+ *
+ * Swipe, the arrow buttons, or the arrow keys (which follow the reading
+ * direction) move between them. The body is keyed per opening so the
+ * carousel starts fresh at the clicked image each time.
+ */
 const Viewer = ({
   viewing,
-  onChange,
+  onClose,
 }: {
   viewing: Viewing | null;
-  onChange: (viewing: Viewing | null) => void;
-}) => {
+  onClose: () => void;
+}) => (
+  <Dialog open={Boolean(viewing)} onOpenChange={(open) => !open && onClose()}>
+    <DialogContent className="sm:max-w-3xl">
+      {viewing ? (
+        <ViewerBody
+          key={`${viewing.files[0]?.id}-${viewing.index}`}
+          viewing={viewing}
+        />
+      ) : null}
+    </DialogContent>
+  </Dialog>
+);
+
+const ViewerBody = ({ viewing }: { viewing: Viewing }) => {
   const t = useTranslations("common.PatientRecordsSection");
   const locale = useLocale();
-  const file = viewing ? viewing.files[viewing.index] : null;
-  const count = viewing?.files.length ?? 0;
+  const direction = useDirection();
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [current, setCurrent] = React.useState(viewing.index);
+  const count = viewing.files.length;
+  const file = viewing.files[current];
 
-  const step = React.useCallback(
-    (by: number) => {
-      if (!viewing) return;
-      onChange({
-        ...viewing,
-        index: (viewing.index + by + viewing.files.length) % viewing.files.length,
-      });
-    },
-    [viewing, onChange]
-  );
+  React.useEffect(() => {
+    if (!api) return;
+    const onSelect = () => setCurrent(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api]);
 
   return (
-    <Dialog open={Boolean(file)} onOpenChange={(open) => !open && onChange(null)}>
-      <DialogContent
-        className="sm:max-w-3xl"
-        onKeyDown={(event) => {
-          if (count < 2) return;
-          // Arrow keys follow reading direction: "next" is the way the text
-          // flows, so it is the left arrow in Persian.
-          const forward = locale === "fa" ? "ArrowLeft" : "ArrowRight";
-          const back = locale === "fa" ? "ArrowRight" : "ArrowLeft";
-          if (event.key === forward) step(1);
-          if (event.key === back) step(-1);
-        }}
+    <>
+      <DialogTitle className="truncate pe-8">{viewing.title}</DialogTitle>
+      <DialogDescription className="truncate">
+        {/* Only the name is isolated: it is usually Latin, and letting it set
+            the direction of the whole line scrambled "2 of 3" in Persian. */}
+        <bdi>{file?.original_name}</bdi>
+        {count > 1
+          ? ` — ${t("Position", {
+              index: localeDigits(current + 1, locale),
+              count: localeDigits(count, locale),
+            })}`
+          : ""}
+      </DialogDescription>
+
+      <Carousel
+        dir={direction}
+        opts={{ direction, startIndex: viewing.index, loop: count > 1 }}
+        setApi={setApi}
+        // Focusable, and first in the dialog, so it receives focus on open
+        // and the arrow keys work straight away.
+        tabIndex={0}
+        aria-label={viewing.title}
+        className="focus-visible:ring-ring rounded-lg outline-none focus-visible:ring-2"
       >
-        <DialogTitle className="truncate pe-8">{viewing?.title}</DialogTitle>
-        <DialogDescription className="truncate">
-          {/* Only the name is isolated: it is usually Latin, and letting it set
-              the direction of the whole line scrambled "2 of 3" in Persian. */}
-          <bdi>{file?.original_name}</bdi>
-          {count > 1
-            ? ` — ${t("Position", {
-                index: localeDigits((viewing?.index ?? 0) + 1, locale),
-                count: localeDigits(count, locale),
-              })}`
-            : ""}
-        </DialogDescription>
-
-        {file?.url ? (
-          <div className="bg-muted relative h-[65dvh] w-full overflow-hidden rounded-lg">
-            <Image
-              key={file.id}
-              src={file.url}
-              alt={file.original_name}
-              fill
-              sizes="(min-width: 640px) 768px, 100vw"
-              unoptimized
-              className="object-contain"
+        <CarouselContent>
+          {viewing.files.map((image, index) => (
+            <CarouselItem key={image.id}>
+              <div className="bg-muted relative h-[65dvh] w-full overflow-hidden rounded-lg">
+                {image.url ? (
+                  <Image
+                    src={image.url}
+                    alt={image.original_name}
+                    fill
+                    sizes="(min-width: 640px) 768px, 100vw"
+                    unoptimized
+                    // The opening image first; its neighbours as they come.
+                    loading={index === viewing.index ? "eager" : "lazy"}
+                    className="object-contain"
+                  />
+                ) : null}
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {count > 1 ? (
+          <>
+            <CarouselPrevious
+              label={t("Previous")}
+              className="start-3 bg-background/80 backdrop-blur-sm"
             />
-          </div>
+            <CarouselNext
+              label={t("Next")}
+              className="end-3 bg-background/80 backdrop-blur-sm"
+            />
+          </>
         ) : null}
+      </Carousel>
 
-        <div className="flex items-center justify-between gap-2">
-          {count > 1 ? (
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => step(-1)}
-                aria-label={t("Previous")}
-              >
-                <ChevronRight className="size-4 ltr:rotate-180" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => step(1)}
-                aria-label={t("Next")}
-              >
-                <ChevronLeft className="size-4 ltr:rotate-180" />
-              </Button>
-            </div>
-          ) : (
-            <span />
-          )}
-          {file?.url ? (
-            <Button asChild variant="ghost" size="sm">
-              <a href={file.url} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="size-4" />
-                {t("OpenOriginal")}
-              </a>
-            </Button>
-          ) : null}
+      {file?.url ? (
+        <div className="flex justify-end">
+          <Button asChild variant="ghost" size="sm">
+            <a href={file.url} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="size-4" />
+              {t("OpenOriginal")}
+            </a>
+          </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      ) : null}
+    </>
   );
 };
