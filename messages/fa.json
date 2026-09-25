@@ -150,6 +150,46 @@
       "Placeholder": "مرحله را انتخاب کنید",
       "Step1": "مرحله ۱",
       "Step2": "مرحله ۲"
+    },
+    "SchemaForm": {
+      "NoFields": "هنوز هیچ فیلدی اضافه نشده است.",
+      "EmptySection": "این بخش فیلدی ندارد.",
+      "Required": "پر کردن این فیلد الزامی است.",
+      "TooShort": "حداقل {n} رقم لازم است.",
+      "TooLong": "حداکثر {n} رقم مجاز است.",
+      "ExactlyNDigits": "دقیقاً {n} رقم.",
+      "BetweenNDigits": "بین {min} تا {max} رقم.",
+      "OneImage": "یک تصویر.",
+      "ManyImages": "حداکثر {n} تصویر.",
+      "NoLimit": "بدون محدودیت",
+      "MaxSize": "حداکثر {size} مگابایت برای هر تصویر.",
+      "TooManyImages": "حداکثر {n} تصویر مجاز است.",
+      "ImageTooLarge": "حجم «{name}» بیش از {size} مگابایت است.",
+      "RemoveImage": "حذف {name}",
+      "Queued": "با ذخیره آپلود می‌شود",
+      "Uploading": "در حال آپلود… {percent}٪",
+      "Uploaded": "آپلود شد",
+      "UploadFailedShort": "آپلود ناموفق",
+      "NotAnImage": "«{name}» تصویر پشتیبانی‌شده نیست (JPEG، PNG، WebP یا GIF)."
+    },
+    "PatientRecordsSection": {
+      "Title": "اطلاعات و تصاویر ثبت‌شده",
+      "Description": "آنچه اپراتورها در فرم‌های پایش برای این بیمار ثبت کرده‌اند.",
+      "Loading": "در حال بارگذاری اطلاعات ثبت‌شده…",
+      "LoadFailed": "بارگذاری اطلاعات ثبت‌شده انجام نشد.",
+      "Empty": "هنوز چیزی برای این بیمار ثبت نشده است.",
+      "UpdatedAt": "به‌روزرسانی {date}",
+      "Edit": "ویرایش",
+      "Unavailable": "تصویر در دسترس نیست",
+      "OpenImage": "باز کردن تصویر {name}",
+      "Position": "{index} از {count}",
+      "Previous": "تصویر قبلی",
+      "Next": "تصویر بعدی",
+      "OpenOriginal": "باز کردن فایل اصلی"
+    },
+    "StaffOnly": {
+      "Title": "فقط برای کارکنان",
+      "Description": "فقط کاربران کارمند می‌توانند این را اضافه یا ویرایش کنند. اگر دسترسی لازم دارید، به مدیر سیستم بگویید."
     }
   },
   "/": {
@@ -236,7 +276,7 @@
         "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
         "patientReports": "تولید گزارشات جامع برای بیماران",
         "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
-        "monitoringTypes": "انواعی که گزارش‌های بارگذاری‌شده زیر آن‌ها ثبت می‌شوند",
+        "monitorings": "پایش‌هایی که اطلاعات ذیل آن‌ها ثبت می‌شود و فیلدهای هر کدام",
         "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
       }
     },
@@ -246,7 +286,7 @@
       "periodicalReports": "گزارشات دوره‌ای",
       "patientReports": "گزارشات بیمار",
       "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
-      "monitoringTypes": "انواع پایش",
+      "monitorings": "پایش‌ها",
       "formSabtPayesh": "فرم ثبت پایش",
       "account": "حساب کاربری",
       "logout": "خروج"
@@ -492,7 +532,7 @@
       }
     }
   },
-  "/console/monitoring-types": {
+  "/console/monitorings": {
     "MonitoringTypesPage": {
       "PageTitle": "انواع پایش",
       "PageDescription": "انواعی که یک گزارش پایش می‌تواند زیر آن ثبت شود. بارگذاری‌ها از همین فهرست انتخاب می‌کنند.",
@@ -506,33 +546,6 @@
       "EmptyStateDescription": "پیش از بارگذاری گزارش، یک نوع بسازید.",
       "EmptyStateDescriptionDetail": "هنوز هیچ نوع پایشی تعریف نشده است."
     },
-    "MonitoringTypeFormDialog": {
-      "CreateTitle": "نوع پایش جدید",
-      "CreateDescription": "گزارش‌هایی که زیر این نوع ثبت می‌شوند تنها در صورتی صفحه جزئیات دارند که داشبورد برای شناسه آن نمایی داشته باشد.",
-      "EditTitle": "ویرایش نوع پایش",
-      "EditDescription": "تغییرات روی همه گزارش‌هایی که پیش‌تر زیر این نوع ثبت شده‌اند اعمال می‌شود.",
-      "CreatedMessage": "نوع پایش ساخته شد",
-      "UpdatedMessage": "نوع پایش به‌روزرسانی شد",
-      "ErrorTitle": "ذخیره نشد",
-      "ErrorMessage": "مشکلی پیش آمد. دوباره تلاش کنید.",
-      "SlugRenameWarningTitle": "این شناسه در داشبورد نما دارد",
-      "SlugRenameWarning": "گزارش‌های ثبت‌شده زیر «{slug}» صفحه جزئیاتی دارند که بر پایه همین شناسه ساخته می‌شود. با تغییر نام، تا زمانی که داشبورد هماهنگ نشود این گزارش‌ها صفحه جزئیات نخواهند داشت.",
-      "Form": {
-        "SlugLabel": "شناسه",
-        "SlugPlaceholder": "step_3",
-        "SlugHelp": "حروف، اعداد، خط تیره و زیرخط. مسیرهای داشبورد و API از همین استفاده می‌کنند.",
-        "SlugRequired": "وارد کردن شناسه الزامی است.",
-        "SlugTooLong": "حداکثر {max} نویسه.",
-        "SlugPattern": "تنها از حروف، اعداد، خط تیره و زیرخط استفاده کنید.",
-        "NameEnLabel": "نام (انگلیسی)",
-        "NameEnPlaceholder": "Step 3",
-        "NameEnRequired": "وارد کردن نام انگلیسی الزامی است.",
-        "NameFaLabel": "نام (فارسی)",
-        "NameFaPlaceholder": "مرحله ۳",
-        "NameFaRequired": "وارد کردن نام فارسی الزامی است.",
-        "NameTooLong": "حداکثر {max} نویسه."
-      }
-    },
     "DeleteMonitoringTypeDialog": {
       "DialogTitle": "این نوع پایش حذف شود؟",
       "DialogDescription": "«{name}» حذف خواهد شد. این کار برگشت‌پذیر نیست.",
@@ -541,6 +554,94 @@
       "InUseTitle": "هنوز در حال استفاده است",
       "InUseDescription": "{count} گزارش پایش زیر این نوع ثبت شده است. ابتدا آن‌ها را حذف کنید، یا به‌جای حذف این نوع را تغییر نام دهید.",
       "InUseDescriptionUnknown": "هنوز گزارش‌هایی زیر این نوع ثبت شده‌اند. ابتدا آن‌ها را حذف کنید، یا به‌جای حذف این نوع را تغییر نام دهید."
+    },
+    "Builder": {
+      "NewTitle": "نوع پایش جدید",
+      "EditTitle": "ویرایش نوع پایش",
+      "NotFound": "این نوع پایش پیدا نشد.",
+      "Back": "بازگشت به فهرست",
+      "Save": "ذخیره",
+      "Created": "نوع پایش ساخته شد.",
+      "Updated": "نوع پایش به‌روز شد.",
+      "SaveFailed": "ذخیره‌سازی انجام نشد.",
+      "Slug": "شناسه",
+      "NameFa": "نام فارسی",
+      "NameEn": "نام انگلیسی",
+      "AddDigitString": "افزودن فیلد عددی",
+      "AddImage": "افزودن فیلد تصویر",
+      "AddSection": "افزودن بخش",
+      "Sections": "بخش‌ها",
+      "SectionTitleFa": "عنوان فارسی",
+      "SectionTitleEn": "عنوان انگلیسی",
+      "RemoveSection": "حذف بخش",
+      "RemoveSectionKeepsFields": "با حذف یک بخش، فیلدهای آن باقی می‌مانند و فقط گروه‌بندی آن‌ها برداشته می‌شود.",
+      "Fields": "فیلدها",
+      "NoFieldsYet": "هنوز فیلدی ندارد. یک فیلد عددی یا تصویری اضافه کنید.",
+      "TypeDigitString": "عددی (متنی، صفر ابتدا حفظ می‌شود)",
+      "TypeImage": "تصویر",
+      "LabelFa": "برچسب فارسی",
+      "LabelEn": "برچسب انگلیسی",
+      "Required": "الزامی",
+      "AllowMany": "چندتایی",
+      "Section": "بخش",
+      "NoSection": "بدون بخش",
+      "MoveUp": "انتقال به بالا",
+      "MoveDown": "انتقال به پایین",
+      "RemoveField": "حذف فیلد",
+      "ShowAdvanced": "تنظیمات بیشتر",
+      "HideAdvanced": "بستن تنظیمات",
+      "MinLength": "حداقل رقم",
+      "MaxLength": "حداکثر رقم",
+      "MaxSizeMb": "حداکثر حجم (مگابایت)",
+      "MaxCount": "حداکثر تعداد تصویر",
+      "FieldKey": "کلید فیلد",
+      "PreviewTitle": "پیش‌نمایش زنده",
+      "PreviewNote": "این همان فرمی است که اپراتور پر می‌کند. تایپ و انتخاب تصویر در اینجا چیزی را ذخیره نمی‌کند.",
+      "NationalId": "کد ملی",
+      "NationalIdNote": "همیشه وجود دارد. شناسهٔ بیمار است و فیلدی نیست که شما اضافه کنید.",
+      "SectionNeedsTitles": "هر بخش باید عنوان فارسی و انگلیسی داشته باشد.",
+      "FieldNeedsLabels": "هر فیلد باید برچسب فارسی و انگلیسی داشته باشد.",
+      "MinAboveMax": "حداقل «{field}» از حداکثر آن بیشتر است.",
+      "DuplicateFieldKey": "دو فیلد کلید یکسان دارند. کلیدها باید یکتا باشند.",
+      "InvalidFieldKey": "کلید فیلد باید با حرف شروع شود و فقط شامل a-z ، 0-9 و _ باشد.",
+      "SlugRenameWarningTitle": "این شناسه در داشبورد نما دارد",
+      "SlugRenameWarning": "گزارش‌های ثبت‌شده زیر «{slug}» صفحه جزئیاتی دارند که بر پایه همین شناسه ساخته می‌شود. با تغییر نام، تا زمانی که داشبورد هماهنگ نشود این گزارش‌ها صفحه جزئیات نخواهند داشت."
+    },
+    "Records": {
+      "PageTitle": "رکوردها",
+      "PageDescription": "بیماران ثبت‌شده ذیل «{name}».",
+      "AddRecord": "افزودن رکورد",
+      "EditRecord": "ویرایش رکورد",
+      "NationalIdColumn": "کد ملی",
+      "FilesColumn": "تصاویر",
+      "UpdatedColumn": "آخرین به‌روزرسانی",
+      "NoRecords": "هنوز رکوردی ثبت نشده است",
+      "NoRecordsHint": "اولین رکورد این پایش را اضافه کنید.",
+      "LoadFailed": "بارگذاری رکوردها انجام نشد.",
+      "TypeHasNoFields": "این پایش فیلدی برای تکمیل ندارد",
+      "TypeHasNoFieldsHint": "هنوز فیلدی تعریف نکرده است. برای افزودن، آن را ویرایش کنید.",
+      "DeleteRecord": "حذف رکورد",
+      "DeleteTitle": "این رکورد حذف شود؟",
+      "DeleteDescription": "رکورد {nationalId} حذف می‌شود. تصاویر آپلودشده از فضای ذخیره‌سازی پاک نمی‌شوند.",
+      "Deleted": "رکورد حذف شد.",
+      "DeleteFailed": "حذف رکورد انجام نشد.",
+      "BackToMonitorings": "بازگشت به پایش‌ها",
+      "BackToRecords": "بازگشت به رکوردها",
+      "SaveChanges": "ذخیرهٔ تغییرات",
+      "Saved": "رکورد ذخیره شد.",
+      "SaveFailed": "ذخیرهٔ رکورد انجام نشد.",
+      "AlreadyExists": "این بیمار از قبل رکورد دارد؛ همان باز می‌شود.",
+      "FixErrors": "برخی فیلدها نیاز به اصلاح دارند.",
+      "NationalId": "کد ملی",
+      "NationalIdPlaceholder": "مثلاً ۰۰۱۲۳۴۵۶۷۸",
+      "NationalIdRequired": "کد ملی بیمار را وارد کنید.",
+      "RecordNotFound": "این رکورد پیدا نشد.",
+      "NationalIdHint": "{n} رقم.",
+      "UploadingProgress": "در حال آپلود {done} از {total}…",
+      "Saving": "در حال ذخیره…",
+      "UploadsFailed": "آپلود {n} تصویر انجام نشد. چیزی ذخیره نشد؛ دوباره تلاش کنید یا آن‌ها را حذف کنید.",
+      "StorageUnreachable": "اتصال به فضای ذخیره‌سازی برقرار نشد.",
+      "NationalIdLength": "کد ملی باید ۱۰ رقم باشد."
     }
   },
   "/patient/sign-in": {
@@ -674,9 +775,9 @@
       "title": "پایش سلامت بانک صادرات",
       "description": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای."
     },
-    "monitoringTypes": {
-      "title": "انواع پایش",
-      "description": "انواعی که گزارش‌های بارگذاری‌شده زیر آن‌ها ثبت می‌شوند."
+    "monitorings": {
+      "title": "پایش‌ها",
+      "description": "تعریف پایش‌ها و فیلدهایی که ثبت می‌کنند."
     },
     "sbhmStep1": {
       "title": "گزارش مرحله ۱",

@@ -150,6 +150,46 @@
       "Placeholder": "Select step",
       "Step1": "Step 1",
       "Step2": "Step 2"
+    },
+    "SchemaForm": {
+      "NoFields": "No fields have been added yet.",
+      "EmptySection": "No fields in this section.",
+      "Required": "This field is required.",
+      "TooShort": "Must be at least {n} digits.",
+      "TooLong": "Must be at most {n} digits.",
+      "ExactlyNDigits": "Exactly {n} digits.",
+      "BetweenNDigits": "Between {min} and {max} digits.",
+      "OneImage": "One image.",
+      "ManyImages": "Up to {n} images.",
+      "NoLimit": "any number of",
+      "MaxSize": "Max {size} MB each.",
+      "TooManyImages": "At most {n} images.",
+      "ImageTooLarge": "“{name}” is larger than {size} MB.",
+      "RemoveImage": "Remove {name}",
+      "Queued": "Ready to upload on save",
+      "Uploading": "Uploading… {percent}%",
+      "Uploaded": "Uploaded",
+      "UploadFailedShort": "Upload failed",
+      "NotAnImage": "“{name}” is not a supported image (JPEG, PNG, WebP or GIF)."
+    },
+    "PatientRecordsSection": {
+      "Title": "Recorded information and images",
+      "Description": "What operators recorded for this patient in the monitoring forms.",
+      "Loading": "Loading recorded information…",
+      "LoadFailed": "The recorded information could not be loaded.",
+      "Empty": "Nothing has been recorded for this patient yet.",
+      "UpdatedAt": "Updated {date}",
+      "Edit": "Edit",
+      "Unavailable": "Image unavailable",
+      "OpenImage": "Open image {name}",
+      "Position": "{index} of {count}",
+      "Previous": "Previous image",
+      "Next": "Next image",
+      "OpenOriginal": "Open original"
+    },
+    "StaffOnly": {
+      "Title": "Staff only",
+      "Description": "Only staff users can add or change this. Ask an administrator if you need access."
     }
   },
   "/": {
@@ -236,7 +276,7 @@
         "periodicalReports": "Generate comprehensive reports for time periods",
         "patientReports": "Generate comprehensive reports for patients",
         "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
-        "monitoringTypes": "The report types uploads can be filed under",
+        "monitorings": "The monitorings you record against, and the fields each one collects",
         "formSabtPayesh": "Register monitoring data with the online form"
       }
     },
@@ -246,7 +286,7 @@
       "periodicalReports": "Periodical Reports",
       "patientReports": "Patient Reports",
       "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
-      "monitoringTypes": "Monitoring Types",
+      "monitorings": "Monitorings",
       "formSabtPayesh": "Form Sabt Payesh",
       "account": "Account",
       "logout": "Log out"
@@ -492,7 +532,7 @@
       }
     }
   },
-  "/console/monitoring-types": {
+  "/console/monitorings": {
     "MonitoringTypesPage": {
       "PageTitle": "Monitoring Types",
       "PageDescription": "The types a monitoring report can be filed under. Uploads choose from this list.",
@@ -506,33 +546,6 @@
       "EmptyStateDescription": "Create one before uploading a report.",
       "EmptyStateDescriptionDetail": "No monitoring types have been defined yet."
     },
-    "MonitoringTypeFormDialog": {
-      "CreateTitle": "New monitoring type",
-      "CreateDescription": "Reports filed under this type only get a detail page if the dashboard has a view for its slug.",
-      "EditTitle": "Edit monitoring type",
-      "EditDescription": "Changes apply to every report already filed under this type.",
-      "CreatedMessage": "Monitoring type created",
-      "UpdatedMessage": "Monitoring type updated",
-      "ErrorTitle": "Could not save",
-      "ErrorMessage": "Something went wrong. Please try again.",
-      "SlugRenameWarningTitle": "This slug has a view in the dashboard",
-      "SlugRenameWarning": "Reports filed under “{slug}” open a detail page keyed on that slug. Renaming it leaves them with no detail page until the dashboard is updated to match.",
-      "Form": {
-        "SlugLabel": "Slug",
-        "SlugPlaceholder": "step_3",
-        "SlugHelp": "Letters, numbers, hyphens and underscores. This is what the API and the dashboard's routes use.",
-        "SlugRequired": "A slug is required.",
-        "SlugTooLong": "At most {max} characters.",
-        "SlugPattern": "Use only letters, numbers, hyphens and underscores.",
-        "NameEnLabel": "Name (English)",
-        "NameEnPlaceholder": "Step 3",
-        "NameEnRequired": "An English name is required.",
-        "NameFaLabel": "Name (Persian)",
-        "NameFaPlaceholder": "مرحله ۳",
-        "NameFaRequired": "A Persian name is required.",
-        "NameTooLong": "At most {max} characters."
-      }
-    },
     "DeleteMonitoringTypeDialog": {
       "DialogTitle": "Delete this monitoring type?",
       "DialogDescription": "“{name}” will be removed. This cannot be undone.",
@@ -541,6 +554,94 @@
       "InUseTitle": "Still in use",
       "InUseDescription": "{count} monitoring reports are filed under this type. Delete them first, or rename this type instead.",
       "InUseDescriptionUnknown": "Monitoring reports are still filed under this type. Delete them first, or rename this type instead."
+    },
+    "Builder": {
+      "NewTitle": "New monitoring type",
+      "EditTitle": "Edit monitoring type",
+      "NotFound": "This monitoring type was not found.",
+      "Back": "Back to list",
+      "Save": "Save",
+      "Created": "Monitoring type created.",
+      "Updated": "Monitoring type updated.",
+      "SaveFailed": "It could not be saved.",
+      "Slug": "Slug",
+      "NameFa": "Persian name",
+      "NameEn": "English name",
+      "AddDigitString": "Add number field",
+      "AddImage": "Add image field",
+      "AddSection": "Add section",
+      "Sections": "Sections",
+      "SectionTitleFa": "Persian title",
+      "SectionTitleEn": "English title",
+      "RemoveSection": "Remove section",
+      "RemoveSectionKeepsFields": "Removing a section keeps its fields; they simply stop being grouped.",
+      "Fields": "Fields",
+      "NoFieldsYet": "No fields yet. Add a number or image field to begin.",
+      "TypeDigitString": "Number (text, keeps leading zeros)",
+      "TypeImage": "Image",
+      "LabelFa": "Persian label",
+      "LabelEn": "English label",
+      "Required": "Required",
+      "AllowMany": "Allow many",
+      "Section": "Section",
+      "NoSection": "No section",
+      "MoveUp": "Move up",
+      "MoveDown": "Move down",
+      "RemoveField": "Remove field",
+      "ShowAdvanced": "Show advanced",
+      "HideAdvanced": "Hide advanced",
+      "MinLength": "Min digits",
+      "MaxLength": "Max digits",
+      "MaxSizeMb": "Max size (MB)",
+      "MaxCount": "Max images",
+      "FieldKey": "Field key",
+      "PreviewTitle": "Live preview",
+      "PreviewNote": "This is the form operators will fill in. Typing and picking images here changes nothing.",
+      "NationalId": "National ID",
+      "NationalIdNote": "Always present. It identifies the patient and is not a field you add.",
+      "SectionNeedsTitles": "Every section needs both a Persian and an English title.",
+      "FieldNeedsLabels": "Every field needs both a Persian and an English label.",
+      "MinAboveMax": "“{field}” has a minimum longer than its maximum.",
+      "DuplicateFieldKey": "Two fields share the same key. Keys must be unique.",
+      "InvalidFieldKey": "A field key must start with a letter and use only a-z, 0-9 and _.",
+      "SlugRenameWarningTitle": "This slug has a view in the dashboard",
+      "SlugRenameWarning": "Reports filed under “{slug}” open a detail page keyed on that slug. Renaming it leaves them with no detail page until the dashboard is updated to match."
+    },
+    "Records": {
+      "PageTitle": "Records",
+      "PageDescription": "Patients recorded under {name}.",
+      "AddRecord": "Add record",
+      "EditRecord": "Edit record",
+      "NationalIdColumn": "National ID",
+      "FilesColumn": "Images",
+      "UpdatedColumn": "Last updated",
+      "NoRecords": "No records yet",
+      "NoRecordsHint": "Add the first record for this monitoring.",
+      "LoadFailed": "The records could not be loaded.",
+      "TypeHasNoFields": "This monitoring collects no form fields",
+      "TypeHasNoFieldsHint": "It declares no fields yet. Edit it to add some.",
+      "DeleteRecord": "Delete record",
+      "DeleteTitle": "Delete this record?",
+      "DeleteDescription": "The record for {nationalId} will be removed. Uploaded images are not deleted from storage.",
+      "Deleted": "Record deleted.",
+      "DeleteFailed": "The record could not be deleted.",
+      "BackToMonitorings": "Back to monitorings",
+      "BackToRecords": "Back to records",
+      "SaveChanges": "Save changes",
+      "Saved": "Record saved.",
+      "SaveFailed": "The record could not be saved.",
+      "AlreadyExists": "This patient already has a record here. Opening it.",
+      "FixErrors": "Some fields need attention.",
+      "NationalId": "National ID",
+      "NationalIdPlaceholder": "e.g. 0012345678",
+      "NationalIdRequired": "Enter the patient's national ID.",
+      "RecordNotFound": "This record was not found.",
+      "NationalIdHint": "{n} digits.",
+      "UploadingProgress": "Uploading {done} of {total}…",
+      "Saving": "Saving…",
+      "UploadsFailed": "{n} image(s) failed to upload. Nothing was saved — retry or remove them.",
+      "StorageUnreachable": "Storage could not be reached.",
+      "NationalIdLength": "A national ID has 10 digits."
     }
   },
   "/patient/sign-in": {
@@ -674,9 +775,9 @@
       "title": "Saderat Bank Health Monitoring",
       "description": "Uploaded datasets and their step reports."
     },
-    "monitoringTypes": {
-      "title": "Monitoring Types",
-      "description": "The report types uploads can be filed under."
+    "monitorings": {
+      "title": "Monitorings",
+      "description": "Define monitorings and the fields they collect."
     },
     "sbhmStep1": {
       "title": "Step 1 Report",

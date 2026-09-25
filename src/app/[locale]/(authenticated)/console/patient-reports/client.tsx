@@ -35,6 +35,7 @@ import { Line, XAxis, YAxis, CartesianGrid, ReferenceArea, ComposedChart } from 
 import { format, newDate } from "date-fns-jalali";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 import { PageHeader } from "@/components/app/page-header";
+import { PatientRecordsSection } from "@/components/app/patient-records-section";
 
 interface ServiceCountData {
   serviceName: string;
@@ -587,6 +588,14 @@ const Client = (props: {
           </div>
         </div>
       )}
+
+      {/* Outside the EHR block on purpose: what operators recorded here does
+          not depend on the upstream EHR answering. Renders nothing unless the
+          filter names one patient -- or the URL does, before any search. */}
+      <PatientRecordsSection
+        nationalId={filters.nationalNumber || props.initialValues.nationalNumber}
+        authorized
+      />
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="bottom" className="max-h-[100dvh]">

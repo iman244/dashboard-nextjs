@@ -56,7 +56,7 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
   const tStep = useTranslations("common.SBHM_Step");
   const locale = useLocale();
   const tLoading = useTranslations("common.Loading");
-  const tTypes = useTranslations("/console/monitoring-types.MonitoringTypesPage");
+  const tTypes = useTranslations("/console/monitorings.MonitoringTypesPage");
   const { data: monitoringTypes, isPending: typesPending, error: typesError } =
     useList_MonitoringType_API({ enabled: open });
 

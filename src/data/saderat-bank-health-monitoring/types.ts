@@ -26,7 +26,7 @@ export const SBHM_TYPES = Object.keys(SBHM_TYPE_LABEL_KEYS) as SBHM_Type[];
  * Whether this dashboard can render a type the API returned.
  *
  * Needed because types are rows in a table now and staff can create one
- * through /console/monitoring-types. A type created there has no entry in
+ * through /console/monitorings. A type created there has no entry in
  * SBHM_TYPE_LABEL_KEYS and none in SBHM_TYPE_SEGMENTS, so calling either
  * helper with it returns `undefined` -- which reaches the UI as a missing
  * translation key and as an href of `/console/.../undefined/12`. Neither

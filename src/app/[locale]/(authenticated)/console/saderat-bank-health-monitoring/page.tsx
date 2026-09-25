@@ -56,7 +56,7 @@ const SaderatBankHealthMonitoringPage = () => {
         cell: (info) => {
           // Typed SBHM_Type by WithKnownType, which is an assertion rather
           // than a guarantee: staff can create a type in
-          // /console/monitoring-types that has no entry in the label map, and
+          // /console/monitorings that has no entry in the label map, and
           // tStep() on a missing key renders an error placeholder. Widened to
           // string so the guard can actually narrow it.
           const type: string = info.getValue();
