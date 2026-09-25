@@ -414,7 +414,7 @@ const MonitoringPage = (
               <CardTitle>توزیع جنسیت</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center justify-center">
-              <ChartContainer config={genderChartConfig} className="h-[300px]">
+              <ChartContainer config={genderChartConfig} className="h-[300px] w-full">
                 <PieChart>
                   <Pie
                     data={reportData.genderDistribution}
@@ -462,7 +462,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.bmiGroupDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -507,7 +507,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.bpGroupDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -558,7 +558,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.ageDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -612,7 +612,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.fbsDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -657,7 +657,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px] flex items-center justify-center"
+                className="h-[300px] w-full flex items-center justify-center"
               >
                 <BarChart data={reportData.totalCholDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -702,7 +702,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.hdlDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -747,7 +747,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.ldlDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -792,7 +792,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.tshDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -837,7 +837,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.vitDDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -882,7 +882,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.hba1cDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -927,7 +927,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.tgDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -972,7 +972,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.t3Distribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1017,7 +1017,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.t4Distribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1062,7 +1062,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.vitaminB12Distribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1107,7 +1107,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.ferritinDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1152,7 +1152,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.psaDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1197,7 +1197,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.ureaDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1242,7 +1242,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.sgotDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1287,7 +1287,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.sgptDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1332,7 +1332,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.crDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1377,7 +1377,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.cbcHbDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1422,7 +1422,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.cbcWbcDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1467,7 +1467,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.uaGluDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -1512,7 +1512,7 @@ const MonitoringPage = (
             <CardContent className="flex items-center justify-center">
               <ChartContainer
                 config={testResultChartConfig}
-                className="h-[300px]"
+                className="h-[300px] w-full"
               >
                 <BarChart data={reportData.insuranceDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />

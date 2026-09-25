@@ -65,9 +65,12 @@ export const TablePagination = <T extends RowData,>({
         </p>
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* On a phone the controls that repeat something the page numbers
+          already say -- rows per page, first/last, "page X of Y" -- are
+          hidden, and the rest wraps rather than pushing past the edge. */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         {showPageSizeSelector && (
-          <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-2 sm:flex">
             <p className="text-sm font-medium">{t("Rows per page")}</p>
             <Select
               value={`${pageSize}`}
@@ -102,7 +105,7 @@ export const TablePagination = <T extends RowData,>({
             size="sm"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className="h-8 w-8 p-0"
+            className="hidden h-8 w-8 p-0 sm:inline-flex"
           >
             <span className="sr-only">{t("First page")}</span>
             <FirstIcon className="h-4 w-4" />
@@ -180,14 +183,14 @@ export const TablePagination = <T extends RowData,>({
             size="sm"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
-            className="h-8 w-8 p-0"
+            className="hidden h-8 w-8 p-0 sm:inline-flex"
           >
             <span className="sr-only">{t("Last page")}</span>
             <LastIcon className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 sm:flex">
           <p className="text-sm font-medium">
             {t("Page", {
               current: localeDigits(pageIndex + 1, locale),

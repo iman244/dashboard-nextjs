@@ -170,7 +170,7 @@ const Step2MonitoringPage = (
           {/* h2, not h3: PageHeader now owns the page h1, so sections sit one level
               below it rather than skipping a level (#39). */}
           <h2 className="text-lg font-semibold">{tReport(section.titleKey)}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {section.charts.map((chart) => (
               <DistributionChart
                 key={chart.field}
