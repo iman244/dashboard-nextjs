@@ -66,19 +66,22 @@ export const TablePagination = <T extends RowData,>({
       </div>
 
       {/* On a phone the controls that repeat something the page numbers
-          already say -- rows per page, first/last, "page X of Y" -- are
-          hidden, and the rest wraps rather than pushing past the edge. */}
+          already say -- first/last, "page X of Y" -- are hidden, the page
+          size keeps its selector but not its caption, and everything wraps
+          rather than pushing past the edge, down to a 320px screen. */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         {showPageSizeSelector && (
-          <div className="hidden items-center gap-2 sm:flex">
-            <p className="text-sm font-medium">{t("Rows per page")}</p>
+          <div className="flex items-center gap-2">
+            <p className="sr-only text-sm font-medium sm:not-sr-only">
+              {t("Rows per page")}
+            </p>
             <Select
               value={`${pageSize}`}
               onValueChange={(value) => {
                 table.setPageSize(Number(value));
               }}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger className="h-8 w-[70px]" aria-label={t("Rows per page")}>
                 <SelectValue
                   placeholder={localeDigits(pageSize, locale)}
                 />
@@ -98,7 +101,7 @@ export const TablePagination = <T extends RowData,>({
         )}
 
         {/* Custom RTL Pagination */}
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1">
           {/* First Page Button */}
           <Button
             variant="outline"
