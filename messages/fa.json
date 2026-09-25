@@ -303,6 +303,15 @@
   "/console/electronic-health-record": {
     "EHRTable": {
       "title": "سوابق پزشکی الکترونیکی",
+      "description": "بیمار را پیدا کنید، سوابق درمان او را ببینید و از ردیف نتیجه به گزارش بیمار بروید.",
+      "refresh": "بروزرسانی",
+      "activeFilters": "فیلترهای فعال",
+      "nationalNumberFilter": "شماره ملی",
+      "dateRangeFilter": "بازه تاریخ",
+      "patientTypeFilter": "نوع بیمار",
+      "removeNationalNumber": "حذف فیلتر شماره ملی",
+      "removeDateRange": "حذف فیلتر بازه تاریخ",
+      "removePatientType": "حذف فیلتر نوع بیمار",
       "pagination": {
         "showing": "نمایش {start} تا {end} از {total} رکورد",
         "rowsPerPage": "ردیف در صفحه:",
@@ -337,6 +346,17 @@
     "PatientReports": {
       "title": "گزارشات بیمار",
       "description": "تولید گزارشات جامع برای بیماران",
+      "chartTestValue": "مقدار آزمایش",
+      "chartNormalMin": "حد پایین نرمال",
+      "chartNormalMax": "حد بالای نرمال",
+      "chartNormalArea": "محدوده طبیعی",
+      "chartAbnormalArea": "محدوده غیرطبیعی",
+      "chartDate": "تاریخ",
+      "trendOverTime": "روند نتایج آزمایش در طول زمان",
+      "recordDetails": "جزئیات رکوردها",
+      "serviceSearchPlaceholder": "جستجو در نام خدمت...",
+      "clearSearch": "پاک کردن جستجو",
+      "serviceRecordsTitle": "گزارش رکوردهای خدمت: {service}",
       "patientType": "نوع بیمار",
       "selectPatientType": "انتخاب نوع بیمار",
       "loadingMessage": "گزارش در حال آماده‌سازی است…",
@@ -429,6 +449,7 @@
   "/console/saderat-bank-health-monitoring": {
     "UploadSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "بارگذاری اکسل",
+      "NoSupportedTypes": "هیچ نوع گزارشی با نمای جزئیات برای بارگذاری اکسل در دسترس نیست.",
       "Form": {
         "NameLabel": "نام",
         "NamePlaceholder": "نام را وارد کنید",
@@ -447,6 +468,8 @@
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "بارگذاری اکسل",
+      "PageDescription": "گزارش‌های بارگذاری‌شده پایش سلامت بانک را بررسی کنید. فرم بارگذاری فقط نوع‌های دارای نمای گزارش را نشان می‌دهد.",
+      "UnsupportedDetail": "نمای جزئیات برای این نوع گزارش موجود نیست",
       "Loading": "در حال بارگذاری…",
       "ErrorTitle": "خطا در بارگذاری داده‌ها",
       "EmptyStateTitle": "هیچ داده‌ای موجود نیست",

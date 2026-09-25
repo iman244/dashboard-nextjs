@@ -7,7 +7,7 @@ import { useLocaleDigits } from "@/lib/use-locale-digits";
 import { usePatientReports } from "./provider";
 import { PatientReportsForm } from "./_form/patient-reports-form";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDate, formatNumber, localeDigits } from "@/lib/utils";
+import { formatDate, localeDigits } from "@/lib/utils";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
@@ -15,7 +15,7 @@ import { DataTable } from "@/components/app";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, FileText, XIcon, ChartLine, Eye } from "lucide-react";
+import { Search, XIcon, ChartLine, Eye } from "lucide-react";
 import { RowAction, RowActions } from "@/components/app";
 import { TablePagination } from "@/components/app/table-pagination";
 import {
@@ -35,6 +35,7 @@ import { Line, XAxis, YAxis, CartesianGrid, ReferenceArea, ComposedChart } from 
 import { format, newDate } from "date-fns-jalali";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { PatientRecordsSection } from "@/components/app/patient-records-section";
 
 interface ServiceCountData {
@@ -78,30 +79,6 @@ const renderResultCount = (
 
 const columnHelper = createColumnHelper<AppTableFeatures, ServiceCountData>();
 
-// Chart configuration for service trend
-const serviceTrendChartConfig: ChartConfig = {
-  testValue: {
-    label: "مقدار آزمایش",
-    color: "var(--chart-1)", // the measured series
-  },
-  normalRangeMin: {
-    label: "حد پایین نرمال",
-    color: "var(--success)", // reference range bound
-  },
-  normalRangeMax: {
-    label: "حد بالای نرمال",
-    color: "var(--success)", // reference range bound
-  },
-  normalArea: {
-    label: "محدوده طبیعی",
-    color: "var(--success)", // the in-range band
-  },
-  abnormalArea: {
-    label: "محدوده غیرطبیعی",
-    color: "var(--destructive)", // out-of-range band
-  },
-};
-
 // Service Details Table Component for the sheet
 export const ServiceDetailsTable: React.FC<{
   data: ElectronicHealthRecord[];
@@ -110,6 +87,14 @@ export const ServiceDetailsTable: React.FC<{
   const locale = useLocale();
   const fmt = useLocaleDigits();
   const tDictionary = useTranslations("common.dictionary");
+  const t = useTranslations("/console/patient-reports.PatientReports");
+  const serviceTrendChartConfig: ChartConfig = {
+    testValue: { label: t("chartTestValue"), color: "var(--chart-1)" },
+    normalRangeMin: { label: t("chartNormalMin"), color: "var(--success)" },
+    normalRangeMax: { label: t("chartNormalMax"), color: "var(--success)" },
+    normalArea: { label: t("chartNormalArea"), color: "var(--success)" },
+    abnormalArea: { label: t("chartAbnormalArea"), color: "var(--destructive)" },
+  };
 
   const detailsColumnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
 
@@ -196,7 +181,7 @@ export const ServiceDetailsTable: React.FC<{
       {chartData.length > 0 && (
         <div className="space-y-4 flex flex-col items-center justify-center">
           <h3 className="text-lg font-semibold">
-            روند نتایج آزمایش در طول زمان
+            {t("trendOverTime")}
           </h3>
           <ChartContainer
             config={serviceTrendChartConfig}
@@ -227,16 +212,16 @@ export const ServiceDetailsTable: React.FC<{
                   <ChartTooltipContent
                     labelFormatter={(value) => (
                       <span className="font-medium">
-                        تاریخ: {fmt(value as string)}
+                        {t("chartDate")}: {fmt(value as string)}
                       </span>
                     )}
                     formatter={(value, name) => {
                       const label =
                         name === "testValue"
-                          ? "مقدار آزمایش"
+                          ? t("chartTestValue")
                           : name === "normalRangeMin"
-                          ? "حد پایین نرمال"
-                          : "حد بالای نرمال";
+                          ? t("chartNormalMin")
+                          : t("chartNormalMax");
                       return [fmt(value), " ", label];
                     }}
                   />
@@ -287,7 +272,7 @@ export const ServiceDetailsTable: React.FC<{
 
       {/* Table */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">جزئیات رکوردها</h3>
+        <h3 className="text-lg font-semibold">{t("recordDetails")}</h3>
         <DataTable<ElectronicHealthRecord, string>
           table={table}
           columns={columns}
@@ -314,6 +299,7 @@ const Client = (props: {
   const tLoading = useTranslations("common.Loading");
   const tData = useTranslations("common.data");
   const tDictionary = useTranslations("common.Dictionary");
+  const tEhr = useTranslations("/console/electronic-health-record.EHRTable");
   const {
     ehrByNationalNumber_m,
     mobileLaboratoryByNationalNumber_m,
@@ -510,7 +496,15 @@ const Client = (props: {
 
   return (
     <div className="mt-2 space-y-4">
-      <PageHeader title={t("title")} />
+      <PageHeader
+        breadcrumbs={
+          <ConsoleBreadcrumbs
+            parent={{ href: "/console/electronic-health-record", label: tEhr("title") }}
+          />
+        }
+        title={t("title")}
+        description={t("description")}
+      />
       <div className="flex items-center gap-2">
         <PatientReportsForm
           initialValues={props.initialValues}
@@ -541,7 +535,7 @@ const Client = (props: {
                 </p>
                 {filters.nationalNumber && (
                   <p className="text-muted-foreground">
-                    شماره ملی: {localeDigits(filters.nationalNumber, locale)}
+                    {t("nationalNumber")}: {localeDigits(filters.nationalNumber, locale)}
                   </p>
                 )}
               </div>
@@ -555,7 +549,7 @@ const Client = (props: {
                     <div className="relative flex-1 max-w-sm">
                       <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
-                        placeholder="جستجو در نام خدمت..."
+                        placeholder={t("serviceSearchPlaceholder")}
                         value={searchTerm}
                         onChange={(e) => {
                           setSearchTerm(e.target.value);
@@ -570,7 +564,7 @@ const Client = (props: {
                         onClick={() => setSearchTerm("")}
                         className="h-10"
                       >
-                        پاک کردن
+                        {t("clearSearch")}
                       </Button>
                     )}
                   </div>
@@ -600,7 +594,7 @@ const Client = (props: {
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="bottom" className="max-h-[100dvh]">
           <SheetHeader className="flex flex-row items-center justify-between">
-            <SheetTitle>گزارش رکوردهای خدمت: {selectedService}</SheetTitle>
+            <SheetTitle>{t("serviceRecordsTitle", { service: selectedService ?? "" })}</SheetTitle>
             <SheetClose aria-label={tDictionary("Close")}>
               <XIcon className="h-4 w-4" />
             </SheetClose>

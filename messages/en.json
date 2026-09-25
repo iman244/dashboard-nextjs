@@ -303,6 +303,15 @@
   "/console/electronic-health-record": {
     "EHRTable": {
       "title": "Electronic Health Records",
+      "description": "Find a patient, inspect their care history, and open a patient report from a result.",
+      "refresh": "Refresh",
+      "activeFilters": "Active filters",
+      "nationalNumberFilter": "National ID",
+      "dateRangeFilter": "Date range",
+      "patientTypeFilter": "Patient type",
+      "removeNationalNumber": "Remove national ID filter",
+      "removeDateRange": "Remove date range filter",
+      "removePatientType": "Remove patient type filter",
       "pagination": {
         "showing": "Showing {start} to {end} of {total} records",
         "rowsPerPage": "Rows per page:",
@@ -337,6 +346,17 @@
     "PatientReports": {
       "title": "Patient Reports",
       "description": "Generate comprehensive reports for specific patients",
+      "chartTestValue": "Test result",
+      "chartNormalMin": "Normal range minimum",
+      "chartNormalMax": "Normal range maximum",
+      "chartNormalArea": "Normal range",
+      "chartAbnormalArea": "Outside normal range",
+      "chartDate": "Date",
+      "trendOverTime": "Test results over time",
+      "recordDetails": "Record details",
+      "serviceSearchPlaceholder": "Search service names…",
+      "clearSearch": "Clear search",
+      "serviceRecordsTitle": "Service records: {service}",
       "loadingMessage": "Report is getting ready…",
       "selectPatientAndPeriod": "Select Patient and Time Period",
       "nationalNumber": "National Number",
@@ -429,6 +449,7 @@
   "/console/saderat-bank-health-monitoring": {
     "UploadSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "Upload Excel",
+      "NoSupportedTypes": "No report type with a detail view is available for Excel upload.",
       "Form": {
         "NameLabel": "Name",
         "NamePlaceholder": "Enter name",
@@ -447,6 +468,8 @@
     },
     "SaderatBankHealthMonitoringPage": {
       "UploadExcel": "Upload Excel",
+      "PageDescription": "Review uploaded Bank monitoring reports. Excel upload supports the report types shown in the form.",
+      "UnsupportedDetail": "Detail view unavailable for this report type",
       "Loading": "Loading…",
       "ErrorTitle": "Error loading data",
       "EmptyStateTitle": "No data available",

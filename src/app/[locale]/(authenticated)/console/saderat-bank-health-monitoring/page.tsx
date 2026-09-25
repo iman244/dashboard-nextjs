@@ -5,6 +5,7 @@ import React from "react";
 import UploadSaderatBankHealthMonitoringExcelDialog from "./_upload-excel-dialog/dialog";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import {
@@ -85,6 +86,11 @@ const SaderatBankHealthMonitoringPage = () => {
                 href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
               />
             )}
+            {!isKnownSBHM_Type(row.original.type) && (
+              <span className="text-xs text-muted-foreground">
+                {t("UnsupportedDetail")}
+              </span>
+            )}
             {isStaff && (
               <RowAction
                 icon={Trash}
@@ -105,7 +111,9 @@ const SaderatBankHealthMonitoringPage = () => {
   const withHeader = (body: React.ReactNode) => (
     <div className="space-y-4">
       <PageHeader
+        breadcrumbs={<ConsoleBreadcrumbs />}
         title={t("PageTitle")}
+        description={t("PageDescription")}
         actions={
           isStaff ? (
             <UploadSaderatBankHealthMonitoringExcelDialog

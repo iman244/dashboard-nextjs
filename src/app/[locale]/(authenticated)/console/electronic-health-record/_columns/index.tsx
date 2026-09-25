@@ -3,18 +3,11 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { type AppTableFeatures } from "@/components/app/table-features";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { formatCellValue } from "@/lib/utils";
-import { MoreHorizontal, Eye, BarChart3 } from "lucide-react";
+import { Eye, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useRouter } from "@/i18n/navigation";
 import { format, subYears } from "date-fns-jalali";
 import { useElectronicHealthRecord } from "../provider";
-import { useIsRtl } from "@/lib/use-direction";
 import { useTranslations } from "next-intl";
 
 const columnHelper = createColumnHelper<AppTableFeatures, ElectronicHealthRecord>();
@@ -40,7 +33,6 @@ export const useEHRColumns = ({
   // key on screen and still passes tsc and lint.
   const tField = useTranslations("common.dictionary");
   const { filters } = useElectronicHealthRecord();
-  const isRtl = useIsRtl();
 
   const handlePatientReport = React.useCallback(
     (record: ElectronicHealthRecord) => {
@@ -121,34 +113,20 @@ export const useEHRColumns = ({
           const record = row.original;
 
           return (
-            <DropdownMenu dir={isRtl ? "rtl" : "ltr"}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">{tDictionary("OpenMenu")}</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  onClick={() => onViewDetails?.(record)}
-                  className="cursor-pointer"
-                >
-                  <Eye aria-hidden="true" className="me-2 h-4 w-4" />
-                  {tDictionary("ViewDetails")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handlePatientReport(record)}
-                  className="cursor-pointer"
-                >
-                  <BarChart3 aria-hidden="true" className="me-2 h-4 w-4" />
-                  {tDictionary("PatientReport")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex flex-wrap items-center gap-1">
+              <Button variant="ghost" size="sm" onClick={() => onViewDetails?.(record)}>
+                <Eye aria-hidden="true" className="me-1 size-4" />
+                {tDictionary("ViewDetails")}
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handlePatientReport(record)}>
+                <BarChart3 aria-hidden="true" className="me-1 size-4" />
+                {tDictionary("PatientReport")}
+              </Button>
+            </div>
           );
         },
       }),
     ]),
-    [locale, onViewDetails, handlePatientReport, isRtl, tDictionary, tField]
+    [locale, onViewDetails, handlePatientReport, tDictionary, tField]
   );
 };

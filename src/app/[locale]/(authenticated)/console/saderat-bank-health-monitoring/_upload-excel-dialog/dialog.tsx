@@ -29,6 +29,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { LIST_SBHM_QUERY_KEY } from "@/data/saderat-bank-health-monitoring/api";
 import { useUploadExcelApi } from "@/data/saderat-bank-health-monitoring/api/upload-excel";
 import { useList_MonitoringType_API } from "@/data/monitoring-type/api";
+import { isKnownSBHM_Type } from "@/data/saderat-bank-health-monitoring/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
@@ -59,6 +60,9 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
   const tTypes = useTranslations("/console/monitorings.MonitoringTypesPage");
   const { data: monitoringTypes, isPending: typesPending, error: typesError } =
     useList_MonitoringType_API({ enabled: open });
+  const reportTypes = monitoringTypes?.filter((type) =>
+    isKnownSBHM_Type(type.slug)
+  );
 
   const { mutate: uploadExcel, isPending } = useUploadExcelApi();
   const form = useForm<FormValues>({
@@ -165,7 +169,7 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                   <Select
                     onValueChange={field.onChange}
                     value={field.value ?? ""}
-                    disabled={typesPending || !!typesError || !monitoringTypes?.length}
+                    disabled={typesPending || !!typesError || !reportTypes?.length}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -173,7 +177,7 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {monitoringTypes?.map((type) => (
+                      {reportTypes?.map((type) => (
                         <SelectItem key={type.id} value={type.slug}>
                           {locale === "fa" ? type.name_fa : type.name_en}
                         </SelectItem>
@@ -182,8 +186,8 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                   </Select>
                   {typesPending && <p role="status">{tLoading("monitoringTypes")}</p>}
                   {typesError && <p role="alert">{tTypes("ErrorTitle")}</p>}
-                  {!typesPending && !typesError && !monitoringTypes?.length && (
-                    <p role="status">{tTypes("EmptyStateDescriptionDetail")}</p>
+                  {!typesPending && !typesError && !reportTypes?.length && (
+                    <p role="status">{t("NoSupportedTypes")}</p>
                   )}
                   <FormMessage />
                 </FormItem>
@@ -207,7 +211,7 @@ const UploadSaderatBankHealthMonitoringExcelDialog = ({
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending || typesPending || !!typesError || !monitoringTypes?.length} aria-busy={isPending}>
+            <Button type="submit" disabled={isPending || typesPending || !!typesError || !reportTypes?.length} aria-busy={isPending}>
               {isPending && <Spinner />}
               {t("Form.UploadButton")}
             </Button>
