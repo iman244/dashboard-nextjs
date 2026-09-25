@@ -270,8 +270,12 @@
   "/console": {
     "ConsoleHome": {
       "title": "Dashboard",
-      "subtitle": "Choose a section to get started.",
+      "subtitle": "Choose the task you need to complete.",
+      "tasksLabel": "Console tasks",
       "descriptions": {
+        "home": "Return to console tasks",
+        "findPatient": "Search electronic health records by patient",
+        "recordMonitoring": "Choose a monitoring type and work with patient entries",
         "electronicHealthRecord": "Search and browse patient health records",
         "periodicalReports": "Generate comprehensive reports for time periods",
         "patientReports": "Generate comprehensive reports for patients",
@@ -282,6 +286,10 @@
     },
     "ConsoleSidebar": {
       "dashboard": "Dashboard",
+      "home": "Console home",
+      "findPatient": "Find a patient",
+      "recordMonitoring": "Record monitoring",
+      "groups": {"find": "Find", "record": "Record", "review": "Review reports", "administration": "Administration"},
       "electronicHealthRecord": "Electronic Health Record",
       "periodicalReports": "Periodical Reports",
       "patientReports": "Patient Reports",
@@ -532,6 +540,21 @@
       }
     }
   },
+  "/console/record-monitoring": {
+    "title": "Record monitoring",
+    "description": "Choose a monitoring type to view its patient entries or add a record.",
+    "loading": "Loading monitoring types…",
+    "errorTitle": "Monitoring types could not be loaded",
+    "errorDescription": "Check your connection and try again.",
+    "retry": "Try again",
+    "emptyTitle": "No monitoring types yet",
+    "emptyStaff": "Create a monitoring type to start recording.",
+    "emptyViewer": "Ask an administrator to create a monitoring type.",
+    "createType": "New type",
+    "ready": "Form ready for entries",
+    "noFields": "No form fields yet; entries cannot be added",
+    "viewEntries": "View entries"
+  },
   "/console/monitorings": {
     "MonitoringTypesPage": {
       "PageTitle": "Monitoring Types",
@@ -626,6 +649,7 @@
       "Deleted": "Record deleted.",
       "DeleteFailed": "The record could not be deleted.",
       "BackToMonitorings": "Back to monitorings",
+      "BackToRecordMonitoring": "Choose a monitoring type",
       "BackToRecords": "Back to records",
       "SaveChanges": "Save changes",
       "Saved": "Record saved.",
@@ -774,6 +798,10 @@
     "saderatBankHealthMonitoring": {
       "title": "Saderat Bank Health Monitoring",
       "description": "Uploaded datasets and their step reports."
+    },
+    "recordMonitoring": {
+      "title": "Record Monitoring",
+      "description": "Choose a monitoring type and work with patient entries."
     },
     "monitorings": {
       "title": "Monitorings",

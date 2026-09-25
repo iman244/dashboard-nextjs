@@ -270,8 +270,12 @@
   "/console": {
     "ConsoleHome": {
       "title": "داشبورد",
-      "subtitle": "برای شروع، یکی از بخش‌های زیر را انتخاب کنید.",
+      "subtitle": "کاری را که می‌خواهید انجام دهید انتخاب کنید.",
+      "tasksLabel": "کارهای کنسول",
       "descriptions": {
+        "home": "بازگشت به کارهای کنسول",
+        "findPatient": "جستجوی پرونده سلامت بیمار",
+        "recordMonitoring": "انتخاب نوع پایش و کار با رکوردهای بیماران",
         "electronicHealthRecord": "جستجو و مرور سوابق پزشکی بیماران",
         "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
         "patientReports": "تولید گزارشات جامع برای بیماران",
@@ -282,6 +286,10 @@
     },
     "ConsoleSidebar": {
       "dashboard": "داشبورد",
+      "home": "خانه کنسول",
+      "findPatient": "یافتن بیمار",
+      "recordMonitoring": "ثبت پایش",
+      "groups": {"find": "یافتن", "record": "ثبت", "review": "بررسی گزارش‌ها", "administration": "مدیریت"},
       "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
       "periodicalReports": "گزارشات دوره‌ای",
       "patientReports": "گزارشات بیمار",
@@ -532,6 +540,21 @@
       }
     }
   },
+  "/console/record-monitoring": {
+    "title": "ثبت پایش",
+    "description": "نوع پایش را برای دیدن رکوردهای بیماران یا افزودن رکورد انتخاب کنید.",
+    "loading": "در حال بارگذاری انواع پایش…",
+    "errorTitle": "انواع پایش بارگذاری نشد",
+    "errorDescription": "اتصال را بررسی کنید و دوباره تلاش کنید.",
+    "retry": "تلاش دوباره",
+    "emptyTitle": "هنوز نوع پایشی وجود ندارد",
+    "emptyStaff": "برای شروع ثبت، یک نوع پایش بسازید.",
+    "emptyViewer": "از مدیر بخواهید یک نوع پایش بسازد.",
+    "createType": "نوع جدید",
+    "ready": "فرم آماده ثبت رکورد است",
+    "noFields": "هنوز فیلدی ندارد؛ امکان افزودن رکورد نیست",
+    "viewEntries": "دیدن رکوردها"
+  },
   "/console/monitorings": {
     "MonitoringTypesPage": {
       "PageTitle": "انواع پایش",
@@ -626,6 +649,7 @@
       "Deleted": "رکورد حذف شد.",
       "DeleteFailed": "حذف رکورد انجام نشد.",
       "BackToMonitorings": "بازگشت به پایش‌ها",
+      "BackToRecordMonitoring": "انتخاب نوع پایش",
       "BackToRecords": "بازگشت به رکوردها",
       "SaveChanges": "ذخیرهٔ تغییرات",
       "Saved": "رکورد ذخیره شد.",
@@ -774,6 +798,10 @@
     "saderatBankHealthMonitoring": {
       "title": "پایش سلامت بانک صادرات",
       "description": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای."
+    },
+    "recordMonitoring": {
+      "title": "ثبت پایش",
+      "description": "نوع پایش را انتخاب کنید و رکوردهای بیماران را ببینید."
     },
     "monitorings": {
       "title": "پایش‌ها",
