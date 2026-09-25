@@ -1,6 +1,7 @@
 "use client";
 
 import { use } from "react";
+import { StaffOnly } from "@/components/app/staff-only";
 import { TypeForm } from "../../_builder/type-form";
 
 const EditMonitoringTypePage = ({
@@ -9,7 +10,11 @@ const EditMonitoringTypePage = ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = use(params);
-  return <TypeForm id={Number(id)} />;
+  return (
+    <StaffOnly>
+      <TypeForm id={Number(id)} />
+    </StaffOnly>
+  );
 };
 
 export default EditMonitoringTypePage;

@@ -186,6 +186,10 @@
       "Previous": "Previous image",
       "Next": "Next image",
       "OpenOriginal": "Open original"
+    },
+    "StaffOnly": {
+      "Title": "Staff only",
+      "Description": "Only staff users can add or change this. Ask an administrator if you need access."
     }
   },
   "/": {

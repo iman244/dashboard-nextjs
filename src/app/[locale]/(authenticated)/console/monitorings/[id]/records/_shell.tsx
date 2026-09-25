@@ -7,9 +7,13 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
 import { LoadingState } from "@/components/app/loading-state";
+import { StaffOnly } from "@/components/app/staff-only";
 import { Link } from "@/i18n/navigation";
 
-/** Header, back link and the loading / not-found states both pages share. */
+/**
+ * Header, back link and the loading / not-found states both pages share.
+ * Both pages change a record, so their content is staff-only.
+ */
 export const RecordShell = ({
   monitoringId,
   title,
@@ -43,14 +47,14 @@ export const RecordShell = ({
         }
       />
       {loading ? (
-        <LoadingState label={tLoading("Loading")} />
+        <LoadingState label={tLoading("record")} />
       ) : missing ? (
         <Alert variant="destructive">
           <AlertCircle className="size-4" aria-hidden="true" />
           <AlertTitle>{t("RecordNotFound")}</AlertTitle>
         </Alert>
       ) : (
-        children
+        <StaffOnly>{children}</StaffOnly>
       )}
     </div>
   );

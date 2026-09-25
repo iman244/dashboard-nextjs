@@ -23,6 +23,7 @@ import { useList_PatientEntry_API } from "@/data/patient-entry/api/list";
 import { asFieldSchema } from "@/components/schema-form";
 import { formatDate, localeDigits } from "@/lib/utils";
 import type { PatientEntry } from "@/data/patient-entry/types";
+import { useIsStaff } from "@/data/user/fetches/me";
 import { DeleteRecordDialog } from "./_delete-dialog";
 
 /**
@@ -40,6 +41,9 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const tDictionary = useTranslations("common.Dictionary");
   const tLoading = useTranslations("common.Loading");
   const locale = useLocale();
+  // Records are readable by everyone signed in; adding, editing and deleting
+  // are staff-only, as Django enforces.
+  const isStaff = useIsStaff();
 
   const [deleting, setDeleting] = React.useState<PatientEntry | null>(null);
 
@@ -62,7 +66,7 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
   const body = () => {
     if (types.isPending || records.isPending) {
-      return <LoadingState label={tLoading("Loading")} />;
+      return <LoadingState label={tLoading("records")} />;
     }
 
     if (!monitoring) {
@@ -112,7 +116,7 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
               <TableHead>{t("NationalIdColumn")}</TableHead>
               <TableHead>{t("FilesColumn")}</TableHead>
               <TableHead>{t("UpdatedColumn")}</TableHead>
-              <TableHead>{tDictionary("Actions")}</TableHead>
+              {isStaff ? <TableHead>{tDictionary("Actions")}</TableHead> : null}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -130,20 +134,22 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
                     locale
                   )}
                 </TableCell>
-                <TableCell>
-                  <RowActions>
-                    <RowAction
-                      icon={Pencil}
-                      label={t("EditRecord")}
-                      href={`/console/monitorings/${monitoringId}/records/${record.id}/edit`}
-                    />
-                    <RowAction
-                      icon={Trash}
-                      label={t("DeleteRecord")}
-                      onClick={() => setDeleting(record)}
-                    />
-                  </RowActions>
-                </TableCell>
+                {isStaff ? (
+                  <TableCell>
+                    <RowActions>
+                      <RowAction
+                        icon={Pencil}
+                        label={t("EditRecord")}
+                        href={`/console/monitorings/${monitoringId}/records/${record.id}/edit`}
+                      />
+                      <RowAction
+                        icon={Trash}
+                        label={t("DeleteRecord")}
+                        onClick={() => setDeleting(record)}
+                      />
+                    </RowActions>
+                  </TableCell>
+                ) : null}
               </TableRow>
             ))}
           </TableBody>
@@ -168,7 +174,7 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
                 {t("BackToMonitorings")}
               </Link>
             </Button>
-            {declaresFields ? (
+            {declaresFields && isStaff ? (
               // A page, not a dialog: a form with sections and image uploads
               // needs the room, and the URL can be shared or reopened.
               <Button asChild>
@@ -184,7 +190,7 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
       {body()}
 
-      {monitoring ? (
+      {monitoring && isStaff ? (
         <>
           <DeleteRecordDialog
             record={deleting ?? undefined}
