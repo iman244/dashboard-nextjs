@@ -85,6 +85,11 @@ const SaderatBankHealthMonitoringPage = () => {
                 href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
               />
             )}
+            {!isKnownSBHM_Type(row.original.type) && (
+              <span className="text-xs text-muted-foreground">
+                {t("UnsupportedDetail")}
+              </span>
+            )}
             {isStaff && (
               <RowAction
                 icon={Trash}
@@ -106,6 +111,7 @@ const SaderatBankHealthMonitoringPage = () => {
     <div className="space-y-4">
       <PageHeader
         title={t("PageTitle")}
+        description={t("PageDescription")}
         actions={
           isStaff ? (
             <UploadSaderatBankHealthMonitoringExcelDialog

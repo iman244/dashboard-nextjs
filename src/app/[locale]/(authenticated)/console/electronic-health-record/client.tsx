@@ -16,7 +16,6 @@ import { EHRFilter } from "./_components/ehr-filter";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { formatNumber, formatDate } from "@/lib/utils";
 import { useElectronicHealthRecord } from "./provider";
-import { Badge } from "@/components/ui/badge";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 
 const Client = () => {
@@ -73,6 +72,7 @@ const Client = () => {
     <div className="space-y-4 h-full flex flex-col">
       <PageHeader
         title={t("title")}
+        description={t("description")}
         actions={
           <>
             <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
@@ -88,7 +88,7 @@ const Client = () => {
                   ehrByNationalNumber_m.isPending ? "animate-spin" : ""
                 }`}
               />
-              <span>بروزرسانی</span>
+              <span>{t("refresh")}</span>
             </Button>
           </>
         }
@@ -96,34 +96,39 @@ const Client = () => {
 
       {(filters.nationalNumber ||
         filters.dateRange?.from ||
-        filters.dateRange?.to) && (
+        filters.dateRange?.to ||
+        filters.patientType) && (
         // flex-wrap per ux-guidelines #115: a chip collection must reflow,
         // not clip, when space or text size changes.
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-medium text-foreground">فیلترها</span>
+          <span className="text-sm font-medium text-foreground">{t("activeFilters")}</span>
           {filters.nationalNumber && (
-            <Badge
-              variant={"secondary"}
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
               onClick={() => setFilters({ ...filters, nationalNumber: "" })}
-              className="cursor-pointer"
+              aria-label={t("removeNationalNumber")}
             >
-              <XIcon className="w-4 h-4" />
-              <span>شماره ملی: {filters.nationalNumber}</span>
-            </Badge>
+              <XIcon aria-hidden="true" className="size-4" />
+              <span>{t("nationalNumberFilter")}: {fmt(filters.nationalNumber)}</span>
+            </Button>
           )}
           {filters.dateRange?.from && filters.dateRange.to && (
-            <Badge
-              variant={"secondary"}
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
               onClick={() =>
                 setFilters({
                   ...filters,
                   dateRange: { from: undefined, to: undefined },
                 })
               }
-              className="cursor-pointer"
+              aria-label={t("removeDateRange")}
             >
-              <XIcon className="w-4 h-4" />
-              <span>بازه تاریخ:</span>
+              <XIcon aria-hidden="true" className="size-4" />
+              <span>{t("dateRangeFilter")}:</span>
               <span>
                 {fmt(
                   `${formatDate(
@@ -132,17 +137,19 @@ const Client = () => {
                   )} - ${formatDate(filters.dateRange?.to, locale)}`
                 )}
               </span>
-            </Badge>
+            </Button>
           )}
           {filters.patientType && (
-            <Badge
-              variant={"secondary"}
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
               onClick={() => setFilters({ ...filters, patientType: "" })}
-              className="cursor-pointer"
+              aria-label={t("removePatientType")}
             >
-              <XIcon className="w-4 h-4" />
-              <span>نوع بیمار: {tPatientTypes(filters.patientType)}</span>
-            </Badge>
+              <XIcon aria-hidden="true" className="size-4" />
+              <span>{t("patientTypeFilter")}: {tPatientTypes(filters.patientType)}</span>
+            </Button>
           )}
         </div>
       )}
