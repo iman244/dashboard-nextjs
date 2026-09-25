@@ -7,6 +7,7 @@ import { useTable } from "@tanstack/react-table";
 import { appTableFeatures } from "@/components/app/table-features";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { RefreshCw, XIcon } from "lucide-react";
 
 import { useEHRColumns } from "./_columns";
@@ -71,6 +72,7 @@ const Client = () => {
   return (
     <div className="space-y-4 h-full flex flex-col">
       <PageHeader
+        breadcrumbs={<ConsoleBreadcrumbs />}
         title={t("title")}
         description={t("description")}
         actions={

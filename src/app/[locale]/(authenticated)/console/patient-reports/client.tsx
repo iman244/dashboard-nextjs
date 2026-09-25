@@ -35,6 +35,7 @@ import { Line, XAxis, YAxis, CartesianGrid, ReferenceArea, ComposedChart } from 
 import { format, newDate } from "date-fns-jalali";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { PatientRecordsSection } from "@/components/app/patient-records-section";
 
 interface ServiceCountData {
@@ -298,6 +299,7 @@ const Client = (props: {
   const tLoading = useTranslations("common.Loading");
   const tData = useTranslations("common.data");
   const tDictionary = useTranslations("common.Dictionary");
+  const tEhr = useTranslations("/console/electronic-health-record.EHRTable");
   const {
     ehrByNationalNumber_m,
     mobileLaboratoryByNationalNumber_m,
@@ -494,7 +496,15 @@ const Client = (props: {
 
   return (
     <div className="mt-2 space-y-4">
-      <PageHeader title={t("title")} description={t("description")} />
+      <PageHeader
+        breadcrumbs={
+          <ConsoleBreadcrumbs
+            parent={{ href: "/console/electronic-health-record", label: tEhr("title") }}
+          />
+        }
+        title={t("title")}
+        description={t("description")}
+      />
       <div className="flex items-center gap-2">
         <PatientReportsForm
           initialValues={props.initialValues}
