@@ -16,48 +16,46 @@ import { useDirection, useIsRtl } from "@/lib/use-direction";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NavUser } from "./nav-user";
 import { useConsoleNavItems } from "../_nav/use-console-nav-items";
+import { CONSOLE_NAV_GROUPS, isConsoleNavItemActive } from "../_nav/items";
 
 export function AppSidebar() {
   const pathname = usePathname();
   const navItems = useConsoleNavItems();
-
   const t = useTranslations("/console.ConsoleSidebar");
-  const isRtl = useIsRtl();
-  // The sidebar sits on the reading-start edge.
-  const side = isRtl ? "right" : "left";
+  const side = useIsRtl() ? "right" : "left";
   const dir = useDirection();
-
 
   return (
     <Sidebar side={side}>
       <SidebarContent dir={dir}>
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("dashboard")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild isActive={pathname === item.url}>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{t(item.titleKey)}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {CONSOLE_NAV_GROUPS.map((group) => {
+          const items = navItems.filter((item) => item.group === group);
+          if (!items.length) return null;
+          return (
+            <SidebarGroup key={group}>
+              {group !== "home" && <SidebarGroupLabel>{t(`groups.${group}`)}</SidebarGroupLabel>}
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {items.map((item) => {
+                    const active = isConsoleNavItemActive(item, pathname);
+                    return (
+                      <SidebarMenuItem key={item.url}>
+                        <SidebarMenuButton asChild isActive={active}>
+                          <Link href={item.url} aria-current={active ? "page" : undefined}>
+                            <item.icon />
+                            <span>{t(item.titleKey)}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          );
+        })}
       </SidebarContent>
-      {/* Language and appearance used to sit here as a labelled pair. They
-          live in the account menu now: a signed-in user looks for their own
-          preferences under their own name, and a menu row can report which
-          language and theme are currently active — a bare toggle button cannot
-          say whether its label is the current state or the destination. The
-          footer also stops competing with the nav for vertical space. */}
-      <SidebarFooter dir={dir}>
-        <NavUser />
-      </SidebarFooter>
+      <SidebarFooter dir={dir}><NavUser /></SidebarFooter>
     </Sidebar>
   );
 }

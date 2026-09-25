@@ -166,12 +166,12 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
         actions={
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/console/monitorings">
+              <Link href="/console/record-monitoring">
                 <ArrowLeft
                   className="size-4 rtl:rotate-180"
                   aria-hidden="true"
                 />
-                {t("BackToMonitorings")}
+                {t("BackToRecordMonitoring")}
               </Link>
             </Button>
             {declaresFields && isStaff ? (
