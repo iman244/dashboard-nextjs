@@ -3,7 +3,9 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, TriangleAlert } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { isKnownSBHM_Type } from "@/data/saderat-bank-health-monitoring/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -99,6 +101,11 @@ const TypeFormBody = ({
   t: ReturnType<typeof useTranslations<"/console/monitorings.Builder">>;
 }) => {
   const [slug, setSlug] = React.useState(initialSlug);
+  // The dashboard routes step_1 and step_2 reports by slug, so renaming one
+  // leaves those reports with no detail page. Warn, do not block: Django
+  // allows it on purpose, and it may be a typo fix on an unused type.
+  const renamingRoutedType =
+    isKnownSBHM_Type(initialSlug) && slug !== initialSlug;
   const [nameFa, setNameFa] = React.useState(initialNameFa);
   const [nameEn, setNameEn] = React.useState(initialNameEn);
   const [schema, setSchema] = React.useState<FieldSchema>(initialSchema);
@@ -209,6 +216,16 @@ const TypeFormBody = ({
               />
             </div>
           </div>
+
+          {renamingRoutedType ? (
+            <Alert variant="destructive">
+              <TriangleAlert className="size-4" aria-hidden="true" />
+              <AlertTitle>{t("SlugRenameWarningTitle")}</AlertTitle>
+              <AlertDescription>
+                {t("SlugRenameWarning", { slug: initialSlug })}
+              </AlertDescription>
+            </Alert>
+          ) : null}
 
           <SchemaBuilder schema={schema} onChange={setSchema} />
 

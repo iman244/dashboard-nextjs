@@ -112,8 +112,30 @@ export const RecordForm = ({
   // Digits only and never longer than ten, enforced as it is typed: the
   // server caps it at ten, and a longer value used to fail only at upload.
   const [nationalId, setNationalId] = React.useState(entry?.national_id ?? "");
+  // A national ID is always ten digits. Checked before anything uploads, so a
+  // short one cannot leave images in storage for a record Django will refuse.
+  // An existing record's ID is read-only and was accepted when it was made.
+  const nationalIdComplete = entry !== undefined || nationalId.length === 10;
   const [values, setValues] = React.useState<SchemaFormValues>(() =>
     initialValues(entry)
+  );
+
+  // Picked images preview through blob: URLs, which hold the file in memory
+  // until revoked. Removing a tile revokes its own; leaving the page must
+  // revoke the rest. A ref, because the cleanup needs the latest images.
+  const latestImages = React.useRef(values.images);
+  React.useEffect(() => {
+    latestImages.current = values.images;
+  }, [values.images]);
+  React.useEffect(
+    () => () => {
+      for (const list of Object.values(latestImages.current)) {
+        for (const image of list) {
+          if (image.url?.startsWith("blob:")) URL.revokeObjectURL(image.url);
+        }
+      }
+    },
+    []
   );
   const [attempted, setAttempted] = React.useState(false);
   const [phase, setPhase] = React.useState<"idle" | "uploading" | "saving">(
@@ -226,7 +248,7 @@ export const RecordForm = ({
     event.preventDefault();
     if (busy) return;
     setAttempted(true);
-    if (!nationalId || formProblems(schema, values).length > 0) {
+    if (!nationalIdComplete || formProblems(schema, values).length > 0) {
       toast.error(t("FixErrors"));
       return;
     }
@@ -299,8 +321,13 @@ export const RecordForm = ({
     save(final);
   };
 
-  const nationalIdProblem =
-    attempted && !nationalId ? t("NationalIdRequired") : null;
+  const nationalIdProblem = !attempted
+    ? null
+    : !nationalId
+      ? t("NationalIdRequired")
+      : !nationalIdComplete
+        ? t("NationalIdLength")
+        : null;
 
   return (
     <form onSubmit={onSubmit} className="max-w-2xl space-y-8" noValidate>

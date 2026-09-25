@@ -603,7 +603,9 @@
       "FieldNeedsLabels": "Every field needs both a Persian and an English label.",
       "MinAboveMax": "“{field}” has a minimum longer than its maximum.",
       "DuplicateFieldKey": "Two fields share the same key. Keys must be unique.",
-      "InvalidFieldKey": "A field key must start with a letter and use only a-z, 0-9 and _."
+      "InvalidFieldKey": "A field key must start with a letter and use only a-z, 0-9 and _.",
+      "SlugRenameWarningTitle": "This slug has a view in the dashboard",
+      "SlugRenameWarning": "Reports filed under “{slug}” open a detail page keyed on that slug. Renaming it leaves them with no detail page until the dashboard is updated to match."
     },
     "Records": {
       "PageTitle": "Records",
@@ -638,7 +640,8 @@
       "UploadingProgress": "Uploading {done} of {total}…",
       "Saving": "Saving…",
       "UploadsFailed": "{n} image(s) failed to upload. Nothing was saved — retry or remove them.",
-      "StorageUnreachable": "Storage could not be reached."
+      "StorageUnreachable": "Storage could not be reached.",
+      "NationalIdLength": "A national ID has 10 digits."
     }
   },
   "/patient/sign-in": {
