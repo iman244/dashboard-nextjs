@@ -198,26 +198,16 @@
     },
     "HomePage": {
       "title": "Welcome",
-      "description": "Clinical data console to explore EHRs, run periodical analytics, and build patient-specific reports.",
+      "description": "Choose how you access health records.",
+      "choosePath": "Where would you like to go?",
       "buttons": {
-        "goToConsole": "Go to Console",
+        "goToConsole": "Staff console",
         "signInRegister": "Sign In / Register",
-        "patientSignIn": "I'm a patient"
+        "patientSignIn": "Patient records"
       },
-      "features": {
-        "ehr": {
-          "title": "Electronic Health Records",
-          "description": "Search and filter clinical records with sortable tables and detail views."
-        },
-        "periodical": {
-          "title": "Periodical Reports",
-          "description": "Visualize trends with charts for records and patients over time."
-        },
-        "patient": {
-          "title": "Patient Reports",
-          "description": "Aggregate services per patient and drill down into result trends."
-        },
-        "cta": "Get started"
+      "staffWork": {
+        "title": "Inside the staff console",
+        "description": "Find a patient, record monitoring information, and review clinical and periodical reports."
       }
     }
   },
@@ -402,6 +392,8 @@
       "errorMessage": "Error loading report data",
       "chartTitle": "Records Count by Date",
       "patientChartTitle": "Patient Count by Date",
+      "patientDateRangeTitle": "Patient reports for the selected date range",
+      "serviceResultsTitle": "Services and result counts",
       "serviceChartTitle": "Service Distribution",
       "debugData": "Debug Data",
       "noDataAvailable": "No data available",
@@ -443,7 +435,11 @@
       "columnServiceCount": "Times recorded",
       "columnNormalResults": "Normal results",
       "columnAbnormalResults": "Abnormal results",
-      "noLabResult": "No lab result"
+      "noLabResult": "No lab result",
+      "noServices": "No services found",
+      "searchService": "Search service names…",
+      "clearSearch": "Clear search",
+      "serviceRecordsTitle": "Service records: {service}"
     }
   },
   "/console/saderat-bank-health-monitoring": {
