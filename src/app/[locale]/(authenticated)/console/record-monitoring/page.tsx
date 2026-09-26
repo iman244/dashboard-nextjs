@@ -9,13 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { asFieldSchema } from "@/components/schema-form";
 import { useList_MonitoringType_API } from "@/data/monitoring-type/api/list";
-import { useIsStaff } from "@/data/user/fetches/me";
+import { useMe_API } from "@/data/user/fetches/me";
 
 export default function RecordMonitoringPage() {
   const t = useTranslations("/console/record-monitoring");
   const locale = useLocale();
-  const isStaff = useIsStaff();
-  const { data, isPending, error, refetch } = useList_MonitoringType_API();
+  const { data: user, isPending: userPending } = useMe_API();
+  const isStaff = user?.is_staff === true;
+  const { data, isPending, error, refetch } = useList_MonitoringType_API({ enabled: isStaff });
 
   return (
     <div className="space-y-6">
@@ -28,7 +29,13 @@ export default function RecordMonitoringPage() {
           </Button>
         ) : undefined}
       />
-      {isPending ? <LoadingState label={t("loading")} /> : error ? (
+      {userPending ? <LoadingState label={t("loading")} /> : !isStaff ? (
+        <Alert>
+          <AlertCircle aria-hidden="true" className="size-4" />
+          <AlertTitle>{t("accessDeniedTitle")}</AlertTitle>
+          <AlertDescription>{t("accessDeniedDescription")}</AlertDescription>
+        </Alert>
+      ) : isPending ? <LoadingState label={t("loading")} /> : error ? (
         <Alert variant="destructive">
           <AlertCircle aria-hidden="true" className="size-4" />
           <AlertTitle>{t("errorTitle")}</AlertTitle>

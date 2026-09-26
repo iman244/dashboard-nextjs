@@ -564,6 +564,8 @@
     }
   },
   "/console/record-monitoring": {
+    "accessDeniedTitle": "Staff access required",
+    "accessDeniedDescription": "Ask an administrator for access to monitoring records.",
     "title": "Record monitoring",
     "description": "Choose a monitoring type to view its patient entries or add a record.",
     "loading": "Loading monitoring types…",

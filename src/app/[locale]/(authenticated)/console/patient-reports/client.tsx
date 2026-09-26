@@ -37,6 +37,7 @@ import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
 import { PageHeader } from "@/components/app/page-header";
 import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { PatientRecordsSection } from "@/components/app/patient-records-section";
+import { useIsStaff } from "@/data/user/fetches/me";
 
 interface ServiceCountData {
   serviceName: string;
@@ -300,6 +301,7 @@ const Client = (props: {
   const tData = useTranslations("common.data");
   const tDictionary = useTranslations("common.Dictionary");
   const tEhr = useTranslations("/console/electronic-health-record.EHRTable");
+  const isStaff = useIsStaff();
   const {
     ehrByNationalNumber_m,
     mobileLaboratoryByNationalNumber_m,
@@ -586,10 +588,12 @@ const Client = (props: {
       {/* Outside the EHR block on purpose: what operators recorded here does
           not depend on the upstream EHR answering. Renders nothing unless the
           filter names one patient -- or the URL does, before any search. */}
-      <PatientRecordsSection
-        nationalId={filters.nationalNumber || props.initialValues.nationalNumber}
-        authorized
-      />
+      {isStaff && (
+        <PatientRecordsSection
+          nationalId={filters.nationalNumber || props.initialValues.nationalNumber}
+          authorized
+        />
+      )}
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="bottom" className="max-h-[100dvh]">
