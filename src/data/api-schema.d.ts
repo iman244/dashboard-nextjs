@@ -64,6 +64,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/patient/jwt/create/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["auth_patient_jwt_create_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/users/": {
         parameters: {
             query?: never;
@@ -434,14 +450,26 @@ export interface paths {
         };
         /**
          * A patient's records across every monitoring
-         * @description Everything recorded for one patient, for display.
-         *
-         *     Open to anonymous callers because the patient portal has no sign-in of
-         *     its own (the upstream EHR it fronts takes no credentials either). The
-         *     national ID is therefore the only key: this never answers without a
-         *     well-formed one, and anonymous callers are throttled.
+         * @description Staff-only lookup across monitorings for a supplied national ID.
          */
         get: operations["saderat_bank_health_monitoring_patient_records_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/saderat-bank-health-monitoring/patient-records/me/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The authenticated patient’s own monitoring records */
+        get: operations["saderat_bank_health_monitoring_patient_records_me_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -557,6 +585,14 @@ export interface components {
             readonly files: components["schemas"]["PatientEntryFile"][];
             /** Format: date-time */
             readonly updated_at: string;
+        };
+        PatientToken: {
+            readonly access: string;
+            readonly refresh: string;
+        };
+        PatientTokenRequest: {
+            national_id: string;
+            password: string;
         };
         /** @description What the browser must state before Django will sign anything. */
         PresignRequestRequest: {
@@ -776,6 +812,31 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    auth_patient_jwt_create_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PatientTokenRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatientTokenRequest"];
+                "multipart/form-data": components["schemas"]["PatientTokenRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientToken"];
+                };
             };
         };
     };
@@ -1741,8 +1802,62 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Too many anonymous requests. */
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Staff access required. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests. */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_records_me_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientRecord"][];
+                };
+            };
+            /** @description Patient selection is not accepted. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A patient identity is required. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
