@@ -1,5 +1,10 @@
 {
   "common": {
+    "StaffAccess": {
+      "checking": "Checking access…",
+      "title": "Staff access required",
+      "description": "Ask an administrator for access to this section."
+    },
     "Navigation": {
       "backToHome": "Back to home",
       "toggleSidebar": "Toggle sidebar"
