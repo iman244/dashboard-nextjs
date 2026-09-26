@@ -2,6 +2,9 @@
   "common": {
     "StaffAccess": {
       "checking": "Checking access…",
+      "checkFailedTitle": "Could not check access",
+      "checkFailedDescription": "The account service did not respond.",
+      "retry": "Try again",
       "title": "Staff access required",
       "description": "Ask an administrator for access to this section."
     },
