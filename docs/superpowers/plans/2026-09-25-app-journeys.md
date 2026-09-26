@@ -10,6 +10,8 @@
 
 **Spec:** `docs/superpowers/specs/2026-09-25-app-journeys-design.md`
 
+**Execution status:** Implemented on local `green` in both repositories. See `docs/superpowers/plans/2026-09-25-app-journeys-progress.md` for merged commits, verification, and release dependencies. The checklists below preserve the original execution plan; the progress file records the actual result.
+
 ## Global Constraints
 
 - Work only on feature branches from local `green`, merge each accepted slice into local `green`; leave `main` unchanged.

@@ -37,7 +37,7 @@ Existing URLs and records remain valid. `/console/record-monitoring` is a new ta
 ## Interaction and states
 
 - The console home and sidebar share one ordered task map. The primary action is Find a patient. Sections separate finding, reviewing, recording, and administration. Nested routes highlight the owning task; `/console/monitorings/[id]/records...` belongs to Record monitoring.
-- The monitoring chooser lists types with localized names and schema capability, and handles loading, empty, error, and no field schema. Staff can reach creation; readers can reach existing entries according to their existing permissions.
+- The monitoring chooser lists types with localized names and schema capability, and handles loading, empty, error, and no field schema. Django now restricts monitoring records and Bank reports to staff; the console hides these destinations from other accounts and guards direct routes.
 - EHR results show a visible patient-report action. Page headers and breadcrumbs give a path back to the console and parent task. Filter removal is a keyboard reachable button. Persian and English catalogs contain all new interface copy.
 - Excel upload offers only type slugs with a report detail renderer (`step_1`, `step_2`). Existing reports with other slugs remain visible with a clear unavailable-detail explanation.
 - Patient sign-in uses a separately stored patient JWT obtained from Django. A linked patient profile supplies the national ID for `/patient-records/me/`. A patient cannot supply another national ID to that endpoint. Old national-ID-only browser sessions cease to authenticate.
