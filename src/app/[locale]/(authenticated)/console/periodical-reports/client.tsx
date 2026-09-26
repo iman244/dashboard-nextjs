@@ -49,7 +49,7 @@ const Client = (props: {
             {filters.dateRange?.from && filters.dateRange.to && (
               <div className="flex flex-col gap-2 items-center justify-center">
                 <h2 className="text-lg font-semibold">
-                  گزارش بیماران در بازه تاریخ
+                  {t("patientDateRangeTitle")}
                 </h2>
                 <p className="text-muted-foreground">
                   {localeDigits(
@@ -91,7 +91,7 @@ const Client = (props: {
               {/* Mixed Results Table */}
               <Card className="h-full">
                 <CardHeader>
-                  <CardTitle>جدول خدمات با نتایج مختلط</CardTitle>
+                  <CardTitle>{t("serviceResultsTitle")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ServiceCountTable data={data} />

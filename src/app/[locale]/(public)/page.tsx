@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { pageMetadata } from "@/lib/metadata";
-import { isRtlLocale } from "@/lib/direction";
 import ButtonsSection from "./_components/ButtonsSection";
 import { DarkModeToggle } from "@/components/app/theme-toggle";
 import { LanguageSwitcher } from "@/components/app/language-switcher";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
-import { FileText, BarChart, User, ChevronLeft, ChevronRight } from "lucide-react";
-import { getLocale } from "next-intl/server";
 
 export async function generateMetadata({
   params,
@@ -17,29 +11,21 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  // Was the route-local "/.Metadata" namespace with a title and no description;
-  // it now reads from the one place every other route reads from.
   return pageMetadata(locale, "home");
 }
 
 export default async function LandingPage() {
   const t = await getTranslations("/.HomePage");
-  const locale = await getLocale();
-  const isRTL = isRtlLocale(locale);
-  const Chevron = isRTL ? ChevronLeft : ChevronRight;
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Viewing preferences — language and theme are the same kind of control,
-          so they sit together in the corner users already scan for settings. */}
       <header className="w-full flex items-center justify-start gap-2 p-6">
         <LanguageSwitcher />
         <DarkModeToggle />
       </header>
 
-      {/* Main content */}
       <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-4xl space-y-10">
-          {/* Title section */}
+        <div className="w-full max-w-3xl space-y-10">
           <div className="space-y-3 text-center">
             <h1 className="text-5xl font-semibold tracking-tight text-foreground">
               {t("title")}
@@ -49,81 +35,22 @@ export default async function LandingPage() {
             </p>
           </div>
 
-          {/* Divider */}
           <div className="w-16 h-px bg-border mx-auto" />
 
-          {/* Action section */}
-          <div className="pt-2 text-center">
+          <section aria-labelledby="choose-path-heading" className="space-y-5 text-center">
+            <h2 id="choose-path-heading" className="text-xl font-semibold text-foreground">
+              {t("choosePath")}
+            </h2>
             <ButtonsSection />
-          </div>
+          </section>
 
-          {/* Features section */}
-          <section aria-labelledby="features-heading" className="pt-2">
-            <h2 id="features-heading" className="sr-only">Features</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center gap-2">
-                  <FileText className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-base font-semibold">
-                    {t("features.ehr.title")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm leading-relaxed">
-                    {t("features.ehr.description")}
-                  </CardDescription>
-                  <div className="pt-3">
-                    <Button asChild variant="link" size="sm" className="p-0 h-auto">
-                      <Link href="/console/electronic-health-record">
-                        {t("features.cta")} <Chevron className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center gap-2">
-                  <BarChart className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-base font-semibold">
-                    {t("features.periodical.title")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm leading-relaxed">
-                    {t("features.periodical.description")}
-                  </CardDescription>
-                  <div className="pt-3">
-                    <Button asChild variant="link" size="sm" className="p-0 h-auto">
-                      <Link href="/console/periodical-reports">
-                        {t("features.cta")} <Chevron className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center gap-2">
-                  <User className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-base font-semibold">
-                    {t("features.patient.title")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm leading-relaxed">
-                    {t("features.patient.description")}
-                  </CardDescription>
-                  <div className="pt-3">
-                    <Button asChild variant="link" size="sm" className="p-0 h-auto">
-                      <Link href="/console/patient-reports">
-                        {t("features.cta")} <Chevron className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+          <section aria-labelledby="staff-work-heading" className="border-t border-border pt-8 text-center space-y-2">
+            <h2 id="staff-work-heading" className="text-base font-semibold text-foreground">
+              {t("staffWork.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground max-w-2xl mx-auto">
+              {t("staffWork.description")}
+            </p>
           </section>
         </div>
       </main>

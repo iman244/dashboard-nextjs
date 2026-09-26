@@ -25,16 +25,15 @@ type ChartDataPoint = {
   timestamp: number;
 };
 
-const patientChartConfig: ChartConfig = {
-  patientCount: {
-    label: "تعداد بیماران",
-    color: "var(--chart-1)",
-  },
-};
-
 export const PatientCountChart: React.FC<PatientCountChart> = ({ data }) => {
   const t = useTranslations("/console/periodical-reports.PatientCountChart");
   const fmt = useLocaleDigits();
+  const patientChartConfig: ChartConfig = {
+    patientCount: {
+      label: t("patientCount"),
+      color: "var(--chart-1)",
+    },
+  };
 
   // Process data to group by date and count unique patients
   const chartData: ChartDataPoint[] = React.useMemo(() => {

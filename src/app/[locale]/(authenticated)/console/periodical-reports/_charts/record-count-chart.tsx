@@ -25,16 +25,15 @@ type ChartDataPoint = {
   timestamp: number;
 };
 
-const chartConfig: ChartConfig = {
-  count: {
-    label: "تعداد رکوردها",
-    color: "var(--chart-1)",
-  },
-};
-
 export const RecordCountChart: React.FC<RecordCountChart> = ({ data }) => {
   const t = useTranslations("/console/periodical-reports.RecordCountChart");
   const fmt = useLocaleDigits();
+  const chartConfig: ChartConfig = {
+    count: {
+      label: t("recordCount"),
+      color: "var(--chart-1)",
+    },
+  };
 
   // Process data to group by date and count records
   const chartData: ChartDataPoint[] = React.useMemo(() => {
