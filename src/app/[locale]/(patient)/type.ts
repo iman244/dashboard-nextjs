@@ -7,6 +7,7 @@ export enum PatientSessionStatus {
 export type PatientSessionContextType = {
   status: PatientSessionStatus;
   nationalId: string | null;
-  signIn: (nationalId: string) => void;
+  sessionId: string | null;
+  signIn: (tokens: { access: string; refresh: string }, nationalId: string) => void;
   signOut: () => void;
 };

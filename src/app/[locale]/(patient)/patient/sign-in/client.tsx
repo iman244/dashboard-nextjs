@@ -19,14 +19,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AuthShell, AuthSubmitButton } from "@/components/app/auth-shell";
-import {
-  ehr_by_national_number,
-  EHR_BY_NATIONAL_NUMBER_KEY,
-} from "@/data/electronic health record/api/EHR-by-national-number";
+import { authenticatePatient, PatientRequestError } from "@/lib/patient-session";
+import { DJANGO_ADDRESS, DJANGO_API_PATH } from "@/settings";
 import { useRouter } from "@/i18n/navigation";
 import { AppRoutes } from "@/app/paths";
 import { usePatientSession } from "../../provider";
-import { signInProbeParams } from "../../_data/ehr-params";
 
 export function Client() {
   const t = useTranslations("/patient/sign-in.SignInPage");
@@ -36,12 +33,6 @@ export function Client() {
   const { signIn } = usePatientSession();
   const [formError, setFormError] = React.useState<string | null>(null);
 
-  // Built inside the component so the validation messages are the translated
-  // ones rather than a module-level English default.
-  //
-  // Only presence is validated here. Whether the password matches is checked in
-  // onSubmit and reported as one generic form-level failure, because a
-  // field-level "this must equal your national id" would just be the hint again.
   const schema = React.useMemo(
     () =>
       z.object({
@@ -59,56 +50,22 @@ export function Client() {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationKey: [EHR_BY_NATIONAL_NUMBER_KEY, "patient-sign-in"],
-    mutationFn: ehr_by_national_number,
+    mutationFn: ({ nationalId, password }: FormData) => authenticatePatient(DJANGO_ADDRESS + DJANGO_API_PATH, digitsFaToEn(nationalId).trim(), password),
+    gcTime: 0,
   });
-
-  // Held separately from `isPending` rather than derived from `isSuccess`: this
-  // request succeeds even when it finds no records, which is a rejected sign-in,
-  // not a redirect. Only the branch that actually navigates sets this — and it
-  // must stay set through the navigation, since this card is what the patient
-  // watches while their records load.
   const [redirecting, setRedirecting] = React.useState(false);
   const isBusy = isPending || redirecting;
-
-  const onSubmit = React.useCallback(
-    (data: FormData) => {
-      setFormError(null);
-      const nationalId = digitsFaToEn(data.nationalId);
-
-      // Wrong password and unknown id give the same answer, as on any sign-in
-      // page. Checked here rather than in the schema so it reads as a rejected
-      // login instead of a form-validation hint, and still sends no request.
-      if (nationalId !== digitsFaToEn(data.password)) {
-        setFormError(t("errors.invalidCredentials"));
-        return;
-      }
-
-      mutate(
-        { params: signInProbeParams(nationalId) },
-        {
-          onSuccess: (records) => {
-            // Nothing found reads as bad credentials, not as "no such patient" —
-            // a normal sign-in does not confirm which accounts exist. A failed
-            // request stays distinct, so a dead upstream is not blamed on the
-            // person typing.
-            if (records.length === 0) {
-              setFormError(t("errors.invalidCredentials"));
-              return;
-            }
-            signIn(nationalId);
-            setRedirecting(true);
-            router.replace(AppRoutes.PATIENT_RECORDS);
-          },
-          onError: (error) => {
-            console.error("patient sign-in probe failed:", error);
-            setFormError(t("errors.requestFailed"));
-          },
-        }
-      );
-    },
-    [mutate, router, signIn, t]
-  );
+  const onSubmit = (data: FormData) => {
+    setFormError(null);
+    mutate(data, {
+      onSuccess: (tokens) => {
+        signIn(tokens, digitsFaToEn(data.nationalId).trim());
+        setRedirecting(true);
+        router.replace(AppRoutes.PATIENT_RECORDS);
+      },
+      onError: (error) => setFormError(t(error instanceof PatientRequestError && [400, 401, 403].includes(error.status) ? "errors.invalidCredentials" : "errors.requestFailed")),
+    });
+  };
 
   return (
     <AuthShell

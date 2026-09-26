@@ -67,28 +67,24 @@ const fullNationalId = (raw: string | null | undefined) => {
     : digits;
 };
 
-/**
- * What operators recorded for one patient through the monitoring forms: the
- * digit fields and the images, one block per monitoring.
- *
- * Shared by the staff patient pages and the patient portal. `authorized`
- * decides whether the staff token is sent -- see PatientRecordsInput.
- */
-export const PatientRecordsSection = ({
-  nationalId,
-  authorized,
-}: {
+/** Staff lookup retains its separate authorized API client. */
+export const PatientRecordsSection = ({ nationalId, authorized }: {
   nationalId: string | null | undefined;
   authorized: boolean;
 }) => {
-  const t = useTranslations("common.PatientRecordsSection");
   const id = fullNationalId(nationalId);
-  const valid = id.length === 10;
   const records = useList_PatientRecord_API({ nationalId: id, authorized });
+  if (id.length !== 10) return null;
+  return <PatientRecordsContent records={records} editable={authorized} />;
+};
+
+/** Rendering is shared; patient credentials never pass through the staff client. */
+export const PatientRecordsContent = ({ records, editable = false }: {
+  records: { data?: PatientRecord[]; isPending: boolean; isError: boolean };
+  editable?: boolean;
+}) => {
+  const t = useTranslations("common.PatientRecordsSection");
   const [viewing, setViewing] = React.useState<Viewing | null>(null);
-
-  if (!valid) return null;
-
   const shown = (records.data ?? []).filter(hasContent);
 
   return (
@@ -108,13 +104,13 @@ export const PatientRecordsSection = ({
         ) : records.isError ? (
           <p className="text-sm text-destructive">{t("LoadFailed")}</p>
         ) : shown.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t("Empty")}</p>
+          <p className="text-sm text-muted-foreground">{t(editable ? "Empty" : "PatientEmpty")}</p>
         ) : (
           shown.map((record) => (
             <RecordBlock
               key={record.id}
               record={record}
-              editable={authorized}
+              editable={editable}
               onOpen={setViewing}
             />
           ))
@@ -190,8 +186,7 @@ const RecordBlock = ({
             })}
           </p>
         </div>
-        {/* Mounted only on staff pages: the portal has no Django session, so
-            asking who the user is there would only fail. */}
+        {/* Staff permissions are checked only on staff pages. */}
         {editable ? <EditLink record={record} /> : null}
       </div>
 
