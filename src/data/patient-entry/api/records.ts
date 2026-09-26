@@ -7,11 +7,7 @@ const PATH = "/saderat-bank-health-monitoring/patient-records/";
 export type PatientRecordsInput = {
   /** Ten ASCII digits. Anything else is not sent. */
   nationalId: string;
-  /**
-   * Send the staff token. Staff pages do, so they are not rate-limited. The
-   * patient portal must not: it has no Django session, and an expired token
-   * left in the browser would turn an anonymous read into a 401.
-   */
+  /** Staff pages send the staff token; the patient portal uses /me/. */
   authorized: boolean;
 };
 
@@ -33,5 +29,5 @@ export const useList_PatientRecord_API = (input: PatientRecordsInput) =>
   useQuery({
     queryKey: PATIENT_RECORDS_QUERY_KEY(input.nationalId),
     queryFn: () => listPatientRecords(input),
-    enabled: /^\d{10}$/.test(input.nationalId),
+    enabled: input.authorized && /^\d{10}$/.test(input.nationalId),
   });

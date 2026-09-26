@@ -185,7 +185,8 @@
       "Position": "{index} of {count}",
       "Previous": "Previous image",
       "Next": "Next image",
-      "OpenOriginal": "Open original"
+      "OpenOriginal": "Open original",
+      "PatientEmpty": "No monitoring records have been added yet. Contact your care team if you expected a record."
     },
     "StaffOnly": {
       "Title": "Staff only",
@@ -648,7 +649,7 @@
     "SignInPage": {
       "eyebrow": "Health Record",
       "title": "Patient sign in",
-      "description": "Enter your national ID to see your own health records.",
+      "description": "Sign in with your national ID and the password provided by your care team to view your monitoring records. Contact your care team to set up access or reset your password.",
       "status": {
         "signedIn": "Signed in successfully."
       },
@@ -676,7 +677,7 @@
   },
   "/patient/records": {
     "PatientRecords": {
-      "title": "My health records",
+      "title": "My monitoring records",
       "subtitle": "National ID: {nationalId}",
       "refresh": "Refresh",
       "signOut": "Sign out",
@@ -706,7 +707,8 @@
         "error": "Could not load your records: {message}",
         "retry": "Try again",
         "noData": "No records in this date range"
-      }
+      },
+      "availability": "This page shows monitoring records entered by your care team. EHR visits, laboratory results and X-rays are not available here."
     }
   },
   "/authentication/register": {
