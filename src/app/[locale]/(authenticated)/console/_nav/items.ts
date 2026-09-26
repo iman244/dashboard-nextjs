@@ -48,6 +48,7 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     icon: ClipboardList,
     group: "record",
     activePrefixes: ["/console/monitorings/*/records"],
+    staffOnly: true,
   },
   {
     titleKey: "formSabtPayesh",
@@ -76,6 +77,7 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     url: "/console/saderat-bank-health-monitoring",
     icon: SquareActivity,
     group: "review",
+    staffOnly: true,
   },
   {
     titleKey: "monitorings",

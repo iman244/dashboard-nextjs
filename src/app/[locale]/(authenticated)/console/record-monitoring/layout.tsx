@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { pageMetadata } from "@/lib/metadata";
+import { StaffOnlyConsoleSection } from "@/components/app/staff-only-console-section";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -8,5 +9,5 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return children;
+  return <StaffOnlyConsoleSection>{children}</StaffOnlyConsoleSection>;
 }

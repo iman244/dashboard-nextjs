@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { sectionMetadata } from "@/lib/metadata";
+import { StaffOnlyConsoleSection } from "@/components/app/staff-only-console-section";
 
 /**
  * Exists only to carry metadata: `page.tsx` is a client component, and a
@@ -16,5 +17,5 @@ export async function generateMetadata({
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return children;
+  return <StaffOnlyConsoleSection>{children}</StaffOnlyConsoleSection>;
 }
