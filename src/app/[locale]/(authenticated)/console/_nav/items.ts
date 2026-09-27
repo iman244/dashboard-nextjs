@@ -6,7 +6,6 @@ import {
   Search,
   SquareActivity,
   Tags,
-  User,
   type LucideIcon,
 } from "lucide-react";
 
@@ -40,6 +39,9 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     icon: Search,
     group: "find",
     primary: true,
+    // A patient opens from search, and the service report opens from the
+    // patient page, so both sit under this task rather than in the sidebar.
+    activePrefixes: ["/console/patients", "/console/patient-reports"],
   },
   {
     titleKey: "recordMonitoring",
@@ -62,13 +64,6 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     descriptionKey: "periodicalReports",
     url: "/console/periodical-reports",
     icon: BarChart,
-    group: "review",
-  },
-  {
-    titleKey: "patientReports",
-    descriptionKey: "patientReports",
-    url: "/console/patient-reports",
-    icon: User,
     group: "review",
   },
   {

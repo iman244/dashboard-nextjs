@@ -39,6 +39,8 @@ import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrRecordsTable } from "../../../_ehr/records-table";
 import { PatientRecordsSection } from "@/components/app/patient-records-section";
+import { PatientPageLink } from "@/components/app/patient-page-link";
+import { fullNationalId } from "@/lib/national-id";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 
 /** One step_2 record, laid out the way the step-1 person page lays out its own. */
@@ -153,7 +155,9 @@ const Step2PersonPage = (
   const matches = React.useMemo(() => {
     if (data?.type !== "step_2") return [];
     const records = data.json as unknown as SBHM_Step2Record[];
-    return records.filter((r) => String(r["کد ملی"] ?? "") === national_id);
+    // Older uploads stored the id as a number, without its leading zeros.
+    const wanted = fullNationalId(national_id);
+    return records.filter((r) => fullNationalId(r["کد ملی"] as string | number | null) === wanted);
   }, [data, national_id]);
 
   // Fetched once for the person, not once per matched record: EHR is keyed by
@@ -254,16 +258,19 @@ const Step2PersonPage = (
                 </div>
               </CardDescription>
             </div>
-            <Button asChild variant="outline" size="sm">
-              <Link href={SBHM_DETAIL_PATH("step_2", data.id)}>
-                {/* Base icon is the LTR appearance and rtl:rotate-180 mirrors it,
-                    as with the sign-in button. "Back" points left when reading
-                    left-to-right and right when reading right-to-left; this was
-                    ArrowRight, so it pointed the wrong way in BOTH directions. */}
-                <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
-                {tDetail("backToReport")}
-              </Link>
-            </Button>
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+              <PatientPageLink nationalId={national_id} />
+              <Button asChild variant="outline" size="sm">
+                <Link href={SBHM_DETAIL_PATH("step_2", data.id)}>
+                  {/* Base icon is the LTR appearance and rtl:rotate-180 mirrors it,
+                      as with the sign-in button. "Back" points left when reading
+                      left-to-right and right when reading right-to-left; this was
+                      ArrowRight, so it pointed the wrong way in BOTH directions. */}
+                  <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
+                  {tDetail("backToReport")}
+                </Link>
+              </Button>
+            </div>
           </div>
         </CardHeader>
       </Card>

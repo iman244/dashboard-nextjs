@@ -220,22 +220,28 @@ const buildPersonEhr = (
 /** Every electronic result for one person, arranged the way the page reads it. */
 export const usePersonEhr = ({
   nationalId,
-  campaignDate,
+  campaignDate = "",
+  window,
   enabled = true,
 }: {
   nationalId: string;
   /** `created_at` of the campaign, ISO. Anchors how far back to ask, only. */
-  campaignDate: string;
+  campaignDate?: string;
+  /** An explicit window instead, e.g. the patient page's date picker. */
+  window?: { from: Date; to: Date };
   enabled?: boolean;
 }): PersonEhr => {
+  const windowFrom = window ? format(window.from, "yyyy/MM/dd") : undefined;
+  const windowTo = window ? format(window.to, "yyyy/MM/dd") : undefined;
   const range = React.useMemo(() => {
+    if (windowFrom && windowTo) return { fromDate: windowFrom, toDate: windowTo };
     const exam = new Date(campaignDate);
     const anchor = Number.isNaN(exam.getTime()) ? new Date() : exam;
     return {
       fromDate: format(subYears(anchor, EHR_HISTORY_YEARS), "yyyy/MM/dd"),
       toDate: format(new Date(), "yyyy/MM/dd"),
     };
-  }, [campaignDate]);
+  }, [campaignDate, windowFrom, windowTo]);
 
   const combine = React.useCallback(
     (results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]) =>

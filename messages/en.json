@@ -144,7 +144,7 @@
       "Close": "Close",
       "ViewDetails": "View details",
       "PatientRecord": "Patient record",
-      "PatientReport": "Patient report",
+      "PatientPage": "Patient page",
       "TrendChart": "Trend chart",
       "ServiceRecords": "Service records",
       "OpenReport": "Open report",
@@ -263,7 +263,6 @@
         "recordMonitoring": "Choose a monitoring type and work with patient entries",
         "electronicHealthRecord": "Search and browse patient health records",
         "periodicalReports": "Generate comprehensive reports for time periods",
-        "patientReports": "Generate comprehensive reports for patients",
         "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
         "monitorings": "The monitorings you record against, and the fields each one collects",
         "formSabtPayesh": "Register monitoring data with the online form"
@@ -277,7 +276,6 @@
       "groups": {"find": "Find", "record": "Record", "review": "Review reports", "administration": "Administration"},
       "electronicHealthRecord": "Electronic Health Record",
       "periodicalReports": "Periodical Reports",
-      "patientReports": "Patient Reports",
       "saderatBankHealthMonitoring": "Excel reports",
       "monitorings": "Monitorings",
       "formSabtPayesh": "Form Sabt Payesh",
@@ -327,6 +325,27 @@
     }
   },
   "/console/form-sabt-payesh": {},
+  "/console/patients": {
+    "PatientPage": {
+      "fallbackTitle": "Patient",
+      "nationalId": "National ID {id}",
+      "rangeHint": "The date range applies to EHR results. Monitoring records and Excel reports are always shown in full.",
+      "invalidTitle": "Not a valid national ID",
+      "invalidDescription": "A national ID has 10 digits. Search for the patient again.",
+      "ehrTitle": "EHR results",
+      "excelTitle": "Excel reports",
+      "excelDescription": "Uploaded Excel reports that include this patient.",
+      "excelEmpty": "No uploaded Excel report includes this patient.",
+      "excelError": "Excel reports could not be loaded.",
+      "retry": "Try again",
+      "open": "Open",
+      "noReportView": "No report view for this type",
+      "rowCount": "Rows for this patient: {count}",
+      "serviceReportTitle": "Service report by record type",
+      "serviceReportDescription": "Hospital, drug and other record types, one type at a time, with per-service trends.",
+      "serviceReportAction": "Open service report"
+    }
+  },
   "/console/patient-reports": {
     "PatientReports": {
       "title": "Patient Reports",
@@ -808,6 +827,10 @@
     "periodicalReports": {
       "title": "Periodical Reports",
       "description": "Generate comprehensive reports for time periods."
+    },
+    "patient": {
+      "title": "Patient",
+      "description": "One patient’s full history."
     },
     "patientReports": {
       "title": "Patient Reports",

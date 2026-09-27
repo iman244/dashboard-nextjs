@@ -7,14 +7,13 @@ import { DataTable } from "@/components/app";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { appTableFeatures, type AppTableFeatures } from "@/components/app/table-features";
 import { useLocale, useTranslations } from "next-intl";
-import { BarChart3, Eye } from "lucide-react";
+import { Eye, User } from "lucide-react";
 import { RowAction, RowActions } from "@/components/app";
 import { formatNumber, localeDigits } from "@/lib/utils";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { usePeriodicalReports } from "../provider";
 import { TablePagination } from "@/components/app/table-pagination";
-import { format, subYears } from "date-fns-jalali";
-import { useRouter } from "@/i18n/navigation";
+import { patientHref } from "@/lib/national-id";
 
 interface ServiceRecordsTableProps {
   data: ElectronicHealthRecord[];
@@ -31,7 +30,6 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
   const tSRT = useTranslations("/console/periodical-reports.ServiceRecordsTable");
   const tDictionary = useTranslations("common.Dictionary");
   const locale = useLocale();
-  const router = useRouter();
 
   const {
     filters,
@@ -43,36 +41,6 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
     isDetailModalOpen,
     setIsDetailModalOpen,
   } = usePeriodicalReports();
-
-  const handlePatientReport = React.useCallback(
-    (record: ElectronicHealthRecord) => {
-      const now = new Date();
-      const oneYearAgo = subYears(now, 1);
-
-      const fromDate = format(
-        filters.dateRange?.from || oneYearAgo,
-        "yyyy/MM/dd"
-      );
-      const toDate = format(filters.dateRange?.to || now, "yyyy/MM/dd");
-      const nationalNumber = record["كدملي"];
-      const patientType = filters.patientType; // Use the current patientType from EHR filters
-
-      const searchParams = new URLSearchParams({
-        nationalNumber,
-        fromDate,
-        toDate,
-        patientType,
-      });
-
-      router.push(`/console/patient-reports?${searchParams.toString()}`);
-    },
-    [
-      router,
-      filters.patientType,
-      filters.dateRange?.from,
-      filters.dateRange?.to,
-    ]
-  );
 
   const columns = useMemo(
     () => columnHelper.columns([
@@ -210,15 +178,15 @@ export const ServiceRecordsTable: React.FC<ServiceRecordsTableProps> = ({
               onClick={() => setSelectedRecord(info.row.original)}
             />
             <RowAction
-              icon={BarChart3}
-              label={tDictionary("PatientReport")}
-              onClick={() => handlePatientReport(info.row.original)}
+              icon={User}
+              label={tDictionary("PatientPage")}
+              href={patientHref(info.row.original["كدملي"], filters.dateRange)}
             />
           </RowActions>
         ),
       }),
     ]),
-    [t, tSRT, tDictionary, locale, setSelectedRecord, handlePatientReport]
+    [t, tSRT, tDictionary, locale, setSelectedRecord, filters.dateRange]
   );
 
   // Filter records by selected service

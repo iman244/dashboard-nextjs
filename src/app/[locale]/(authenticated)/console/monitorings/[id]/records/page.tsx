@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import { PageHeader } from "@/components/app/page-header";
 import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
+import { PATIENT_PATH } from "@/lib/national-id";
 import { LoadingState } from "@/components/app/loading-state";
 import { RowAction, RowActions } from "@/components/app";
 import { Link } from "@/i18n/navigation";
@@ -125,7 +126,12 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
             {(records.data ?? []).map((record) => (
               <TableRow key={record.id}>
                 <TableCell dir="ltr" className="text-start font-medium">
-                  {localeDigits(record.national_id, locale)}
+                  <Link
+                    href={PATIENT_PATH(record.national_id)}
+                    className="text-primary underline-offset-4 hover:underline"
+                  >
+                    {localeDigits(record.national_id, locale)}
+                  </Link>
                 </TableCell>
                 <TableCell>
                   {localeDigits((record.files ?? []).length, locale)}

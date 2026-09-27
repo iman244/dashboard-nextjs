@@ -144,7 +144,7 @@
       "Close": "بستن",
       "ViewDetails": "مشاهده جزئیات",
       "PatientRecord": "پرونده بیمار",
-      "PatientReport": "گزارش بیمار",
+      "PatientPage": "صفحه بیمار",
       "TrendChart": "نمودار روند",
       "ServiceRecords": "رکوردهای خدمت",
       "OpenReport": "مشاهده گزارش",
@@ -263,7 +263,6 @@
         "recordMonitoring": "انتخاب نوع پایش و کار با رکوردهای بیماران",
         "electronicHealthRecord": "جستجو و مرور سوابق پزشکی بیماران",
         "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
-        "patientReports": "تولید گزارشات جامع برای بیماران",
         "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
         "monitorings": "پایش‌هایی که اطلاعات ذیل آن‌ها ثبت می‌شود و فیلدهای هر کدام",
         "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
@@ -277,7 +276,6 @@
       "groups": {"find": "یافتن", "record": "ثبت", "review": "بررسی گزارش‌ها", "administration": "مدیریت"},
       "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
       "periodicalReports": "گزارشات دوره‌ای",
-      "patientReports": "گزارشات بیمار",
       "saderatBankHealthMonitoring": "گزارش‌های اکسل",
       "monitorings": "پایش‌ها",
       "formSabtPayesh": "فرم ثبت پایش",
@@ -327,6 +325,27 @@
     }
   },
   "/console/form-sabt-payesh": {},
+  "/console/patients": {
+    "PatientPage": {
+      "fallbackTitle": "بیمار",
+      "nationalId": "کد ملی {id}",
+      "rangeHint": "بازه زمانی فقط روی سوابق پرونده الکترونیک اعمال می‌شود. سوابق پایش و گزارش‌های اکسل همیشه کامل نمایش داده می‌شوند.",
+      "invalidTitle": "کد ملی معتبر نیست",
+      "invalidDescription": "کد ملی ۱۰ رقم است. بیمار را دوباره جستجو کنید.",
+      "ehrTitle": "سوابق پرونده الکترونیک",
+      "excelTitle": "گزارش‌های اکسل",
+      "excelDescription": "گزارش‌های اکسل بارگذاری‌شده‌ای که این بیمار در آن‌ها آمده است.",
+      "excelEmpty": "این بیمار در هیچ گزارش اکسل بارگذاری‌شده‌ای نیامده است.",
+      "excelError": "گزارش‌های اکسل بارگذاری نشد.",
+      "retry": "تلاش دوباره",
+      "open": "مشاهده",
+      "noReportView": "برای این نوع نمای گزارش وجود ندارد",
+      "rowCount": "ردیف‌های این بیمار: {count}",
+      "serviceReportTitle": "گزارش خدمات بر اساس نوع پرونده",
+      "serviceReportDescription": "پرونده‌های بیمارستانی، دارویی و انواع دیگر، هر بار یک نوع، همراه با روند هر خدمت.",
+      "serviceReportAction": "مشاهده گزارش خدمات"
+    }
+  },
   "/console/patient-reports": {
     "PatientReports": {
       "title": "گزارشات بیمار",
@@ -808,6 +827,10 @@
     "periodicalReports": {
       "title": "گزارشات دوره‌ای",
       "description": "تولید گزارشات جامع برای دوره‌های زمانی."
+    },
+    "patient": {
+      "title": "بیمار",
+      "description": "سوابق کامل یک بیمار."
     },
     "patientReports": {
       "title": "گزارشات بیمار",

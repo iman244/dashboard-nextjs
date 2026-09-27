@@ -39,10 +39,10 @@ import {
   groupFields,
   labelOf,
   titleOf,
-  toDigits,
   type SchemaField,
 } from "@/components/schema-form/types";
 import { useList_PatientRecord_API } from "@/data/patient-entry/api/records";
+import { fullNationalId } from "@/lib/national-id";
 import { useIsStaff } from "@/data/user/fetches/me";
 import type {
   PatientEntryFile,
@@ -53,19 +53,6 @@ import { useDirection } from "@/lib/use-direction";
 
 type Viewing = { files: PatientEntryFile[]; index: number; title: string };
 
-/**
- * The ten-digit form of a national ID as a page happens to hold it.
- *
- * Iranian national IDs are always ten digits, but a spreadsheet column read
- * as a number drops the leading zeros -- step 2's Excel turns 0849290351 into
- * 849290351 -- so eight or nine digits can only mean zeros were lost.
- */
-const fullNationalId = (raw: string | null | undefined) => {
-  const digits = toDigits(raw ?? "");
-  return digits.length >= 8 && digits.length < 10
-    ? digits.padStart(10, "0")
-    : digits;
-};
 
 /** Staff lookup retains its separate authorized API client. */
 export const PatientRecordsSection = ({ nationalId, authorized }: {

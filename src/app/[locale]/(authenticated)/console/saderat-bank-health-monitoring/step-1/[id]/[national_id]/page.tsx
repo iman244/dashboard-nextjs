@@ -37,6 +37,8 @@ import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
 import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
 import { EhrRecordsTable } from "../../../_ehr/records-table";
 import { PatientRecordsSection } from "@/components/app/patient-records-section";
+import { PatientPageLink } from "@/components/app/patient-page-link";
+import { fullNationalId } from "@/lib/national-id";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { Button } from "@/components/ui/button";
@@ -162,7 +164,7 @@ const PersonMonitoringPage = (
 
   const person_data = React.useMemo(() => {
     return data?.json.find(
-      (item) => item["personel.کد ملی"] === national_id
+      (item) => fullNationalId(item["personel.کد ملی"]) === fullNationalId(national_id)
     ) as MonitoringData | undefined;
   }, [data, national_id]);
 
@@ -371,14 +373,17 @@ const PersonMonitoringPage = (
                 </div>
               </CardDescription>
             </div>
-            <Badge
-              variant={getStatusColor(person_data["BMI_Group"])}
-              className="text-sm"
-            >
-              {person_data["BMI_Group"] != null
-                ? formatCellValue(person_data["BMI_Group"], locale)
-                : "-"}
-            </Badge>
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+              <Badge
+                variant={getStatusColor(person_data["BMI_Group"])}
+                className="text-sm"
+              >
+                {person_data["BMI_Group"] != null
+                  ? formatCellValue(person_data["BMI_Group"], locale)
+                  : "-"}
+              </Badge>
+              <PatientPageLink nationalId={national_id} />
+            </div>
           </div>
         </CardHeader>
       </Card>

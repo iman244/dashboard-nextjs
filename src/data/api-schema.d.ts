@@ -478,6 +478,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/saderat-bank-health-monitoring/person-reports/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Excel uploads that mention a national ID
+         * @description Staff-only: which Excel uploads contain rows for one person.
+         *
+         *     The rows live in each upload's `json` blob, so Postgres filters the
+         *     candidates with jsonb containment and the rows are counted here. Uploads
+         *     made before ids were stored as text hold them as numbers without their
+         *     leading zeros, so those spellings are searched too.
+         */
+        get: operations["saderat_bank_health_monitoring_person_reports_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -593,6 +618,15 @@ export interface components {
         PatientTokenRequest: {
             national_id: string;
             password: string;
+        };
+        /** @description One Excel upload that mentions a person, without its rows. */
+        PersonReport: {
+            readonly id: number;
+            name: string;
+            readonly type: string;
+            /** Format: date-time */
+            readonly created_at: string;
+            readonly match_count: number;
         };
         /** @description What the browser must state before Django will sign anything. */
         PresignRequestRequest: {
@@ -1858,6 +1892,56 @@ export interface operations {
             };
             /** @description A patient identity is required. */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saderat_bank_health_monitoring_person_reports_list: {
+        parameters: {
+            query: {
+                /** @description Ten digits; Persian and Arabic-Indic digits accepted. */
+                national_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonReport"][];
+                };
+            };
+            /** @description Missing or malformed national_id. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Staff access required. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests. */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
