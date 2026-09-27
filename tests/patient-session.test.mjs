@@ -86,3 +86,9 @@ test('sign out cleanup removes only patient cache and aborts an in-flight reques
   assert.deepEqual(client.getQueryData(['patient-own-records','second']),['second-data']);
   client.clear();
 });
+test('a base with a trailing slash, as production configures it, never doubles the slash', async () => {
+  const urls=[];
+  globalThis.fetch=async (url) => { urls.push(url); return {ok:true,json:async()=>({access:'a',refresh:'r'})}; };
+  await session.authenticatePatient('https://api.test/api/','1234567890','pw');
+  assert.equal(urls[0],'https://api.test/api/auth/patient/jwt/create/');
+});

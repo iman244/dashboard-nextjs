@@ -25,12 +25,14 @@ export function clearPatientSession() {
   sessionStorage.removeItem("patient_national_id");
   emit();
 }
+/** NEXT_PUBLIC_DJANGO_API_PATH is "/api/" in production; joining it with "/auth/..." must not produce "//". */
+const endpoint = (base: string, path: string) => base.replace(/\/+$/, "") + path;
 export class PatientRequestError extends Error {
   status: number;
   constructor(status: number) { super("Patient request failed"); this.status = status; }
 }
 export async function authenticatePatient(base: string, nationalId: string, password: string): Promise<PatientTokens> {
-  const response = await fetch(`${base}/auth/patient/jwt/create/`, {
+  const response = await fetch(endpoint(base, "/auth/patient/jwt/create/"), {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ national_id: nationalId, password }), cache: "no-store",
   });
@@ -43,7 +45,7 @@ let refreshing: { id: string; promise: Promise<PatientSession> } | null = null;
 async function refreshSession(base: string, original: PatientSession): Promise<PatientSession> {
   if (refreshing?.id === original.id) return refreshing.promise;
   const promise = (async () => {
-    const response = await fetch(`${base}/auth/jwt/refresh/`, {
+    const response = await fetch(endpoint(base, "/auth/jwt/refresh/"), {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refresh: original.refresh }), cache: "no-store",
     });
@@ -65,7 +67,7 @@ async function refreshSession(base: string, original: PatientSession): Promise<P
 export async function fetchPatientRecords(base: string, signal?: AbortSignal) {
   let session = readPatientSession();
   if (!session) throw new PatientRequestError(401);
-  const request = (access: string) => fetch(`${base}/saderat-bank-health-monitoring/patient-records/me/`, {
+  const request = (access: string) => fetch(endpoint(base, "/saderat-bank-health-monitoring/patient-records/me/"), {
     headers: { Authorization: `JWT ${access}` }, cache: "no-store", signal,
   });
   let response = await request(session.access);
