@@ -7,14 +7,7 @@ import { useLocaleDigits } from "@/lib/use-locale-digits";
 import React from "react";
 import { useMonitoringIdRouteContext } from "./route-context";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/app/page-header";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb";
-import { Link } from "@/i18n/navigation";
+import { ReportFrame } from "../../_report/report-frame";
 import { AlertCircle, Inbox, Users, BarChart3 } from "lucide-react";
 import { SearchPersonnelSheet } from "./_search-personnel-sheet/sheet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -220,25 +213,31 @@ const MonitoringPage = (
 
   if (error) {
     return (
-      <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
-        <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
-        <div className="flex flex-col gap-1">
-          <p className="font-semibold text-destructive">{t("ErrorTitle")}</p>
-          <p className="text-sm text-muted-foreground">{error.message}</p>
+      <ReportFrame title={t("ReportTitle")}>
+        <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
+          <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+          <div className="flex flex-col gap-1">
+            <p className="font-semibold text-destructive">{t("ErrorTitle")}</p>
+            <p className="text-sm text-muted-foreground">{error.message}</p>
+          </div>
         </div>
-      </div>
+      </ReportFrame>
     );
   }
 
   if (!data || !data.json || data.json.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 gap-3">
-        <Inbox className="h-12 w-12 text-muted-foreground" />
-        <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
-        <p className="text-sm text-muted-foreground">
-          {t("EmptyStateDescriptionDetail")}
-        </p>
-      </div>
+      <ReportFrame
+        title={data ? `${t("ReportTitle")} ${data.name}` : t("ReportTitle")}
+      >
+        <div className="flex flex-col items-center justify-center py-12 gap-3">
+          <Inbox className="h-12 w-12 text-muted-foreground" />
+          <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("EmptyStateDescriptionDetail")}
+          </p>
+        </div>
+      </ReportFrame>
     );
   }
 
@@ -315,42 +314,27 @@ const MonitoringPage = (
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        breadcrumbs={
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/console/saderat-bank-health-monitoring">
-                    {t("PageTitle")}
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        }
-        title={
-          <span className="flex items-center gap-2">
-            <BarChart3 className="size-5 shrink-0 text-muted-foreground" />
-            {t("ReportTitle")} {data.name}
-          </span>
-        }
-        actions={
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setActiveFilter(null);
-              setIsSearchSheetOpen(true);
-            }}
-          >
-            <Users className="h-4 w-4 ms-2" />
-            {t("SearchPersonnel")}
-          </Button>
-        }
-      />
-
+    <ReportFrame
+      title={
+        <span className="flex items-center gap-2">
+          <BarChart3 className="size-5 shrink-0 text-muted-foreground" />
+          {t("ReportTitle")} {data.name}
+        </span>
+      }
+      actions={
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setActiveFilter(null);
+            setIsSearchSheetOpen(true);
+          }}
+        >
+          <Users className="h-4 w-4 ms-2" />
+          {t("SearchPersonnel")}
+        </Button>
+      }
+    >
       {/* Summary Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
@@ -1569,7 +1553,7 @@ const MonitoringPage = (
           filterDescription={activeFilter?.description}
         />
       )}
-    </div>
+    </ReportFrame>
   );
 };
 

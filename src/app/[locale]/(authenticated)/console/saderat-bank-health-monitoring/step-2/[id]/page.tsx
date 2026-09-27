@@ -6,13 +6,7 @@ import React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, Inbox, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/app/page-header";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb";
+import { ReportFrame } from "../../_report/report-frame";
 import { Link } from "@/i18n/navigation";
 import { localeDigits, formatDate } from "@/lib/utils";
 import { useRetrieve_SBHM_API } from "@/data/saderat-bank-health-monitoring/api/retrieve";
@@ -82,13 +76,15 @@ const Step2MonitoringPage = (
 
   if (error) {
     return (
-      <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
-        <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
-        <div className="flex flex-col gap-1">
-          <p className="font-semibold text-destructive">{t("ErrorTitle")}</p>
-          <p className="text-sm text-muted-foreground">{error.message}</p>
+      <ReportFrame title={t("ReportTitle")}>
+        <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
+          <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+          <div className="flex flex-col gap-1">
+            <p className="font-semibold text-destructive">{t("ErrorTitle")}</p>
+            <p className="text-sm text-muted-foreground">{error.message}</p>
+          </div>
         </div>
-      </div>
+      </ReportFrame>
     );
   }
 
@@ -96,75 +92,69 @@ const Step2MonitoringPage = (
   // happily and would render nothing recognisable. Point it at the right view.
   if (data.type !== "step_2") {
     return (
-      <div className="flex flex-col items-center justify-center py-12 gap-3">
-        <AlertCircle className="h-10 w-10 text-muted-foreground" />
-        <p className="text-lg font-semibold">{t("WrongStepTitle")}</p>
-        <Button asChild variant="outline">
-          <Link href={SBHM_DETAIL_PATH(data.type, data.id)}>
-            {t("WrongStepAction")}
-          </Link>
-        </Button>
-      </div>
+      <ReportFrame title={localeDigits(data.name, locale)}>
+        <div className="flex flex-col items-center justify-center py-12 gap-3">
+          <AlertCircle className="h-10 w-10 text-muted-foreground" />
+          <p className="text-lg font-semibold">{t("WrongStepTitle")}</p>
+          <Button asChild variant="outline">
+            <Link href={SBHM_DETAIL_PATH(data.type, data.id)}>
+              {t("WrongStepAction")}
+            </Link>
+          </Button>
+        </div>
+      </ReportFrame>
     );
   }
 
+  const uploadedOn = localeDigits(
+    formatDate(new Date(data.created_at), locale),
+    locale
+  );
+
   if (!report) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 gap-3">
-        <Inbox className="h-12 w-12 text-muted-foreground" />
-        <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
-        <p className="text-sm text-muted-foreground">
-          {t("EmptyStateDescriptionDetail")}
-        </p>
-      </div>
+      <ReportFrame
+        title={localeDigits(data.name, locale)}
+        description={uploadedOn}
+      >
+        <div className="flex flex-col items-center justify-center py-12 gap-3">
+          <Inbox className="h-12 w-12 text-muted-foreground" />
+          <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("EmptyStateDescriptionDetail")}
+          </p>
+        </div>
+      </ReportFrame>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Was a bare h2 with a sibling p: no h1 on the page at all, and the
-          section headings below jumped from h2 straight to h3. Routed through
-          PageHeader so this reads as a sibling of step-1 rather than a second
-          way of titling the same kind of page. */}
-      <PageHeader
-        breadcrumbs={
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/console/saderat-bank-health-monitoring">
-                    {t("PageTitle")}
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        }
-        title={localeDigits(data.name, locale)}
-        description={
-          <>
-            {localeDigits(formatDate(new Date(data.created_at), locale), locale)}
-            {" · "}
-            {tReport("recordCount", {
-              count: localeDigits(report.totalRecords, locale),
-            })}
-          </>
-        }
-        actions={
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setActiveFilter(undefined);
-              setIsSheetOpen(true);
-            }}
-          >
-            <Users className="h-4 w-4 ms-2" />
-            {t("SearchPersonnel")}
-          </Button>
-        }
-      />
-
+    // PageHeader (via ReportFrame) owns the page h1; the sections below are h2s.
+    <ReportFrame
+      title={localeDigits(data.name, locale)}
+      description={
+        <>
+          {uploadedOn}
+          {" · "}
+          {tReport("recordCount", {
+            count: localeDigits(report.totalRecords, locale),
+          })}
+        </>
+      }
+      actions={
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setActiveFilter(undefined);
+            setIsSheetOpen(true);
+          }}
+        >
+          <Users className="h-4 w-4 ms-2" />
+          {t("SearchPersonnel")}
+        </Button>
+      }
+    >
       {STEP2_CHART_SECTIONS.map((section) => (
         <section key={section.titleKey} className="space-y-3">
           {/* h2, not h3: PageHeader now owns the page h1, so sections sit one level
@@ -195,7 +185,7 @@ const Step2MonitoringPage = (
         monitoringId={data.id}
         filter={activeFilter}
       />
-    </div>
+    </ReportFrame>
   );
 };
 
