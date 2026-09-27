@@ -19,7 +19,7 @@ Staff open one patient and read their full history on one page: EHR results with
 ## Page sections, top to bottom
 
 1. **Header.**
-   - Name: from the first EHR row (`نام بيمار` + `نام خانوادگي بيمار`), else from the first Excel row, else "Patient".
+   - Name: from the upstream `EHRGetMobileNumberByNationalNumber` lookup (`FirstName` `LastName`), else "Patient". `usePersonEhr` does not expose raw rows, and the person-reports endpoint does not return row contents.
    - National ID.
    - A `DateRangePicker` that writes `from`/`to` into the URL.
 2. **EHR results.** `usePersonEhr`, extended to accept an explicit `{fromDate, toDate}`. The Excel person pages keep passing `campaignDate`. Rendered with `EhrRecordsTable`, `EhrTrendDialog` and `useRecordDetail`, the same as the step 2 person page. Types: lab, imaging, pathology, paraclinical.
@@ -35,7 +35,8 @@ Each section loads and fails on its own. One failing source shows an inline erro
 - Permission `IsClinicalStaff`, with the same throttle as `patient-records`. The ID is normalised with `normalize_national_id`. A malformed ID returns 400.
 - Returns `[{id, name, type, created_at, match_count}]`, newest first.
 - Matching looks in the step 1 key `personel.کد ملی` and the step 2 key `کد ملی`. Existing step 2 uploads stored this column as a number, so leading zeros are lost. The query therefore ORs `json__contains` over the 10-digit string, the string without leading zeros, and the integer. `match_count` is counted in Python over the candidate rows with the same normalisation.
-- Upload parsing reads `کد ملی` as a string from now on, so new step 2 uploads keep leading zeros.
+- Upload parsing stores every national ID column as ten-digit text (`canonical_national_id`: numbers become text, 8–9 digits are padded), so new uploads keep leading zeros. Reading the column as text alone cannot restore zeros that Excel dropped from a number cell.
+- The Excel person pages compare IDs by their padded form (`fullNationalId`, now shared from `lib/national-id`), so an upload with a numeric ID still opens.
 - Tests (Postgres, since `json__contains` needs it):
   - staff only; patients and viewers get 403;
   - a malformed ID returns 400;
