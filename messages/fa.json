@@ -251,20 +251,6 @@
       }
     }
   },
-  "/auth-authenticated": {
-    "AuthAuthenticated": {
-      "description1": "شما احراز هویت شده اید، تا چند ثانیه دیگر به صفحه مورد نظر منتقل خواهید شد.",
-      "description2": "اگر منتقل نشدید، لطفاً بر روی دکمه زیر کلیک کنید.",
-      "redirect": "برو"
-    }
-  },
-  "/console-unauthenticate": {
-    "AuthenticatedGroupLayout": {
-      "description1": "شما احراز هویت نشده اید، تا چند ثانیه دیگر به صفحه ورود منتقل خواهید شد.",
-      "description2": "اگر منتقل نشدید، لطفاً بر روی دکمه ورود کلیک کنید.",
-      "redirectToLogin": "صفحه ورود"
-    }
-  },
   "/form-sabt-payesh": {},
   "/console": {
     "ConsoleHome": {
@@ -861,14 +847,6 @@
     "patientRecords": {
       "title": "سوابق سلامت من",
       "description": "سوابق پزشکی الکترونیکی شما."
-    },
-    "loading": {
-      "title": "در حال بارگذاری",
-      "description": "در حال بارگذاری."
-    },
-    "redirecting": {
-      "title": "در حال انتقال",
-      "description": "در حال انتقال به صفحه‌ی درست."
     }
   }
 }

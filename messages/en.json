@@ -251,20 +251,6 @@
       }
     }
   },
-  "/auth-authenticated": {
-    "AuthAuthenticated": {
-      "description1": "You are authenticated, you will be redirected to the desired page in a few seconds.",
-      "description2": "If you are not redirected, please click the button below.",
-      "redirect": "Redirect"
-    }
-  },
-  "/console-unauthenticate": {
-    "AuthenticatedGroupLayout": {
-      "description1": "You are not authenticated, you will be redirected to login in a few seconds.",
-      "description2": "If you are not redirected, please click the login button.",
-      "redirectToLogin": "Login"
-    }
-  },
   "/form-sabt-payesh": {},
   "/console": {
     "ConsoleHome": {
@@ -861,14 +847,6 @@
     "patientRecords": {
       "title": "My Health Records",
       "description": "Your own electronic health records."
-    },
-    "loading": {
-      "title": "Loading",
-      "description": "Loading."
-    },
-    "redirecting": {
-      "title": "Redirecting",
-      "description": "Taking you to the right page."
     }
   }
 }

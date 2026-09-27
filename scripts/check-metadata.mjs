@@ -29,9 +29,6 @@ const ROUTES = [
   '/console/saderat-bank-health-monitoring/step-2/7/849290351',
   '/console/form-sabt-payesh',
   '/form-sabt-payesh',
-  '/loading',
-  '/auth-authenticated',
-  '/console-unauthenticate',
 ];
 
 const pick = (html, re) => {
