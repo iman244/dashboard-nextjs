@@ -6,6 +6,7 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { LoadingState } from "@/components/app/loading-state";
 import { StaffOnly } from "@/components/app/staff-only";
 import { Link } from "@/i18n/navigation";
@@ -31,10 +32,25 @@ export const RecordShell = ({
 }) => {
   const t = useTranslations("/console/monitorings.Records");
   const tLoading = useTranslations("common.Loading");
+  const tNav = useTranslations("/console.ConsoleSidebar");
 
   return (
     <div className="space-y-6">
       <PageHeader
+        breadcrumbs={
+          <ConsoleBreadcrumbs
+            trail={[
+              {
+                href: "/console/record-monitoring",
+                label: tNav("recordMonitoring"),
+              },
+              {
+                href: `/console/monitorings/${monitoringId}/records`,
+                label: t("PageTitle"),
+              },
+            ]}
+          />
+        }
         title={title}
         description={description}
         actions={

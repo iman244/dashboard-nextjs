@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { LoadingState } from "@/components/app/loading-state";
 import { RowAction, RowActions } from "@/components/app";
 import { Link } from "@/i18n/navigation";
@@ -40,6 +41,7 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const t = useTranslations("/console/monitorings.Records");
   const tDictionary = useTranslations("common.Dictionary");
   const tLoading = useTranslations("common.Loading");
+  const tNav = useTranslations("/console.ConsoleSidebar");
   const locale = useLocale();
   // Records are readable by everyone signed in; adding, editing and deleting
   // are staff-only, as Django enforces.
@@ -161,6 +163,14 @@ const RecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className="space-y-4">
       <PageHeader
+        breadcrumbs={
+          <ConsoleBreadcrumbs
+            parent={{
+              href: "/console/record-monitoring",
+              label: tNav("recordMonitoring"),
+            }}
+          />
+        }
         title={t("PageTitle")}
         description={name ? t("PageDescription", { name }) : undefined}
         actions={

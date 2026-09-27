@@ -3,13 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { PageHeader } from "@/components/app/page-header";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb";
-import { Link } from "@/i18n/navigation";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 
 /**
  * The header every step report renders, in every state.
@@ -37,17 +31,12 @@ export function ReportFrame({
     <div className="space-y-6">
       <PageHeader
         breadcrumbs={
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/console/saderat-bank-health-monitoring">
-                    {t("PageTitle")}
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <ConsoleBreadcrumbs
+            parent={{
+              href: "/console/saderat-bank-health-monitoring",
+              label: t("PageTitle"),
+            }}
+          />
         }
         title={title}
         description={description}

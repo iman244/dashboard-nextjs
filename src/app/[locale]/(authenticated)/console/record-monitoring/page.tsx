@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, ArrowRight, Inbox, Plus } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { LoadingState } from "@/components/app/loading-state";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -21,6 +22,7 @@ export default function RecordMonitoringPage() {
   return (
     <div className="space-y-6">
       <PageHeader
+        breadcrumbs={<ConsoleBreadcrumbs />}
         title={t("title")}
         description={t("description")}
         actions={isStaff ? (

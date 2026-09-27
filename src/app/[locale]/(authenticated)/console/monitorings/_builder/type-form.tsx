@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -100,6 +101,7 @@ const TypeFormBody = ({
   onDone: () => void;
   t: ReturnType<typeof useTranslations<"/console/monitorings.Builder">>;
 }) => {
+  const tNav = useTranslations("/console.ConsoleSidebar");
   const [slug, setSlug] = React.useState(initialSlug);
   // The dashboard routes step_1 and step_2 reports by slug, so renaming one
   // leaves those reports with no detail page. Warn, do not block: Django
@@ -159,6 +161,11 @@ const TypeFormBody = ({
   return (
     <div className="space-y-4">
       <PageHeader
+        breadcrumbs={
+          <ConsoleBreadcrumbs
+            parent={{ href: LIST_PATH, label: tNav("monitorings") }}
+          />
+        }
         title={id === undefined ? t("NewTitle") : t("EditTitle")}
         actions={
           <div className="flex items-center gap-2">

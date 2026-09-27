@@ -3,6 +3,7 @@
 import { DataTable, RowAction, RowActions } from "@/components/app";
 import { LoadingState } from "@/components/app/loading-state";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import {
   appTableFeatures,
   type AppTableFeatures,
@@ -129,6 +130,7 @@ const MonitoringTypesPage = () => {
   const withHeader = (body: React.ReactNode) => (
     <div className="space-y-4">
       <PageHeader
+        breadcrumbs={<ConsoleBreadcrumbs />}
         title={t("PageTitle")}
         description={t("PageDescription")}
         actions={
