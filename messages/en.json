@@ -278,7 +278,7 @@
       "electronicHealthRecord": "Electronic Health Record",
       "periodicalReports": "Periodical Reports",
       "patientReports": "Patient Reports",
-      "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
+      "saderatBankHealthMonitoring": "Excel reports",
       "monitorings": "Monitorings",
       "formSabtPayesh": "Form Sabt Payesh",
       "account": "Account",
@@ -475,7 +475,7 @@
       "NoResults": "No results found",
       "WrongStepTitle": "This record belongs to a different step.",
       "WrongStepAction": "Open it in the right view",
-      "PageTitle": "Saderat Bank Health Monitoring",
+      "PageTitle": "Excel reports",
       "MatchCount": "{count} patients"
     },
     "PersonRecord": {
@@ -567,9 +567,10 @@
     "emptyStaff": "Create a monitoring type to start recording.",
     "emptyViewer": "Ask an administrator to create a monitoring type.",
     "createType": "New type",
-    "ready": "Form ready for entries",
-    "noFields": "No form fields yet; entries cannot be added",
-    "viewEntries": "View entries"
+    "viewEntries": "View entries",
+    "noFormsTitle": "No monitoring type has a form yet",
+    "noFormsDescription": "Add fields to a monitoring type under Monitorings to start recording.",
+    "hiddenNote": "Types without form fields, such as Excel report types, are not listed here."
   },
   "/console/monitorings": {
     "MonitoringTypesPage": {
@@ -813,7 +814,7 @@
       "description": "Generate comprehensive reports for patients."
     },
     "saderatBankHealthMonitoring": {
-      "title": "Saderat Bank Health Monitoring",
+      "title": "Excel reports",
       "description": "Uploaded datasets and their step reports."
     },
     "recordMonitoring": {

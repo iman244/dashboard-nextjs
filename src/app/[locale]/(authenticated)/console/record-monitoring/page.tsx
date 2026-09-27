@@ -18,6 +18,11 @@ export default function RecordMonitoringPage() {
   const { data: user, isPending: userPending } = useMe_API();
   const isStaff = user?.is_staff === true;
   const { data, isPending, error, refetch } = useList_MonitoringType_API({ enabled: isStaff });
+  // Only a type with form fields can take a record here. Types without fields
+  // (the Excel report types) live under Excel reports and would only be noise.
+  const recordable = data?.filter(
+    (monitoring) => asFieldSchema(monitoring.field_schema).fields.length > 0
+  );
 
   return (
     <div className="space-y-6">
@@ -52,30 +57,39 @@ export default function RecordMonitoringPage() {
           <AlertTitle>{t("emptyTitle")}</AlertTitle>
           <AlertDescription>{isStaff ? t("emptyStaff") : t("emptyViewer")}</AlertDescription>
         </Alert>
+      ) : !recordable?.length ? (
+        <Alert>
+          <Inbox aria-hidden="true" className="size-4" />
+          <AlertTitle>{t("noFormsTitle")}</AlertTitle>
+          <AlertDescription>
+            <Link href="/console/monitorings" className="underline underline-offset-4">
+              {t("noFormsDescription")}
+            </Link>
+          </AlertDescription>
+        </Alert>
       ) : (
-        <ul className="max-w-3xl divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
-          {data.map((monitoring) => {
-            const hasFields = asFieldSchema(monitoring.field_schema).fields.length > 0;
-            const name = locale === "fa" ? monitoring.name_fa : monitoring.name_en;
-            return (
-              <li key={monitoring.id}>
-                <Link
-                  href={`/console/monitorings/${monitoring.id}/records`}
-                  className="group flex min-h-16 items-center gap-4 px-4 py-4 transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
-                >
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-medium">{name}</span>
-                    <span className="block text-sm text-muted-foreground">
-                      {hasFields ? t("ready") : t("noFields")}
-                    </span>
-                  </span>
-                  <span className="shrink-0 text-sm font-medium text-primary">{t("viewEntries")}</span>
-                  <ArrowRight aria-hidden="true" className="size-4 shrink-0 rtl:rotate-180" />
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="max-w-3xl space-y-3">
+          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+            {recordable.map((monitoring) => {
+              const name = locale === "fa" ? monitoring.name_fa : monitoring.name_en;
+              return (
+                <li key={monitoring.id}>
+                  <Link
+                    href={`/console/monitorings/${monitoring.id}/records`}
+                    className="group flex min-h-16 items-center gap-4 px-4 py-4 transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                  >
+                    <span className="min-w-0 flex-1 font-medium">{name}</span>
+                    <span className="shrink-0 text-sm font-medium text-primary">{t("viewEntries")}</span>
+                    <ArrowRight aria-hidden="true" className="size-4 shrink-0 rtl:rotate-180" />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          {recordable.length < data.length ? (
+            <p className="text-sm text-muted-foreground">{t("hiddenNote")}</p>
+          ) : null}
+        </div>
       )}
     </div>
   );

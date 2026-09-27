@@ -278,7 +278,7 @@
       "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
       "periodicalReports": "گزارشات دوره‌ای",
       "patientReports": "گزارشات بیمار",
-      "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
+      "saderatBankHealthMonitoring": "گزارش‌های اکسل",
       "monitorings": "پایش‌ها",
       "formSabtPayesh": "فرم ثبت پایش",
       "account": "حساب کاربری",
@@ -475,7 +475,7 @@
       "NoResults": "نتیجه‌ای یافت نشد",
       "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
       "WrongStepAction": "مشاهده در نمای درست",
-      "PageTitle": "پایش سلامت بانک صادرات",
+      "PageTitle": "گزارش‌های اکسل",
       "MatchCount": "{count} بیمار"
     },
     "PersonRecord": {
@@ -567,9 +567,10 @@
     "emptyStaff": "برای شروع ثبت، یک نوع پایش بسازید.",
     "emptyViewer": "از مدیر بخواهید یک نوع پایش بسازد.",
     "createType": "نوع جدید",
-    "ready": "فرم آماده ثبت رکورد است",
-    "noFields": "هنوز فیلدی ندارد؛ امکان افزودن رکورد نیست",
-    "viewEntries": "دیدن رکوردها"
+    "viewEntries": "دیدن رکوردها",
+    "noFormsTitle": "هنوز هیچ نوع پایشی فرم ندارد",
+    "noFormsDescription": "برای شروع ثبت، در بخش پایش‌ها برای یک نوع پایش فیلد تعریف کنید.",
+    "hiddenNote": "انواعی که فیلد فرم ندارند، مانند انواع گزارش اکسل، اینجا نمایش داده نمی‌شوند."
   },
   "/console/monitorings": {
     "MonitoringTypesPage": {
@@ -813,7 +814,7 @@
       "description": "تولید گزارشات جامع برای بیماران."
     },
     "saderatBankHealthMonitoring": {
-      "title": "پایش سلامت بانک صادرات",
+      "title": "گزارش‌های اکسل",
       "description": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای."
     },
     "recordMonitoring": {
