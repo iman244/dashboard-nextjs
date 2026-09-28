@@ -39,6 +39,7 @@ import { EhrRecordsTable } from "../../../_ehr/records-table";
 import { PatientRecordsSection } from "@/components/app/patient-records-section";
 import { PatientPageLink } from "@/components/app/patient-page-link";
 import { fullNationalId } from "@/lib/national-id";
+import { toNumber } from "@/lib/campaign";
 import { useRecordDetail } from "../../../_ehr/use-record-detail";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { Button } from "@/components/ui/button";
@@ -465,14 +466,9 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {person_data["BMI"] != null
-                ? formatCellValue(
-                    person_data["BMI"].toLocaleString("en-US", {
-                      minimumFractionDigits: 2,
-                    }),
-                    locale
-                  )
-                : "-"}
+              {toNumber(person_data["BMI"])?.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+              }) ?? formatCellValue(String(person_data["BMI"] ?? "-"), locale)}
             </div>
             <Badge
               variant={getStatusColor(person_data["BMI_Group"])}

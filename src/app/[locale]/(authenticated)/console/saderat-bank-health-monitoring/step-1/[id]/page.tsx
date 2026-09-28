@@ -30,6 +30,7 @@ import {
   Cell,
 } from "recharts";
 import { CHART_TICK_FONT_SIZE } from "@/lib/chart";
+import { toNumber } from "@/lib/campaign";
 
 const MonitoringPage = (
   props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-1/[id]">
@@ -77,8 +78,8 @@ const MonitoringPage = (
       field: keyof SBHM_RetrieveSerializer["json"][number]
     ) => {
       const values = records
-        .map((r) => r[field])
-        .filter((v): v is number => typeof v === "number" && !isNaN(v));
+        .map((r) => toNumber(r[field]))
+        .filter((v): v is number => v !== undefined);
       if (values.length === 0) return null;
       const sum = values.reduce((a, b) => a + b, 0);
       return {
@@ -97,8 +98,8 @@ const MonitoringPage = (
       const counts: Record<string, number> = {};
       ranges.forEach((range) => (counts[range.label] = 0));
       records.forEach((record) => {
-        const value = record[field];
-        if (typeof value === "number" && !isNaN(value)) {
+        const value = toNumber(record[field]);
+        if (value !== undefined) {
           const range = ranges.find((r) => value >= r.min && value < r.max);
           if (range) counts[range.label]++;
         }
@@ -302,8 +303,8 @@ const MonitoringPage = (
     chartTitle: string
   ) => {
     const filterFn = (record: SBHM_RetrieveSerializer["json"][number]) => {
-      const value = record[field];
-      if (typeof value !== "number" || isNaN(value)) return false;
+      const value = toNumber(record[field]);
+      if (value === undefined) return false;
       return value >= range.min && value < range.max;
     };
     setActiveFilter({

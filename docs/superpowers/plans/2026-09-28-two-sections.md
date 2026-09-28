@@ -582,7 +582,7 @@ New uploads hold text only; older uploads hold numbers. Every place that needs a
 **Interfaces:**
 - Produces: `toNumber(value: unknown): number | undefined`. It folds Persian/Arabic digits and the Persian decimal separator `٫`, trims, and accepts only a plain decimal number; everything else is `undefined`.
 
-- [ ] **Step 1: Failing test** (in `tests/campaign.test.mjs`):
+- [x] **Step 1: Failing test** (in `tests/campaign.test.mjs`):
 
 ```js
 import { toNumber } from '../src/lib/campaign.ts';
@@ -600,9 +600,9 @@ test('toNumber reads text and numbers alike, and refuses anything else', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails.** `node --test --experimental-strip-types tests/campaign.test.mjs`. Expected: FAIL (`toNumber` is not exported).
+- [x] **Step 2: Run to verify it fails.** `node --test --experimental-strip-types tests/campaign.test.mjs`. Expected: FAIL (`toNumber` is not exported).
 
-- [ ] **Step 3: Implement** in `campaign.ts`:
+- [x] **Step 3: Implement** in `campaign.ts`:
 
 ```ts
 /** A spreadsheet cell as a number, whether stored as text or as a number. */
@@ -618,7 +618,7 @@ export const toNumber = (value: unknown): number | undefined => {
 };
 ```
 
-- [ ] **Step 4: Use it at the four places.**
+- [x] **Step 4: Use it at the four places.**
   - Step 1 report, `numericStats` (~line 81): map through `toNumber` and keep the defined values, instead of filtering `typeof v === "number"`:
     `.map((v) => toNumber(v)).filter((v): v is number => v !== undefined)`.
   - `categorizeNumeric` (~line 101): `const value = toNumber(item[field]); if (value !== undefined) { … }`.
@@ -627,12 +627,12 @@ export const toNumber = (value: unknown): number | undefined => {
 
   Import `toNumber` from `@/lib/campaign`. The Step 1 files move in Tasks 10 and 13, and those moves carry these edits along unchanged.
 
-- [ ] **Step 5: Verify.**
+- [x] **Step 5: Verify.**
   - The tests pass; `npx tsc --noEmit` passes; lint is unchanged on both files (25 existing errors on the report stay 25).
-  - Browser: an existing Step 1 upload still shows the age and BMI averages and distributions.
-  - Seed a Step 1 upload whose cells are all text (`SaderatBankHealthMonitoring.objects.create(..., json=[{'personel.کد ملی': '0012345678', 'سن': '41', 'BMI': '24.5', 'BMI_Group': 'normal', ...}])`): the averages and distributions show the same values.
+  - Browser: an existing Step 1 upload still shows the age and BMI averages and distributions. (Deferred to the orchestrator's checkpoint, which owns the servers and database.)
+  - Seed a Step 1 upload whose cells are all text (`SaderatBankHealthMonitoring.objects.create(..., json=[{'personel.کد ملی': '0012345678', 'سن': '41', 'BMI': '24.5', 'BMI_Group': 'normal', ...}])`): the averages and distributions show the same values. (Deferred to the orchestrator's checkpoint.)
 
-- [ ] **Step 6: Commit** (Next.js) `fix: parse spreadsheet numbers where charts use them`
+- [x] **Step 6: Commit** (Next.js) `fix: parse spreadsheet numbers where charts use them`
 
 ### Task 4: Person reports carry the campaign, and rows on request
 

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { findNationalIdColumn, campaignUploads, pickUpload, rowMatches } from '../src/lib/campaign.ts';
+import { findNationalIdColumn, campaignUploads, pickUpload, rowMatches, toNumber } from '../src/lib/campaign.ts';
 
 const up = (id, type, day) => ({ id, type, created_at: `2026-09-${day}T00:00:00Z`, name: String(id) });
 
@@ -31,4 +31,16 @@ test('row search matches any cell, with Persian digits folded', () => {
   assert.equal(rowMatches(row, '۱۲۳۴'), true);
   assert.equal(rowMatches(row, 'sara'), false);
   assert.equal(rowMatches(row, '  '), true);
+});
+
+test('toNumber reads text and numbers alike, and refuses anything else', () => {
+  assert.equal(toNumber(24.5), 24.5);
+  assert.equal(toNumber('24.5'), 24.5);
+  assert.equal(toNumber(' ۲۴٫۵ '), 24.5);
+  assert.equal(toNumber('70'), 70);
+  assert.equal(toNumber('-3'), -3);
+  assert.equal(toNumber(''), undefined);
+  assert.equal(toNumber(null), undefined);
+  assert.equal(toNumber('12 kg'), undefined);
+  assert.equal(toNumber(Number.NaN), undefined);
 });

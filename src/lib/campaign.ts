@@ -30,6 +30,18 @@ export const pickUpload = <U extends { id: number }>(uploads: U[], requested: st
   };
 };
 
+/** A spreadsheet cell as a number, whether stored as text or as a number. */
+export const toNumber = (value: unknown): number | undefined => {
+  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
+  if (typeof value !== "string") return undefined;
+  const text = value
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+    .replace("٫", ".")
+    .trim();
+  return /^-?\d+(\.\d+)?$/.test(text) ? Number(text) : undefined;
+};
+
 /** Whether any cell of `row` contains `query`, ignoring case and digit script. */
 export const rowMatches = (row: Record<string, unknown>, query: string) => {
   const q = query.trim().toLowerCase();
