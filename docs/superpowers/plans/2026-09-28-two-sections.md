@@ -48,7 +48,7 @@
 3. **`?upload=` naming an upload that belongs to another campaign or was deleted** must fall back to the newest upload of this campaign, with a notice. Pinned in Task 6 (`pickUpload` tests) and Task 11.
 4. **A viewer opening a staff route by URL, or a patient account calling any console endpoint**: the viewer sees "Staff access required" and no write controls; the patient gets 403. Pinned in Task 1 (Django tests) and Task 8/11 (browser).
 5. **An upload for a campaign without a chart layout that has no national-ID column** must still render as a table, with rows that are not links, and the uploader is told why. Pinned in Task 3 (`no_id_column`), Task 6 (`findNationalIdColumn`) and Task 10.
-6. **A messy spreadsheet** (dates, blank or letter-bearing IDs, duplicates, missing chart columns) is saved and each problem is listed by Excel row. Only an unreadable file, an empty sheet or a missing ID column for a charted monitoring is refused, and it says exactly why. Pinned in Task 3 (Django tests) and Task 9 (browser, fa and en).
+6. **A messy spreadsheet** (dates, numbers, blank or letter-bearing IDs, duplicates, missing columns, no rows) is saved as text, and each problem is listed by Excel row. Only an unreadable file is refused, and it says why. Charts still read numbers from the text. Pinned in Task 3 (Django tests), Task 3b (`toNumber`, text-only Step 1 upload) and Task 9 (browser, fa and en).
 
 ---
 
@@ -273,17 +273,19 @@ In `views.py`, add to `MonitoringTypeViewSet` (and import `Count` from `django.d
 
 - [ ] **Step 5: Commit** `feat: monitoring types report upload and record counts`
 
-### Task 3: Upload feedback: exact problems, blocking only what breaks
+### Task 3: Upload saves every readable file as text, and lists what to check
 
-The report code reads spreadsheets loosely: missing columns give empty charts, and odd cell types give "-". So the upload refuses a file only where our code really fails. Everything else is saved and reported as a warning with Excel row numbers. The API returns **codes plus details, not sentences**, so the upload page can say it in Persian or English.
+User rules (2026-09-28):
+- **Every cell is stored as text.** A component converts to a number only where it needs one (Task 3b); the upload never cares about types.
+- **Save whenever possible.** The only refusal is a file that cannot be read at all, because then there is nothing to save. Everything else is saved, and anything that will limit what the pages can show is listed as a warning with Excel row numbers.
+- The API returns **codes plus details, not sentences**, so the upload page can say it in Persian or English.
 
-Verified failure points (2026-09-28 code read) that shape the rules:
-- A date or time cell made the save raise, giving a 500. **Fixed here** by storing dates as ISO text.
-- A layout campaign whose national-ID column is missing: no one in the file can be opened (links become `/undefined`). **Refused.**
-- A sheet with no data rows: nothing to show. **Refused.**
-- An unreadable, corrupt or `.xls` file (no `xlrd`). **Refused**, with the parser's detail.
-- Blank IDs, non-10-digit IDs and duplicate IDs: those rows can't be opened or would match the wrong person. **Warned**, with row numbers.
-- Missing chart columns: those charts are empty. **Warned**, naming every column.
+What each warning means for the pages (from the 2026-09-28 code read):
+- **No data rows:** the upload shows its empty state.
+- **A charted monitoring missing its national-ID column:** charts still work, but no one can be opened.
+- **Blank, non-10-digit or duplicate IDs:** those rows can't be opened, or a duplicate shows several rows.
+- **Missing chart columns:** those charts are empty.
+- **Reading every cell as text also removes the date crash** (a date cell used to make the save fail with a 500).
 
 **Files:**
 - Create: `D/saderatBankHealthMonitoring/layouts.py`, `D/saderatBankHealthMonitoring/upload_checks.py`
@@ -293,7 +295,7 @@ Verified failure points (2026-09-28 code read) that shape the rules:
 
 **Interfaces:**
 - Produces:
-  - An issue is a dict `{"level": "error"|"warning", "code": str, ...details}`. Codes and details:
+  - An issue is a dict `{"level": "error"|"warning", "code": str, ...details}`. `unreadable` is the only error; every other code is a warning. Codes and details:
     - `unreadable {detail}`
     - `no_rows {}`
     - `missing_id_column {column, found: [str], looks_like?: slug}`
@@ -303,7 +305,7 @@ Verified failure points (2026-09-28 code read) that shape the rules:
     - `duplicate_ids {count, groups: [{value, rows: [int]}]}`
     - `missing_columns {columns: [str]}`
   - Row numbers are Excel row numbers (header = row 1, so the first data row is 2). Lists are capped at 20 entries, and `count` carries the full total.
-  - A refused upload returns `400 {"file": ["The file cannot be used as it is."], "issues": [errors]}`.
+  - An unreadable file returns `400 {"file": ["The file could not be read."], "issues": [unreadable]}`.
   - A saved upload returns `200 {"message": "...", "id": int, "issues": [warnings]}`.
 
 - [ ] **Step 1: Write the failing tests** in `test_upload_checks.py`:
@@ -336,32 +338,42 @@ class UploadChecksTests(APITestCase):
         return self.client.post(reverse('monitorings-upload-excel'),
                                 {'name': name, 'type': slug, 'file': file}, format='multipart')
 
-    def test_date_cells_are_stored_as_text(self):
-        response = self.upload('step_2', excel_upload([{**STEP_2_ROW, 'تاریخ': datetime(2026, 9, 1)}]))
+    def test_every_cell_is_stored_as_text(self):
+        row = {**STEP_2_ROW, 'تاریخ': datetime(2026, 9, 1), 'Heart rate:': 70, 'BMI': 24.5}
+        response = self.upload('step_2', excel_upload([row]))
         self.assertEqual(response.status_code, 200)
-        stored = SaderatBankHealthMonitoring.objects.get(id=response.data['id']).json
-        self.assertTrue(stored[0]['تاریخ'].startswith('2026-09-01'))
+        stored = SaderatBankHealthMonitoring.objects.get(id=response.data['id']).json[0]
+        self.assertTrue(stored['تاریخ'].startswith('2026-09-01'))
+        self.assertEqual(stored['Heart rate:'], '70')
+        self.assertEqual(stored['BMI'], '24.5')
+        self.assertIsNone({**stored, 'x': None}['x'])
 
-    def test_layout_file_without_its_id_column_is_refused_with_details(self):
+    def test_empty_cells_stay_null_not_the_text_nan(self):
+        response = self.upload('step_2', excel_upload([{**STEP_2_ROW, 'Respiratory rate': None}]))
+        stored = SaderatBankHealthMonitoring.objects.get(id=response.data['id']).json[0]
+        self.assertIsNone(stored['Respiratory rate'])
+
+    def test_layout_file_without_its_id_column_is_saved_with_details(self):
         response = self.upload('step_1', excel_upload([STEP_2_ROW]))
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         issue = codes(response.data['issues'])['missing_id_column']
-        self.assertEqual(issue['level'], 'error')
+        self.assertEqual(issue['level'], 'warning')
         self.assertEqual(issue['column'], 'personel.کد ملی')
         self.assertIn('کد ملی', issue['found'])
         self.assertEqual(issue['looks_like'], 'step_2')
-        self.assertFalse(SaderatBankHealthMonitoring.objects.filter(name='Sheet').exists())
 
-    def test_empty_sheet_is_refused(self):
+    def test_empty_sheet_is_saved_with_a_warning(self):
         response = self.upload('step_2', excel_upload([]))
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('no_rows', codes(response.data['issues']))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(codes(response.data['issues'])['no_rows']['level'], 'warning')
 
-    def test_unreadable_file_is_refused_with_the_parser_detail(self):
+    def test_unreadable_file_is_the_only_refusal(self):
         bad = io.BytesIO(b'not a spreadsheet'); bad.name = 'report.xlsx'
         response = self.upload('step_2', bad)
         self.assertEqual(response.status_code, 400)
-        self.assertTrue(codes(response.data['issues'])['unreadable']['detail'])
+        issue = codes(response.data['issues'])['unreadable']
+        self.assertEqual(issue['level'], 'error')
+        self.assertTrue(issue['detail'])
 
     def test_bad_ids_are_saved_and_listed_by_excel_row(self):
         rows = [STEP_2_ROW, {**STEP_2_ROW, 'کد ملی': None}, {**STEP_2_ROW, 'کد ملی': 'AB12'}, STEP_2_ROW]
@@ -386,7 +398,7 @@ class UploadChecksTests(APITestCase):
         self.assertEqual(set(codes(response.data['issues'])), {'missing_columns'})
 ```
 
-- [ ] **Step 2: Run to verify they fail.** `manage.py test saderatBankHealthMonitoring.test_upload_checks --noinput`. Expected: FAIL (a 500 on the date test, and `KeyError: 'issues'`).
+- [ ] **Step 2: Run to verify they fail.** `manage.py test saderatBankHealthMonitoring.test_upload_checks --noinput`. Expected: FAIL (a 500 on the date cell, numbers stored as numbers, and `KeyError: 'issues'`).
 
 - [ ] **Step 3: `layouts.py`.** These columns are copied from the chart code; keep them in step with `C/saderat-bank-health-monitoring/step-1/[id]/page.tsx` (its `countValues`/`numericStats`/`categorizeNumeric` calls) and `C/saderat-bank-health-monitoring/step-2/[id]/_charts/config.ts`.
 
@@ -434,26 +446,18 @@ LAYOUTS = {
 - [ ] **Step 4: `upload_checks.py`**
 
 ```python
-"""Turn a parsed sheet into issues a person can act on.
+"""Turn a parsed sheet into warnings a person can act on.
 
-Errors stop the upload; warnings are saved with it. Row numbers are
-Excel's: row 1 holds the headers, so the first data row is 2.
+Nothing here stops an upload: a readable sheet is always saved. Row
+numbers are Excel's: row 1 holds the headers, so the first data row is 2.
 """
 from collections import defaultdict
-from datetime import date, datetime, time
 
 from .layouts import LAYOUTS
 from .national_id import EXCEL_NATIONAL_ID_COLUMNS, canonical_national_id
 
 LISTED = 20
 FIRST_DATA_ROW = 2
-
-
-def json_safe(value):
-    """Dates and times as ISO text: JSONField cannot store them."""
-    if isinstance(value, (datetime, date, time)):  # pandas.Timestamp is a datetime
-        return value.isoformat()
-    return value
 
 
 def id_column_for(slug, columns):
@@ -473,23 +477,22 @@ def looks_like(slug, columns):
 
 
 def check_sheet(slug, rows, columns):
-    """(errors, warnings) for a parsed sheet going into monitoring `slug`."""
+    """Warnings for a parsed sheet going into monitoring `slug`."""
     columns = [str(c) for c in columns]
     if not rows:
-        return [{'level': 'error', 'code': 'no_rows'}], []
+        return [{'level': 'warning', 'code': 'no_rows'}]
 
     layout = LAYOUTS.get(slug)
     id_column = id_column_for(slug, columns)
+    warnings = []
     if layout and id_column is None:
-        error = {'level': 'error', 'code': 'missing_id_column',
-                 'column': layout['id_column'], 'found': columns[:LISTED]}
+        warning = {'level': 'warning', 'code': 'missing_id_column',
+                   'column': layout['id_column'], 'found': columns[:LISTED]}
         other = looks_like(slug, columns)
         if other:
-            error['looks_like'] = other
-        return [error], []
-
-    warnings = []
-    if id_column is None:
+            warning['looks_like'] = other
+        warnings.append(warning)
+    elif id_column is None:
         warnings.append({'level': 'warning', 'code': 'no_id_column'})
     else:
         blank, invalid, seen = [], [], defaultdict(list)
@@ -517,36 +520,30 @@ def check_sheet(slug, rows, columns):
         missing = [c for c in layout['chart_columns'] if c not in columns]
         if missing:
             warnings.append({'level': 'warning', 'code': 'missing_columns', 'columns': missing})
-    return [], warnings
+    return warnings
 ```
 
 - [ ] **Step 5: Use it in the upload serializer.** Replace the body of `create` from `try:` through `objects.create(...)` with:
 
 ```python
         try:
-            string_columns = {
-                'personel.کد ملی': str,
-                'تجمیع نتایج.کد ملی': str
-            }
-            df = pd.read_excel(file, dtype=string_columns)
+            # Every cell as text: a component parses a number only where it
+            # needs one. Empty cells stay NaN here and become None below.
+            df = pd.read_excel(file, dtype=str)
         except Exception as e:
             raise serializers.ValidationError({
-                'file': ['The file cannot be used as it is.'],
+                'file': ['The file could not be read.'],
                 'issues': [{'level': 'error', 'code': 'unreadable', 'detail': str(e)}],
             })
 
         df = df.astype(object).where(pd.notnull(df), None)
-        json_data = [{key: json_safe(value) for key, value in row.items()}
-                     for row in df.to_dict(orient="records")]
+        json_data = df.to_dict(orient="records")
         for row in json_data:
             for column in EXCEL_NATIONAL_ID_COLUMNS:
                 if column in row:
                     row[column] = canonical_national_id(row[column])
 
-        errors, warnings = check_sheet(type.slug, json_data, list(df.columns))
-        if errors:
-            raise serializers.ValidationError({
-                'file': ['The file cannot be used as it is.'], 'issues': errors})
+        warnings = check_sheet(type.slug, json_data, list(df.columns))
 
         instance = SaderatBankHealthMonitoring.objects.create(
             name=name, type=type, json=json_data)
@@ -554,7 +551,9 @@ def check_sheet(slug, rows, columns):
         return instance
 ```
 
-Import `from .upload_checks import check_sheet, json_safe`. The existing `UniqueTogetherValidator` stays.
+Import `from .upload_checks import check_sheet`. The existing `UniqueTogetherValidator` (the same name twice in one monitoring) stays: that is a name-field message, not a file problem.
+
+Check with pandas: a numeric cell read with `dtype=str` comes back as `'70'`, not `'70.0'`, because openpyxl yields an `int` for a whole number. If the test shows `'70.0'`, strip a trailing `.0` from whole floats in a small loop before `to_dict`. Don't change the test.
 
 In `views.py`, `upload_excel`:
 
@@ -566,9 +565,74 @@ In `views.py`, `upload_excel`:
 
 The `inline_serializer` fields become `{'message': CharField(), 'id': IntegerField(), 'issues': ListField(child=DictField())}`.
 
-- [ ] **Step 6: Run the suite.** `manage.py test --noinput`. Expected: `OK`. `UploadKeepsNationalIdZerosTests` still passes, since its row has `کد ملی` and goes to `step_2`.
+- [ ] **Step 6: Run the suite.** `manage.py test --noinput`. Expected: `OK`. `UploadKeepsNationalIdZerosTests` still passes: the numeric cell `12345678` is read as the text `'12345678'` and padded to `'0012345678'`.
 
-- [ ] **Step 7: Commit** `feat: upload reports exact problems by row; refuses only what breaks`
+- [ ] **Step 7: Commit** `feat: upload stores every cell as text, saves any readable file, lists what to check`
+
+### Task 3b: Numbers are parsed where they are used (Next.js)
+
+New uploads hold text only; older uploads hold numbers. Every place that needs a number must accept both. The 2026-09-28 search found four such places, all in Step 1. Step 2 already reads every cell as text.
+
+**Files:**
+- Modify: `N/src/lib/campaign.ts` (add `toNumber`; created in Task 6, so create the file here if Task 6 has not run, with only this function and its test)
+- Modify: `C/saderat-bank-health-monitoring/step-1/[id]/page.tsx` (lines ~81, ~101, ~306)
+- Modify: `C/saderat-bank-health-monitoring/step-1/[id]/[national_id]/page.tsx` (line ~470)
+- Test: `N/tests/campaign.test.mjs`
+
+**Interfaces:**
+- Produces: `toNumber(value: unknown): number | undefined`. It folds Persian/Arabic digits and the Persian decimal separator `٫`, trims, and accepts only a plain decimal number; everything else is `undefined`.
+
+- [ ] **Step 1: Failing test** (in `tests/campaign.test.mjs`):
+
+```js
+import { toNumber } from '../src/lib/campaign.ts';
+
+test('toNumber reads text and numbers alike, and refuses anything else', () => {
+  assert.equal(toNumber(24.5), 24.5);
+  assert.equal(toNumber('24.5'), 24.5);
+  assert.equal(toNumber(' ۲۴٫۵ '), 24.5);
+  assert.equal(toNumber('70'), 70);
+  assert.equal(toNumber('-3'), -3);
+  assert.equal(toNumber(''), undefined);
+  assert.equal(toNumber(null), undefined);
+  assert.equal(toNumber('12 kg'), undefined);
+  assert.equal(toNumber(Number.NaN), undefined);
+});
+```
+
+- [ ] **Step 2: Run to verify it fails.** `node --test --experimental-strip-types tests/campaign.test.mjs`. Expected: FAIL (`toNumber` is not exported).
+
+- [ ] **Step 3: Implement** in `campaign.ts`:
+
+```ts
+/** A spreadsheet cell as a number, whether stored as text or as a number. */
+export const toNumber = (value: unknown): number | undefined => {
+  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
+  if (typeof value !== "string") return undefined;
+  const text = value
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+    .replace("٫", ".")
+    .trim();
+  return /^-?\d+(\.\d+)?$/.test(text) ? Number(text) : undefined;
+};
+```
+
+- [ ] **Step 4: Use it at the four places.**
+  - Step 1 report, `numericStats` (~line 81): map through `toNumber` and keep the defined values, instead of filtering `typeof v === "number"`:
+    `.map((v) => toNumber(v)).filter((v): v is number => v !== undefined)`.
+  - `categorizeNumeric` (~line 101): `const value = toNumber(item[field]); if (value !== undefined) { … }`.
+  - `handleRangeBarClick` (~line 306): `const value = toNumber(record[field]); if (value === undefined) return false;`.
+  - Step 1 person page (~line 470): `toNumber(person_data["BMI"])?.toLocaleString("en-US", { … }) ?? formatCellValue(String(person_data["BMI"] ?? "-"), locale)`, keeping the existing options object.
+
+  Import `toNumber` from `@/lib/campaign`. The Step 1 files move in Tasks 10 and 13, and those moves carry these edits along unchanged.
+
+- [ ] **Step 5: Verify.**
+  - The tests pass; `npx tsc --noEmit` passes; lint is unchanged on both files (25 existing errors on the report stay 25).
+  - Browser: an existing Step 1 upload still shows the age and BMI averages and distributions.
+  - Seed a Step 1 upload whose cells are all text (`SaderatBankHealthMonitoring.objects.create(..., json=[{'personel.کد ملی': '0012345678', 'سن': '41', 'BMI': '24.5', 'BMI_Group': 'normal', ...}])`): the averages and distributions show the same values.
+
+- [ ] **Step 6: Commit** (Next.js) `fix: parse spreadsheet numbers where charts use them`
 
 ### Task 4: Person reports carry the campaign, and rows on request
 
@@ -1066,7 +1130,7 @@ In `/console/monitorings.Builder`: `NewTitle` → "Define a new monitoring" / "�
     - The campaign `Select` lists **all** types (remove the `isKnownSBHM_Type` filter). Its value is the slug, as the API expects.
     - The default campaign is `searchParams.get("campaign")`, mapped to that type's slug once types load (render the form only once `types.data` exists, and pass the matching slug as `defaultValues.type` to `useForm`).
     - On success, `router.push(\`/console/monitorings/${campaign.id}?upload=${result.id}\`)`, where `campaign` is the type whose slug was submitted. Keep the toast and the `LIST_SBHM_QUERY_KEY` invalidation.
-    - **Refused** (400 with `issues`): don't set a field error. Show an `Alert variant="destructive"` titled `t("refusedTitle")` containing `<UploadIssues issues={issues} campaigns={types.data} />`.
+    - **Refused** (400 with `issues`: only an unreadable file): don't set a field error. Show an `Alert variant="destructive"` titled `t("refusedTitle")` containing `<UploadIssues issues={issues} campaigns={types.data} />`.
     - **Saved with warnings** (200, `issues.length > 0`): don't navigate. Replace the form with a result panel: title `t("savedWithIssues", { count })`, `<UploadIssues …/>`, and two buttons, `t("openUpload")` (→ the campaign page with `?upload=`) and `t("uploadAnother")` (resets the form).
     - **Saved clean**: navigate as above.
   - `C/monitorings/upload/_issues.tsx` exports `UploadIssues({ issues, campaigns })`. It renders a `<ul>` with one `<li>` per issue, using `t(\`issues.${issue.code}\`, values)`. The values are built per code:
@@ -1086,8 +1150,8 @@ In `/console/monitorings.Builder`: `NewTitle` → "Define a new monitoring" / "�
 | openUpload | Open this upload | مشاهده این فایل |
 | uploadAnother | Upload another file | بارگذاری فایل دیگر |
 | issues.unreadable | The file could not be read. Save it as an .xlsx file and try again. | فایل خوانده نشد. آن را با قالب ‎.xlsx ذخیره کنید و دوباره تلاش کنید. |
-| issues.no_rows | The sheet has no data rows under its header row. | برگه زیر ردیف سرستون‌ها هیچ ردیف داده‌ای ندارد. |
-| issues.missing_id_column | The column “{column}” is missing, so no one in this file could be opened. Columns found: {found} | ستون «{column}» وجود ندارد، بنابراین هیچ‌کس در این فایل باز نمی‌شود. ستون‌های موجود: {found} |
+| issues.no_rows | The sheet has no data rows under its header row, so there is nothing to show. | برگه زیر ردیف سرستون‌ها هیچ ردیف داده‌ای ندارد و چیزی برای نمایش نیست. |
+| issues.missing_id_column | The column “{column}” is missing: the charts work, but no one in this file can be opened. Columns found: {found} | ستون «{column}» وجود ندارد: نمودارها کار می‌کنند، اما هیچ‌کس در این فایل باز نمی‌شود. ستون‌های موجود: {found} |
 | issues.looks_like | This looks like a “{campaign}” file. Did you choose the right monitoring? | این فایل شبیه فایل «{campaign}» است. آیا پایش درست را انتخاب کرده‌اید؟ |
 | issues.no_id_column | No national ID column was found, so these rows can’t be linked to patients. | ستون کد ملی پیدا نشد، بنابراین این ردیف‌ها به بیماران وصل نمی‌شوند. |
 | issues.blank_ids | {count} rows have no national ID and can’t be opened. Rows: {rows} | {count} ردیف کد ملی ندارند و باز نمی‌شوند. ردیف‌ها: {rows} |
@@ -1101,7 +1165,7 @@ In `/console/monitorings.Builder`: `NewTitle` → "Define a new monitoring" / "�
   - `npx tsc --noEmit` and the message check.
   - Browser as staff:
     - upload a small xlsx to "Blood pressure check" → lands on `/fa/console/monitorings/3?upload=<id>`;
-    - upload a Step 2 sheet to Step 1 → refused; the alert names the missing `personel.کد ملی` column, lists the columns found, and asks "Did you choose the right monitoring?" naming Step 2;
+    - upload a Step 2 sheet to Step 1 → saved; the result panel names the missing `personel.کد ملی` column, lists the columns found, and asks "Did you choose the right monitoring?" naming Step 2;
     - upload a Step 2 sheet with one blank and one duplicate ID → saved; the result panel lists both with Excel row numbers and the missing chart columns; "Open this upload" goes to the campaign page;
     - upload a `.txt` renamed to `.xlsx` → refused with the "could not be read" message and the parser detail;
     - check the same three in `/en/`.

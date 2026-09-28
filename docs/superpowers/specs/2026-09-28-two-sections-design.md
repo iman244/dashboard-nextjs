@@ -81,19 +81,14 @@ No database change is needed: uploads and form records already point at their `M
 
 **Campaign counts.** The monitoring-types list and retrieve responses add read-only `upload_count` and `record_count`, annotated in one query, so the campaign list does not fetch every upload or record.
 
-**Upload feedback.** The uploader learns exactly what is wrong, and only what really breaks our code is refused. The report code reads sheets loosely (a missing column gives an empty chart, an odd cell gives "-"), so:
-- **Refused**, each with its detail:
-  - an unreadable file (not .xlsx, or corrupt), with the parser's message;
-  - a sheet with no data rows;
-  - for a charted monitoring (`step_1`, `step_2`), a missing national-ID column. The error names the column, lists the columns found, and says when the file looks like another monitoring's.
-- **Saved, and listed as warnings** with Excel row numbers:
-  - blank national IDs;
-  - IDs that aren't 10 digits;
-  - duplicate IDs;
-  - missing chart columns, each named;
-  - for monitorings without charts, no national-ID column at all.
-- **Fixed rather than refused:** date and time cells, which used to crash the upload with a 500, are stored as ISO text.
-- The API returns codes plus details, and the upload page writes the sentences in Persian or English.
+**Upload feedback.** Every cell is stored as text; a component converts to a number only where it needs one (the Step 1 age and BMI charts, the range-bar filter and the person page's BMI). Any readable file is saved; the only refusal is a file that cannot be read at all. Everything that will limit what the pages can show is listed as a warning with Excel row numbers:
+- no data rows;
+- a charted monitoring (`step_1`, `step_2`) missing its national-ID column (charts work, but no one can be opened). The warning lists the columns found and says when the file looks like another monitoring's;
+- blank, non-10-digit or duplicate national IDs;
+- missing chart columns, each named;
+- for monitorings without charts, no national-ID column.
+
+The API returns codes plus details, and the upload page writes the sentences in Persian or English.
 
 **Person reports** gains two things:
 - Each item carries its campaign as `monitoring: {id, slug, name_en, name_fa}`.
