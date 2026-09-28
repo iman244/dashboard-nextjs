@@ -75,11 +75,11 @@ export default function RecordMonitoringPage() {
               return (
                 <li key={monitoring.id}>
                   <Link
-                    href={`/console/monitorings/${monitoring.id}/records`}
+                    href={`/console/monitorings/${monitoring.id}/records/new`}
                     className="group flex min-h-16 items-center gap-4 px-4 py-4 transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
                   >
                     <span className="min-w-0 flex-1 font-medium">{name}</span>
-                    <span className="shrink-0 text-sm font-medium text-primary">{t("viewEntries")}</span>
+                    <span className="shrink-0 text-sm font-medium text-primary">{t("addRecord")}</span>
                     <ArrowRight aria-hidden="true" className="size-4 shrink-0 rtl:rotate-180" />
                   </Link>
                 </li>

@@ -552,7 +552,7 @@
     "accessDeniedTitle": "Staff access required",
     "accessDeniedDescription": "Ask an administrator for access to monitoring records.",
     "title": "Record monitoring",
-    "description": "Choose a monitoring type to view its patient entries or add a record.",
+    "description": "Choose a monitoring type to add a patient record to it.",
     "loading": "Loading monitoring types…",
     "errorTitle": "Monitoring types could not be loaded",
     "errorDescription": "Check your connection and try again.",
@@ -561,7 +561,7 @@
     "emptyStaff": "Create a monitoring type to start recording.",
     "emptyViewer": "Ask an administrator to create a monitoring type.",
     "createType": "New type",
-    "viewEntries": "View entries",
+    "addRecord": "Add record",
     "noFormsTitle": "No monitoring type has a form yet",
     "noFormsDescription": "Add fields to a monitoring type under Monitorings to start recording.",
     "hiddenNote": "Types without form fields, such as Excel report types, are not listed here."
