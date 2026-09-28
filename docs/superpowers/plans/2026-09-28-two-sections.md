@@ -67,13 +67,13 @@
 **Interfaces:**
 - Produces: `IsConsoleReader` permission class. Safe methods are allowed for an authenticated user without `patient_identity`; anything else additionally requires `is_staff`.
 
-- [ ] **Step 1: Create the branch**
+- [x] **Step 1: Create the branch**
 
 ```bash
 cd D && git switch feat/person-reports && git switch -c feat/two-sections
 ```
 
-- [ ] **Step 2: Write the failing tests** in `D/saderatBankHealthMonitoring/test_console_read.py`:
+- [x] **Step 2: Write the failing tests** in `D/saderatBankHealthMonitoring/test_console_read.py`:
 
 ```python
 from django.contrib.auth import get_user_model
@@ -151,12 +151,12 @@ class ConsoleReadAccessTests(APITestCase):
                 self.assertEqual(self.client.get(API + endpoint).status_code, 401)
 ```
 
-- [ ] **Step 3: Run it to verify it fails**
+- [x] **Step 3: Run it to verify it fails**
 
 Run: `cd D && ../dashboard-django/venv/bin/python manage.py test saderatBankHealthMonitoring.test_console_read --noinput`
 Expected: FAIL. `test_viewer_reads_every_console_endpoint` gets 403.
 
-- [ ] **Step 4: Add the permission** in `views.py`, directly after `class IsClinicalStaff`:
+- [x] **Step 4: Add the permission** in `views.py`, directly after `class IsClinicalStaff`:
 
 ```python
 class IsConsoleReader(permissions.BasePermission):
@@ -179,7 +179,7 @@ class IsConsoleReader(permissions.BasePermission):
 
 Then set `permission_classes = [IsConsoleReader]` on `MonitoringTypeViewSet`, `SaderatBankHealthMonitoringViewSet`, `PatientEntryViewSet`, `PatientRecordsView` and `PersonReportsView`. Leave `OwnPatientRecordsView` unchanged.
 
-- [ ] **Step 5: Flip the old read-denial tests to the new rule**
+- [x] **Step 5: Flip the old read-denial tests to the new rule**
   - `tests.py` `test_member_cannot_read_types`: rename to `test_member_reads_types` and assert `200`.
   - `tests.py` `test_member_cannot_list_or_read`: rename to `test_member_can_list_and_read` and assert `200` for both `listed` and `one`.
   - `test_patient_access.py` `test_unprofiled_account_cannot_read_general_endpoints`: rename to `test_unprofiled_account_reads_general_endpoints` and assert `200` for each endpoint.
@@ -194,12 +194,12 @@ Then set `permission_classes = [IsConsoleReader]` on `MonitoringTypeViewSet`, `S
         self.assertEqual(self.get().status_code, status.HTTP_403_FORBIDDEN)
 ```
 
-- [ ] **Step 6: Run the whole suite**
+- [x] **Step 6: Run the whole suite**
 
 Run: `cd D && ../dashboard-django/venv/bin/python manage.py test --noinput`
 Expected: `OK`. Every test that still expects 403 involves a patient identity or a write.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 cd D && git add saderatBankHealthMonitoring && git commit -m "feat: console users read monitoring data; staff write; patients refused
@@ -217,7 +217,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 **Interfaces:**
 - Produces: `MonitoringType` responses gain read-only `upload_count: int` and `record_count: int`.
 
-- [ ] **Step 1: Write the failing test** (append to `test_console_read.py`):
+- [x] **Step 1: Write the failing test** (append to `test_console_read.py`):
 
 ```python
 class CampaignCountTests(APITestCase):
@@ -236,12 +236,12 @@ class CampaignCountTests(APITestCase):
         self.assertEqual(one['upload_count'], 2)
 ```
 
-- [ ] **Step 2: Run it to verify it fails**
+- [x] **Step 2: Run it to verify it fails**
 
 Run: `../dashboard-django/venv/bin/python manage.py test saderatBankHealthMonitoring.test_console_read.CampaignCountTests --noinput`
 Expected: FAIL with `KeyError: 'upload_count'`.
 
-- [ ] **Step 3: Implement.** In `serializers.py`:
+- [x] **Step 3: Implement.** In `serializers.py`:
 
 ```python
 class MonitoringTypeSerializer(serializers.ModelSerializer):
@@ -269,9 +269,9 @@ In `views.py`, add to `MonitoringTypeViewSet` (and import `Count` from `django.d
 
 (`monitorings` is the `related_name` of `SaderatBankHealthMonitoring.type`, the same one `destroy` uses; `entries` is the `related_name` of `PatientEntry.monitoring`.)
 
-- [ ] **Step 4: Run the suite.** `manage.py test --noinput`. Expected: `OK`.
+- [x] **Step 4: Run the suite.** `manage.py test --noinput`. Expected: `OK`.
 
-- [ ] **Step 5: Commit** `feat: monitoring types report upload and record counts`
+- [x] **Step 5: Commit** `feat: monitoring types report upload and record counts`
 
 ### Task 3: Upload saves every readable file as text, and lists what to check
 
@@ -308,7 +308,7 @@ What each warning means for the pages (from the 2026-09-28 code read):
   - An unreadable file returns `400 {"file": ["The file could not be read."], "issues": [unreadable]}`.
   - A saved upload returns `200 {"message": "...", "id": int, "issues": [warnings]}`.
 
-- [ ] **Step 1: Write the failing tests** in `test_upload_checks.py`:
+- [x] **Step 1: Write the failing tests** in `test_upload_checks.py`:
 
 ```python
 import io
@@ -398,9 +398,9 @@ class UploadChecksTests(APITestCase):
         self.assertEqual(set(codes(response.data['issues'])), {'missing_columns'})
 ```
 
-- [ ] **Step 2: Run to verify they fail.** `manage.py test saderatBankHealthMonitoring.test_upload_checks --noinput`. Expected: FAIL (a 500 on the date cell, numbers stored as numbers, and `KeyError: 'issues'`).
+- [x] **Step 2: Run to verify they fail.** `manage.py test saderatBankHealthMonitoring.test_upload_checks --noinput`. Expected: FAIL (a 500 on the date cell, numbers stored as numbers, and `KeyError: 'issues'`).
 
-- [ ] **Step 3: `layouts.py`.** These columns are copied from the chart code; keep them in step with `C/saderat-bank-health-monitoring/step-1/[id]/page.tsx` (its `countValues`/`numericStats`/`categorizeNumeric` calls) and `C/saderat-bank-health-monitoring/step-2/[id]/_charts/config.ts`.
+- [x] **Step 3: `layouts.py`.** These columns are copied from the chart code; keep them in step with `C/saderat-bank-health-monitoring/step-1/[id]/page.tsx` (its `countValues`/`numericStats`/`categorizeNumeric` calls) and `C/saderat-bank-health-monitoring/step-2/[id]/_charts/config.ts`.
 
 ```python
 """What each charted monitoring's spreadsheet is read for.
@@ -443,7 +443,7 @@ LAYOUTS = {
 }
 ```
 
-- [ ] **Step 4: `upload_checks.py`**
+- [x] **Step 4: `upload_checks.py`**
 
 ```python
 """Turn a parsed sheet into warnings a person can act on.
@@ -523,7 +523,7 @@ def check_sheet(slug, rows, columns):
     return warnings
 ```
 
-- [ ] **Step 5: Use it in the upload serializer.** Replace the body of `create` from `try:` through `objects.create(...)` with:
+- [x] **Step 5: Use it in the upload serializer.** Replace the body of `create` from `try:` through `objects.create(...)` with:
 
 ```python
         try:
@@ -565,9 +565,9 @@ In `views.py`, `upload_excel`:
 
 The `inline_serializer` fields become `{'message': CharField(), 'id': IntegerField(), 'issues': ListField(child=DictField())}`.
 
-- [ ] **Step 6: Run the suite.** `manage.py test --noinput`. Expected: `OK`. `UploadKeepsNationalIdZerosTests` still passes: the numeric cell `12345678` is read as the text `'12345678'` and padded to `'0012345678'`.
+- [x] **Step 6: Run the suite.** `manage.py test --noinput`. Expected: `OK`. `UploadKeepsNationalIdZerosTests` still passes: the numeric cell `12345678` is read as the text `'12345678'` and padded to `'0012345678'`.
 
-- [ ] **Step 7: Commit** `feat: upload stores every cell as text, saves any readable file, lists what to check`
+- [x] **Step 7: Commit** `feat: upload stores every cell as text, saves any readable file, lists what to check`
 
 ### Task 3b: Numbers are parsed where they are used (Next.js)
 
@@ -644,7 +644,7 @@ export const toNumber = (value: unknown): number | undefined => {
 **Interfaces:**
 - Produces: each person-report item carries `monitoring: {id, slug, name_en, name_fa}`. With `?monitoring=<id>`, only that campaign's uploads are returned, and each carries `rows: list[dict]` (only this person's rows). Without it, `rows` is absent.
 
-- [ ] **Step 1: Write the failing tests** (append to `PersonReportsApiTests`):
+- [x] **Step 1: Write the failing tests** (append to `PersonReportsApiTests`):
 
 ```python
     def test_items_name_their_campaign(self):
@@ -670,9 +670,9 @@ export const toNumber = (value: unknown): number | undefined => {
         self.assertEqual(response.status_code, 400)
 ```
 
-- [ ] **Step 2: Run to verify they fail.** Expected: `KeyError: 'monitoring'`.
+- [x] **Step 2: Run to verify they fail.** Expected: `KeyError: 'monitoring'`.
 
-- [ ] **Step 3: Implement.** In `serializers.py`:
+- [x] **Step 3: Implement.** In `serializers.py`:
 
 ```python
 class CampaignRefSerializer(serializers.ModelSerializer):
@@ -719,9 +719,9 @@ In `PersonReportsView.list`:
 
 Add `OpenApiParameter('monitoring', int, required=False, description='Limit to one monitoring and include the rows.')` to the view's `extend_schema`.
 
-- [ ] **Step 4: Run the suite.** Expected: `OK`.
+- [x] **Step 4: Run the suite.** Expected: `OK`.
 
-- [ ] **Step 5: Regenerate the contract and commit (Django)**
+- [x] **Step 5: Regenerate the contract and commit (Django)**
 
 ```bash
 cd D && ../dashboard-django/venv/bin/python manage.py spectacular --file openapi.yaml --validate

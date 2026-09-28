@@ -30,6 +30,23 @@ Plan: `2026-09-28-two-sections.md` (19 tasks: 1–18 plus 3b). Spec: `../specs/2
 
 ## Task status
 
-| Task | Status | Commit |
+| Task | Status | Commits |
 |---|---|---|
-| 1–18, 3b | not started | |
+| 1 | done, review clean | Django 5d74f7e..ef4a761 |
+| 2 | done, 1 fix round | Django ef4a761..a5938a6 |
+| 3 | done, review clean | Django a5938a6..dbcaf23 |
+| 4 | done, 1 fix round | Django dbcaf23..b108449 |
+| 6 | done, 1 fix round | Next 61ac3a3..4878fe5 |
+| 3b | done | Next 4878fe5..d93de23 |
+| 7 | done, review clean | Next d93de23..c866951 |
+| 5 | done, review clean | Next c866951..f61cf33 |
+| 8–18 | not started | |
+
+**Checkpoint 1 (2026-09-28):** 35/35 API checks against the live server (staff, viewer, patient, anonymous; counts; person rows; upload warnings; unreadable refusal). Browser: two-section sidebar and home in fa and en, staff and viewer, 390px with no overflow; the Step 1 report renders identically from a numeric and a text-only upload.
+
+**Rulings made during execution** (full list in the orchestrator's final report):
+- `UploadIssue` types `no_rows` and `missing_id_column` as warnings (plan Task 5 said error).
+- Task 8 removes the section-wide `StaffOnlyConsoleSection` from `monitorings/layout.tsx`; staff-only child routes keep their own guard.
+- Task 10 adds the rows-table message keys (the plan put them in Task 11).
+- `fullNationalId` also strips invisible direction marks, and the patient paths escape the id.
+- Patient records nest a count-free monitoring type (no fake zero counts on `/me/`).
