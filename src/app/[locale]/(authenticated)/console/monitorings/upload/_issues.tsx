@@ -11,9 +11,9 @@ import type { MonitoringType_ListSerializer } from "@/data/monitoring-type/types
  * in Persian or English. Row lists (`blank_ids`, `invalid_ids`,
  * `duplicate_ids`) are capped at 20 server-side; `count` is the true total, so
  * an "and N more" line only appears once there is more than what was sent.
- * `missing_id_column.found` and `missing_columns.columns` are capped at 20
- * too, but Django sends no `count` for either, so there is no total to show
- * an "and N more" line against.
+ * `missing_id_column.found` is capped at 20 too; `missing_columns.columns`
+ * is not capped at all. Neither carries a `count`, so there is no total to
+ * show an "and N more" line against for either.
  */
 export function UploadIssues({
   issues,
