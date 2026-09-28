@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { format as formatIso, isValid, parseISO, subYears } from "date-fns";
-import { AlertCircle, Inbox } from "lucide-react";
+import { AlertCircle, Inbox, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { DateRangePicker } from "@/components/app/date-range-picker";
@@ -22,6 +22,7 @@ import {
 import { fullNationalId, isNationalId, safeDecode } from "@/lib/national-id";
 import { localeDigits } from "@/lib/utils";
 import { useDirection } from "@/lib/use-direction";
+import { type PatientType } from "@/components/app/patient-type-selector";
 import { type LabSeries } from "../../saderat-bank-health-monitoring/_ehr/use-person-ehr";
 import { EhrRecordsTable } from "../../saderat-bank-health-monitoring/_ehr/records-table";
 import { EhrTrendDialog } from "../../saderat-bank-health-monitoring/_ehr/trend-dialog";
@@ -81,6 +82,9 @@ export default function PatientPage(
 
   const { settled, tabs, failed } = usePatientEhrTabs({ nationalId, range, enabled: valid });
   const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(null);
+  // The tab the reader last picked; `ehrBody` falls it back to the first tab
+  // at render time when it no longer names one of `tabs`.
+  const [selectedTab, setSelectedTab] = React.useState<PatientType | undefined>(undefined);
   const recordDetail = useRecordDetail();
 
   const person = useQuery({
@@ -115,11 +119,6 @@ export default function PatientPage(
     );
   }
 
-  // Remounts whenever the set of successful types changes (range change,
-  // retry), so a `defaultValue` naming a now-absent tab never leaves the
-  // `Tabs` with nothing selected.
-  const tabsKey = tabs.map((tab) => tab.type).join("|");
-
   const ehrBody = () => {
     if (!settled) {
       return (
@@ -138,10 +137,19 @@ export default function PatientPage(
         </div>
       );
     }
+    // Falls back to the first tab whenever `selectedTab` names a type no
+    // longer among `tabs` (a range change or a successful retry can drop or
+    // add types), computed here rather than synced in an effect, so a retry
+    // that succeeds never yanks the reader back to the first tab.
+    const activeTab = tabs.find((tab) => tab.type === selectedTab)?.type ?? tabs[0]?.type;
     return (
       <div className="space-y-4">
-        {tabs.length > 0 && (
-          <Tabs key={tabsKey} dir={dir} defaultValue={String(tabs[0].type)}>
+        {tabs.length > 0 && activeTab !== undefined && (
+          <Tabs
+            dir={dir}
+            value={String(activeTab)}
+            onValueChange={(value) => setSelectedTab(value as PatientType)}
+          >
             <TabsList>
               {tabs.map((tab) => (
                 <TabsTrigger key={tab.type} value={String(tab.type)}>
@@ -160,12 +168,20 @@ export default function PatientPage(
             ))}
           </Tabs>
         )}
-        {failed.map(({ type, retry }) => (
+        {failed.map(({ type, retry, isFetching }) => (
           <Alert key={type} variant="destructive">
             <AlertCircle aria-hidden="true" className="size-4" />
             <AlertDescription className="flex flex-wrap items-center gap-3">
               <span>{t("ehrFailed", { type: tPatientTypes(type) })}</span>
-              <Button type="button" variant="outline" size="sm" onClick={retry}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={retry}
+                disabled={isFetching}
+                aria-busy={isFetching}
+              >
+                {isFetching && <Loader2 aria-hidden="true" className="size-4 animate-spin" />}
                 {t("retry")}
               </Button>
             </AlertDescription>

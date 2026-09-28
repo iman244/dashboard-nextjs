@@ -12,7 +12,7 @@ import {
 import { buildPersonEhr, type PersonEhr } from "../../saderat-bank-health-monitoring/_ehr/use-person-ehr";
 
 export type PatientEhrTab = { type: PatientType; ehr: PersonEhr };
-export type PatientEhrFailure = { type: PatientType; retry: () => void };
+export type PatientEhrFailure = { type: PatientType; retry: () => void; isFetching: boolean };
 
 /**
  * Every EHR record type for one patient, loaded together; tabs only for types
@@ -26,7 +26,10 @@ export type PatientEhrFailure = { type: PatientType; retry: () => void };
  * A type whose request failed is listed in `failed` and never in `tabs`, even
  * when the cache still holds rows from an earlier success of the same request:
  * the section shows that type's error with a retry, not rows it could not
- * refresh beside an error about them.
+ * refresh beside an error about them. `isFetching` stays true for the
+ * duration of a retry — React Query keeps `isError` true while a failed query
+ * refetches, so the caller needs its own signal to show that the retry is in
+ * flight rather than leaving the button looking inert.
  *
  * Keys match `usePersonEhr` and `useEHRByNationalNumberApi` for the same
  * (id, type, from, to), so the three share cache entries.
@@ -65,7 +68,7 @@ export const usePatientEhrTabs = ({
       });
       const failed = PATIENT_TYPE_ORDER.flatMap((type, i): PatientEhrFailure[] => {
         const r = results[i];
-        return r.isError ? [{ type, retry: () => void r.refetch() }] : [];
+        return r.isError ? [{ type, retry: () => void r.refetch(), isFetching: r.isFetching }] : [];
       });
       return { settled, tabs, failed };
     },
