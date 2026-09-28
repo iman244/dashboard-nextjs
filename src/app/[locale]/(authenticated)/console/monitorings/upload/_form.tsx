@@ -42,9 +42,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const NAMESPACE =
-  "/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog";
-
 const formSchema = z.object({
   name: z.string(),
   type: z.string().min(1),
@@ -94,7 +91,9 @@ function UploadExcelFormReady({
 }) {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const t = useTranslations(NAMESPACE);
+  const t = useTranslations(
+    "/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog"
+  );
   const tStep = useTranslations("common.SBHM_Step");
   const locale = useLocale();
 

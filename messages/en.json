@@ -479,9 +479,9 @@
         "missing_id_column": "The column “{column}” is missing: the charts work, but no one in this file can be opened. Columns found: <bdi>{found}</bdi>",
         "looks_like": "This looks like a “{campaign}” file. Did you choose the right monitoring?",
         "no_id_column": "No national ID column was found, so these rows can’t be linked to patients.",
-        "blank_ids": "{count} rows have no national ID and can’t be opened. Rows: {rows}",
-        "invalid_ids": "{count} rows have a national ID that isn’t 10 digits and won’t match a patient: {rows}",
-        "duplicate_ids": "{count} national IDs appear on more than one row; every row is kept: {groups}",
+        "blank_ids": "{count, plural, one {# row has} other {# rows have}} no national ID and can’t be opened. Rows: {rows}",
+        "invalid_ids": "{count, plural, one {# row has} other {# rows have}} a national ID that isn’t 10 digits and won’t match a patient: {rows}",
+        "duplicate_ids": "{count, plural, one {# national ID appears} other {# national IDs appear}} on more than one row; every row is kept: {groups}",
         "missing_columns": "These columns are missing, so the charts that use them will be empty: <bdi>{columns}</bdi>",
         "more": "and {count} more"
       }

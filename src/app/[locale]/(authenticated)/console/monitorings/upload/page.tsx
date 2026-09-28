@@ -6,9 +6,6 @@ import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { StaffOnly } from "@/components/app/staff-only";
 import { UploadExcelForm } from "./_form";
 
-const NAMESPACE =
-  "/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog";
-
 /**
  * Upload used to be a dialog opened from the campaign list; it is its own
  * page now, so it can be linked to (`?campaign=<id>`) and can show a result
@@ -16,7 +13,9 @@ const NAMESPACE =
  * the ones with a detail view.
  */
 const UploadExcelPage = () => {
-  const t = useTranslations(NAMESPACE);
+  const t = useTranslations(
+    "/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog"
+  );
   const tNav = useTranslations("/console.ConsoleSidebar");
 
   return (

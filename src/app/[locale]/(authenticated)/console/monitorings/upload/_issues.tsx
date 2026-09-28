@@ -6,16 +6,14 @@ import { isRtlLocale } from "@/lib/direction";
 import type { UploadIssue } from "@/data/saderat-bank-health-monitoring/api/upload-excel";
 import type { MonitoringType_ListSerializer } from "@/data/monitoring-type/types";
 
-const NAMESPACE =
-  "/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog";
-
 /**
  * Turns Django's upload issue codes into the sentences the upload page shows,
  * in Persian or English. Row lists (`blank_ids`, `invalid_ids`,
  * `duplicate_ids`) are capped at 20 server-side; `count` is the true total, so
  * an "and N more" line only appears once there is more than what was sent.
- * `missing_id_column.found` and `missing_columns.columns` carry no count and
- * are never capped.
+ * `missing_id_column.found` and `missing_columns.columns` are capped at 20
+ * too, but Django sends no `count` for either, so there is no total to show
+ * an "and N more" line against.
  */
 export function UploadIssues({
   issues,
@@ -24,7 +22,9 @@ export function UploadIssues({
   issues: UploadIssue[];
   campaigns: MonitoringType_ListSerializer;
 }) {
-  const t = useTranslations(NAMESPACE);
+  const t = useTranslations(
+    "/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog"
+  );
   const locale = useLocale();
   const rtl = isRtlLocale(locale);
   const sep = rtl ? "، " : ", ";
@@ -90,7 +90,11 @@ export function UploadIssues({
             return (
               <li key={index}>
                 {t("issues.blank_ids", {
-                  count: localeDigits(issue.count, locale),
+                  // A raw number, not a pre-localized string: the en message
+                  // needs it plural-aware (ICU `{count, plural, ...}`), and
+                  // the fa message formats it with `{count, number}` so it
+                  // still renders Persian digits.
+                  count: issue.count,
                   rows: withMore(
                     joinNumbers(issue.rows),
                     issue.count,
@@ -108,7 +112,7 @@ export function UploadIssues({
             return (
               <li key={index}>
                 {t("issues.invalid_ids", {
-                  count: localeDigits(issue.count, locale),
+                  count: issue.count,
                   rows: withMore(
                     joinStrings(entries),
                     issue.count,
@@ -127,7 +131,7 @@ export function UploadIssues({
             return (
               <li key={index}>
                 {t("issues.duplicate_ids", {
-                  count: localeDigits(issue.count, locale),
+                  count: issue.count,
                   groups: withMore(
                     joinStrings(entries),
                     issue.count,
