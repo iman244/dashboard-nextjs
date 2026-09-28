@@ -70,10 +70,12 @@ export const TypeForm = ({ id }: { id?: number }) => {
         // editor rows have a stable identity to be keyed on.
         existing ? withIds(asFieldSchema(existing.field_schema)) : EMPTY_SCHEMA
       }
-      onDone={(campaignId) => {
+      onDone={async (campaignId) => {
         // "all": the list is not mounted on this page, and with refetchOnMount
         // off it would otherwise come back with the old names and schema.
-        queryClient.invalidateQueries({
+        // Awaited: a new campaign is not in the cached list, so its page would
+        // flash "Monitoring not found" until the refetch landed.
+        await queryClient.invalidateQueries({
           queryKey: LIST_MONITORING_TYPE_QUERY_KEY(),
           refetchType: "all",
         });
@@ -119,7 +121,10 @@ const TypeFormBody = ({
 
   const create = useCreate_MonitoringType_API();
   const update = useUpdate_MonitoringType_API();
-  const saving = create.isPending || update.isPending;
+  // Saved, and waiting for the list to refetch before leaving: still busy,
+  // or a second click would create the campaign twice.
+  const [finishing, setFinishing] = React.useState(false);
+  const saving = create.isPending || update.isPending || finishing;
 
   const problems = draftProblems(schema);
   const incomplete =
@@ -155,6 +160,7 @@ const TypeFormBody = ({
           // response; the list's own id is not known until here.
           onSuccess: (created) => {
             toast.success(t("Created"));
+            setFinishing(true);
             onDone(created.id);
           },
           onError,
@@ -166,6 +172,7 @@ const TypeFormBody = ({
         {
           onSuccess: () => {
             toast.success(t("Updated"));
+            setFinishing(true);
             onDone(id);
           },
           onError,

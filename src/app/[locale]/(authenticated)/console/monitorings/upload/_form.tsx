@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { LoadingState } from "@/components/app/loading-state";
-import { LIST_SBHM_QUERY_KEY } from "@/data/saderat-bank-health-monitoring/api";
+import { refreshUploads } from "@/data/saderat-bank-health-monitoring/refresh";
 import {
   useUploadExcelApi,
   type UploadIssue,
@@ -101,7 +101,11 @@ function UploadExcelFormReady({
     ? campaigns.find((type) => String(type.id) === campaignParam)
     : undefined;
 
-  const { mutate: uploadExcel, isPending } = useUploadExcelApi();
+  const { mutate: uploadExcel, isPending: isUploading } = useUploadExcelApi();
+  // The upload is saved, and the lists it changed are being refetched before
+  // the campaign page opens; the button stays busy through both.
+  const [refreshing, setRefreshing] = React.useState(false);
+  const isPending = isUploading || refreshing;
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: { type: preselected?.slug ?? "" },
@@ -133,10 +137,14 @@ function UploadExcelFormReady({
       uploadExcel(
         { payload: data },
         {
-          onSuccess: (result) => {
+          onSuccess: async (result) => {
             toast.success(t("SuccessMessage"));
-            queryClient.invalidateQueries({ queryKey: LIST_SBHM_QUERY_KEY() });
+            // Awaited: the campaign page would otherwise open on the cached
+            // list, which lacks the new upload and says it is not there.
+            setRefreshing(true);
+            await refreshUploads(queryClient);
             const campaign = campaigns.find((type) => type.slug === data.type);
+            if (!campaign || result.issues.length > 0) setRefreshing(false);
             if (!campaign) return;
             if (result.issues.length > 0) {
               setSavedResult({ campaign, uploadId: result.id, issues: result.issues });

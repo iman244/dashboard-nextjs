@@ -21,15 +21,16 @@ export const listPersonReports = async (
   return response.data;
 };
 
+/** Every person's reports: what an added or deleted upload makes stale. */
+export const ALL_PERSON_REPORTS_QUERY_KEY = () => [
+  "saderat-bank-health-monitoring",
+  "person-reports",
+];
+
 export const PERSON_REPORTS_QUERY_KEY = (
   nationalId: string,
   monitoring?: number
-) => [
-  "saderat-bank-health-monitoring",
-  "person-reports",
-  nationalId,
-  monitoring ?? "all",
-];
+) => [...ALL_PERSON_REPORTS_QUERY_KEY(), nationalId, monitoring ?? "all"];
 
 /** Any console user reads; patient accounts get 403. */
 export const useList_PersonReports_API = ({

@@ -19,6 +19,8 @@ import { RowAction, RowActions } from "@/components/app";
 import { Link } from "@/i18n/navigation";
 import { useList_MonitoringType_API } from "@/data/monitoring-type/api/list";
 import { useList_PatientEntry_API } from "@/data/patient-entry/api/list";
+import { refreshRecords } from "@/data/patient-entry/refresh";
+import { useQueryClient } from "@tanstack/react-query";
 import { asFieldSchema } from "@/components/schema-form";
 import { formatDate, localeDigits } from "@/lib/utils";
 import type { PatientEntry } from "@/data/patient-entry/types";
@@ -41,6 +43,7 @@ export const RecordsPanel = ({ monitoringId }: { monitoringId: number }) => {
   const isStaff = useIsStaff();
 
   const [deleting, setDeleting] = React.useState<PatientEntry | null>(null);
+  const queryClient = useQueryClient();
 
   const types = useList_MonitoringType_API();
   const monitoring = types.data?.find(
@@ -176,7 +179,9 @@ export const RecordsPanel = ({ monitoringId }: { monitoringId: number }) => {
             open={deleting !== null}
             onOpenChange={(open) => setDeleting(open ? deleting : null)}
             onDeleted={() => {
-              records.refetch();
+              // Not just this list: the counts and the patient's own records
+              // are cached too, on pages that are not mounted.
+              refreshRecords(queryClient);
               setDeleting(null);
             }}
           />
