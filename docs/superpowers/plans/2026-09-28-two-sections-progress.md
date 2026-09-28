@@ -40,7 +40,26 @@ Plan: `2026-09-28-two-sections.md` (19 tasks: 1–18 plus 3b). Spec: `../specs/2
 | 3b | done | Next 4878fe5..d93de23 |
 | 7 | done, review clean | Next d93de23..c866951 |
 | 5 | done, review clean | Next c866951..f61cf33 |
-| 8–18 | not started | |
+| 8 | done, review clean | Next 8068ea0..279b0c8 |
+| 9 | done, 2 fix rounds | Next 279b0c8..fb73b62 |
+| 10 | done, review clean | Next fb73b62..1d1d3f7 |
+| 11 | done, review clean | Next 1d1d3f7..c936bad |
+| 12 | done, 1 fix round | Next c936bad..48eec6d |
+| 13 | done, review clean | Next 48eec6d..a58a24b |
+| 14 | done, 2 fix rounds | Next a58a24b..ea564a6 |
+| 15 | done, review clean | Next ea564a6..064159c |
+| 16 | done, 1 fix round | Next 064159c..2d0ce5c |
+| 17 | done, 1 fix round | Next 2d0ce5c..59c2c4f |
+| 18 | done, review clean | Next 59c2c4f..9f89d93 |
+| Final fix wave | done, 2 rounds | Next 9f89d93..a83d8db; Django b108449..72f75a4 |
+
+**Final state (2026-09-28):** Django 168 tests OK; Next tsc 0, check-messages clean (en/fa parity), 29 node tests, no file gained lint problems. Final whole-branch review → fix wave → re-review clean. Security review: no write bypass; two read-side policy questions open for the user (see below). Browser: 96 route checks (staff/viewer × fa/en × 1366/390), 10/10 old-address redirects, patient portal sign-in, national-ID box, EHR inline errors with no global dialog.
+
+**Open for the user (security policy, not decided by the orchestrator):**
+1. `IsConsoleReader` reads as "signed in and not a patient": no positive console marker, so an account whose patient identity is deleted (or any stray account) reads all monitoring data.
+2. Viewers can bulk-read: `patient-entries/` is unpaginated and unthrottled (with presigned image URLs), `?national_id=` there bypasses the patient-records throttle, and `monitorings/{id}` returns whole sheets (the charts need them).
+
+**Needs a post-deploy check:** EHR tabs rendering with real data (no EHR upstream locally).
 
 **Checkpoint 1 (2026-09-28):** 35/35 API checks against the live server (staff, viewer, patient, anonymous; counts; person rows; upload warnings; unreadable refusal). Browser: two-section sidebar and home in fa and en, staff and viewer, 390px with no overflow; the Step 1 report renders identically from a numeric and a text-only upload.
 

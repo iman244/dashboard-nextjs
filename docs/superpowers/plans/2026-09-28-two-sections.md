@@ -1162,7 +1162,7 @@ In `/console/monitorings.Builder`: `NewTitle` → "Define a new monitoring" / "�
 | issues.more | and {count} more | و {count} مورد دیگر |
   - `layout.tsx` carries metadata the way `C/patients/[national_id]/layout.tsx` does.
 
-- [ ] **Step 2: Verify.**
+- [x] **Step 2: Verify.**
   - `npx tsc --noEmit` and the message check.
   - Browser as staff:
     - upload a small xlsx to "Blood pressure check" → lands on `/fa/console/monitorings/3?upload=<id>`;
@@ -1437,7 +1437,7 @@ export default async function Page(props: PageProps<"/[locale]/console/monitorin
 
 (`@/i18n/navigation` exports `redirect`, created by `createNavigation`.) The `records/new` and `records/[recordId]/edit` routes stay. Their `_shell.tsx` breadcrumb trail becomes `[{ href: "/console/monitorings", label: tNav("campaigns") }, { href: \`/console/monitorings/${monitoringId}?tab=records\`, label: <campaign name or t("PageTitle")> }]`.
 
-- [ ] **Step 5: Verify in the browser** (staff, fa and en, desktop and 390px):
+- [x] **Step 5: Verify in the browser** (staff, fa and en, desktop and 390px):
   - Step 2 campaign: picker lists "Azar 1405", "Aban 1405", "Mehr 1405" newest first; charts render; clicking a bar opens the sheet; a person link goes to `/console/monitorings/2/patients/<nid>`.
   - `?upload=<id of a step_1 upload>` on the Step 2 campaign shows the notice and the latest Step 2 upload.
   - A campaign with no uploads shows `noUploads`.
@@ -1476,7 +1476,7 @@ export const useUploadCampaign = (uploadId: number) => {
 
 - [x] **Step 2: Redirect pages.** Each old step page becomes a client component: call `useUploadCampaign(Number(id))`; when `campaignId` is known, `router.replace(\`/console/monitorings/${campaignId}?upload=${id}\`)` inside a `useEffect` guarded by a ref, like `(authenticated)/layout.tsx`. Render `<LoadingState />` meanwhile, and an `Alert` with a link to `/console/monitorings` on error. The list page `saderat-bank-health-monitoring/page.tsx` does a server `redirect` to `/console/monitorings`, like Task 11 Step 4.
 
-- [ ] **Step 3: Verify in the browser.**
+- [x] **Step 3: Verify in the browser.**
   - `/fa/console/saderat-bank-health-monitoring/step-2/4` lands on `/fa/console/monitorings/2?upload=4`.
   - `/fa/console/saderat-bank-health-monitoring` lands on `/fa/console/monitorings`.
   - A non-existent upload id shows the error with the link.
@@ -1575,7 +1575,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
 
 - [x] **Step 2b: Records section for viewers.** In `src/components/app/patient-records-section.tsx`, `PatientRecordsSection` should fetch with `authorized: true` always and pass `editable={isStaff}` using `useIsStaff()`. Its `authorized` prop is removed and its callers updated (grep `PatientRecordsSection`).
 
-- [ ] **Step 3: Verify in the browser** as staff and viewer:
+- [x] **Step 3: Verify in the browser** as staff and viewer:
   - `/fa/console/monitorings/2/patients/0012345678` shows Ali Rezaei's rows from both Step 2 uploads, with the legacy numeric one included.
   - `/fa/console/monitorings/3/patients/0012345678` shows the blood-pressure form record.
   - The "Health record" button opens the patient page.
@@ -1611,7 +1611,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
 
 - [x] **Step 2: Person redirects.** Both `step-N/[id]/[national_id]/page.tsx` files become client redirects: `useUploadCampaign(Number(id))` → `router.replace(CAMPAIGN_PATIENT_PATH(campaignId, national_id))`, with the same loading and error handling as Task 12.
 
-- [ ] **Step 3: Verify in the browser.**
+- [x] **Step 3: Verify in the browser.**
   - The patient page shows «پایش‌های این بیمار» listing Step 2 (2 Excel rows) and Blood pressure check (1 record).
   - Each "Open" goes to the right patient-in-campaign page.
   - The old `/fa/console/saderat-bank-health-monitoring/step-2/4/0012345678` redirects to `/fa/console/monitorings/2/patients/0012345678`.
@@ -1696,7 +1696,7 @@ declare module "@tanstack/react-query" {
 }
 ```
 
-- [ ] **Step 4: Verify.** `npx tsc --noEmit`. Browser: the Step 2 person view and the patient page no longer open the global dialog when the EHR is unreachable (locally it always is). Stopping Django briefly and loading `/fa/console/monitorings` still opens it.
+- [x] **Step 4: Verify.** `npx tsc --noEmit`. Browser: the Step 2 person view and the patient page no longer open the global dialog when the EHR is unreachable (locally it always is). Stopping Django briefly and loading `/fa/console/monitorings` still opens it.
 
 - [x] **Step 5: Commit** `feat: EHR per record type, errors kept inside their section`
 
@@ -1722,7 +1722,7 @@ declare module "@tanstack/react-query" {
 | ehrEmpty | No EHR records in this date range. | در این بازه سابقه‌ای در پرونده الکترونیک نیست. |
 | ehrFailed | {type} records could not be loaded. | سوابق {type} بارگذاری نشد. |
 
-- [ ] **Step 2: Verify.** Locally every type fails, so the page shows 8 inline errors with retry buttons, no global dialog, and the monitorings card still works. Check fa, en and 390px. The tab rendering needs a post-deploy check: note it in the handoff.
+- [x] **Step 2: Verify.** Locally every type fails, so the page shows 8 inline errors with retry buttons, no global dialog, and the monitorings card still works. Check fa, en and 390px. The tab rendering needs a post-deploy check: note it in the handoff.
 
 - [x] **Step 3: Commit** `feat: patient page shows EHR by record type`
 
@@ -1766,7 +1766,7 @@ export default async function Page(props: PageProps<"/[locale]/console/patient-r
 
 Delete `C/patient-reports/layout.tsx` only if it carries nothing but metadata. Then grep `patient-reports` across `src` and fix leftovers; `/console/patient-reports` stays in `activePrefixes` harmlessly or can be removed.
 
-- [ ] **Step 3: Full verification pass** (the one batched browser round):
+- [x] **Step 3: Full verification pass** (the one batched browser round):
   - `npx tsc --noEmit` = 0; `node scripts/check-messages.mjs` passes; `node --test --experimental-strip-types tests/*.test.mjs` passes; the lint comparison on every file changed across the branch (`git diff --name-only feat/patient-page...HEAD`) shows no increase.
   - Django: `manage.py test --noinput` = OK.
   - Browser (fa and en; 1366 and 390; staff, viewer and patient), each route loads with the right sidebar highlight:
