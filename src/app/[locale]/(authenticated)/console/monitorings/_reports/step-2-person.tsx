@@ -19,6 +19,7 @@ import {
 } from "@/app/[locale]/(authenticated)/console/saderat-bank-health-monitoring/step-2/[id]/_detail/sections";
 import { noteKeyFor } from "@/app/[locale]/(authenticated)/console/saderat-bank-health-monitoring/step-2/[id]/_detail/notes";
 import { NoFindings } from "./no-findings";
+import { Demographics } from "./demographics";
 
 /** One step_2 record, laid out the way the step-1 person page lays out its own. */
 export const Step2PersonSections = ({ row }: { row: SBHM_Step2Record }) => {
@@ -40,11 +41,22 @@ export const Step2PersonSections = ({ row }: { row: SBHM_Step2Record }) => {
     return { section, entries };
   }).filter(({ entries }) => entries.length > 0);
 
+  // Not a finding, so it never decides NoFindings below.
+  const demographics = <Demographics row={row} fields={["age", "gender"]} />;
+
   // A row holding only name, age and ID would otherwise leave its card blank.
-  if (vitals.length === 0 && sections.length === 0) return <NoFindings />;
+  if (vitals.length === 0 && sections.length === 0) {
+    return (
+      <>
+        {demographics}
+        <NoFindings />
+      </>
+    );
+  }
 
   return (
     <>
+      {demographics}
       {vitals.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {vitals.map((vital) => (

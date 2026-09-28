@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { hasAnyValue, toNumber } from "@/lib/campaign";
 import { NoFindings } from "./no-findings";
+import { Demographics } from "./demographics";
 
 type MonitoringData = {
   [key: string]: string | number | null;
@@ -353,19 +354,24 @@ export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
     </Card>
   );
 
+  // Leads every branch; it is not a finding, so it never decides NoFindings.
+  const demographics = (
+    <Demographics row={row} fields={["age", "gender", "examDate"]} />
+  );
+
   if (!hasAnyValue(row, [...findingKeys, ...OTHER_FINDING_KEYS])) {
-    return hasAnyValue(row, ADMINISTRATIVE_KEYS) ? (
+    return (
       <div className="space-y-6">
+        {demographics}
         <NoFindings />
-        {administrative}
+        {hasAnyValue(row, ADMINISTRATIVE_KEYS) && administrative}
       </div>
-    ) : (
-      <NoFindings />
     );
   }
 
   return (
     <div className="space-y-6">
+      {demographics}
       {/* Abnormal findings summary. The classification already existed and drove
           only badge colour; this is the question a clinician opens the record to
           ask, so it leads rather than being buried among ~50 equal-weight tiles. */}
