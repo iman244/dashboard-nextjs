@@ -1709,7 +1709,7 @@ declare module "@tanstack/react-query" {
 **Interfaces:**
 - Consumes: `usePatientEhrTabs` (Task 16), `Tabs*` (Task 11), `EhrRecordsTable`, `EhrTrendDialog`, `useRecordDetail`, `common.PatientTypes` labels: `const tPatientTypes = useTranslations("common.PatientTypes")`, then `tPatientTypes(type)` with the enum value as the key, as `C/electronic-health-record/client.tsx:153` does.
 
-- [ ] **Step 1: Replace the EHR card body.**
+- [x] **Step 1: Replace the EHR card body.**
   - Not settled: a row of 3 `Skeleton` pills with `role="status"` and `t("tabsLoading")`.
   - Settled with `tabs.length === 0` and no failures: `t("ehrEmpty")`.
   - Otherwise: `<Tabs dir={dir} defaultValue={String(tabs[0].type)}>`, a `TabsList` with one `TabsTrigger` per tab labelled by the patient type, and a `TabsContent` with `<EhrRecordsTable ehr={tab.ehr} onViewRecord={recordDetail.open} onSelectSeries={setSelectedSeries} />`.
@@ -1724,7 +1724,7 @@ declare module "@tanstack/react-query" {
 
 - [ ] **Step 2: Verify.** Locally every type fails, so the page shows 8 inline errors with retry buttons, no global dialog, and the monitorings card still works. Check fa, en and 390px. The tab rendering needs a post-deploy check: note it in the handoff.
 
-- [ ] **Step 3: Commit** `feat: patient page shows EHR by record type`
+- [x] **Step 3: Commit** `feat: patient page shows EHR by record type`
 
 ### Task 18: National-ID box, and patient reports retired
 

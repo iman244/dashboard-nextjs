@@ -5,14 +5,15 @@ import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { format as formatIso, isValid, parseISO, subYears } from "date-fns";
-import { format as formatJalali } from "date-fns-jalali";
-import { AlertCircle, ChevronRight } from "lucide-react";
+import { AlertCircle, Inbox } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { DateRangePicker } from "@/components/app/date-range-picker";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import {
   PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY,
@@ -20,12 +21,14 @@ import {
 } from "@/data/electronic health record/api/mobile-number-by-national-number";
 import { fullNationalId, isNationalId, safeDecode } from "@/lib/national-id";
 import { localeDigits } from "@/lib/utils";
-import { usePersonEhr, type LabSeries } from "../../saderat-bank-health-monitoring/_ehr/use-person-ehr";
+import { useDirection } from "@/lib/use-direction";
+import { type LabSeries } from "../../saderat-bank-health-monitoring/_ehr/use-person-ehr";
 import { EhrRecordsTable } from "../../saderat-bank-health-monitoring/_ehr/records-table";
 import { EhrTrendDialog } from "../../saderat-bank-health-monitoring/_ehr/trend-dialog";
 import { useRecordDetail } from "../../saderat-bank-health-monitoring/_ehr/use-record-detail";
 import { EHR_HISTORY_YEARS } from "../../saderat-bank-health-monitoring/_ehr/config";
 import { PatientCampaignsCard } from "./_patient-campaigns";
+import { usePatientEhrTabs } from "./use-patient-ehr-tabs";
 
 const FIND_PATIENT = "/console/electronic-health-record";
 /** The URL carries the window as plain Gregorian days; the picker shows Jalali. */
@@ -38,10 +41,9 @@ const dayFromUrl = (value: string | null) => {
 };
 
 /**
- * One patient's full history: EHR results for the chosen window, then every
- * monitoring record and every Excel report that mentions them. Each section
- * loads and fails on its own, so one slow or broken source never blanks the
- * page.
+ * One patient's full history: EHR results for the chosen window, one tab per
+ * record type, then every campaign that mentions them. Each section loads
+ * and fails on its own, so one slow or broken source never blanks the page.
  */
 export default function PatientPage(
   props: PageProps<"/[locale]/console/patients/[national_id]">
@@ -52,7 +54,9 @@ export default function PatientPage(
 
   const t = useTranslations("/console/patients.PatientPage");
   const tNav = useTranslations("/console.ConsoleSidebar");
+  const tPatientTypes = useTranslations("common.PatientTypes");
   const locale = useLocale();
+  const dir = useDirection();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -75,7 +79,7 @@ export default function PatientPage(
     router.replace(query ? `${pathname}?${query}` : pathname);
   };
 
-  const ehr = usePersonEhr({ nationalId, window: range, enabled: valid });
+  const { settled, tabs, failed } = usePatientEhrTabs({ nationalId, range, enabled: valid });
   const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(null);
   const recordDetail = useRecordDetail();
 
@@ -111,12 +115,65 @@ export default function PatientPage(
     );
   }
 
-  const serviceReportHref = `/console/patient-reports?${new URLSearchParams({
-    nationalNumber: nationalId,
-    fromDate: formatJalali(range.from, "yyyy/MM/dd"),
-    toDate: formatJalali(range.to, "yyyy/MM/dd"),
-    patientType: "25",
-  }).toString()}`;
+  // Remounts whenever the set of successful types changes (range change,
+  // retry), so a `defaultValue` naming a now-absent tab never leaves the
+  // `Tabs` with nothing selected.
+  const tabsKey = tabs.map((tab) => tab.type).join("|");
+
+  const ehrBody = () => {
+    if (!settled) {
+      return (
+        <div role="status" aria-label={t("tabsLoading")} className="flex flex-wrap gap-2">
+          <Skeleton className="h-9 w-28 rounded-lg" />
+          <Skeleton className="h-9 w-28 rounded-lg" />
+          <Skeleton className="h-9 w-28 rounded-lg" />
+        </div>
+      );
+    }
+    if (tabs.length === 0 && failed.length === 0) {
+      return (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Inbox aria-hidden="true" className="size-4 shrink-0" />
+          <span>{t("ehrEmpty")}</span>
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-4">
+        {tabs.length > 0 && (
+          <Tabs key={tabsKey} dir={dir} defaultValue={String(tabs[0].type)}>
+            <TabsList>
+              {tabs.map((tab) => (
+                <TabsTrigger key={tab.type} value={String(tab.type)}>
+                  {tPatientTypes(tab.type)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            {tabs.map((tab) => (
+              <TabsContent key={tab.type} value={String(tab.type)}>
+                <EhrRecordsTable
+                  ehr={tab.ehr}
+                  onViewRecord={recordDetail.open}
+                  onSelectSeries={setSelectedSeries}
+                />
+              </TabsContent>
+            ))}
+          </Tabs>
+        )}
+        {failed.map(({ type, retry }) => (
+          <Alert key={type} variant="destructive">
+            <AlertCircle aria-hidden="true" className="size-4" />
+            <AlertDescription className="flex flex-wrap items-center gap-3">
+              <span>{t("ehrFailed", { type: tPatientTypes(type) })}</span>
+              <Button type="button" variant="outline" size="sm" onClick={retry}>
+                {t("retry")}
+              </Button>
+            </AlertDescription>
+          </Alert>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -132,31 +189,10 @@ export default function PatientPage(
         <CardHeader>
           <CardTitle>{t("ehrTitle")}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <EhrRecordsTable
-            ehr={ehr}
-            onViewRecord={recordDetail.open}
-            onSelectSeries={setSelectedSeries}
-          />
-        </CardContent>
+        <CardContent>{ehrBody()}</CardContent>
       </Card>
 
       <PatientCampaignsCard nationalId={nationalId} />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("serviceReportTitle")}</CardTitle>
-          <CardDescription>{t("serviceReportDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button asChild variant="outline">
-            <Link href={serviceReportHref}>
-              {t("serviceReportAction")}
-              <ChevronRight aria-hidden="true" className="size-4 rtl:rotate-180" />
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
 
       {recordDetail.modal}
       <EhrTrendDialog
