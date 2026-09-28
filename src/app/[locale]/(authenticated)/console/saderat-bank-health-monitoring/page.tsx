@@ -2,8 +2,6 @@
 
 import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
-import UploadSaderatBankHealthMonitoringExcelDialog from "./_upload-excel-dialog/dialog";
-import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
 import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
@@ -105,22 +103,16 @@ const SaderatBankHealthMonitoringPage = () => {
     data: data || [],
   });
 
-  // One header for every state. The title and the upload action used to exist
-  // only on the populated table, so loading, error and empty each rendered a
-  // page with no heading at all — three of the four states a user can land on.
+  // One header for every state. The title used to exist only on the
+  // populated table, so loading, error and empty each rendered a page with no
+  // heading at all — three of the four states a user can land on. The upload
+  // action moved to its own page (/console/monitorings/upload).
   const withHeader = (body: React.ReactNode) => (
     <div className="space-y-4">
       <PageHeader
         breadcrumbs={<ConsoleBreadcrumbs />}
         title={t("PageTitle")}
         description={t("PageDescription")}
-        actions={
-          isStaff ? (
-            <UploadSaderatBankHealthMonitoringExcelDialog
-              trigger={<Button>{t("UploadExcel")}</Button>}
-            />
-          ) : undefined
-        }
       />
       {body}
     </div>

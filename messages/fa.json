@@ -458,7 +458,7 @@
   },
   "/console/saderat-bank-health-monitoring": {
     "UploadSaderatBankHealthMonitoringExcelDialog": {
-      "DialogTitle": "بارگذاری اکسل",
+      "PageTitle": "بارگذاری اکسل",
       "NoSupportedTypes": "هیچ نوع گزارشی با نمای جزئیات برای بارگذاری اکسل در دسترس نیست.",
       "Form": {
         "NameLabel": "نام",
@@ -468,7 +468,23 @@
       },
       "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد",
       "ErrorTitle": "بارگذاری انجام نشد",
-      "ErrorMessage": "بارگذاری فایل با خطا مواجه شد. لطفاً دوباره تلاش کنید."
+      "ErrorMessage": "بارگذاری فایل با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+      "refusedTitle": "فایل بارگذاری نشد",
+      "savedWithIssues": "بارگذاری شد. {count} مورد برای بررسی:",
+      "openUpload": "مشاهده این فایل",
+      "uploadAnother": "بارگذاری فایل دیگر",
+      "issues": {
+        "unreadable": "فایل خوانده نشد. آن را با قالب ‎.xlsx ذخیره کنید و دوباره تلاش کنید.",
+        "no_rows": "برگه زیر ردیف سرستون‌ها هیچ ردیف داده‌ای ندارد و چیزی برای نمایش نیست.",
+        "missing_id_column": "ستون «{column}» وجود ندارد: نمودارها کار می‌کنند، اما هیچ‌کس در این فایل باز نمی‌شود. ستون‌های موجود: <bdi>{found}</bdi>",
+        "looks_like": "این فایل شبیه فایل «{campaign}» است. آیا پایش درست را انتخاب کرده‌اید؟",
+        "no_id_column": "ستون کد ملی پیدا نشد، بنابراین این ردیف‌ها به بیماران وصل نمی‌شوند.",
+        "blank_ids": "{count} ردیف کد ملی ندارند و باز نمی‌شوند. ردیف‌ها: {rows}",
+        "invalid_ids": "{count} ردیف کد ملی ۱۰ رقمی ندارند و به بیماری وصل نمی‌شوند: {rows}",
+        "duplicate_ids": "{count} کد ملی در بیش از یک ردیف آمده‌اند؛ همه ردیف‌ها نگه داشته می‌شوند: {groups}",
+        "missing_columns": "این ستون‌ها وجود ندارند و نمودارهای مربوط خالی می‌مانند: <bdi>{columns}</bdi>",
+        "more": "و {count} مورد دیگر"
+      }
     },
     "DeleteSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "حذف اکسل",
@@ -848,6 +864,10 @@
     "monitorings": {
       "title": "پایش‌ها",
       "description": "تعریف پایش‌ها و فیلدهایی که ثبت می‌کنند."
+    },
+    "uploadExcel": {
+      "title": "بارگذاری اکسل",
+      "description": "فایل اکسل یک پایش را اضافه کنید."
     },
     "sbhmStep1": {
       "title": "گزارش مرحله ۱",

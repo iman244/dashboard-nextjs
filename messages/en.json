@@ -458,7 +458,7 @@
   },
   "/console/saderat-bank-health-monitoring": {
     "UploadSaderatBankHealthMonitoringExcelDialog": {
-      "DialogTitle": "Upload Excel",
+      "PageTitle": "Upload Excel",
       "NoSupportedTypes": "No report type with a detail view is available for Excel upload.",
       "Form": {
         "NameLabel": "Name",
@@ -468,7 +468,23 @@
       },
       "SuccessMessage": "Excel uploaded successfully",
       "ErrorTitle": "Upload failed",
-      "ErrorMessage": "The file could not be uploaded. Please try again."
+      "ErrorMessage": "The file could not be uploaded. Please try again.",
+      "refusedTitle": "The file was not uploaded",
+      "savedWithIssues": "Uploaded. {count} things to check:",
+      "openUpload": "Open this upload",
+      "uploadAnother": "Upload another file",
+      "issues": {
+        "unreadable": "The file could not be read. Save it as an .xlsx file and try again.",
+        "no_rows": "The sheet has no data rows under its header row, so there is nothing to show.",
+        "missing_id_column": "The column “{column}” is missing: the charts work, but no one in this file can be opened. Columns found: <bdi>{found}</bdi>",
+        "looks_like": "This looks like a “{campaign}” file. Did you choose the right monitoring?",
+        "no_id_column": "No national ID column was found, so these rows can’t be linked to patients.",
+        "blank_ids": "{count} rows have no national ID and can’t be opened. Rows: {rows}",
+        "invalid_ids": "{count} rows have a national ID that isn’t 10 digits and won’t match a patient: {rows}",
+        "duplicate_ids": "{count} national IDs appear on more than one row; every row is kept: {groups}",
+        "missing_columns": "These columns are missing, so the charts that use them will be empty: <bdi>{columns}</bdi>",
+        "more": "and {count} more"
+      }
     },
     "DeleteSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "Delete Excel",
@@ -848,6 +864,10 @@
     "monitorings": {
       "title": "Monitorings",
       "description": "Define monitorings and the fields they collect."
+    },
+    "uploadExcel": {
+      "title": "Upload Excel",
+      "description": "Add an Excel file to a monitoring."
     },
     "sbhmStep1": {
       "title": "Step 1 Report",

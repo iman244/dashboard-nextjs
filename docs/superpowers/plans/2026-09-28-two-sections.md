@@ -1125,7 +1125,7 @@ In `/console/monitorings.Builder`: `NewTitle` â†’ "Define a new monitoring" / "Ø
 - Consumes: `useUploadExcelApi` returning `{ id }`; `useList_MonitoringType_API`.
 - Produces: `/console/monitorings/upload?campaign=<id>`. On success it navigates to `/console/monitorings/<campaignId>?upload=<newId>`.
 
-- [ ] **Step 1: Build the page.**
+- [x] **Step 1: Build the page.**
   - `page.tsx` is `"use client"`. It renders `<StaffOnly>` around a `PageHeader` (breadcrumbs parent `{ href: "/console/monitorings", label: tNav("campaigns") }`, title `t("PageTitle")`) and `<UploadExcelForm />`.
   - `_form.tsx` is the dialog body without `Dialog`/`DialogContent`/`DialogTrigger`/`open` state, with these changes:
     - The campaign `Select` lists **all** types (remove the `isKnownSBHM_Type` filter). Its value is the slug, as the API expects.
@@ -1172,7 +1172,7 @@ In `/console/monitorings.Builder`: `NewTitle` â†’ "Define a new monitoring" / "Ø
     - check the same three in `/en/`.
   - As viewer, the page shows "Staff access required".
 
-- [ ] **Step 3: Commit** `feat: upload Excel on its own page, to any monitoring`
+- [x] **Step 3: Commit** `feat: upload Excel on its own page, to any monitoring`
 
 ---
 
