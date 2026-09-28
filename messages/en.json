@@ -721,6 +721,16 @@
       "NationalIdLength": "A national ID has 10 digits."
     },
     "Campaign": {
+      "uploadsTab": "Excel uploads",
+      "recordsTab": "Entered records",
+      "editDefinition": "Edit definition",
+      "uploadExcel": "Upload Excel",
+      "chooseUpload": "Excel upload",
+      "noUploads": "No Excel has been uploaded to this monitoring yet.",
+      "uploadMissing": "That upload is not in this monitoring; showing the latest instead.",
+      "notFound": "Monitoring not found",
+      "backToList": "Back to monitorings",
+      "deleteUpload": "Delete this upload",
       "loadingRows": "Loading rows…",
       "rowsError": "The rows could not be loaded.",
       "noRows": "This upload has no rows.",
@@ -867,6 +877,10 @@
     "recordMonitoring": {
       "title": "Record Monitoring",
       "description": "Choose a monitoring type and work with patient entries."
+    },
+    "campaign": {
+      "title": "Monitoring",
+      "description": "One monitoring's uploads and records."
     },
     "monitorings": {
       "title": "Monitorings",

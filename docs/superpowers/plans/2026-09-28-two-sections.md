@@ -1344,7 +1344,7 @@ export const UploadRowsTable = ({ uploadId, personHref }: { uploadId: number; pe
   - `DeleteSaderatBankHealthMonitoringExcelDialog` from `C/saderat-bank-health-monitoring/_delete-excel-dialog`.
 - Produces: `/console/monitorings/[id]?tab=uploads|records&upload=<uploadId>`.
 
-- [ ] **Step 1: Tabs component** (`src/components/ui/tabs.tsx`, shadcn new-york over `radix-ui`):
+- [x] **Step 1: Tabs component** (`src/components/ui/tabs.tsx`, shadcn new-york over `radix-ui`):
 
 ```tsx
 "use client"
@@ -1387,7 +1387,7 @@ function TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPr
 export { Tabs, TabsList, TabsTrigger, TabsContent }
 ```
 
-- [ ] **Step 2: Campaign page** (`C/monitorings/[id]/page.tsx`, `"use client"`). Behaviour:
+- [x] **Step 2: Campaign page** (`C/monitorings/[id]/page.tsx`, `"use client"`). Behaviour:
   - Find the campaign in `useList_MonitoringType_API()` by `Number(id)`. While loading, show `LoadingState`; if not found, show an `Alert` "Monitoring not found" with a link back.
   - `PageHeader`:
     - breadcrumbs `<ConsoleBreadcrumbs parent={{ href: "/console/monitorings", label: tNav("campaigns") }} />`;
@@ -1402,7 +1402,7 @@ export { Tabs, TabsList, TabsTrigger, TabsContent }
     - Body: `campaign.slug === "step_1"` → `<Step1Report key={selected.id} uploadId={selected.id} personHref={(nid) => CAMPAIGN_PATIENT_PATH(campaign.id, nid)} />`; `"step_2"` → `Step2Report` with the same props; otherwise `<UploadRowsTable … />`.
   - **Records tab**: `<RecordsPanel monitoringId={campaign.id} />`. In `RecordsPanel`, the national-ID link (added in the patient page work) becomes `CAMPAIGN_PATIENT_PATH(monitoringId, record.national_id)`.
 
-- [ ] **Step 3: Messages** (`/console/monitorings.Campaign`, both files):
+- [x] **Step 3: Messages** (`/console/monitorings.Campaign`, both files):
 
 | key | en | fa |
 |---|---|---|
@@ -1424,7 +1424,7 @@ export { Tabs, TabsList, TabsTrigger, TabsContent }
 
 `metadata.campaign`: en `{"title": "Monitoring", "description": "One monitoring's uploads and records."}`, fa `{"title": "پایش", "description": "فایل‌ها و اطلاعات ثبت‌شده یک پایش."}`.
 
-- [ ] **Step 4: Records redirect.** `C/monitorings/[id]/records/page.tsx` becomes:
+- [x] **Step 4: Records redirect.** `C/monitorings/[id]/records/page.tsx` becomes:
 
 ```tsx
 import { redirect } from "@/i18n/navigation";
@@ -1445,7 +1445,7 @@ export default async function Page(props: PageProps<"/[locale]/console/monitorin
   - The records tab lists the records; `/console/monitorings/3/records` lands on `?tab=records`.
   - As viewer: no edit, upload or delete controls, but charts and records are visible.
 
-- [ ] **Step 6: Commit** `feat: campaign page with upload picker, charts or rows, and records`
+- [x] **Step 6: Commit** `feat: campaign page with upload picker, charts or rows, and records`
 
 ### Task 12: Redirects from the old Excel routes
 

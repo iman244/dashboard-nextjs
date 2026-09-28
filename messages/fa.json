@@ -721,6 +721,16 @@
       "NationalIdLength": "کد ملی باید ۱۰ رقم باشد."
     },
     "Campaign": {
+      "uploadsTab": "فایل‌های اکسل",
+      "recordsTab": "اطلاعات ثبت‌شده",
+      "editDefinition": "ویرایش تعریف",
+      "uploadExcel": "بارگذاری اکسل",
+      "chooseUpload": "فایل اکسل",
+      "noUploads": "هنوز فایل اکسلی برای این پایش بارگذاری نشده است.",
+      "uploadMissing": "آن فایل در این پایش نیست؛ آخرین فایل نمایش داده می‌شود.",
+      "notFound": "پایش پیدا نشد",
+      "backToList": "بازگشت به پایش‌ها",
+      "deleteUpload": "حذف این فایل",
       "loadingRows": "در حال بارگذاری ردیف‌ها…",
       "rowsError": "ردیف‌ها بارگذاری نشد.",
       "noRows": "این فایل ردیفی ندارد.",
@@ -867,6 +877,10 @@
     "recordMonitoring": {
       "title": "ثبت پایش",
       "description": "نوع پایش را انتخاب کنید و رکوردهای بیماران را ببینید."
+    },
+    "campaign": {
+      "title": "پایش",
+      "description": "فایل‌ها و اطلاعات ثبت‌شده یک پایش."
     },
     "monitorings": {
       "title": "پایش‌ها",
