@@ -743,7 +743,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
   - `useList_PersonReports_API({ nationalId, monitoring?, enabled? })`, whose query key includes `monitoring`.
   - `UploadIssue`, `UploadExcelResult` from `@/data/saderat-bank-health-monitoring/api/upload-excel`; `useUploadExcelApi` returns `UploadExcelResult`.
 
-- [ ] **Step 1: Regenerate the types**
+- [x] **Step 1: Regenerate the types**
 
 ```bash
 cd N && npx -y openapi-typescript@7.13.0 ../dashboard-django-app-journeys/openapi.yaml -o src/data/api-schema.d.ts
@@ -752,7 +752,7 @@ grep -n "upload_count\|record_count\|CampaignRef" src/data/api-schema.d.ts
 
 Expected: `upload_count`, `record_count` and `CampaignRef` all appear.
 
-- [ ] **Step 2: Extend the hooks.** In `person-reports.ts`:
+- [x] **Step 2: Extend the hooks.** In `person-reports.ts`:
 
 ```ts
 export const listPersonReports = async (nationalId: string, monitoring?: number) => {
@@ -798,9 +798,9 @@ export type UploadExcelResult = { message: string; id: number; issues: UploadIss
 
 A refused upload's `AxiosError.response.data` is `{ file: string[]; issues: UploadIssue[] }`.
 
-- [ ] **Step 3: Verify.** `npx tsc --noEmit` exits 0.
+- [x] **Step 3: Verify.** `npx tsc --noEmit` exits 0.
 
-- [ ] **Step 4: Commit** `chore: sync API types with campaign counts, person rows and upload id`
+- [x] **Step 4: Commit** `chore: sync API types with campaign counts, person rows and upload id`
 
 ---
 

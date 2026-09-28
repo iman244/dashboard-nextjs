@@ -450,7 +450,9 @@ export interface paths {
         };
         /**
          * A patient's records across every monitoring
-         * @description Staff-only lookup across monitorings for a supplied national ID.
+         * @description Lookup across monitorings for a supplied national ID.
+         *
+         *     Any signed-in console user reads; patient accounts get 403.
          */
         get: operations["saderat_bank_health_monitoring_patient_records_list"];
         put?: never;
@@ -487,7 +489,9 @@ export interface paths {
         };
         /**
          * Excel uploads that mention a national ID
-         * @description Staff-only: which Excel uploads contain rows for one person.
+         * @description Which Excel uploads contain rows for one person.
+         *
+         *     Any signed-in console user reads; patient accounts get 403.
          *
          *     The rows live in each upload's `json` blob, so Postgres filters the
          *     candidates with jsonb containment and the rows are counted here. Uploads
@@ -515,13 +519,41 @@ export interface components {
             uid: string;
             token: string;
         };
+        CampaignRef: {
+            readonly id: number;
+            slug: string;
+            name_en: string;
+            name_fa: string;
+        };
+        /** @description A campaign, with its upload and record counts. */
         MonitoringType: {
             readonly id: number;
             slug: string;
             name_en: string;
             name_fa: string;
             field_schema?: unknown;
+            /** @default 0 */
+            readonly upload_count: number;
+            /** @default 0 */
+            readonly record_count: number;
         };
+        /**
+         * @description A monitoring type's own fields, with no campaign counts.
+         *
+         *     Used wherever a type is nested inside another record (e.g.
+         *     PatientRecordSerializer) rather than listed by MonitoringTypeViewSet:
+         *     those instances are never annotated with upload_count/record_count, and
+         *     the fields' own defaults would otherwise render plausible-looking zeros
+         *     that are not actually counts of anything.
+         */
+        MonitoringTypeFields: {
+            readonly id: number;
+            slug: string;
+            name_en: string;
+            name_fa: string;
+            field_schema?: unknown;
+        };
+        /** @description A campaign, with its upload and record counts. */
         MonitoringTypeRequest: {
             slug: string;
             name_en: string;
@@ -538,6 +570,7 @@ export interface components {
             token: string;
             new_password: string;
         };
+        /** @description A campaign, with its upload and record counts. */
         PatchedMonitoringTypeRequest: {
             slug?: string;
             name_en?: string;
@@ -604,7 +637,7 @@ export interface components {
          */
         PatientRecord: {
             readonly id: number;
-            readonly monitoring: components["schemas"]["MonitoringType"];
+            readonly monitoring: components["schemas"]["MonitoringTypeFields"];
             readonly national_id: string;
             readonly values: unknown;
             readonly files: components["schemas"]["PatientEntryFile"][];
@@ -619,14 +652,18 @@ export interface components {
             national_id: string;
             password: string;
         };
-        /** @description One Excel upload that mentions a person, without its rows. */
+        /** @description One Excel upload that mentions a person; `rows` only when asked for. */
         PersonReport: {
             readonly id: number;
             name: string;
             readonly type: string;
+            readonly monitoring: components["schemas"]["CampaignRef"];
             /** Format: date-time */
             readonly created_at: string;
             readonly match_count: number;
+            rows?: {
+                [key: string]: unknown;
+            }[];
         };
         /** @description What the browser must state before Django will sign anything. */
         PresignRequestRequest: {
@@ -721,6 +758,10 @@ export interface components {
         };
         UploadExcelResponse: {
             message: string;
+            id: number;
+            issues: {
+                [key: string]: unknown;
+            }[];
         };
         User: {
             /** Email address */
@@ -1843,7 +1884,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Staff access required. */
+            /** @description Console access required; patient accounts are refused. */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -1902,6 +1943,8 @@ export interface operations {
     saderat_bank_health_monitoring_person_reports_list: {
         parameters: {
             query: {
+                /** @description Limit to one monitoring and include the rows. */
+                monitoring?: number;
                 /** @description Ten digits; Persian and Arabic-Indic digits accepted. */
                 national_id: string;
             };
@@ -1919,7 +1962,7 @@ export interface operations {
                     "application/json": components["schemas"]["PersonReport"][];
                 };
             };
-            /** @description Missing or malformed national_id. */
+            /** @description Missing or malformed national_id or monitoring. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1933,7 +1976,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Staff access required. */
+            /** @description Console access required; patient accounts are refused. */
             403: {
                 headers: {
                     [name: string]: unknown;
