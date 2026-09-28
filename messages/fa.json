@@ -430,7 +430,7 @@
       "ErrorTitle": "بارگذاری انجام نشد",
       "ErrorMessage": "بارگذاری فایل با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
       "refusedTitle": "فایل بارگذاری نشد",
-      "savedWithIssues": "بارگذاری شد. {count} مورد برای بررسی:",
+      "savedWithIssues": "بارگذاری شد. {count, number} مورد برای بررسی:",
       "openUpload": "مشاهده این فایل",
       "uploadAnother": "بارگذاری فایل دیگر",
       "issues": {
@@ -571,7 +571,7 @@
       "PageTitle": "پایش‌ها",
       "PageDescription": "هر پایش با فایل‌های اکسل و اطلاعات ثبت‌شده‌اش.",
       "CreateType": "تعریف پایش جدید",
-      "counts": "{uploads} اکسل · {records} اطلاعات ثبت‌شده",
+      "counts": "{uploads, number} اکسل · {records, number} اطلاعات ثبت‌شده",
       "SlugColumn": "شناسه",
       "NameEnColumn": "نام (انگلیسی)",
       "NameFaColumn": "نام (فارسی)",
@@ -694,7 +694,7 @@
       "rowsError": "ردیف‌ها بارگذاری نشد.",
       "noRows": "این فایل ردیفی ندارد.",
       "searchRows": "جستجو در ردیف‌ها",
-      "rowCount": "{shown} از {total} ردیف"
+      "rowCount": "{shown, number} از {total, number} ردیف"
     },
     "CampaignPatient": {
       "fallbackTitle": "بیمار",

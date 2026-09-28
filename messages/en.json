@@ -430,7 +430,7 @@
       "ErrorTitle": "Upload failed",
       "ErrorMessage": "The file could not be uploaded. Please try again.",
       "refusedTitle": "The file was not uploaded",
-      "savedWithIssues": "Uploaded. {count} things to check:",
+      "savedWithIssues": "Uploaded. {count, plural, one {# thing} other {# things}} to check:",
       "openUpload": "Open this upload",
       "uploadAnother": "Upload another file",
       "issues": {
@@ -571,7 +571,7 @@
       "PageTitle": "Monitorings",
       "PageDescription": "Every monitoring with its Excel uploads and entered records.",
       "CreateType": "Define a new monitoring",
-      "counts": "{uploads} Excel uploads · {records} records",
+      "counts": "{uploads, plural, one {# Excel upload} other {# Excel uploads}} · {records, plural, one {# record} other {# records}}",
       "SlugColumn": "Slug",
       "NameEnColumn": "Name (English)",
       "NameFaColumn": "Name (Persian)",
@@ -694,7 +694,7 @@
       "rowsError": "The rows could not be loaded.",
       "noRows": "This upload has no rows.",
       "searchRows": "Search rows",
-      "rowCount": "{shown} of {total} rows"
+      "rowCount": "{shown, number} of {total, plural, one {# row} other {# rows}}"
     },
     "CampaignPatient": {
       "fallbackTitle": "Patient",

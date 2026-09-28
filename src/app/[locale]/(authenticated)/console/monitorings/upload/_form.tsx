@@ -31,7 +31,6 @@ import type {
   MonitoringType_ListSerializer,
 } from "@/data/monitoring-type/types";
 import { UploadIssues } from "./_issues";
-import { localeDigits } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
@@ -206,9 +205,7 @@ function UploadExcelFormReady({
       <div className="space-y-6">
         <Alert>
           <AlertTitle>
-            {t("savedWithIssues", {
-              count: localeDigits(savedResult.issues.length, locale),
-            })}
+            {t("savedWithIssues", { count: savedResult.issues.length })}
           </AlertTitle>
           <AlertDescription>
             <UploadIssues issues={savedResult.issues} campaigns={campaigns} />

@@ -9,7 +9,7 @@ import { Link } from "@/i18n/navigation";
 import { useRetrieve_SBHM_API } from "@/data/saderat-bank-health-monitoring/api/retrieve";
 import { findNationalIdColumn, rowMatches } from "@/lib/campaign";
 import { fullNationalId, isNationalId } from "@/lib/national-id";
-import { formatCellValue, localeDigits } from "@/lib/utils";
+import { formatCellValue } from "@/lib/utils";
 
 /**
  * An upload with no chart layout: its rows, searchable, linking to each person.
@@ -71,10 +71,7 @@ export const UploadRowsTable = ({
         />
       </div>
       <p className="text-sm text-muted-foreground">
-        {t("rowCount", {
-          shown: localeDigits(shown.length, locale),
-          total: localeDigits(rows.length, locale),
-        })}
+        {t("rowCount", { shown: shown.length, total: rows.length })}
       </p>
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full text-sm">

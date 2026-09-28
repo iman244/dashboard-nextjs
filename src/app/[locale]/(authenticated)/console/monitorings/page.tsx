@@ -12,7 +12,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useList_MonitoringType_API } from "@/data/monitoring-type/api";
 import { MonitoringType } from "@/data/monitoring-type/types";
 import { useIsStaff } from "@/data/user/fetches/me";
-import { localeDigits } from "@/lib/utils";
 import React from "react";
 import DeleteMonitoringTypeDialog from "./_delete-dialog/dialog";
 
@@ -99,8 +98,8 @@ const MonitoringTypesPage = () => {
                   </span>
                   <span className="text-sm text-muted-foreground">
                     {t("counts", {
-                      uploads: localeDigits(monitoring.upload_count, locale),
-                      records: localeDigits(monitoring.record_count, locale),
+                      uploads: monitoring.upload_count,
+                      records: monitoring.record_count,
                     })}
                   </span>
                 </Link>
