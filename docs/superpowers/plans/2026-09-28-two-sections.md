@@ -1458,7 +1458,7 @@ export default async function Page(props: PageProps<"/[locale]/console/monitorin
 **Interfaces:**
 - Produces: `useUploadCampaign(uploadId: number): { campaignId?: number; isPending: boolean; isError: boolean }`. It resolves the upload's `type` slug to the campaign's id via `useList_MonitoringType_API`.
 
-- [ ] **Step 1: The hook**
+- [x] **Step 1: The hook**
 
 ```ts
 "use client";
@@ -1474,14 +1474,14 @@ export const useUploadCampaign = (uploadId: number) => {
 };
 ```
 
-- [ ] **Step 2: Redirect pages.** Each old step page becomes a client component: call `useUploadCampaign(Number(id))`; when `campaignId` is known, `router.replace(\`/console/monitorings/${campaignId}?upload=${id}\`)` inside a `useEffect` guarded by a ref, like `(authenticated)/layout.tsx`. Render `<LoadingState />` meanwhile, and an `Alert` with a link to `/console/monitorings` on error. The list page `saderat-bank-health-monitoring/page.tsx` does a server `redirect` to `/console/monitorings`, like Task 11 Step 4.
+- [x] **Step 2: Redirect pages.** Each old step page becomes a client component: call `useUploadCampaign(Number(id))`; when `campaignId` is known, `router.replace(\`/console/monitorings/${campaignId}?upload=${id}\`)` inside a `useEffect` guarded by a ref, like `(authenticated)/layout.tsx`. Render `<LoadingState />` meanwhile, and an `Alert` with a link to `/console/monitorings` on error. The list page `saderat-bank-health-monitoring/page.tsx` does a server `redirect` to `/console/monitorings`, like Task 11 Step 4.
 
 - [ ] **Step 3: Verify in the browser.**
   - `/fa/console/saderat-bank-health-monitoring/step-2/4` lands on `/fa/console/monitorings/2?upload=4`.
   - `/fa/console/saderat-bank-health-monitoring` lands on `/fa/console/monitorings`.
   - A non-existent upload id shows the error with the link.
 
-- [ ] **Step 4: Commit** `feat: old Excel report addresses redirect into their campaign`
+- [x] **Step 4: Commit** `feat: old Excel report addresses redirect into their campaign`
 
 ---
 

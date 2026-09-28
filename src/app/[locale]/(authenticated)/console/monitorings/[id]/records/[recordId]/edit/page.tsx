@@ -24,7 +24,8 @@ const EditRecordPage = ({
   const types = useList_MonitoringType_API();
   const monitoring = types.data?.find((item) => item.id === monitoringId);
   const record = useRetrieve_PatientEntry_API(recordId);
-  const listPath = `/console/monitorings/${monitoringId}/records`;
+  const listPath = `/console/monitorings/${monitoringId}?tab=records`;
+  const editPath = (id: number) => `/console/monitorings/${monitoringId}/records/${id}/edit`;
 
   // A record id from another monitoring's URL is treated as not found rather
   // than edited against the wrong schema.
@@ -49,7 +50,7 @@ const EditRecordPage = ({
           monitoring={monitoring}
           entry={record.data}
           onSaved={() => router.push(listPath)}
-          onExisting={(id) => router.push(`${listPath}/${id}/edit`)}
+          onExisting={(id) => router.push(editPath(id))}
         />
       ) : null}
     </RecordShell>
