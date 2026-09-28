@@ -6,5 +6,9 @@ declare module "@tanstack/react-query" {
       /** Skip the global "Network error" dialog; the caller shows the failure inline. */
       silentNetworkError?: boolean;
     };
+    mutationMeta: {
+      /** Skip the global "Network error" dialog; the caller shows the failure itself. */
+      silentNetworkError?: boolean;
+    };
   }
 }

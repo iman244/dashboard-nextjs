@@ -14,7 +14,7 @@ export const useNetworkError = () => {
       .subscribe((event) => {
         if (event?.type === "updated" && event.action.type == "error") {
           const error = event.query.state.error;
-          // Queries that show their own inline error opt out (see
+          // Queries and mutations that show their own error opt out (see
           // `src/react-query.d.ts`), so one unreachable service does not
           // cover a page whose other sections still work.
           if (isAxiosError(error) && error.code === "ERR_NETWORK" && !event.query.meta?.silentNetworkError) {
@@ -29,7 +29,7 @@ export const useNetworkError = () => {
       .subscribe((event) => {
         if (event?.type === "updated" && event.action.type === "error") {
           const error = event.mutation.state.error;
-          if (isAxiosError(error) && error.code === "ERR_NETWORK") {
+          if (isAxiosError(error) && error.code === "ERR_NETWORK" && !event.mutation.meta?.silentNetworkError) {
             setNetworkErrorOpen(true)
           }
         }

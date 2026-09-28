@@ -16,7 +16,7 @@ export type PatientEhrFailure = { type: PatientType; retry: () => void };
 
 /**
  * Every EHR record type for one patient, loaded together; tabs only for types
- * with rows.
+ * with rows to show.
  *
  * `settled` stays false until every type has answered, so the caller can show
  * one placeholder instead of tabs popping in one by one. A disabled hook is
@@ -59,7 +59,9 @@ export const usePatientEhrTabs = ({
           type === PatientType.LAB
             ? buildPersonEhr({ lab: r, reports: [] })
             : buildPersonEhr({ reports: [r] });
-        return [{ type, ehr }];
+        // `buildPersonEhr` drops rows without a service name, so rows in the
+        // response do not guarantee anything to show.
+        return ehr.hasAny ? [{ type, ehr }] : [];
       });
       const failed = PATIENT_TYPE_ORDER.flatMap((type, i): PatientEhrFailure[] => {
         const r = results[i];

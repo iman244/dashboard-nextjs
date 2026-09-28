@@ -84,6 +84,8 @@ export default function PatientPage(
     queryFn: () => mobile_number_by_national_number({ params: { nationalNumber: nationalId } }),
     enabled: valid,
     staleTime: 5 * 60 * 1000,
+    // An EHR-host request: an unreachable EHR only loses the name, never the page.
+    meta: { silentNetworkError: true },
   });
   const found = person.data?.[0];
   const name = found ? `${found.FirstName ?? ""} ${found.LastName ?? ""}`.trim() : "";
