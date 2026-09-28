@@ -49,7 +49,11 @@ export function PageHeader({
           )}
         </div>
         {actions && (
-          <div className="flex shrink-0 items-center gap-2">{actions}</div>
+          // Wraps on a phone, where two long buttons would otherwise run off
+          // the screen; from sm up it keeps its width beside the title.
+          <div className="flex min-w-0 flex-wrap items-center gap-2 sm:shrink-0">
+            {actions}
+          </div>
         )}
       </div>
     </div>
