@@ -103,18 +103,28 @@ const toPoint = (record: ElectronicHealthRecord): LabPoint => {
   };
 };
 
+type EhrQuery = UseQueryResult<EHRByNationalNumberApiResponse, unknown>;
+
 /**
- * Shape the four responses into what the page renders.
+ * Shape the lab response and any report responses into what the page renders.
+ *
+ * `lab` is optional so a single report type can be shaped on its own (the
+ * patient page's per-type tabs); its rows then only ever land in `reports`.
  *
  * Unlike the patient-reports page this keeps results whose range will not
  * parse: they surface as `unknown` rather than being filtered away, because a
  * dropped imaging report reads to the user as "this patient had no imaging".
  */
-const buildPersonEhr = (
-  results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]
-): PersonEhr => {
+export const buildPersonEhr = ({
+  lab,
+  reports: reportQueries,
+}: {
+  lab?: EhrQuery;
+  reports: EhrQuery[];
+}): PersonEhr => {
+  const labQuery = lab;
+  const results = lab ? [lab, ...reportQueries] : reportQueries;
   const failed = results.find((r) => r.isError);
-  const [labQuery, ...reportQueries] = results;
 
   const points = (labQuery?.data ?? []).map(toPoint).filter((p) => p.service);
 
@@ -244,8 +254,8 @@ export const usePersonEhr = ({
   }, [campaignDate, windowFrom, windowTo]);
 
   const combine = React.useCallback(
-    (results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]) =>
-      buildPersonEhr(results),
+    (results: EhrQuery[]) =>
+      buildPersonEhr({ lab: results[0], reports: results.slice(1) }),
     []
   );
 
@@ -269,6 +279,9 @@ export const usePersonEhr = ({
         }),
       enabled: enabled && Boolean(nationalId),
       staleTime: 5 * 60 * 1000,
+      // An unreachable EHR shows inside its own section; the global dialog
+      // would block the monitoring data around it.
+      meta: { silentNetworkError: true },
     })),
     combine,
   });

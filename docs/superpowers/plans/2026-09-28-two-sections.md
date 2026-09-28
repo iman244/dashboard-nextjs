@@ -1636,9 +1636,9 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
   - `usePatientEhrTabs({ nationalId, range, enabled }): { settled: boolean; tabs: { type: PatientType; ehr: PersonEhr }[]; failed: { type: PatientType; retry: () => void }[] }`
   - Query meta `{ silentNetworkError: true }` is skipped by the global network-error dialog.
 
-- [ ] **Step 1: `buildPersonEhr`.** Change its signature to the object form above. Inside, replace `const [labQuery, ...reportQueries] = results;` with `const labQuery = lab; const reportQueries = reports;`, and `const failed = results.find(…)` with `[lab, ...reports].filter(Boolean).find(…)`. Update `usePersonEhr`'s `combine` to `(results) => buildPersonEhr({ lab: results[0], reports: results.slice(1) })`. Export `buildPersonEhr`. Add `meta: { silentNetworkError: true }` to each query in `usePersonEhr`.
+- [x] **Step 1: `buildPersonEhr`.** Change its signature to the object form above. Inside, replace `const [labQuery, ...reportQueries] = results;` with `const labQuery = lab; const reportQueries = reports;`, and `const failed = results.find(…)` with `[lab, ...reports].filter(Boolean).find(…)`. Update `usePersonEhr`'s `combine` to `(results) => buildPersonEhr({ lab: results[0], reports: results.slice(1) })`. Export `buildPersonEhr`. Add `meta: { silentNetworkError: true }` to each query in `usePersonEhr`.
 
-- [ ] **Step 2: The hook.**
+- [x] **Step 2: The hook.**
 
 ```ts
 "use client";
@@ -1681,7 +1681,7 @@ export const usePatientEhrTabs = ({ nationalId, range, enabled }: {
 
 In `src/components/app/patient-type-selector.tsx`, change `const PATIENT_TYPE_ORDER: PatientType[] = [` to `export const PATIENT_TYPE_ORDER: PatientType[] = [` (the eight types in render order). `EHR_BY_NATIONAL_NUMBER_KEY` and `ehr_by_national_number` are already exported from `EHR-by-national-number.ts`.
 
-- [ ] **Step 3: Global dialog opt-out.** In `network-error.ts`, in the query-cache subscriber, change the condition to:
+- [x] **Step 3: Global dialog opt-out.** In `network-error.ts`, in the query-cache subscriber, change the condition to:
 
 ```ts
 if (isAxiosError(error) && error.code === "ERR_NETWORK" && !event.query.meta?.silentNetworkError) {
@@ -1698,7 +1698,7 @@ declare module "@tanstack/react-query" {
 
 - [ ] **Step 4: Verify.** `npx tsc --noEmit`. Browser: the Step 2 person view and the patient page no longer open the global dialog when the EHR is unreachable (locally it always is). Stopping Django briefly and loading `/fa/console/monitorings` still opens it.
 
-- [ ] **Step 5: Commit** `feat: EHR per record type, errors kept inside their section`
+- [x] **Step 5: Commit** `feat: EHR per record type, errors kept inside their section`
 
 ### Task 17: EHR tabs on the patient page
 
