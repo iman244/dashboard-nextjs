@@ -16,7 +16,7 @@ Plan: `2026-09-28-two-sections.md` (19 tasks: 1–18 plus 3b). Spec: `../specs/2
 - **Django settings** for local runs: `/Users/iman244/Repositories/mainreport/.claude/dev/walk_settings.py` (stable path, not the scratchpad).
 - **Review:** one Opus reviewer after every task. It checks spec and plan compliance, runs the tests itself, and hunts for bugs. At most 2 review→fix rounds, then escalate to the orchestrator; design questions go to the user.
 - **One task per implementer**, fresh context each time.
-- **Parallelism:** only the opening lane runs in parallel (Django Tasks 1–4 alongside Next.js Tasks 3b, 6, 7, in different repos). Everything else is sequential.
+- **Parallelism:** only the opening lane runs in parallel. **Lane A** is Django Tasks 1 → 2 → 3 → 4, in sequence. **Lane B** is Next.js Tasks 6 → 3b → 7, in sequence, because 6 and 3b both edit `src/lib/campaign.ts`. The two lanes run side by side (different repos). Task 5 starts only when both lanes are done; everything after is sequential.
 - **Environment:** the orchestrator owns the Postgres container `mainreport-walkthrough-pg` (:55432), Django :8001, Next :3000 and the browser checks. Subagents only run tests.
 - **Checkpoints:** after each of the 5 slices the orchestrator brings the servers up, runs the browser pass, and waits for the user's go.
 - **Final gates:** a whole-branch review (Opus, max effort) and a separate security review of the slice 1 permission change.
