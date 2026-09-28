@@ -17,10 +17,10 @@ test('pickUpload keeps a valid request, else falls back to the newest', () => {
   assert.deepEqual(pickUpload([], '1'), { selected: undefined, requestedMissing: true });
 });
 
-test('national id column: known names first, then any "کد ملی" column, else none', () => {
+test('national id column: only the three known names, else none', () => {
   assert.equal(findNationalIdColumn([{ 'کد ملی': '1' }]), 'کد ملی');
   assert.equal(findNationalIdColumn([{ a: 1 }, { 'personel.کد ملی': '1' }]), 'personel.کد ملی');
-  assert.equal(findNationalIdColumn([{ 'کد ملی همسر': '1' }]), 'کد ملی همسر');
+  assert.equal(findNationalIdColumn([{ 'کد ملی همسر': '1' }]), undefined);
   assert.equal(findNationalIdColumn([{ name: 'x' }]), undefined);
   assert.equal(findNationalIdColumn([]), undefined);
 });
