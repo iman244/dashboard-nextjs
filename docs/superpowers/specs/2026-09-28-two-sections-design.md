@@ -33,8 +33,12 @@ No database change is needed: uploads and form records already point at their `M
 ## Pages
 
 **Patient page** (`/console/patients/[national_id]`, the user's "patient-ehr-page"). Already built; it changes as follows:
-- **EHR tabs per «نوع بیمار».** On open, all eight types are requested in the background for the date window; only types that return rows get a tab. The lab tab shows lab series with the trend dialog. Every other tab shows that type's rows with the existing detail dialog. These tabs replace the "Service report by record type" card and the patient-reports page.
+- **EHR tabs per «نوع بیمار».** On open, all eight types are requested in the background for the date window. While any is loading, the tab bar shows a placeholder, so tabs do not pop in one by one. When all have settled, only types that returned rows get a tab, and a type that failed shows its error inside the EHR section. The lab tab shows lab series with the trend dialog. Every other tab shows that type's rows with the existing detail dialog. These tabs replace the "Service report by record type" card and the patient-reports page.
 - **«پایش‌های این بیمار»** replaces the Excel reports card. It lists **campaigns**, not uploads: the union of campaigns with an Excel row for the person and campaigns with a form record. Each item links to the patient-in-campaign page.
+
+- **EHR failures stay inside their section.** EHR requests on this page are marked so the global "Network error" dialog ignores them; an unreachable EHR service shows an inline error with a retry, and the monitoring sections below keep working.
+
+**Patient search** (`جستجوی بیمار`) gains a national-ID box at the top: typing 8–10 digits (Persian or English) and pressing Enter opens `/console/patients/[national_id]` directly, with no date filters needed.
 
 **Campaign list** (`/console/monitorings`, replaces the types admin table). One row per campaign: name, number of uploads, number of form records. The row opens the campaign page. Staff see "Define new campaign" and "Upload Excel" actions.
 
@@ -77,23 +81,24 @@ No database change is needed: uploads and form records already point at their `M
 
 **Campaign counts.** The monitoring-types list and retrieve responses add read-only `upload_count` and `record_count`, annotated in one query, so the campaign list does not fetch every upload or record.
 
+**Upload column check.** For a campaign with a chart layout (`step_1`, `step_2`), the upload endpoint checks that the spreadsheet has that layout's national-ID column and the columns its charts read, before saving anything. A missing column fails with 400, and the error names each one, which the upload page shows. Campaigns without a layout accept any columns.
+
 **Person reports** gains two things:
 - Each item carries its campaign as `monitoring: {id, slug, name_en, name_fa}`.
 - With `?monitoring=<id>`, each item also carries `rows`: only this person's rows from that upload, so the patient-in-campaign page never downloads whole uploads.
 
 ## Build order (thin slices, each usable on its own)
 
-1. **Backend permissions, campaign counts and person-reports additions**, with tests.
+1. **Backend permissions, campaign counts, upload column check and person-reports additions**, with tests.
 2. **Sidebar and campaign list**, the upload page, renamed define/edit, and "Excel reports" removed from the sidebar.
 3. **Campaign page**: picker, existing charts, table fallback, form records tab, and redirects from the upload and records routes.
 4. **Patient-in-campaign page**, «پایش‌های این بیمار» on the patient page, the person-page redirect, and the sheet/table links repointed.
-5. **EHR tabs** on the patient page, removing the patient-reports page and its route (redirect).
+5. **EHR tabs** on the patient page with the loading placeholder and inline EHR errors, the national-ID box on patient search, and removing the patient-reports page and its route (redirect).
 
 ## Known constraints
 
 - The step 1 person view is one 1,265-line page. Slice 4 moves its rendering into a component unchanged (a mechanical move) so the patient-in-campaign page can reuse it; it is not rewritten.
 - EHR data cannot be checked locally, because there is no upstream EHR address. EHR tabs need a check after deploy.
-- Step 1 and Step 2 should get descriptive campaign names through "Edit definition" before release. This is data, not code; the `step_1` and `step_2` codes must not change.
 
 ## Verification per slice
 
