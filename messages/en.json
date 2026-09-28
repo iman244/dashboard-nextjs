@@ -743,7 +743,8 @@
       "healthRecord": "Health record",
       "rowIndex": "Row {index}",
       "nothing": "This patient has no data in this monitoring.",
-      "loadError": "This patient's monitoring data could not be loaded."
+      "loadError": "This patient's monitoring data could not be loaded.",
+      "noFindings": "No findings recorded in this row."
     }
   },
   "/patient/sign-in": {

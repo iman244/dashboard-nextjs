@@ -20,7 +20,7 @@ import {
   PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY,
   mobile_number_by_national_number,
 } from "@/data/electronic health record/api/mobile-number-by-national-number";
-import { fullNationalId, isNationalId } from "@/lib/national-id";
+import { fullNationalId, isNationalId, safeDecode } from "@/lib/national-id";
 import { localeDigits } from "@/lib/utils";
 import { usePersonEhr, type LabSeries } from "../../saderat-bank-health-monitoring/_ehr/use-person-ehr";
 import { EhrRecordsTable } from "../../saderat-bank-health-monitoring/_ehr/records-table";
@@ -49,7 +49,7 @@ export default function PatientPage(
   props: PageProps<"/[locale]/console/patients/[national_id]">
 ) {
   const { national_id } = React.use(props.params);
-  const nationalId = fullNationalId(decodeURIComponent(national_id));
+  const nationalId = fullNationalId(safeDecode(national_id));
   const valid = isNationalId(nationalId);
 
   const t = useTranslations("/console/patients.PatientPage");

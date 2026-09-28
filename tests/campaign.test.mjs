@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { findNationalIdColumn, campaignUploads, pickUpload, rowMatches, toNumber } from '../src/lib/campaign.ts';
+import { findNationalIdColumn, campaignUploads, pickUpload, rowMatches, toNumber, hasAnyValue } from '../src/lib/campaign.ts';
 
 const up = (id, type, day) => ({ id, type, created_at: `2026-09-${day}T00:00:00Z`, name: String(id) });
 
@@ -43,4 +43,12 @@ test('toNumber reads text and numbers alike, and refuses anything else', () => {
   assert.equal(toNumber(null), undefined);
   assert.equal(toNumber('12 kg'), undefined);
   assert.equal(toNumber(Number.NaN), undefined);
+});
+
+test('hasAnyValue: a row with only blank finding cells has no findings', () => {
+  const row = { 'نام': 'علی', 'کد ملی': '0012345678', FBS: null, TSH: '', PSA: '   ' };
+  assert.equal(hasAnyValue(row, ['FBS', 'TSH', 'PSA', 'Missing']), false);
+  assert.equal(hasAnyValue(row, []), false);
+  assert.equal(hasAnyValue({ ...row, FBS: '95' }, ['FBS', 'TSH']), true);
+  assert.equal(hasAnyValue({ ...row, FBS: 0 }, ['FBS']), true);
 });

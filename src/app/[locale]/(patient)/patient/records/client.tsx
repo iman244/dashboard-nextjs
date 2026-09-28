@@ -34,7 +34,7 @@ export default function Client() {
           <RefreshCw className="size-4" />{t("refresh")}
         </Button>
       </div>
-      <PatientRecordsContent key={sessionId} records={records} />
+      <PatientRecordsContent key={sessionId} records={records} patientPortal />
     </main>
   );
 }

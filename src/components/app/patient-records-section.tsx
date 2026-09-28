@@ -70,10 +70,15 @@ export const PatientRecordsSection = ({ nationalId }: {
   return <PatientRecordsContent records={records} editable={isStaff} />;
 };
 
-/** Rendering is shared; patient credentials never pass through the staff client. */
-export const PatientRecordsContent = ({ records, editable = false }: {
+/**
+ * Rendering is shared; patient credentials never pass through the staff client.
+ * `patientPortal` picks the wording for the patient's own page; edit rights
+ * never do, since console viewers read without them.
+ */
+export const PatientRecordsContent = ({ records, editable = false, patientPortal = false }: {
   records: { data?: PatientRecord[]; isPending: boolean; isError: boolean };
   editable?: boolean;
+  patientPortal?: boolean;
 }) => {
   const t = useTranslations("common.PatientRecordsSection");
   const [viewing, setViewing] = React.useState<Viewing | null>(null);
@@ -96,7 +101,7 @@ export const PatientRecordsContent = ({ records, editable = false }: {
         ) : records.isError ? (
           <p className="text-sm text-destructive">{t("LoadFailed")}</p>
         ) : shown.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t(editable ? "Empty" : "PatientEmpty")}</p>
+          <p className="text-sm text-muted-foreground">{t(patientPortal ? "PatientEmpty" : "Empty")}</p>
         ) : (
           shown.map((record) => (
             <RecordBlock

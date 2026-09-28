@@ -1,11 +1,13 @@
 "use client";
 import { useLocale } from "next-intl";
 import { formatCellValue } from "@/lib/utils";
+import { NoFindings } from "./no-findings";
 
 /** A person's row from an upload with no layout: every non-empty column. */
 export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
   const locale = useLocale();
   const entries = Object.entries(row).filter(([, v]) => v !== null && v !== undefined && v !== "");
+  if (entries.length === 0) return <NoFindings />;
   return (
     <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
       {entries.map(([key, value]) => (

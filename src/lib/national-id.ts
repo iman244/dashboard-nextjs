@@ -38,6 +38,19 @@ export const fullNationalId = (raw: string | number | null | undefined) => {
 
 export const isNationalId = (value: string) => /^\d{10}$/.test(value);
 
+/**
+ * A route segment decoded, or left as it came when its escapes are malformed
+ * (`%E0%A4%A`): the stray `%` then keeps it an invalid ID, where
+ * `decodeURIComponent` would have thrown and crashed the page.
+ */
+export const safeDecode = (raw: string) => {
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+};
+
 /** The patient page for a national ID, as the console links to it. */
 export const PATIENT_PATH = (nationalId: string) =>
   `/console/patients/${encodeURIComponent(fullNationalId(nationalId))}`;

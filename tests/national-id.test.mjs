@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { fullNationalId, isNationalId, CAMPAIGN_PATIENT_PATH } from '../src/lib/national-id.ts';
+import { fullNationalId, isNationalId, CAMPAIGN_PATIENT_PATH, safeDecode } from '../src/lib/national-id.ts';
 
 test('Persian digits and lost zeros fold to the ten-digit id', () => {
   assert.equal(fullNationalId('۰۰۱۲۳۴۵۶۷۸'), '0012345678');
@@ -33,4 +33,12 @@ test('campaign patient path uses the folded id', () => {
 
 test('a non-numeric folded id is escaped in the path', () => {
   assert.equal(CAMPAIGN_PATIENT_PATH(3, '12/34'), '/console/monitorings/3/patients/12%2F34');
+});
+
+test('safeDecode: a malformed escape stays invalid instead of throwing', () => {
+  assert.equal(safeDecode('0012345678'), '0012345678');
+  assert.equal(safeDecode('%DB%B0%DB%B0%DB%B1%DB%B2%DB%B3%DB%B4%DB%B5%DB%B6%DB%B7%DB%B8'), '۰۰۱۲۳۴۵۶۷۸');
+  assert.doesNotThrow(() => safeDecode('0012%E0%A4%A'));
+  assert.equal(isNationalId(fullNationalId(safeDecode('0012%E0%A4%A'))), false);
+  assert.equal(isNationalId(fullNationalId(safeDecode('0012345678%'))), false);
 });

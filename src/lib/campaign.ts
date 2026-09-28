@@ -30,6 +30,13 @@ export const pickUpload = <U extends { id: number }>(uploads: U[], requested: st
   };
 };
 
+/** Whether any of `keys` holds a value in `row`; blank or whitespace-only text does not count. */
+export const hasAnyValue = (row: Record<string, unknown>, keys: readonly string[]) =>
+  keys.some((key) => {
+    const value = row[key];
+    return value !== null && value !== undefined && String(value).trim() !== "";
+  });
+
 /** A spreadsheet cell as a number, whether stored as text or as a number. */
 export const toNumber = (value: unknown): number | undefined => {
   if (typeof value === "number") return Number.isFinite(value) ? value : undefined;

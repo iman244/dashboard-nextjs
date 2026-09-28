@@ -25,7 +25,8 @@ import {
   FileText,
   Brain,
 } from "lucide-react";
-import { toNumber } from "@/lib/campaign";
+import { hasAnyValue, toNumber } from "@/lib/campaign";
+import { NoFindings } from "./no-findings";
 
 type MonitoringData = {
   [key: string]: string | number | null;
@@ -95,6 +96,41 @@ const getStatusIcon = (value: string | number | null) => {
  * One person's Step 1 findings, from their upload row. The caller owns the
  * header, EHR and loading/not-found states; this renders only the findings.
  */
+/**
+ * The cells this layout reads as findings outside its test lists: vitals,
+ * imaging, examinations, history. Administrative cells (father's name,
+ * insurance, codes) are not findings.
+ */
+const OTHER_FINDING_KEYS = [
+  "BMI",
+  "BMI_Group",
+  "Sys_Bp",
+  "Dia_BP",
+  "BP_Group",
+  "قد",
+  "وزن",
+  "نبض",
+  "تعداد نبض",
+  "سونوگرافی شکم و لگن",
+  "رادیوگرافی قفسه سینه",
+  "تفسیر الکتروکاردیوگرام",
+  "پستان",
+  "تناسلی مردان",
+  "معاینات بالینی زنان",
+  "پاپ اسمیر",
+  "معاینه بالینی ENT",
+  "دهان و حلق و دندان",
+  "تعداد دندان پوسیده _ D",
+  "تعداد دندان غیرموجود _ M",
+  "تعداد دندان ترمیم شده _ F",
+  "مشاوره قلب",
+  "بیماریهای عضلانی قلب",
+  "عوامل زیان آورشغلی",
+  "تاریخچه قبلی پزشکی",
+  "توصیه های عمومی",
+  "اقدامات و مشاوره های موردنیاز",
+];
+
 export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
   const locale = useLocale();
   const t = useTranslations(
@@ -197,6 +233,18 @@ export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
     ...liverTests,
     ...clinicalSections,
   ].filter((test) => isAbnormal(row[test.key]));
+
+  // A row with no findings would otherwise show a card of dashes under an
+  // "all clear" summary.
+  const findingKeys = [
+    ...keyLabTests,
+    ...urineTests,
+    ...liverTests,
+    ...clinicalSections,
+  ].map((test) => test.key);
+  if (!hasAnyValue(row, [...findingKeys, ...OTHER_FINDING_KEYS])) {
+    return <NoFindings />;
+  }
 
   return (
     <div className="space-y-6">

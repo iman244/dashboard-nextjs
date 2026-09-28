@@ -17,7 +17,7 @@ import { useList_PatientRecord_API } from "@/data/patient-entry/api/records";
 import { useList_PersonReports_API } from "@/data/saderat-bank-health-monitoring/api/person-reports";
 import type { SBHM_Step2Record } from "@/data/saderat-bank-health-monitoring/types";
 import { useIsStaff } from "@/data/user/fetches/me";
-import { PATIENT_PATH, fullNationalId, isNationalId } from "@/lib/national-id";
+import { PATIENT_PATH, fullNationalId, isNationalId, safeDecode } from "@/lib/national-id";
 import { formatDate, localeDigits } from "@/lib/utils";
 import { Step1PersonSections } from "../../../_reports/step-1-person";
 import { Step2PersonSections } from "../../../_reports/step-2-person";
@@ -47,7 +47,7 @@ export default function CampaignPatientPage(
 ) {
   const { id, national_id } = React.use(props.params);
   const campaignId = Number(id);
-  const nationalId = fullNationalId(decodeURIComponent(national_id));
+  const nationalId = fullNationalId(safeDecode(national_id));
   const valid = isNationalId(nationalId);
 
   const t = useTranslations("/console/monitorings.CampaignPatient");
