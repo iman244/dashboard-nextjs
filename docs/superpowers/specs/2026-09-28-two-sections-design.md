@@ -81,7 +81,7 @@ No database change is needed: uploads and form records already point at their `M
 
 **Campaign counts.** The monitoring-types list and retrieve responses add read-only `upload_count` and `record_count`, annotated in one query, so the campaign list does not fetch every upload or record.
 
-**Upload column check.** For a campaign with a chart layout (`step_1`, `step_2`), the upload endpoint checks that the spreadsheet has that layout's national-ID column and the columns its charts read, before saving anything. A missing column fails with 400, and the error names each one, which the upload page shows. Campaigns without a layout accept any columns.
+**Upload column check.** For a campaign with a chart layout (`step_1`, `step_2`), the upload endpoint checks that the spreadsheet has that layout's signature columns (its national-ID column plus a few columns only that layout's sheet has) before saving anything. Requiring every chart column would reject a valid sheet that lacks one optional lab test. A missing column fails with 400, and the error names each one, which the upload page shows. Campaigns without a layout accept any columns.
 
 **Person reports** gains two things:
 - Each item carries its campaign as `monitoring: {id, slug, name_en, name_fa}`.
