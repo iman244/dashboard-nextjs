@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { hasAnyValue } from "@/lib/campaign";
-import { formatCellValue, formatDate } from "@/lib/utils";
+import { formatCellValue, formatDate, localeDigits } from "@/lib/utils";
 
 /** The spreadsheet columns a person header used to show, by message key. */
 const COLUMNS = {
@@ -38,7 +38,8 @@ export const Demographics = ({
     const text = String(row[COLUMNS[field]]).trim();
     if (field === "examDate" && ISO_DATE.test(text)) {
       const date = new Date(text.replace(" ", "T"));
-      if (!Number.isNaN(date.getTime())) return formatDate(date, locale);
+      // date-fns-jalali prints Latin digits; the locale picks the script.
+      if (!Number.isNaN(date.getTime())) return localeDigits(formatDate(date, locale), locale);
     }
     return formatCellValue(text, locale);
   };
