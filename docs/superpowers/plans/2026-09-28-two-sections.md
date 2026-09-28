@@ -41,11 +41,14 @@
 
 ## Review Focus
 
+(Six lines: the upload feedback rule the user added on 2026-09-28 earns its own.)
+
 1. **A national ID typed with Persian digits or missing leading zeros** (`۰۰۱۲۳۴۵۶۷۸`, `12345678`) in any new route or box must open the same patient as `0012345678`. Pinned in Task 6 (`tests/national-id.test.mjs`) and Task 18 (browser).
 2. **A campaign with no uploads, no records, or an upload with zero rows** must show an empty state, never a blank area or a crash. Pinned in Task 6 (`pickUpload([])`) and Task 11 (browser).
 3. **`?upload=` naming an upload that belongs to another campaign or was deleted** must fall back to the newest upload of this campaign, with a notice. Pinned in Task 6 (`pickUpload` tests) and Task 11.
 4. **A viewer opening a staff route by URL, or a patient account calling any console endpoint**: the viewer sees "Staff access required" and no write controls; the patient gets 403. Pinned in Task 1 (Django tests) and Task 8/11 (browser).
-5. **An upload for a campaign without a chart layout that has no national-ID column** must still render as a table, with rows that are not links. Pinned in Task 6 (`findNationalIdColumn`) and Task 10.
+5. **An upload for a campaign without a chart layout that has no national-ID column** must still render as a table, with rows that are not links, and the uploader is told why. Pinned in Task 3 (`no_id_column`), Task 6 (`findNationalIdColumn`) and Task 10.
+6. **A messy spreadsheet** (dates, blank or letter-bearing IDs, duplicates, missing chart columns) is saved and each problem is listed by Excel row. Only an unreadable file, an empty sheet or a missing ID column for a charted monitoring is refused, and it says exactly why. Pinned in Task 3 (Django tests) and Task 9 (browser, fa and en).
 
 ---
 
@@ -270,25 +273,46 @@ In `views.py`, add to `MonitoringTypeViewSet` (and import `Count` from `django.d
 
 - [ ] **Step 5: Commit** `feat: monitoring types report upload and record counts`
 
-### Task 3: Upload column check, and the upload returns its id
+### Task 3: Upload feedback: exact problems, blocking only what breaks
+
+The report code reads spreadsheets loosely: missing columns give empty charts, and odd cell types give "-". So the upload refuses a file only where our code really fails. Everything else is saved and reported as a warning with Excel row numbers. The API returns **codes plus details, not sentences**, so the upload page can say it in Persian or English.
+
+Verified failure points (2026-09-28 code read) that shape the rules:
+- A date or time cell made the save raise, giving a 500. **Fixed here** by storing dates as ISO text.
+- A layout campaign whose national-ID column is missing: no one in the file can be opened (links become `/undefined`). **Refused.**
+- A sheet with no data rows: nothing to show. **Refused.**
+- An unreadable, corrupt or `.xls` file (no `xlrd`). **Refused**, with the parser's detail.
+- Blank IDs, non-10-digit IDs and duplicate IDs: those rows can't be opened or would match the wrong person. **Warned**, with row numbers.
+- Missing chart columns: those charts are empty. **Warned**, naming every column.
 
 **Files:**
-- Modify: `D/saderatBankHealthMonitoring/serializers.py` (`SaderatBankHealthMonitoringUploadExcelSerializer.create`)
-- Modify: `D/saderatBankHealthMonitoring/views.py` (`upload_excel` returns `{'message', 'id'}`; update the `inline_serializer` to add `'id': drf_serializers.IntegerField()`)
-- Create: `D/saderatBankHealthMonitoring/layouts.py`
-- Test: `D/saderatBankHealthMonitoring/test_upload_layout.py`
+- Create: `D/saderatBankHealthMonitoring/layouts.py`, `D/saderatBankHealthMonitoring/upload_checks.py`
+- Modify: `D/saderatBankHealthMonitoring/serializers.py` (upload `create`)
+- Modify: `D/saderatBankHealthMonitoring/views.py` (`upload_excel` returns `{message, id, issues}`; the `inline_serializer` gains `id` and `issues`)
+- Test: `D/saderatBankHealthMonitoring/test_upload_checks.py`
 
 **Interfaces:**
 - Produces:
-  - `LAYOUT_COLUMNS: dict[str, tuple[str, ...]]`.
-  - The upload responds `{"message": str, "id": int}`.
-  - A missing-column failure responds `400 {"file": ["Missing columns for this monitoring: A, B"]}`.
+  - An issue is a dict `{"level": "error"|"warning", "code": str, ...details}`. Codes and details:
+    - `unreadable {detail}`
+    - `no_rows {}`
+    - `missing_id_column {column, found: [str], looks_like?: slug}`
+    - `no_id_column {}`
+    - `blank_ids {count, rows: [int]}`
+    - `invalid_ids {count, rows: [{row, value}]}`
+    - `duplicate_ids {count, groups: [{value, rows: [int]}]}`
+    - `missing_columns {columns: [str]}`
+  - Row numbers are Excel row numbers (header = row 1, so the first data row is 2). Lists are capped at 20 entries, and `count` carries the full total.
+  - A refused upload returns `400 {"file": ["The file cannot be used as it is."], "issues": [errors]}`.
+  - A saved upload returns `200 {"message": "...", "id": int, "issues": [warnings]}`.
 
-A layout's signature columns are the national-ID column plus columns only that layout's spreadsheet has. Requiring every chart column would reject a valid sheet that lacks one optional lab test; the signature is enough to catch the wrong kind of file.
-
-- [ ] **Step 1: Write the failing tests** in `test_upload_layout.py`:
+- [ ] **Step 1: Write the failing tests** in `test_upload_checks.py`:
 
 ```python
+import io
+from datetime import datetime
+
+import pandas as pd
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APITestCase
@@ -296,78 +320,255 @@ from rest_framework.test import APITestCase
 from .models import MonitoringType, SaderatBankHealthMonitoring
 from .tests import excel_upload
 
-STEP_1_ROW = {'personel.کد ملی': '0012345678', 'BMI_Group': 'n', 'BP_Group': 'n', 'name_goroh': 'g'}
-STEP_2_ROW = {'کد ملی': '0012345678', 'علائم عمومي': 'x', 'Heart rate:': 70, 'Respiratory rate': 16}
+STEP_2_ROW = {'کد ملی': '0012345678', 'نام': 'Ali', 'علائم عمومي': 'x'}
 
 
-class UploadLayoutTests(APITestCase):
+def codes(issues):
+    return {issue['code']: issue for issue in issues}
+
+
+class UploadChecksTests(APITestCase):
     def setUp(self):
         staff = get_user_model().objects.create_user('op', password='pw', is_staff=True)
         self.client.force_authenticate(staff)
 
-    def upload(self, type_slug, rows, name='Sheet'):
+    def upload(self, slug, file, name='Sheet'):
         return self.client.post(reverse('monitorings-upload-excel'),
-                                {'name': name, 'type': type_slug, 'file': excel_upload(rows)},
-                                format='multipart')
+                                {'name': name, 'type': slug, 'file': file}, format='multipart')
 
-    def test_matching_sheet_is_saved_and_returns_its_id(self):
-        response = self.upload('step_2', [STEP_2_ROW])
+    def test_date_cells_are_stored_as_text(self):
+        response = self.upload('step_2', excel_upload([{**STEP_2_ROW, 'تاریخ': datetime(2026, 9, 1)}]))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['id'], SaderatBankHealthMonitoring.objects.get(name='Sheet').id)
+        stored = SaderatBankHealthMonitoring.objects.get(id=response.data['id']).json
+        self.assertTrue(stored[0]['تاریخ'].startswith('2026-09-01'))
 
-    def test_step_2_sheet_into_step_1_is_refused_naming_the_columns(self):
-        response = self.upload('step_1', [STEP_2_ROW])
+    def test_layout_file_without_its_id_column_is_refused_with_details(self):
+        response = self.upload('step_1', excel_upload([STEP_2_ROW]))
         self.assertEqual(response.status_code, 400)
-        message = response.data['file'][0]
-        for column in ('personel.کد ملی', 'BMI_Group', 'BP_Group', 'name_goroh'):
-            self.assertIn(column, message)
+        issue = codes(response.data['issues'])['missing_id_column']
+        self.assertEqual(issue['level'], 'error')
+        self.assertEqual(issue['column'], 'personel.کد ملی')
+        self.assertIn('کد ملی', issue['found'])
+        self.assertEqual(issue['looks_like'], 'step_2')
         self.assertFalse(SaderatBankHealthMonitoring.objects.filter(name='Sheet').exists())
 
-    def test_campaign_without_layout_accepts_any_columns(self):
+    def test_empty_sheet_is_refused(self):
+        response = self.upload('step_2', excel_upload([]))
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('no_rows', codes(response.data['issues']))
+
+    def test_unreadable_file_is_refused_with_the_parser_detail(self):
+        bad = io.BytesIO(b'not a spreadsheet'); bad.name = 'report.xlsx'
+        response = self.upload('step_2', bad)
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(codes(response.data['issues'])['unreadable']['detail'])
+
+    def test_bad_ids_are_saved_and_listed_by_excel_row(self):
+        rows = [STEP_2_ROW, {**STEP_2_ROW, 'کد ملی': None}, {**STEP_2_ROW, 'کد ملی': 'AB12'}, STEP_2_ROW]
+        response = self.upload('step_2', excel_upload(rows))
+        self.assertEqual(response.status_code, 200)
+        found = codes(response.data['issues'])
+        self.assertEqual(found['blank_ids']['rows'], [3])
+        self.assertEqual(found['invalid_ids']['rows'], [{'row': 4, 'value': 'AB12'}])
+        self.assertEqual(found['duplicate_ids']['groups'], [{'value': '0012345678', 'rows': [2, 5]}])
+        self.assertIn('Heart rate:', found['missing_columns']['columns'])
+        self.assertTrue(all(issue['level'] == 'warning' for issue in response.data['issues']))
+
+    def test_campaign_without_layout_warns_when_rows_cannot_be_linked(self):
         MonitoringType.objects.create(slug='bp', name_en='BP', name_fa='فشار')
-        self.assertEqual(self.upload('bp', [{'anything': 1}]).status_code, 200)
+        response = self.upload('bp', excel_upload([{'anything': 1}]))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('no_id_column', codes(response.data['issues']))
+
+    def test_clean_sheet_has_no_id_warnings(self):
+        response = self.upload('step_2', excel_upload([STEP_2_ROW]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(set(codes(response.data['issues'])), {'missing_columns'})
 ```
 
-- [ ] **Step 2: Run to verify it fails.** Expected: `KeyError: 'id'` and a 200 where 400 is expected.
+- [ ] **Step 2: Run to verify they fail.** `manage.py test saderatBankHealthMonitoring.test_upload_checks --noinput`. Expected: FAIL (a 500 on the date test, and `KeyError: 'issues'`).
 
-- [ ] **Step 3: Implement.** Create `layouts.py`:
+- [ ] **Step 3: `layouts.py`.** These columns are copied from the chart code; keep them in step with `C/saderat-bank-health-monitoring/step-1/[id]/page.tsx` (its `countValues`/`numericStats`/`categorizeNumeric` calls) and `C/saderat-bank-health-monitoring/step-2/[id]/_charts/config.ts`.
 
 ```python
-"""Columns that identify a monitoring's spreadsheet layout.
+"""What each charted monitoring's spreadsheet is read for.
 
-Only monitorings the dashboard draws charts for have a layout. A sheet
-uploaded to one of them must carry these columns, or its charts would be
-empty; the list is a signature, not every column a chart reads.
+`id_column` is required: without it no one in the file can be opened.
+`chart_columns` only feed charts; a missing one leaves that chart empty,
+so it is reported, never refused.
 """
 
-LAYOUT_COLUMNS = {
-    'step_1': ('personel.کد ملی', 'BMI_Group', 'BP_Group', 'name_goroh'),
-    'step_2': ('کد ملی', 'علائم عمومي', 'Heart rate:', 'Respiratory rate'),
+LAYOUTS = {
+    'step_1': {
+        'id_column': 'personel.کد ملی',
+        'chart_columns': (
+            'Alkaline Phosphatase', 'BMI', 'BMI_Group', 'BP_Group', 'CBC/Hb', 'CBC/Hct',
+            'CBC/MCH', 'CBC/MCHC', 'CBC/MCV', 'CBC/Plat', 'CBC/RBC', 'CBC/WBC', 'Cr', 'FBS',
+            'Ferritin', 'HDL', 'Hb-A1C', 'K', 'LDL', 'Na', 'P', 'PSA', 'SGOT(AST)', 'SGPT(ALT)',
+            'T3', 'T4', 'TG', 'TSH', 'Total Chol', 'U_A/Bact', 'U_A/Blood', 'U_A/Glu',
+            'U_A/Ketone', 'U_A/Prot', 'U_A/RBC', 'U_A/WBC', 'U_A/crystal', 'Urea', 'Vit D',
+            'bilirubin-direct', 'ca', 'name_goroh', 'vitamin b12', 'اندوکرینولوژی', 'بيمه',
+            'بیماریهای عضلانی قلب', 'تفسیر الکتروکاردیوگرام', 'تناسلی مردان', 'جنسیت',
+            'رادیوگرافی قفسه سینه', 'روماتولوژی', 'سایکولوژی', 'ستون فقرات پشتی و کمری',
+            'سر و گردن', 'سن', 'سونوگرافی شکم و لگن', 'سیستم تنفسی', 'قلب', 'مشاوره قلب',
+            'معاینات بالینی زنان', 'معاینه بالینی ENT', 'نام صنعت', 'نبض', 'نورولوژی',
+            'هماتولوژی', 'پاپ اسمیر', 'پستان', 'گوارش',
+        ),
+    },
+    'step_2': {
+        'id_column': 'کد ملی',
+        'chart_columns': (
+            'Heart rate:', 'Respiratory rate', 'آزمایشات تکمیلی مورد نیاز',
+            'آيا دارو خاصي مصرف مي كنيد؟ذكرنماييد.',
+            'آيا سابقه بيماري ارثي درخانواده داريد ؟نام  ببريد.',
+            'آيا سابقه عمل جراحي داريد ؟ذكر نمايد.', 'آيا سيگارميكشيد؟', 'اندوكرينولوژي',
+            'جنسیت', 'روماتولوژي', 'ستون فقرات پشتی و کمری', 'سر و گردن', 'سيستم تنفسي',
+            'سيستم عضلاني اسكلتي تحتاني', 'سيستم عضلاني اسكلتي فوقان', 'علائم عمومي',
+            'عوامل  رواني', 'عوامل ارگونوميك', 'قلب', 'نورولوژی', 'هماتولوژي', 'پستان',
+            'پوست و  مو', 'گوارش',
+        ),
+    },
 }
-
-
-def missing_layout_columns(slug, columns):
-    """The signature columns of `slug`'s layout absent from `columns`, in order."""
-    present = set(columns)
-    return [c for c in LAYOUT_COLUMNS.get(slug, ()) if c not in present]
 ```
 
-In the upload serializer's `create`, right after `df = pd.read_excel(file, dtype=string_columns)` and before converting the rows, add:
+- [ ] **Step 4: `upload_checks.py`**
 
 ```python
-            missing = missing_layout_columns(type.slug, df.columns)
-            if missing:
-                raise serializers.ValidationError({'file': [
-                    'Missing columns for this monitoring: ' + ', '.join(missing)]})
+"""Turn a parsed sheet into issues a person can act on.
+
+Errors stop the upload; warnings are saved with it. Row numbers are
+Excel's: row 1 holds the headers, so the first data row is 2.
+"""
+from collections import defaultdict
+from datetime import date, datetime, time
+
+from .layouts import LAYOUTS
+from .national_id import EXCEL_NATIONAL_ID_COLUMNS, canonical_national_id
+
+LISTED = 20
+FIRST_DATA_ROW = 2
+
+
+def json_safe(value):
+    """Dates and times as ISO text: JSONField cannot store them."""
+    if isinstance(value, (datetime, date, time)):  # pandas.Timestamp is a datetime
+        return value.isoformat()
+    return value
+
+
+def id_column_for(slug, columns):
+    layout = LAYOUTS.get(slug)
+    if layout:
+        return layout['id_column'] if layout['id_column'] in columns else None
+    present = [c for c in EXCEL_NATIONAL_ID_COLUMNS if c in columns]
+    if present:
+        return present[0]
+    return next((c for c in columns if 'کد ملی' in str(c)), None)
+
+
+def looks_like(slug, columns):
+    """Another layout whose id column this sheet has, if any."""
+    return next((other for other, layout in LAYOUTS.items()
+                 if other != slug and layout['id_column'] in columns), None)
+
+
+def check_sheet(slug, rows, columns):
+    """(errors, warnings) for a parsed sheet going into monitoring `slug`."""
+    columns = [str(c) for c in columns]
+    if not rows:
+        return [{'level': 'error', 'code': 'no_rows'}], []
+
+    layout = LAYOUTS.get(slug)
+    id_column = id_column_for(slug, columns)
+    if layout and id_column is None:
+        error = {'level': 'error', 'code': 'missing_id_column',
+                 'column': layout['id_column'], 'found': columns[:LISTED]}
+        other = looks_like(slug, columns)
+        if other:
+            error['looks_like'] = other
+        return [error], []
+
+    warnings = []
+    if id_column is None:
+        warnings.append({'level': 'warning', 'code': 'no_id_column'})
+    else:
+        blank, invalid, seen = [], [], defaultdict(list)
+        for index, row in enumerate(rows):
+            number = index + FIRST_DATA_ROW
+            value = canonical_national_id(row.get(id_column))
+            if value in (None, ''):
+                blank.append(number)
+            elif not (isinstance(value, str) and len(value) == 10 and value.isdigit()):
+                invalid.append({'row': number, 'value': str(value)})
+            else:
+                seen[value].append(number)
+        duplicates = [{'value': v, 'rows': r} for v, r in seen.items() if len(r) > 1]
+        if blank:
+            warnings.append({'level': 'warning', 'code': 'blank_ids',
+                             'count': len(blank), 'rows': blank[:LISTED]})
+        if invalid:
+            warnings.append({'level': 'warning', 'code': 'invalid_ids',
+                             'count': len(invalid), 'rows': invalid[:LISTED]})
+        if duplicates:
+            warnings.append({'level': 'warning', 'code': 'duplicate_ids',
+                             'count': len(duplicates), 'groups': duplicates[:LISTED]})
+
+    if layout:
+        missing = [c for c in layout['chart_columns'] if c not in columns]
+        if missing:
+            warnings.append({'level': 'warning', 'code': 'missing_columns', 'columns': missing})
+    return [], warnings
 ```
 
-Import `from .layouts import missing_layout_columns`. The surrounding `except Exception as e` would rewrap this error, so either add `except serializers.ValidationError: raise` before it, or run the check after the `try` block using the parsed `df`. Pick the second. Keep `df` in scope by initialising it inside `try` and checking right after the `try/except`, before `SaderatBankHealthMonitoring.objects.create`.
+- [ ] **Step 5: Use it in the upload serializer.** Replace the body of `create` from `try:` through `objects.create(...)` with:
 
-In `views.py` `upload_excel`, use `instance = serializer.save()` and `return Response({'message': 'Excel uploaded successfully', 'id': instance.id})`. Update its `inline_serializer` fields to include `'id': drf_serializers.IntegerField()`.
+```python
+        try:
+            string_columns = {
+                'personel.کد ملی': str,
+                'تجمیع نتایج.کد ملی': str
+            }
+            df = pd.read_excel(file, dtype=string_columns)
+        except Exception as e:
+            raise serializers.ValidationError({
+                'file': ['The file cannot be used as it is.'],
+                'issues': [{'level': 'error', 'code': 'unreadable', 'detail': str(e)}],
+            })
 
-- [ ] **Step 4: Run the suite.** Expected: `OK`. `UploadKeepsNationalIdZerosTests` still passes: its row has `کد ملی` and uses `step_2`, so add `'علائم عمومي': 'x', 'Heart rate:': 70, 'Respiratory rate': 16` to that test's row.
+        df = df.astype(object).where(pd.notnull(df), None)
+        json_data = [{key: json_safe(value) for key, value in row.items()}
+                     for row in df.to_dict(orient="records")]
+        for row in json_data:
+            for column in EXCEL_NATIONAL_ID_COLUMNS:
+                if column in row:
+                    row[column] = canonical_national_id(row[column])
 
-- [ ] **Step 5: Commit** `feat: refuse spreadsheets that do not match a monitoring's layout`
+        errors, warnings = check_sheet(type.slug, json_data, list(df.columns))
+        if errors:
+            raise serializers.ValidationError({
+                'file': ['The file cannot be used as it is.'], 'issues': errors})
+
+        instance = SaderatBankHealthMonitoring.objects.create(
+            name=name, type=type, json=json_data)
+        instance.upload_issues = warnings
+        return instance
+```
+
+Import `from .upload_checks import check_sheet, json_safe`. The existing `UniqueTogetherValidator` stays.
+
+In `views.py`, `upload_excel`:
+
+```python
+        instance = serializer.save()
+        return Response({'message': 'Excel uploaded successfully', 'id': instance.id,
+                         'issues': getattr(instance, 'upload_issues', [])})
+```
+
+The `inline_serializer` fields become `{'message': CharField(), 'id': IntegerField(), 'issues': ListField(child=DictField())}`.
+
+- [ ] **Step 6: Run the suite.** `manage.py test --noinput`. Expected: `OK`. `UploadKeepsNationalIdZerosTests` still passes, since its row has `کد ملی` and goes to `step_2`.
+
+- [ ] **Step 7: Commit** `feat: upload reports exact problems by row; refuses only what breaks`
 
 ### Task 4: Person reports carry the campaign, and rows on request
 
@@ -476,7 +677,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Produces:
   - `listPersonReports(nationalId: string, monitoring?: number)`.
   - `useList_PersonReports_API({ nationalId, monitoring?, enabled? })`, whose query key includes `monitoring`.
-  - `useUploadExcelApi` is typed to return `{ message: string; id: number }`.
+  - `UploadIssue`, `UploadExcelResult` from `@/data/saderat-bank-health-monitoring/api/upload-excel`; `useUploadExcelApi` returns `UploadExcelResult`.
 
 - [ ] **Step 1: Regenerate the types**
 
@@ -514,7 +715,24 @@ export const useList_PersonReports_API = ({
   });
 ```
 
-In `upload-excel.ts`, change the mutation's data type from `void` to `{ message: string; id: number }` in `UseMutationOptions<…>`, and type `upload_excel` as returning `Promise<{ message: string; id: number }>`.
+In `upload-excel.ts`, add and export the issue types, and type the mutation with them (both the data type in `UseMutationOptions<…>` and `upload_excel`'s return):
+
+```ts
+/** One upload problem, as Django reports it: a code plus details, never a sentence. */
+export type UploadIssue =
+  | { level: "error"; code: "unreadable"; detail: string }
+  | { level: "error"; code: "no_rows" }
+  | { level: "error"; code: "missing_id_column"; column: string; found: string[]; looks_like?: string }
+  | { level: "warning"; code: "no_id_column" }
+  | { level: "warning"; code: "blank_ids"; count: number; rows: number[] }
+  | { level: "warning"; code: "invalid_ids"; count: number; rows: { row: number; value: string }[] }
+  | { level: "warning"; code: "duplicate_ids"; count: number; groups: { value: string; rows: number[] }[] }
+  | { level: "warning"; code: "missing_columns"; columns: string[] };
+
+export type UploadExcelResult = { message: string; id: number; issues: UploadIssue[] };
+```
+
+A refused upload's `AxiosError.response.data` is `{ file: string[]; issues: UploadIssue[] }`.
 
 - [ ] **Step 3: Verify.** `npx tsc --noEmit` exits 0.
 
@@ -558,6 +776,14 @@ test('Persian digits and lost zeros fold to the ten-digit id', () => {
 test('anything else stays invalid', () => {
   assert.equal(isNationalId(fullNationalId('abc')), false);
   assert.equal(isNationalId(fullNationalId('1234567')), false);
+  assert.equal(isNationalId(fullNationalId('')), false);
+  assert.equal(isNationalId(fullNationalId(null)), false);
+});
+
+test('letters are never stripped into someone else\'s id', () => {
+  assert.equal(fullNationalId('12345678A'), '12345678A');
+  assert.equal(isNationalId(fullNationalId('12345678A')), false);
+  assert.equal(fullNationalId('001-234-5678'), '0012345678');
 });
 
 test('campaign patient path uses the folded id', () => {
@@ -617,7 +843,23 @@ export const asciiDigits = (raw: string) =>
     .replace(/[^0-9]/g, "");
 ```
 
-Change `fullNationalId` to `const digits = asciiDigits(String(raw ?? ""));`, and add:
+Replace `fullNationalId` so it folds digits but never deletes letters. Stripping `12345678A` to `0012345678` would open another real person (verified 2026-09-28).
+
+```ts
+/** Persian and Arabic-Indic digits to ASCII; everything else kept. */
+const foldDigits = (raw: string) =>
+  raw
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
+
+export const fullNationalId = (raw: string | number | null | undefined) => {
+  const compact = foldDigits(String(raw ?? "")).replace(/[\s-]/g, "");
+  if (!/^\d+$/.test(compact)) return compact;
+  return compact.length >= 8 && compact.length < 10 ? compact.padStart(10, "0") : compact;
+};
+```
+
+Then add:
 
 ```ts
 /** A patient inside one campaign (a MonitoringType id). */
@@ -824,14 +1066,45 @@ In `/console/monitorings.Builder`: `NewTitle` → "Define a new monitoring" / "�
     - The campaign `Select` lists **all** types (remove the `isKnownSBHM_Type` filter). Its value is the slug, as the API expects.
     - The default campaign is `searchParams.get("campaign")`, mapped to that type's slug once types load (render the form only once `types.data` exists, and pass the matching slug as `defaultValues.type` to `useForm`).
     - On success, `router.push(\`/console/monitorings/${campaign.id}?upload=${result.id}\`)`, where `campaign` is the type whose slug was submitted. Keep the toast and the `LIST_SBHM_QUERY_KEY` invalidation.
-    - Show the server's `file` error through the existing `FormMessage` on the file field. The missing-columns message arrives as `{"file": [...]}` and lands there already.
+    - **Refused** (400 with `issues`): don't set a field error. Show an `Alert variant="destructive"` titled `t("refusedTitle")` containing `<UploadIssues issues={issues} campaigns={types.data} />`.
+    - **Saved with warnings** (200, `issues.length > 0`): don't navigate. Replace the form with a result panel: title `t("savedWithIssues", { count })`, `<UploadIssues …/>`, and two buttons, `t("openUpload")` (→ the campaign page with `?upload=`) and `t("uploadAnother")` (resets the form).
+    - **Saved clean**: navigate as above.
+  - `C/monitorings/upload/_issues.tsx` exports `UploadIssues({ issues, campaigns })`. It renders a `<ul>` with one `<li>` per issue, using `t(\`issues.${issue.code}\`, values)`. The values are built per code:
+    - row lists are joined with `، ` in fa and `, ` in en, digits through `localeDigits`;
+    - more than listed → append `t("issues.more", { count: total - listed })`;
+    - `invalid_ids` renders `row (value)`;
+    - `duplicate_ids` renders `value (rows …)`;
+    - `found` and `columns` are joined the same way inside `<bdi>` so Latin column names keep their order in RTL;
+    - `looks_like` is shown as a second line `t("issues.looks_like", { campaign })`, where `campaign` is the localized name of the type with that slug;
+    - `unreadable` shows `detail` in a muted `<code dir="ltr">` line.
+  - Messages (`/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog`, both files):
+
+| key | en | fa |
+|---|---|---|
+| refusedTitle | The file was not uploaded | فایل بارگذاری نشد |
+| savedWithIssues | Uploaded. {count} things to check: | بارگذاری شد. {count} مورد برای بررسی: |
+| openUpload | Open this upload | مشاهده این فایل |
+| uploadAnother | Upload another file | بارگذاری فایل دیگر |
+| issues.unreadable | The file could not be read. Save it as an .xlsx file and try again. | فایل خوانده نشد. آن را با قالب ‎.xlsx ذخیره کنید و دوباره تلاش کنید. |
+| issues.no_rows | The sheet has no data rows under its header row. | برگه زیر ردیف سرستون‌ها هیچ ردیف داده‌ای ندارد. |
+| issues.missing_id_column | The column “{column}” is missing, so no one in this file could be opened. Columns found: {found} | ستون «{column}» وجود ندارد، بنابراین هیچ‌کس در این فایل باز نمی‌شود. ستون‌های موجود: {found} |
+| issues.looks_like | This looks like a “{campaign}” file. Did you choose the right monitoring? | این فایل شبیه فایل «{campaign}» است. آیا پایش درست را انتخاب کرده‌اید؟ |
+| issues.no_id_column | No national ID column was found, so these rows can’t be linked to patients. | ستون کد ملی پیدا نشد، بنابراین این ردیف‌ها به بیماران وصل نمی‌شوند. |
+| issues.blank_ids | {count} rows have no national ID and can’t be opened. Rows: {rows} | {count} ردیف کد ملی ندارند و باز نمی‌شوند. ردیف‌ها: {rows} |
+| issues.invalid_ids | {count} rows have a national ID that isn’t 10 digits and won’t match a patient: {rows} | {count} ردیف کد ملی ۱۰ رقمی ندارند و به بیماری وصل نمی‌شوند: {rows} |
+| issues.duplicate_ids | {count} national IDs appear on more than one row; every row is kept: {groups} | {count} کد ملی در بیش از یک ردیف آمده‌اند؛ همه ردیف‌ها نگه داشته می‌شوند: {groups} |
+| issues.missing_columns | These columns are missing, so the charts that use them will be empty: {columns} | این ستون‌ها وجود ندارند و نمودارهای مربوط خالی می‌مانند: {columns} |
+| issues.more | and {count} more | و {count} مورد دیگر |
   - `layout.tsx` carries metadata the way `C/patients/[national_id]/layout.tsx` does.
 
 - [ ] **Step 2: Verify.**
   - `npx tsc --noEmit` and the message check.
   - Browser as staff:
     - upload a small xlsx to "Blood pressure check" → lands on `/fa/console/monitorings/3?upload=<id>`;
-    - upload a Step 2 sheet to Step 1 → the file field shows "Missing columns…".
+    - upload a Step 2 sheet to Step 1 → refused; the alert names the missing `personel.کد ملی` column, lists the columns found, and asks "Did you choose the right monitoring?" naming Step 2;
+    - upload a Step 2 sheet with one blank and one duplicate ID → saved; the result panel lists both with Excel row numbers and the missing chart columns; "Open this upload" goes to the campaign page;
+    - upload a `.txt` renamed to `.xlsx` → refused with the "could not be read" message and the parser detail;
+    - check the same three in `/en/`.
   - As viewer, the page shows "Staff access required".
 
 - [ ] **Step 3: Commit** `feat: upload Excel on its own page, to any monitoring`
@@ -897,7 +1170,10 @@ Remove `export default`.
   - Drop the `ReportFrame` wrappers the same way; the record count moves into the actions row as muted text.
   - Pass `personHref` to its sheet.
 
-- [ ] **Step 4: Sheets.** In both `sheet.tsx` files add `personHref: (nationalId: string) => string;` to the props type. Replace each template-literal person URL with `personHref(nationalId)` (step 1: `personHref(String(row.original["personel.کد ملی"] ?? ""))`).
+- [ ] **Step 4: Sheets.** In both `sheet.tsx` files add `personHref: (nationalId: string) => string;` to the props type, and replace each template-literal person URL with `personHref(nationalId)`.
+  - **Never link a row whose ID is not valid.** Where the Step 1 desktop table builds the link from `row.original["personel.کد ملی"]` unchecked (a blank cell became `/null`, verified 2026-09-28), compute `const nationalId = fullNationalId(row.original["personel.کد ملی"] as string | number | null)`. Render the link only when `isNationalId(nationalId)`, and plain text otherwise.
+  - Apply the same rule to the mobile lists (`href: isNationalId(id) ? personHref(id) : null`), the Step 2 sheet and `UploadRowsTable`.
+  - Also show `""` instead of the literal `null`/`undefined` for blank names in the Step 1 desktop table (`String(info.getValue() ?? "")`).
 
 - [ ] **Step 5: Thin wrappers**, so the old routes still build until Task 12. `step-1/[id]/page.tsx`:
 

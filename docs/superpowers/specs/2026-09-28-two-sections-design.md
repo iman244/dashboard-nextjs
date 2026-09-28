@@ -81,7 +81,19 @@ No database change is needed: uploads and form records already point at their `M
 
 **Campaign counts.** The monitoring-types list and retrieve responses add read-only `upload_count` and `record_count`, annotated in one query, so the campaign list does not fetch every upload or record.
 
-**Upload column check.** For a campaign with a chart layout (`step_1`, `step_2`), the upload endpoint checks that the spreadsheet has that layout's signature columns (its national-ID column plus a few columns only that layout's sheet has) before saving anything. Requiring every chart column would reject a valid sheet that lacks one optional lab test. A missing column fails with 400, and the error names each one, which the upload page shows. Campaigns without a layout accept any columns.
+**Upload feedback.** The uploader learns exactly what is wrong, and only what really breaks our code is refused. The report code reads sheets loosely (a missing column gives an empty chart, an odd cell gives "-"), so:
+- **Refused**, each with its detail:
+  - an unreadable file (not .xlsx, or corrupt), with the parser's message;
+  - a sheet with no data rows;
+  - for a charted monitoring (`step_1`, `step_2`), a missing national-ID column. The error names the column, lists the columns found, and says when the file looks like another monitoring's.
+- **Saved, and listed as warnings** with Excel row numbers:
+  - blank national IDs;
+  - IDs that aren't 10 digits;
+  - duplicate IDs;
+  - missing chart columns, each named;
+  - for monitorings without charts, no national-ID column at all.
+- **Fixed rather than refused:** date and time cells, which used to crash the upload with a 500, are stored as ISO text.
+- The API returns codes plus details, and the upload page writes the sentences in Persian or English.
 
 **Person reports** gains two things:
 - Each item carries its campaign as `monitoring: {id, slug, name_en, name_fa}`.
@@ -89,7 +101,7 @@ No database change is needed: uploads and form records already point at their `M
 
 ## Build order (thin slices, each usable on its own)
 
-1. **Backend permissions, campaign counts, upload column check and person-reports additions**, with tests.
+1. **Backend permissions, campaign counts, upload feedback and person-reports additions**, with tests.
 2. **Sidebar and campaign list**, the upload page, renamed define/edit, and "Excel reports" removed from the sidebar.
 3. **Campaign page**: picker, existing charts, table fallback, form records tab, and redirects from the upload and records routes.
 4. **Patient-in-campaign page**, «پایش‌های این بیمار» on the patient page, the person-page redirect, and the sheet/table links repointed.
