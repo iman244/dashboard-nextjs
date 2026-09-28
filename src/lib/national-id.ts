@@ -25,7 +25,13 @@ const foldDigits = (raw: string) =>
  */
 export const fullNationalId = (raw: string | number | null | undefined) => {
   // Spreadsheet rows can hold the id as a number at runtime, whatever the type says.
-  const compact = foldDigits(String(raw ?? "")).replace(/[\s-]/g, "");
+  // Persian copy-paste and Excel also carry invisible bidi/zero-width marks
+  // (ZWNJ/ZWJ/LRM/RLM, bidi embeddings/overrides, isolates, BOM) that must
+  // fold away like whitespace and dashes, never count as "not a digit".
+  const compact = foldDigits(String(raw ?? "")).replace(
+    /[\s\-‌-‏‪-‮⁦-⁩﻿]/g,
+    ""
+  );
   if (!/^\d+$/.test(compact)) return compact;
   return compact.length >= 8 && compact.length < 10 ? compact.padStart(10, "0") : compact;
 };
@@ -34,7 +40,7 @@ export const isNationalId = (value: string) => /^\d{10}$/.test(value);
 
 /** The patient page for a national ID, as the console links to it. */
 export const PATIENT_PATH = (nationalId: string) =>
-  `/console/patients/${fullNationalId(nationalId)}`;
+  `/console/patients/${encodeURIComponent(fullNationalId(nationalId))}`;
 
 /**
  * The patient page, carrying over a date window the caller was already
@@ -54,4 +60,4 @@ export const patientHref = (
 
 /** A patient inside one campaign (a MonitoringType id). */
 export const CAMPAIGN_PATIENT_PATH = (campaignId: number, nationalId: string) =>
-  `/console/monitorings/${campaignId}/patients/${fullNationalId(nationalId)}`;
+  `/console/monitorings/${campaignId}/patients/${encodeURIComponent(fullNationalId(nationalId))}`;

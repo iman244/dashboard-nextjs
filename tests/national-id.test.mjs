@@ -22,6 +22,15 @@ test('letters are never stripped into someone else\'s id', () => {
   assert.equal(fullNationalId('001-234-5678'), '0012345678');
 });
 
+test('invisible bidi and zero-width marks from Persian copy-paste fold away', () => {
+  assert.equal(fullNationalId('‏0012345678'), '0012345678');
+  assert.equal(fullNationalId('‎۱۲۳۴۵۶۷۸'), '0012345678');
+});
+
 test('campaign patient path uses the folded id', () => {
   assert.equal(CAMPAIGN_PATIENT_PATH(3, '۱۲۳۴۵۶۷۸'), '/console/monitorings/3/patients/0012345678');
+});
+
+test('a non-numeric folded id is escaped in the path', () => {
+  assert.equal(CAMPAIGN_PATIENT_PATH(3, '12/34'), '/console/monitorings/3/patients/12%2F34');
 });
