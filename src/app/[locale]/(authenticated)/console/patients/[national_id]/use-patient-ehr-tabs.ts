@@ -31,8 +31,8 @@ export type PatientEhrFailure = { type: PatientType; retry: () => void; isFetchi
  * refetches, so the caller needs its own signal to show that the retry is in
  * flight rather than leaving the button looking inert.
  *
- * Keys match `usePersonEhr` and `useEHRByNationalNumberApi` for the same
- * (id, type, from, to), so the three share cache entries.
+ * Keys match `useEHRByNationalNumberApi` for the same (id, type, from, to),
+ * so the two share cache entries.
  */
 export const usePatientEhrTabs = ({
   nationalId,
