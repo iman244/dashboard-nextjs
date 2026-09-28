@@ -1,13 +1,7 @@
 "use client";
 
-import React from "react";
-import { useQueries, type UseQueryResult } from "@tanstack/react-query";
-import { format, subYears } from "date-fns-jalali";
-import {
-  ehr_by_national_number,
-  EHR_BY_NATIONAL_NUMBER_KEY,
-  type EHRByNationalNumberApiResponse,
-} from "@/data/electronic health record/api/EHR-by-national-number";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { EHRByNationalNumberApiResponse } from "@/data/electronic health record/api/EHR-by-national-number";
 import type { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import {
   classify,
@@ -18,7 +12,6 @@ import {
   type EhrStatus,
   type NormalRange,
 } from "./classify";
-import { EHR_HISTORY_YEARS, EHR_LAB_TYPE, EHR_REPORT_TYPES } from "./config";
 
 export type LabPoint = {
   service: string;
@@ -225,64 +218,4 @@ export const buildPersonEhr = ({
       : undefined,
     hasAny: points.length > 0 || reports.length > 0,
   };
-};
-
-/** Every electronic result for one person, arranged the way the page reads it. */
-export const usePersonEhr = ({
-  nationalId,
-  campaignDate = "",
-  window,
-  enabled = true,
-}: {
-  nationalId: string;
-  /** `created_at` of the campaign, ISO. Anchors how far back to ask, only. */
-  campaignDate?: string;
-  /** An explicit window instead, e.g. the patient page's date picker. */
-  window?: { from: Date; to: Date };
-  enabled?: boolean;
-}): PersonEhr => {
-  const windowFrom = window ? format(window.from, "yyyy/MM/dd") : undefined;
-  const windowTo = window ? format(window.to, "yyyy/MM/dd") : undefined;
-  const range = React.useMemo(() => {
-    if (windowFrom && windowTo) return { fromDate: windowFrom, toDate: windowTo };
-    const exam = new Date(campaignDate);
-    const anchor = Number.isNaN(exam.getTime()) ? new Date() : exam;
-    return {
-      fromDate: format(subYears(anchor, EHR_HISTORY_YEARS), "yyyy/MM/dd"),
-      toDate: format(new Date(), "yyyy/MM/dd"),
-    };
-  }, [campaignDate, windowFrom, windowTo]);
-
-  const combine = React.useCallback(
-    (results: EhrQuery[]) =>
-      buildPersonEhr({ lab: results[0], reports: results.slice(1) }),
-    []
-  );
-
-  return useQueries({
-    queries: [EHR_LAB_TYPE, ...EHR_REPORT_TYPES].map((patientType) => ({
-      queryKey: [
-        EHR_BY_NATIONAL_NUMBER_KEY,
-        nationalId,
-        patientType,
-        range.fromDate,
-        range.toDate,
-      ],
-      queryFn: () =>
-        ehr_by_national_number({
-          params: {
-            nationalNumber: nationalId,
-            fromDate: range.fromDate,
-            toDate: range.toDate,
-            patientType,
-          },
-        }),
-      enabled: enabled && Boolean(nationalId),
-      staleTime: 5 * 60 * 1000,
-      // An unreachable EHR shows inside its own section; the global dialog
-      // would block the monitoring data around it.
-      meta: { silentNetworkError: true },
-    })),
-    combine,
-  });
 };

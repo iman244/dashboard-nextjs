@@ -1,20 +1,3 @@
-import { PatientType } from "@/components/app/patient-type-selector";
-
-/**
- * Which EHR branches this page pulls.
- *
- * LAB carries the numbers step_2 has none of; the other three carry the
- * imaging, pathology and paraclinical reports. One request each — the page is
- * a single person, so there is no fan-out to worry about.
- */
-export const EHR_LAB_TYPE = PatientType.LAB;
-
-export const EHR_REPORT_TYPES = [
-  PatientType.IMAGE,
-  PatientType.PATHOLOGY,
-  PatientType.PARACLINICAL,
-] as const;
-
 /**
  * How far back to ask for history.
  *

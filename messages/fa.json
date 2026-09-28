@@ -295,6 +295,10 @@
       "removeNationalNumber": "حذف فیلتر شماره ملی",
       "removeDateRange": "حذف فیلتر بازه تاریخ",
       "removePatientType": "حذف فیلتر نوع بیمار",
+      "openPatientLabel": "باز کردن بیمار با کد ملی",
+      "openPatientPlaceholder": "کد ملی",
+      "openPatientAction": "باز کردن",
+      "openPatientInvalid": "کد ملی ۱۰ رقم است.",
       "pagination": {
         "showing": "نمایش {start} تا {end} از {total} رکورد",
         "rowsPerPage": "ردیف در صفحه:",
@@ -343,49 +347,6 @@
       "campaignSummary": "{uploads, number} ردیف اکسل · {records, number} اطلاعات ثبت‌شده",
       "retry": "تلاش دوباره",
       "open": "مشاهده"
-    }
-  },
-  "/console/patient-reports": {
-    "PatientReports": {
-      "title": "گزارشات بیمار",
-      "description": "تولید گزارشات جامع برای بیماران",
-      "chartTestValue": "مقدار آزمایش",
-      "chartNormalMin": "حد پایین نرمال",
-      "chartNormalMax": "حد بالای نرمال",
-      "chartNormalArea": "محدوده طبیعی",
-      "chartAbnormalArea": "محدوده غیرطبیعی",
-      "chartDate": "تاریخ",
-      "trendOverTime": "روند نتایج آزمایش در طول زمان",
-      "recordDetails": "جزئیات رکوردها",
-      "serviceSearchPlaceholder": "جستجو در نام خدمت...",
-      "clearSearch": "پاک کردن جستجو",
-      "serviceRecordsTitle": "گزارش رکوردهای خدمت: {service}",
-      "patientType": "نوع بیمار",
-      "selectPatientType": "انتخاب نوع بیمار",
-      "loadingMessage": "گزارش در حال آماده‌سازی است…",
-      "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
-      "nationalNumber": "شماره ملی",
-      "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
-      "dateRange": "انتخاب بازه تاریخ",
-      "selectDateRange": "انتخاب بازه تاریخ",
-      "generateReport": "تولید گزارش",
-      "reportResults": "نتایج گزارش",
-      "totalRecords": "تعداد کل رکوردها",
-      "patientInfo": "اطلاعات بیمار",
-      "selectedPatientAndPeriod": "بیمار و دوره انتخابی",
-      "chartPlaceholder": "نمودار",
-      "chartComingSoon": "نمودار به زودی",
-      "errorMessage": "خطا در بارگذاری داده‌های گزارش",
-      "serviceChartTitle": "تعداد خدمات",
-      "validation": {
-        "nationalNumberRequired": "وارد کردن شماره ملی الزامی است",
-        "patientTypeRequired": "انتخاب نوع بیمار الزامی است",
-        "dateRangeInvalid": "تاریخ پایان باید پس از تاریخ شروع باشد"
-      },
-      "columnServiceCount": "تعداد دفعات",
-      "columnNormalResults": "تعداد جواب‌های طبیعی",
-      "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
-      "noLabResult": "بدون نتیجه آزمایشگاهی"
     }
   },
   "/console/periodical-reports": {
@@ -514,8 +475,7 @@
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} یافته غیرطبیعی",
-      "ShowAbnormalOnly": "فقط موارد غیرطبیعی",
-      "ViewTestChart": "مشاهده نمودار روند آزمایش"
+      "ShowAbnormalOnly": "فقط موارد غیرطبیعی"
     },
     "Step2Report": {
       "recordCount": "{count} رکورد",
@@ -873,10 +833,6 @@
     "patient": {
       "title": "بیمار",
       "description": "سوابق کامل یک بیمار."
-    },
-    "patientReports": {
-      "title": "گزارشات بیمار",
-      "description": "تولید گزارشات جامع برای بیماران."
     },
     "saderatBankHealthMonitoring": {
       "title": "گزارش‌های اکسل",

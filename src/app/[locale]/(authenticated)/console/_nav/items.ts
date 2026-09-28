@@ -40,9 +40,9 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     icon: Search,
     group: "health",
     primary: true,
-    // A patient opens from search, and the service report opens from the
-    // patient page, so both sit under this task rather than in the sidebar.
-    activePrefixes: ["/console/patients", "/console/patient-reports"],
+    // A patient opens from search, so it sits under this task rather than
+    // in the sidebar.
+    activePrefixes: ["/console/patients"],
   },
   {
     titleKey: "periodicalReports",

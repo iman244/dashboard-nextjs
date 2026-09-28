@@ -8,12 +8,10 @@ import { sectionMetadata } from "@/lib/metadata";
  * `generateMetadata` — Next reads those on the server. A layout is the
  * documented place to put them for such a route.
  *
- * Not staff-only: every route left under here (the list and step redirects,
- * and the old per-person pages until Task 15) is a read or a redirect, and
- * any signed-in console user can read a campaign. A viewer who opens a
- * bookmarked old link needs to land on the redirect, not on "Staff access
- * required" — the one write control on the person pages (editing a patient
- * record) already carries its own `useIsStaff()` gate.
+ * Not staff-only: every route left under here is a redirect (the list, the
+ * step pages, and the old per-person pages all forward to `/console/monitorings`
+ * or the patient page). A viewer who opens a bookmarked old link needs to land
+ * on the redirect, not on "Staff access required".
  */
 export async function generateMetadata({
   params,

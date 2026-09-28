@@ -295,6 +295,10 @@
       "removeNationalNumber": "Remove national ID filter",
       "removeDateRange": "Remove date range filter",
       "removePatientType": "Remove patient type filter",
+      "openPatientLabel": "Open a patient by national ID",
+      "openPatientPlaceholder": "National ID",
+      "openPatientAction": "Open",
+      "openPatientInvalid": "A national ID has 10 digits.",
       "pagination": {
         "showing": "Showing {start} to {end} of {total} records",
         "rowsPerPage": "Rows per page:",
@@ -343,49 +347,6 @@
       "campaignSummary": "{uploads, plural, one {# Excel row} other {# Excel rows}} · {records, plural, one {# entered record} other {# entered records}}",
       "retry": "Try again",
       "open": "Open"
-    }
-  },
-  "/console/patient-reports": {
-    "PatientReports": {
-      "title": "Patient Reports",
-      "description": "Generate comprehensive reports for specific patients",
-      "chartTestValue": "Test result",
-      "chartNormalMin": "Normal range minimum",
-      "chartNormalMax": "Normal range maximum",
-      "chartNormalArea": "Normal range",
-      "chartAbnormalArea": "Outside normal range",
-      "chartDate": "Date",
-      "trendOverTime": "Test results over time",
-      "recordDetails": "Record details",
-      "serviceSearchPlaceholder": "Search service names…",
-      "clearSearch": "Clear search",
-      "serviceRecordsTitle": "Service records: {service}",
-      "loadingMessage": "Report is getting ready…",
-      "selectPatientAndPeriod": "Select Patient and Time Period",
-      "nationalNumber": "National Number",
-      "nationalNumberPlaceholder": "Enter national number",
-      "dateRange": "Select date range",
-      "selectDateRange": "Select date range",
-      "patientType": "Patient Type",
-      "selectPatientType": "Select Patient Type",
-      "generateReport": "Generate Report",
-      "reportResults": "Report Results",
-      "totalRecords": "Total Records",
-      "patientInfo": "Patient Information",
-      "selectedPatientAndPeriod": "Selected Patient and Period",
-      "chartPlaceholder": "Chart",
-      "chartComingSoon": "Chart coming soon",
-      "errorMessage": "Error loading report data",
-      "serviceChartTitle": "Service Count",
-      "validation": {
-        "nationalNumberRequired": "National number is required",
-        "patientTypeRequired": "Patient type is required",
-        "dateRangeInvalid": "End date must be after start date"
-      },
-      "columnServiceCount": "Times recorded",
-      "columnNormalResults": "Normal results",
-      "columnAbnormalResults": "Abnormal results",
-      "noLabResult": "No lab result"
     }
   },
   "/console/periodical-reports": {
@@ -514,8 +475,7 @@
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} abnormal findings",
-      "ShowAbnormalOnly": "Abnormal only",
-      "ViewTestChart": "View test trend chart"
+      "ShowAbnormalOnly": "Abnormal only"
     },
     "Step2Report": {
       "recordCount": "{count} records",
@@ -873,10 +833,6 @@
     "patient": {
       "title": "Patient",
       "description": "One patient’s full history."
-    },
-    "patientReports": {
-      "title": "Patient Reports",
-      "description": "Generate comprehensive reports for patients."
     },
     "saderatBankHealthMonitoring": {
       "title": "Excel reports",

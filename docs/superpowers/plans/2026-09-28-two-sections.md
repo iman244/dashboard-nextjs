@@ -1738,7 +1738,7 @@ declare module "@tanstack/react-query" {
 **Interfaces:**
 - Consumes: `fullNationalId`, `isNationalId`, `PATIENT_PATH`.
 
-- [ ] **Step 1: The box.** Above the table, add a `<form>` with an `Input` (`inputMode="numeric"`, `dir="ltr"`, `aria-label={t("openPatientLabel")}`) and a submit `Button` `t("openPatientAction")`. On submit:
+- [x] **Step 1: The box.** Above the table, add a `<form>` with an `Input` (`inputMode="numeric"`, `dir="ltr"`, `aria-label={t("openPatientLabel")}`) and a submit `Button` `t("openPatientAction")`. On submit:
   - `const id = fullNationalId(value)`;
   - if `isNationalId(id)`, `router.push(PATIENT_PATH(id))`;
   - otherwise show `t("openPatientInvalid")` under the input (with `aria-live="polite"`).
@@ -1750,7 +1750,7 @@ declare module "@tanstack/react-query" {
 | openPatientAction | Open | باز کردن |
 | openPatientInvalid | A national ID has 10 digits. | کد ملی ۱۰ رقم است. |
 
-- [ ] **Step 2: Retire patient reports.** The redirect page:
+- [x] **Step 2: Retire patient reports.** The redirect page:
 
 ```tsx
 import { redirect } from "@/i18n/navigation";
@@ -1786,7 +1786,7 @@ Delete `C/patient-reports/layout.tsx` only if it carries nothing but metadata. T
   - Viewer: the staff items are absent, and the staff routes show "Staff access required".
   - Patient portal sign-in still works.
 
-- [ ] **Step 4: Commit** `feat: open a patient by national ID; retire patient reports`
+- [x] **Step 4: Commit** `feat: open a patient by national ID; retire patient reports`
 
 ---
 

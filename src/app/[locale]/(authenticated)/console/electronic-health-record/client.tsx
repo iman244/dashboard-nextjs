@@ -18,12 +18,18 @@ import { EHRDetailModal } from "@/data/electronic health record/components/EHRDe
 import { formatNumber, formatDate } from "@/lib/utils";
 import { useElectronicHealthRecord } from "./provider";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "@/i18n/navigation";
+import { fullNationalId, isNationalId, PATIENT_PATH } from "@/lib/national-id";
 
 const Client = () => {
   const t = useTranslations("/console/electronic-health-record.EHRTable");
   const fmt = useLocaleDigits();
   const tPatientTypes = useTranslations("common.PatientTypes");
   const locale = useLocale();
+  const router = useRouter();
+  const [openPatientId, setOpenPatientId] = React.useState("");
+  const [openPatientInvalid, setOpenPatientInvalid] = React.useState(false);
   const {
     filters,
     setFilters,
@@ -42,6 +48,19 @@ const Client = () => {
   const handleViewDetails = (record: ElectronicHealthRecord) => {
     setSelectedRecord(record);
     setIsDetailModalOpen(true);
+  };
+
+  // Opens the patient page directly, skipping the table and its date filters
+  // entirely. The id folds Persian digits and a lost leading zero the same
+  // way every other patient link on the console does.
+  const handleOpenPatient = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const id = fullNationalId(openPatientId);
+    if (isNationalId(id)) {
+      router.push(PATIENT_PATH(id));
+      return;
+    }
+    setOpenPatientInvalid(true);
   };
 
   // Column definitions with locale-aware formatting
@@ -95,6 +114,34 @@ const Client = () => {
           </>
         }
       />
+
+      <form
+        onSubmit={handleOpenPatient}
+        className="flex flex-col gap-1"
+      >
+        <div className="flex flex-wrap items-center gap-2">
+          <Input
+            inputMode="numeric"
+            dir="ltr"
+            aria-label={t("openPatientLabel")}
+            placeholder={t("openPatientPlaceholder")}
+            value={openPatientId}
+            onChange={(e) => {
+              setOpenPatientId(e.target.value);
+              setOpenPatientInvalid(false);
+            }}
+            className="max-w-48"
+          />
+          <Button type="submit" variant="outline" size="sm">
+            {t("openPatientAction")}
+          </Button>
+        </div>
+        {openPatientInvalid && (
+          <span aria-live="polite" className="text-sm text-destructive">
+            {t("openPatientInvalid")}
+          </span>
+        )}
+      </form>
 
       {(filters.nationalNumber ||
         filters.dateRange?.from ||
