@@ -15,7 +15,6 @@
     "Loading": {
       "default": "در حال بارگذاری…",
       "session": "در حال بررسی نشست شما…",
-      "datasets": "در حال بارگذاری مجموعه‌داده‌ها…",
       "report": "در حال ساخت گزارش…",
       "record": "در حال بارگذاری پرونده سلامت…",
       "records": "در حال بارگذاری سوابق…",
@@ -453,15 +452,12 @@
       "ErrorMessage": "حذف اکسل انجام نشد: {message}"
     },
     "SaderatBankHealthMonitoringPage": {
-      "UploadExcel": "بارگذاری اکسل",
       "PageDescription": "گزارش‌های بارگذاری‌شده پایش سلامت بانک را بررسی کنید. فرم بارگذاری فقط نوع‌های دارای نمای گزارش را نشان می‌دهد.",
-      "UnsupportedDetail": "نمای جزئیات برای این نوع گزارش موجود نیست",
       "Loading": "در حال بارگذاری…",
       "ErrorTitle": "خطا در بارگذاری داده‌ها",
       "EmptyStateTitle": "هیچ داده‌ای موجود نیست",
       "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
       "EmptyStateDescriptionDetail": "هیچ رکوردی برای نمایش وجود ندارد",
-      "ReportTitle": "گزارش آماری",
       "SearchPersonnel": "جست و جوی بیماران",
       "SearchPersonnelDescription": "جست و جو و مشاهده جزئیات بیماران",
       "SearchPlaceholder": "جست و جو در نام، نام خانوادگی یا کد ملی…",
@@ -516,7 +512,6 @@
       }
     },
     "Ehr": {
-      "recordsTitle": "سوابق الکترونیک سلامت",
       "rangeLabel": "محدوده طبیعی",
       "noRange": "بدون محدوده مرجع",
       "loadError": "دریافت سوابق الکترونیک ناموفق بود.",
@@ -529,9 +524,6 @@
     },
     "Detail": {
       "notFound": "رکوردی با این کد ملی در این پایش یافت نشد.",
-      "backToReport": "بازگشت به گزارش",
-      "duplicateNationalId": "این کد ملی در {count} رکورد وجود دارد. همه در ادامه نمایش داده شده‌اند.",
-      "recordIndex": "رکورد {index}",
       "sections": {
         "ecg": "نوار قلب",
         "clinicalExam": "معاینات بالینی",
@@ -572,10 +564,6 @@
       "PageDescription": "هر پایش با فایل‌های اکسل و اطلاعات ثبت‌شده‌اش.",
       "CreateType": "تعریف پایش جدید",
       "counts": "{uploads, number} اکسل · {records, number} اطلاعات ثبت‌شده",
-      "SlugColumn": "شناسه",
-      "NameEnColumn": "نام (انگلیسی)",
-      "NameFaColumn": "نام (فارسی)",
-      "NoViewBadge": "بدون نما",
       "ErrorTitle": "خطا در بارگذاری انواع پایش",
       "EmptyStateTitle": "هیچ نوع پایشی وجود ندارد",
       "EmptyStateDescription": "پیش از بارگذاری گزارش، یک نوع بسازید.",
@@ -661,7 +649,6 @@
       "Deleted": "رکورد حذف شد.",
       "DeleteFailed": "حذف رکورد انجام نشد.",
       "BackToMonitorings": "بازگشت به پایش‌ها",
-      "BackToRecordMonitoring": "انتخاب نوع پایش",
       "BackToRecords": "بازگشت به رکوردها",
       "SaveChanges": "ذخیرهٔ تغییرات",
       "Saved": "رکورد ذخیره شد.",

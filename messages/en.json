@@ -15,7 +15,6 @@
     "Loading": {
       "default": "Loading…",
       "session": "Checking your session…",
-      "datasets": "Loading datasets…",
       "report": "Building the report…",
       "record": "Loading the health record…",
       "records": "Loading records…",
@@ -453,15 +452,12 @@
       "ErrorMessage": "Could not delete the Excel file: {message}"
     },
     "SaderatBankHealthMonitoringPage": {
-      "UploadExcel": "Upload Excel",
       "PageDescription": "Review uploaded Bank monitoring reports. Excel upload supports the report types shown in the form.",
-      "UnsupportedDetail": "Detail view unavailable for this report type",
       "Loading": "Loading…",
       "ErrorTitle": "Error loading data",
       "EmptyStateTitle": "No data available",
       "EmptyStateDescription": "Please upload an Excel file",
       "EmptyStateDescriptionDetail": "No records available to display",
-      "ReportTitle": "Statistical Report",
       "SearchPersonnel": "Search Patients",
       "SearchPersonnelDescription": "Search and view patient details",
       "SearchPlaceholder": "Search by first name, surname or national ID…",
@@ -516,7 +512,6 @@
       }
     },
     "Ehr": {
-      "recordsTitle": "Electronic Health Records",
       "rangeLabel": "Normal range",
       "noRange": "No reference range",
       "loadError": "Could not load electronic health records.",
@@ -529,9 +524,6 @@
     },
     "Detail": {
       "notFound": "No record with this national ID in this monitoring.",
-      "backToReport": "Back to report",
-      "duplicateNationalId": "This national ID appears on {count} records. All are shown below.",
-      "recordIndex": "Record {index}",
       "sections": {
         "ecg": "Electrocardiogram",
         "clinicalExam": "Clinical Examination",
@@ -572,10 +564,6 @@
       "PageDescription": "Every monitoring with its Excel uploads and entered records.",
       "CreateType": "Define a new monitoring",
       "counts": "{uploads, plural, one {# Excel upload} other {# Excel uploads}} · {records, plural, one {# record} other {# records}}",
-      "SlugColumn": "Slug",
-      "NameEnColumn": "Name (English)",
-      "NameFaColumn": "Name (Persian)",
-      "NoViewBadge": "No view",
       "ErrorTitle": "Error loading monitoring types",
       "EmptyStateTitle": "No monitoring types",
       "EmptyStateDescription": "Create one before uploading a report.",
@@ -661,7 +649,6 @@
       "Deleted": "Record deleted.",
       "DeleteFailed": "The record could not be deleted.",
       "BackToMonitorings": "Back to monitorings",
-      "BackToRecordMonitoring": "Choose a monitoring type",
       "BackToRecords": "Back to records",
       "SaveChanges": "Save changes",
       "Saved": "Record saved.",
