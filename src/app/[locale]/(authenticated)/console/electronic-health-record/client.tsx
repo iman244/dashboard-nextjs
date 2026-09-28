@@ -30,6 +30,7 @@ const Client = () => {
   const router = useRouter();
   const [openPatientId, setOpenPatientId] = React.useState("");
   const [openPatientInvalid, setOpenPatientInvalid] = React.useState(false);
+  const openPatientErrorId = React.useId();
   const {
     filters,
     setFilters,
@@ -115,10 +116,7 @@ const Client = () => {
         }
       />
 
-      <form
-        onSubmit={handleOpenPatient}
-        className="flex flex-col gap-1"
-      >
+      <form onSubmit={handleOpenPatient} className="flex flex-col">
         <div className="flex flex-wrap items-center gap-2">
           <Input
             inputMode="numeric"
@@ -130,17 +128,25 @@ const Client = () => {
               setOpenPatientId(e.target.value);
               setOpenPatientInvalid(false);
             }}
+            aria-invalid={openPatientInvalid || undefined}
+            aria-describedby={openPatientInvalid ? openPatientErrorId : undefined}
             className="max-w-48"
           />
           <Button type="submit" variant="outline" size="sm">
             {t("openPatientAction")}
           </Button>
         </div>
-        {openPatientInvalid && (
-          <span aria-live="polite" className="text-sm text-destructive">
-            {t("openPatientInvalid")}
-          </span>
-        )}
+        {/* Always mounted: a live region added together with its text is
+            often not announced. Only the text comes and goes, and while it
+            is empty the region takes no room (not display:none, which would
+            take it out of the accessibility tree). */}
+        <span
+          id={openPatientErrorId}
+          aria-live="polite"
+          className="pt-1 text-sm text-destructive empty:pt-0"
+        >
+          {openPatientInvalid ? t("openPatientInvalid") : null}
+        </span>
       </form>
 
       {(filters.nationalNumber ||
