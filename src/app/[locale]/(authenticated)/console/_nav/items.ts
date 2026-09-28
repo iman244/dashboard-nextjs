@@ -61,7 +61,7 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
   {
     titleKey: "formSabtPayesh",
     descriptionKey: "formSabtPayesh",
-    url: "/console/form-sabt-payesh",
+    url: "/form-sabt-payesh",
     icon: FileText,
     group: "monitorings",
   },
