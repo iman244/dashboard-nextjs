@@ -1086,13 +1086,13 @@ And these `ConsoleHome.descriptions` (same keys, removing the unused ones):
 - Consumes: `useList_MonitoringType_API()` returning `MonitoringType & { upload_count: number; record_count: number }`.
 - Produces: `/console/monitorings` lists campaigns, each linking to `/console/monitorings/[id]`.
 
-- [ ] **Step 1: Rewrite the page.** Replace the `DataTable` with a list in the style of `C/record-monitoring/page.tsx`.
+- [x] **Step 1: Rewrite the page.** Replace the `DataTable` with a list in the style of `C/record-monitoring/page.tsx`.
   - Each item links to `/console/monitorings/${id}`. It shows the localized name (`locale === "fa" ? name_fa : name_en`) and a muted line `t("counts", { uploads: localeDigits(upload_count, locale), records: localeDigits(record_count, locale) })`.
   - Staff also get two `RowAction`s on each item: edit (→ `/[id]/edit`) and delete (opens `DeleteMonitoringTypeDialog`).
   - `PageHeader`: breadcrumbs `<ConsoleBreadcrumbs />`, title `t("PageTitle")`, description `t("PageDescription")`, and staff actions: `<Link href="/console/monitorings/new">t("CreateType")</Link>` and `<Link href="/console/monitorings/upload">tNav("uploadExcel")</Link>`.
   - Keep the existing loading, error and empty branches.
 
-- [ ] **Step 2: Messages** (`/console/monitorings.MonitoringTypesPage`, both files; replace existing values):
+- [x] **Step 2: Messages** (`/console/monitorings.MonitoringTypesPage`, both files; replace existing values):
 
 | key | en | fa |
 |---|---|---|
@@ -1103,13 +1103,14 @@ And these `ConsoleHome.descriptions` (same keys, removing the unused ones):
 
 In `/console/monitorings.Builder`: `NewTitle` → "Define a new monitoring" / "تعریف پایش جدید"; `EditTitle` → "Edit monitoring" / "ویرایش پایش".
 
-- [ ] **Step 3: Builder navigation.** In `type-form.tsx`, find the `router.push(LIST_PATH)` in the save handler. On **create**, navigate to `/console/monitorings/${created.id}` using the mutation's returned object; on **edit**, navigate to `/console/monitorings/${id}`. Point the breadcrumb parent at `{ href: LIST_PATH, label: tNav("campaigns") }`.
+- [x] **Step 3: Builder navigation.** In `type-form.tsx`, find the `router.push(LIST_PATH)` in the save handler. On **create**, navigate to `/console/monitorings/${created.id}` using the mutation's returned object; on **edit**, navigate to `/console/monitorings/${id}`. Point the breadcrumb parent at `{ href: LIST_PATH, label: tNav("campaigns") }`.
 
-- [ ] **Step 4: Verify.** `npx tsc --noEmit`, the message check, and the lint comparison. Then a browser check as staff and as viewer at `/fa/console/monitorings`:
+- [x] **Step 4: Verify.** `npx tsc --noEmit`, the message check, and the lint comparison. Then a browser check as staff and as viewer at `/fa/console/monitorings`:
   - rows show counts;
   - the viewer sees no edit, delete or create controls.
+  (Browser check deferred to the orchestrator per dispatch instructions.)
 
-- [ ] **Step 5: Commit** `feat: monitorings list shows campaigns with their counts`
+- [x] **Step 5: Commit** `feat: monitorings list shows campaigns with their counts`
 
 ### Task 9: Upload page
 

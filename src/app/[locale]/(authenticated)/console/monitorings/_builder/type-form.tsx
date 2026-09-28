@@ -70,14 +70,16 @@ export const TypeForm = ({ id }: { id?: number }) => {
         // editor rows have a stable identity to be keyed on.
         existing ? withIds(asFieldSchema(existing.field_schema)) : EMPTY_SCHEMA
       }
-      onDone={() => {
+      onDone={(campaignId) => {
         // "all": the list is not mounted on this page, and with refetchOnMount
         // off it would otherwise come back with the old names and schema.
         queryClient.invalidateQueries({
           queryKey: LIST_MONITORING_TYPE_QUERY_KEY(),
           refetchType: "all",
         });
-        router.push(LIST_PATH);
+        // Off to the campaign's own page, not the list: that is where its
+        // uploads and records now live.
+        router.push(`/console/monitorings/${campaignId}`);
       }}
       t={t}
     />
@@ -98,7 +100,7 @@ const TypeFormBody = ({
   initialNameFa: string;
   initialNameEn: string;
   initialSchema: FieldSchema;
-  onDone: () => void;
+  onDone: (campaignId: number) => void;
   t: ReturnType<typeof useTranslations<"/console/monitorings.Builder">>;
 }) => {
   const tNav = useTranslations("/console.ConsoleSidebar");
@@ -131,30 +133,44 @@ const TypeFormBody = ({
       name_en: nameEn.trim(),
       field_schema: toPayload(schema),
     };
-    const handlers = {
-      onSuccess: () => {
-        toast.success(id === undefined ? t("Created") : t("Updated"));
-        onDone();
-      },
-      onError: (error: {
-        response?: { data?: Record<string, string[] | undefined> };
-      }) => {
-        const data = error.response?.data;
-        if (data && typeof data === "object") {
-          setFieldErrors(
-            Object.fromEntries(
-              Object.entries(data).filter(([, value]) => Array.isArray(value))
-            ) as Record<string, string[]>
-          );
-        }
-        toast.error(t("SaveFailed"));
-      },
+    const onError = (error: {
+      response?: { data?: Record<string, string[] | undefined> };
+    }) => {
+      const data = error.response?.data;
+      if (data && typeof data === "object") {
+        setFieldErrors(
+          Object.fromEntries(
+            Object.entries(data).filter(([, value]) => Array.isArray(value))
+          ) as Record<string, string[]>
+        );
+      }
+      toast.error(t("SaveFailed"));
     };
 
     if (id === undefined) {
-      create.mutate({ payload }, handlers);
+      create.mutate(
+        { payload },
+        {
+          // The new campaign's id comes back only from the mutation's
+          // response; the list's own id is not known until here.
+          onSuccess: (created) => {
+            toast.success(t("Created"));
+            onDone(created.id);
+          },
+          onError,
+        }
+      );
     } else {
-      update.mutate({ pathVariables: { id }, payload }, handlers);
+      update.mutate(
+        { pathVariables: { id }, payload },
+        {
+          onSuccess: () => {
+            toast.success(t("Updated"));
+            onDone(id);
+          },
+          onError,
+        }
+      );
     }
   }, [create, id, nameEn, nameFa, onDone, schema, slug, t, update]);
 

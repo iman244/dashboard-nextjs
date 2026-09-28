@@ -593,9 +593,10 @@
   },
   "/console/monitorings": {
     "MonitoringTypesPage": {
-      "PageTitle": "Monitoring Types",
-      "PageDescription": "The types a monitoring report can be filed under. Uploads choose from this list.",
-      "CreateType": "New type",
+      "PageTitle": "Monitorings",
+      "PageDescription": "Every monitoring with its Excel uploads and entered records.",
+      "CreateType": "Define a new monitoring",
+      "counts": "{uploads} Excel uploads · {records} records",
       "SlugColumn": "Slug",
       "NameEnColumn": "Name (English)",
       "NameFaColumn": "Name (Persian)",
@@ -615,8 +616,8 @@
       "InUseDescriptionUnknown": "Monitoring reports are still filed under this type. Delete them first, or rename this type instead."
     },
     "Builder": {
-      "NewTitle": "New monitoring type",
-      "EditTitle": "Edit monitoring type",
+      "NewTitle": "Define a new monitoring",
+      "EditTitle": "Edit monitoring",
       "NotFound": "This monitoring type was not found.",
       "Back": "Back to list",
       "Save": "Save",

@@ -593,9 +593,10 @@
   },
   "/console/monitorings": {
     "MonitoringTypesPage": {
-      "PageTitle": "انواع پایش",
-      "PageDescription": "انواعی که یک گزارش پایش می‌تواند زیر آن ثبت شود. بارگذاری‌ها از همین فهرست انتخاب می‌کنند.",
-      "CreateType": "نوع جدید",
+      "PageTitle": "پایش‌ها",
+      "PageDescription": "هر پایش با فایل‌های اکسل و اطلاعات ثبت‌شده‌اش.",
+      "CreateType": "تعریف پایش جدید",
+      "counts": "{uploads} اکسل · {records} اطلاعات ثبت‌شده",
       "SlugColumn": "شناسه",
       "NameEnColumn": "نام (انگلیسی)",
       "NameFaColumn": "نام (فارسی)",
@@ -615,8 +616,8 @@
       "InUseDescriptionUnknown": "هنوز گزارش‌هایی زیر این نوع ثبت شده‌اند. ابتدا آن‌ها را حذف کنید، یا به‌جای حذف این نوع را تغییر نام دهید."
     },
     "Builder": {
-      "NewTitle": "نوع پایش جدید",
-      "EditTitle": "ویرایش نوع پایش",
+      "NewTitle": "تعریف پایش جدید",
+      "EditTitle": "ویرایش پایش",
       "NotFound": "این نوع پایش پیدا نشد.",
       "Back": "بازگشت به فهرست",
       "Save": "ذخیره",
