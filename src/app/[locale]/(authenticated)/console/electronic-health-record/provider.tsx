@@ -87,25 +87,32 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [selectedRecord, setSelectedRecord] = useState<ElectronicHealthRecord | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
-  // Data fetching with dynamic filters
+  // Data fetching with dynamic filters. Each failure already shows where it
+  // happened (the table's error row, or the detail modal's toasts), so the
+  // global network-error dialog is kept off: it would cover the page, and the
+  // national-ID box with it, whenever the EHR is down.
   const ehrByNationalNumber_m = useMutation({
     mutationKey: [EHR_BY_NATIONAL_NUMBER_KEY],
     mutationFn: ehr_by_national_number,
+    meta: { silentNetworkError: true },
   });
 
   const mobileLaboratoryByNationalNumber_m = useMutation({
     mutationKey: [PDD_MOBILE_LABORATORY_BY_NATIONAL_NUMBER_KEY],
     mutationFn: mobile_laboratory_by_national_number,
+    meta: { silentNetworkError: true },
   });
 
   const mobileXRayByNationalNumber_m = useMutation({
     mutationKey: [PDD_MOBILE_XRAY_BY_NATIONAL_NUMBER_KEY],
     mutationFn: mobile_xray_by_national_number,
+    meta: { silentNetworkError: true },
   });
 
   const mobileNumberByNationalNumber_m = useMutation({
     mutationKey: [PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY],
     mutationFn: mobile_number_by_national_number,
+    meta: { silentNetworkError: true },
     onError: (error) => {
       console.error("error", error);
       toast.error(error.message);
