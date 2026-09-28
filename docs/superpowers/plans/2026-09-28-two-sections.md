@@ -1595,7 +1595,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
 **Interfaces:**
 - Consumes: `useList_PersonReports_API({ nationalId })` (items carry `monitoring`), `useList_PatientRecord_API`, `CAMPAIGN_PATIENT_PATH`.
 
-- [ ] **Step 1: The card.**
+- [x] **Step 1: The card.**
   - Build a map by campaign id: from person reports, each item's `monitoring` with its upload count; from patient records, each record's `monitoring` with a record flag.
   - Render one row per campaign: localized name, a muted line `t("campaignSummary", { uploads, records })`, and an "Open" link to `CAMPAIGN_PATIENT_PATH(id, nationalId)`.
   - Handle loading (Skeleton), error with retry for either query, and empty (`t("campaignsEmpty")`).
@@ -1609,7 +1609,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
 | campaignsError | Monitorings could not be loaded. | پایش‌ها بارگذاری نشد. |
 | campaignSummary | {uploads} Excel rows · {records} entered records | {uploads} ردیف اکسل · {records} اطلاعات ثبت‌شده |
 
-- [ ] **Step 2: Person redirects.** Both `step-N/[id]/[national_id]/page.tsx` files become client redirects: `useUploadCampaign(Number(id))` → `router.replace(CAMPAIGN_PATIENT_PATH(campaignId, national_id))`, with the same loading and error handling as Task 12.
+- [x] **Step 2: Person redirects.** Both `step-N/[id]/[national_id]/page.tsx` files become client redirects: `useUploadCampaign(Number(id))` → `router.replace(CAMPAIGN_PATIENT_PATH(campaignId, national_id))`, with the same loading and error handling as Task 12.
 
 - [ ] **Step 3: Verify in the browser.**
   - The patient page shows «پایش‌های این بیمار» listing Step 2 (2 Excel rows) and Blood pressure check (1 record).
@@ -1617,7 +1617,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
   - The old `/fa/console/saderat-bank-health-monitoring/step-2/4/0012345678` redirects to `/fa/console/monitorings/2/patients/0012345678`.
   - A viewer sees the card.
 
-- [ ] **Step 4: Commit** `feat: patient page lists the patient's monitorings; old person links redirect`
+- [x] **Step 4: Commit** `feat: patient page lists the patient's monitorings; old person links redirect`
 
 ---
 

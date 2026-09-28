@@ -10,12 +10,10 @@ import { AlertCircle, ChevronRight } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { DateRangePicker } from "@/components/app/date-range-picker";
-import { PatientRecordsSection } from "@/components/app/patient-records-section";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
-import { useIsStaff } from "@/data/user/fetches/me";
 import {
   PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY,
   mobile_number_by_national_number,
@@ -27,7 +25,7 @@ import { EhrRecordsTable } from "../../saderat-bank-health-monitoring/_ehr/recor
 import { EhrTrendDialog } from "../../saderat-bank-health-monitoring/_ehr/trend-dialog";
 import { useRecordDetail } from "../../saderat-bank-health-monitoring/_ehr/use-record-detail";
 import { EHR_HISTORY_YEARS } from "../../saderat-bank-health-monitoring/_ehr/config";
-import { ExcelReportsCard } from "./_excel-reports";
+import { PatientCampaignsCard } from "./_patient-campaigns";
 
 const FIND_PATIENT = "/console/electronic-health-record";
 /** The URL carries the window as plain Gregorian days; the picker shows Jalali. */
@@ -55,7 +53,6 @@ export default function PatientPage(
   const t = useTranslations("/console/patients.PatientPage");
   const tNav = useTranslations("/console.ConsoleSidebar");
   const locale = useLocale();
-  const isStaff = useIsStaff();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -142,8 +139,7 @@ export default function PatientPage(
         </CardContent>
       </Card>
 
-      <PatientRecordsSection nationalId={nationalId} />
-      {isStaff ? <ExcelReportsCard nationalId={nationalId} /> : null}
+      <PatientCampaignsCard nationalId={nationalId} />
 
       <Card>
         <CardHeader>
