@@ -24,8 +24,8 @@ export default function Page(
     if (campaignId === undefined) return;
     if (navigated.current) return;
     navigated.current = true;
-    router.replace(`/console/monitorings/${campaignId}?upload=${id}`);
-  }, [campaignId, id, router]);
+    router.replace(`/console/monitorings/${campaignId}?upload=${uploadId}`);
+  }, [campaignId, uploadId, router]);
 
   // A campaign that never resolves (bad id, failed types load, or a type
   // dropped from the list) is the same dead end as a network error.
