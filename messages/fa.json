@@ -259,26 +259,26 @@
       "tasksLabel": "کارهای کنسول",
       "descriptions": {
         "home": "بازگشت به کارهای کنسول",
-        "findPatient": "جستجوی پرونده سلامت بیمار",
-        "recordMonitoring": "انتخاب نوع پایش و کار با رکوردهای بیماران",
-        "electronicHealthRecord": "جستجو و مرور سوابق پزشکی بیماران",
-        "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
-        "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
-        "monitorings": "پایش‌هایی که اطلاعات ذیل آن‌ها ثبت می‌شود و فیلدهای هر کدام",
-        "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
+        "findPatient": "پرونده سلامت یک بیمار را باز کنید",
+        "periodicalReports": "نمودار خدمات و بیماران در یک بازه",
+        "campaigns": "همه پایش‌ها با اکسل‌ها و اطلاعات ثبت‌شده",
+        "formSabtPayesh": "فرم پایش خارجی فرم‌افزار",
+        "recordMonitoring": "پایش را انتخاب کنید و اطلاعات بیمار را ثبت کنید",
+        "uploadExcel": "فایل اکسل یک پایش را اضافه کنید",
+        "defineCampaign": "پایش و فیلدهای فرم آن را بسازید"
       }
     },
     "ConsoleSidebar": {
       "dashboard": "داشبورد",
       "home": "خانه کنسول",
-      "findPatient": "یافتن بیمار",
-      "recordMonitoring": "ثبت پایش",
-      "groups": {"find": "یافتن", "record": "ثبت", "review": "بررسی گزارش‌ها", "administration": "مدیریت"},
-      "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
-      "periodicalReports": "گزارشات دوره‌ای",
-      "saderatBankHealthMonitoring": "گزارش‌های اکسل",
-      "monitorings": "پایش‌ها",
-      "formSabtPayesh": "فرم ثبت پایش",
+      "findPatient": "جستجوی بیمار",
+      "periodicalReports": "گزارش دوره‌ای",
+      "campaigns": "فهرست پایش‌ها",
+      "formSabtPayesh": "فرم آنلاین (فرم‌افزار)",
+      "recordMonitoring": "ثبت اطلاعات بیمار",
+      "uploadExcel": "بارگذاری اکسل پایش",
+      "defineCampaign": "تعریف پایش جدید",
+      "groups": {"health": "پرونده سلامت", "monitorings": "پایش‌ها"},
       "account": "حساب کاربری",
       "logout": "خروج"
     }

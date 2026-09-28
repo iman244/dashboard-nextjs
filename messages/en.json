@@ -259,26 +259,26 @@
       "tasksLabel": "Console tasks",
       "descriptions": {
         "home": "Return to console tasks",
-        "findPatient": "Search electronic health records by patient",
-        "recordMonitoring": "Choose a monitoring type and work with patient entries",
-        "electronicHealthRecord": "Search and browse patient health records",
-        "periodicalReports": "Generate comprehensive reports for time periods",
-        "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
-        "monitorings": "The monitorings you record against, and the fields each one collects",
-        "formSabtPayesh": "Register monitoring data with the online form"
+        "findPatient": "Open one patient's health record",
+        "periodicalReports": "Charts of services and patients over a period",
+        "campaigns": "Every monitoring, its Excel uploads and records",
+        "formSabtPayesh": "The external FormAfzar monitoring form",
+        "recordMonitoring": "Choose a monitoring and enter a patient's data",
+        "uploadExcel": "Add a monitoring's Excel file",
+        "defineCampaign": "Create a monitoring and its form fields"
       }
     },
     "ConsoleSidebar": {
       "dashboard": "Dashboard",
       "home": "Console home",
       "findPatient": "Find a patient",
-      "recordMonitoring": "Record monitoring",
-      "groups": {"find": "Find", "record": "Record", "review": "Review reports", "administration": "Administration"},
-      "electronicHealthRecord": "Electronic Health Record",
-      "periodicalReports": "Periodical Reports",
-      "saderatBankHealthMonitoring": "Excel reports",
-      "monitorings": "Monitorings",
-      "formSabtPayesh": "Form Sabt Payesh",
+      "periodicalReports": "Periodic reports",
+      "campaigns": "All monitorings",
+      "formSabtPayesh": "Online form (FormAfzar)",
+      "recordMonitoring": "Enter patient data",
+      "uploadExcel": "Upload monitoring Excel",
+      "defineCampaign": "Define a new monitoring",
+      "groups": {"health": "Health record", "monitorings": "Monitorings"},
       "account": "Account",
       "logout": "Log out"
     }

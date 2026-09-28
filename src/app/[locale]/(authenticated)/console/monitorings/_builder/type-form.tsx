@@ -163,7 +163,7 @@ const TypeFormBody = ({
       <PageHeader
         breadcrumbs={
           <ConsoleBreadcrumbs
-            parent={{ href: LIST_PATH, label: tNav("monitorings") }}
+            parent={{ href: LIST_PATH, label: tNav("campaigns") }}
           />
         }
         title={id === undefined ? t("NewTitle") : t("EditTitle")}

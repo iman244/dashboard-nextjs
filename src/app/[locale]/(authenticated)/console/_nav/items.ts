@@ -3,13 +3,14 @@ import {
   ClipboardList,
   FileText,
   House,
+  Plus,
   Search,
-  SquareActivity,
   Tags,
+  Upload,
   type LucideIcon,
 } from "lucide-react";
 
-export type ConsoleNavGroup = "home" | "find" | "record" | "review" | "administration";
+export type ConsoleNavGroup = "home" | "health" | "monitorings";
 
 export type ConsoleNavItem = {
   titleKey: string;
@@ -37,49 +38,56 @@ export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
     descriptionKey: "findPatient",
     url: "/console/electronic-health-record",
     icon: Search,
-    group: "find",
+    group: "health",
     primary: true,
     // A patient opens from search, and the service report opens from the
     // patient page, so both sit under this task rather than in the sidebar.
     activePrefixes: ["/console/patients", "/console/patient-reports"],
   },
   {
-    titleKey: "recordMonitoring",
-    descriptionKey: "recordMonitoring",
-    url: "/console/record-monitoring",
-    icon: ClipboardList,
-    group: "record",
-    activePrefixes: ["/console/monitorings/*/records"],
-    staffOnly: true,
+    titleKey: "periodicalReports",
+    descriptionKey: "periodicalReports",
+    url: "/console/periodical-reports",
+    icon: BarChart,
+    group: "health",
+  },
+  {
+    titleKey: "campaigns",
+    descriptionKey: "campaigns",
+    url: "/console/monitorings",
+    icon: Tags,
+    group: "monitorings",
   },
   {
     titleKey: "formSabtPayesh",
     descriptionKey: "formSabtPayesh",
     url: "/console/form-sabt-payesh",
     icon: FileText,
-    group: "record",
+    group: "monitorings",
   },
   {
-    titleKey: "periodicalReports",
-    descriptionKey: "periodicalReports",
-    url: "/console/periodical-reports",
-    icon: BarChart,
-    group: "review",
-  },
-  {
-    titleKey: "saderatBankHealthMonitoring",
-    descriptionKey: "saderatBankHealthMonitoring",
-    url: "/console/saderat-bank-health-monitoring",
-    icon: SquareActivity,
-    group: "review",
+    titleKey: "recordMonitoring",
+    descriptionKey: "recordMonitoring",
+    url: "/console/record-monitoring",
+    icon: ClipboardList,
+    group: "monitorings",
+    activePrefixes: ["/console/monitorings/*/records"],
     staffOnly: true,
   },
   {
-    titleKey: "monitorings",
-    descriptionKey: "monitorings",
-    url: "/console/monitorings",
-    icon: Tags,
-    group: "administration",
+    titleKey: "uploadExcel",
+    descriptionKey: "uploadExcel",
+    url: "/console/monitorings/upload",
+    icon: Upload,
+    group: "monitorings",
+    staffOnly: true,
+  },
+  {
+    titleKey: "defineCampaign",
+    descriptionKey: "defineCampaign",
+    url: "/console/monitorings/new",
+    icon: Plus,
+    group: "monitorings",
     staffOnly: true,
   },
 ];
@@ -92,16 +100,24 @@ const ownsPath = (prefix: string, pathname: string) => {
   );
 };
 
+/**
+ * The most specific item wins: a longer URL or prefix that also owns the
+ * path beats a shorter one, so `/console/monitorings/upload` activates
+ * "uploadExcel" and not the "campaigns" item that owns every other
+ * `/console/monitorings/...` path.
+ */
 export const isConsoleNavItemActive = (item: ConsoleNavItem, pathname: string) => {
   if (item.url === "/console") return pathname === item.url;
   if (item.activePrefixes?.some((prefix) => ownsPath(prefix, pathname))) return true;
-  if (item.url === "/console/monitorings") {
-    return pathname === item.url ||
-      (pathname.startsWith(`${item.url}/`) && !ownsPath("/console/monitorings/*/records", pathname));
-  }
-  return pathname === item.url || pathname.startsWith(`${item.url}/`);
+  const owns = pathname === item.url || pathname.startsWith(`${item.url}/`);
+  if (!owns) return false;
+  // A longer item URL or prefix that also owns the path wins.
+  return !CONSOLE_NAV_ITEMS.some((other) =>
+    other !== item &&
+    ((other.url.length > item.url.length &&
+      (pathname === other.url || pathname.startsWith(`${other.url}/`))) ||
+      other.activePrefixes?.some((prefix) => ownsPath(prefix, pathname)))
+  );
 };
 
-export const CONSOLE_NAV_GROUPS: ConsoleNavGroup[] = [
-  "home", "find", "record", "review", "administration",
-];
+export const CONSOLE_NAV_GROUPS: ConsoleNavGroup[] = ["home", "health", "monitorings"];

@@ -993,7 +993,7 @@ Node's type stripping needs the `.ts` extension on relative imports, and tsc ref
 **Interfaces:**
 - Produces: `ConsoleNavGroup = "home" | "health" | "monitorings"`; `CONSOLE_NAV_GROUPS = ["home", "health", "monitorings"]`.
 
-- [ ] **Step 1: Replace the groups and items** in `items.ts`. Keep `ConsoleNavItem`, `ownsPath` and `isConsoleNavItemActive`, but delete the special case for `/console/monitorings` inside `isConsoleNavItemActive`: the campaign list now owns every `/console/monitorings/...` path except the ones owned below.
+- [x] **Step 1: Replace the groups and items** in `items.ts`. Keep `ConsoleNavItem`, `ownsPath` and `isConsoleNavItemActive`, but delete the special case for `/console/monitorings` inside `isConsoleNavItemActive`: the campaign list now owns every `/console/monitorings/...` path except the ones owned below.
 
 ```ts
 export type ConsoleNavGroup = "home" | "health" | "monitorings";
@@ -1043,7 +1043,7 @@ export const isConsoleNavItemActive = (item: ConsoleNavItem, pathname: string) =
 
 Import `Upload`, `Plus` from `lucide-react`; drop `SquareActivity` if it becomes unused.
 
-- [ ] **Step 2: Messages.** In both files, set `/console.ConsoleSidebar.groups` to exactly:
+- [x] **Step 2: Messages.** In both files, set `/console.ConsoleSidebar.groups` to exactly:
   - en: `{"health": "Health record", "monitorings": "Monitorings"}`
   - fa: `{"health": "پرونده سلامت", "monitorings": "پایش‌ها"}`
 
@@ -1071,9 +1071,9 @@ And these `ConsoleHome.descriptions` (same keys, removing the unused ones):
 | uploadExcel | Add a monitoring's Excel file | فایل اکسل یک پایش را اضافه کنید |
 | defineCampaign | Create a monitoring and its form fields | پایش و فیلدهای فرم آن را بسازید |
 
-- [ ] **Step 3: Verify.** `npx tsc --noEmit` exits 0; `node scripts/check-messages.mjs` passes; lint on `items.ts` is unchanged.
+- [x] **Step 3: Verify.** `npx tsc --noEmit` exits 0; `node scripts/check-messages.mjs` passes; lint on `items.ts` is unchanged.
 
-- [ ] **Step 4: Commit** `feat: sidebar in two sections, health record and monitorings`
+- [x] **Step 4: Commit** `feat: sidebar in two sections, health record and monitorings`
 
 ### Task 8: Campaign list page, and the builder renamed
 
