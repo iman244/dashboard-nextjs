@@ -377,27 +377,17 @@ export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
           ask, so it leads rather than being buried among ~50 equal-weight tiles. */}
       <Card>
         <CardHeader>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              {abnormalFindings.length > 0 ? (
-                <AlertCircle className="size-5 text-destructive" />
-              ) : (
-                <CheckCircle2 className="size-5 text-success" />
-              )}
-              <CardTitle>
-                {t("AbnormalFindings", {
-                  count: localeDigits(abnormalFindings.length, locale),
-                })}
-              </CardTitle>
-            </div>
-            <label className="flex items-center gap-2 text-sm">
-              <Switch
-                checked={abnormalOnly}
-                onCheckedChange={setAbnormalOnly}
-                aria-label={t("ShowAbnormalOnly")}
-              />
-              {t("ShowAbnormalOnly")}
-            </label>
+          <div className="flex items-center gap-2">
+            {abnormalFindings.length > 0 ? (
+              <AlertCircle className="size-5 text-destructive" />
+            ) : (
+              <CheckCircle2 className="size-5 text-success" />
+            )}
+            <CardTitle>
+              {t("AbnormalFindings", {
+                count: localeDigits(abnormalFindings.length, locale),
+              })}
+            </CardTitle>
           </div>
           {abnormalFindings.length > 0 && (
             <div className="flex flex-wrap gap-2 pt-2">
@@ -525,6 +515,17 @@ export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Filters the test sections below (lab, clinical, urine, liver), so it
+          sits at their head, not in the summary above. */}
+      <label className="flex items-center justify-end gap-2 text-sm">
+        <Switch
+          checked={abnormalOnly}
+          onCheckedChange={setAbnormalOnly}
+          aria-label={t("ShowAbnormalOnly")}
+        />
+        {t("ShowAbnormalOnly")}
+      </label>
 
       {/* Lab Results Summary */}
       <Card>
