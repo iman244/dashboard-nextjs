@@ -736,6 +736,14 @@
       "noRows": "این فایل ردیفی ندارد.",
       "searchRows": "جستجو در ردیف‌ها",
       "rowCount": "{shown} از {total} ردیف"
+    },
+    "CampaignPatient": {
+      "fallbackTitle": "بیمار",
+      "nationalId": "کد ملی {id}",
+      "healthRecord": "پرونده سلامت",
+      "rowIndex": "ردیف {index}",
+      "nothing": "این بیمار در این پایش اطلاعاتی ندارد.",
+      "loadError": "اطلاعات پایش این بیمار بارگذاری نشد."
     }
   },
   "/patient/sign-in": {
@@ -881,6 +889,10 @@
     "campaign": {
       "title": "پایش",
       "description": "فایل‌ها و اطلاعات ثبت‌شده یک پایش."
+    },
+    "campaignPatient": {
+      "title": "بیمار در پایش",
+      "description": "اطلاعات یک بیمار در یک پایش."
     },
     "monitorings": {
       "title": "پایش‌ها",

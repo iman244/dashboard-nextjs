@@ -142,7 +142,7 @@ export default function PatientPage(
         </CardContent>
       </Card>
 
-      {isStaff ? <PatientRecordsSection nationalId={nationalId} authorized /> : null}
+      <PatientRecordsSection nationalId={nationalId} />
       {isStaff ? <ExcelReportsCard nationalId={nationalId} /> : null}
 
       <Card>

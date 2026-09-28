@@ -1547,7 +1547,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
   - `fullNationalId`, `isNationalId`, `PATIENT_PATH`.
 - Produces: `/console/monitorings/[id]/patients/[national_id]`.
 
-- [ ] **Step 1: The page** (`"use client"`):
+- [x] **Step 1: The page** (`"use client"`):
   - `nationalId = fullNationalId(decodeURIComponent(national_id))`. If invalid, show the same invalid state as the patient page.
   - `campaign` from `useList_MonitoringType_API()` by id; `reports = useList_PersonReports_API({ nationalId, monitoring: campaign?.id, enabled: !!campaign })`; `records = useList_PatientRecord_API({ nationalId, authorized: true })`, then filter `records.data` to `r.monitoring.id === campaign.id`.
   - `name` = `${row["نام"] ?? ""} ${row["نام خانوادگی"] ?? ""}`.trim() from the first returned row, else `t("fallbackTitle")`.
@@ -1560,7 +1560,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
   - Then `<PatientRecordsContent records={{ ...records, data: filtered }} editable={isStaff} />`.
   - Empty (no reports and no records): `t("nothing")`.
 
-- [ ] **Step 2: Messages** (`/console/monitorings.CampaignPatient`):
+- [x] **Step 2: Messages** (`/console/monitorings.CampaignPatient`):
 
 | key | en | fa |
 |---|---|---|
@@ -1573,7 +1573,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
 
 `metadata.campaignPatient`: en `{"title": "Patient in monitoring", "description": "One patient's data within one monitoring."}`, fa `{"title": "بیمار در پایش", "description": "اطلاعات یک بیمار در یک پایش."}`.
 
-- [ ] **Step 2b: Records section for viewers.** In `src/components/app/patient-records-section.tsx`, `PatientRecordsSection` should fetch with `authorized: true` always and pass `editable={isStaff}` using `useIsStaff()`. Its `authorized` prop is removed and its callers updated (grep `PatientRecordsSection`).
+- [x] **Step 2b: Records section for viewers.** In `src/components/app/patient-records-section.tsx`, `PatientRecordsSection` should fetch with `authorized: true` always and pass `editable={isStaff}` using `useIsStaff()`. Its `authorized` prop is removed and its callers updated (grep `PatientRecordsSection`).
 
 - [ ] **Step 3: Verify in the browser** as staff and viewer:
   - `/fa/console/monitorings/2/patients/0012345678` shows Ali Rezaei's rows from both Step 2 uploads, with the legacy numeric one included.
@@ -1581,7 +1581,7 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
   - The "Health record" button opens the patient page.
   - `/fa/console/monitorings/2/patients/۱۲۳۴۵۶۷۸` works the same as `0012345678`.
 
-- [ ] **Step 4: Commit** `feat: patient-in-campaign page`
+- [x] **Step 4: Commit** `feat: patient-in-campaign page`
 
 ### Task 15: «پایش‌های این بیمار» and the person redirects
 

@@ -42,7 +42,7 @@ import {
   type SchemaField,
 } from "@/components/schema-form/types";
 import { useList_PatientRecord_API } from "@/data/patient-entry/api/records";
-import { fullNationalId } from "@/lib/national-id";
+import { fullNationalId, isNationalId } from "@/lib/national-id";
 import { useIsStaff } from "@/data/user/fetches/me";
 import type {
   PatientEntryFile,
@@ -54,15 +54,20 @@ import { useDirection } from "@/lib/use-direction";
 type Viewing = { files: PatientEntryFile[]; index: number; title: string };
 
 
-/** Staff lookup retains its separate authorized API client. */
-export const PatientRecordsSection = ({ nationalId, authorized }: {
+/**
+ * The console lookup, through the signed-in API client. Every console user
+ * reads; only staff get the edit links, as Django enforces.
+ */
+export const PatientRecordsSection = ({ nationalId }: {
   nationalId: string | null | undefined;
-  authorized: boolean;
 }) => {
   const id = fullNationalId(nationalId);
-  const records = useList_PatientRecord_API({ nationalId: id, authorized });
-  if (id.length !== 10) return null;
-  return <PatientRecordsContent records={records} editable={authorized} />;
+  const isStaff = useIsStaff();
+  const records = useList_PatientRecord_API({ nationalId: id, authorized: true });
+  // The same test the query's `enabled` uses, so a disabled query never
+  // leaves the skeleton up.
+  if (!isNationalId(id)) return null;
+  return <PatientRecordsContent records={records} editable={isStaff} />;
 };
 
 /** Rendering is shared; patient credentials never pass through the staff client. */

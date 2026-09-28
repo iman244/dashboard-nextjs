@@ -736,6 +736,14 @@
       "noRows": "This upload has no rows.",
       "searchRows": "Search rows",
       "rowCount": "{shown} of {total} rows"
+    },
+    "CampaignPatient": {
+      "fallbackTitle": "Patient",
+      "nationalId": "National ID {id}",
+      "healthRecord": "Health record",
+      "rowIndex": "Row {index}",
+      "nothing": "This patient has no data in this monitoring.",
+      "loadError": "This patient's monitoring data could not be loaded."
     }
   },
   "/patient/sign-in": {
@@ -881,6 +889,10 @@
     "campaign": {
       "title": "Monitoring",
       "description": "One monitoring's uploads and records."
+    },
+    "campaignPatient": {
+      "title": "Patient in monitoring",
+      "description": "One patient's data within one monitoring."
     },
     "monitorings": {
       "title": "Monitorings",

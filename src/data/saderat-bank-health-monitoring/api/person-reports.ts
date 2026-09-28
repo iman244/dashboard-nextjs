@@ -31,7 +31,7 @@ export const PERSON_REPORTS_QUERY_KEY = (
   monitoring ?? "all",
 ];
 
-/** Staff only: the endpoint answers 403 to anyone else, so gate on `enabled`. */
+/** Any console user reads; patient accounts get 403. */
 export const useList_PersonReports_API = ({
   nationalId,
   monitoring,

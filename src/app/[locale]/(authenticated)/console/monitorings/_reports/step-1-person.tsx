@@ -361,10 +361,10 @@ export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
             <Droplet className="h-5 w-5" />
             نتایج آزمایشات
           </CardTitle>
-          <CardDescription>خلاصه نتایج آزمایشات و روند تغییرات</CardDescription>
+          <CardDescription>خلاصه نتایج آزمایشات</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {visible(keyLabTests).map((test) => {
               const value = row[test.key];
               const status = getStatusColor(value);
