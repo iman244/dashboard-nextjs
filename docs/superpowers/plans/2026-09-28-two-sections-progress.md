@@ -8,7 +8,12 @@ Plan: `2026-09-28-two-sections.md` (19 tasks: 1–18 plus 3b). Spec: `../specs/2
 - **Implementer model:**
   - **Opus:** Tasks 1, 3, 4, 10, 11, 13, 14, 16.
   - **Sonnet:** Tasks 2, 3b, 5, 6, 7, 8, 9, 12, 15, 17, 18.
-- **Effort:** set through two project agent definitions in `/Users/iman244/Repositories/mainreport/.claude/agents/`, an implementer and a reviewer, both `high`. The final whole-branch reviewer runs at `max`.
+- **Agents** (created 2026-09-28 in `/Users/iman244/Repositories/mainreport/.claude/agents/`):
+  - `two-sections-implementer`: effort high; the model is passed per dispatch (opus or sonnet as listed above).
+  - `two-sections-reviewer`: opus, effort high, read-only.
+  - `two-sections-final-reviewer`: opus, effort max, read-only.
+  - They are loaded at session start. If a dispatch says the agent type is unknown, restart the session or fall back to `general-purpose` with the agent file's body pasted into the prompt.
+- **Django settings** for local runs: `/Users/iman244/Repositories/mainreport/.claude/dev/walk_settings.py` (stable path, not the scratchpad).
 - **Review:** one Opus reviewer after every task. It checks spec and plan compliance, runs the tests itself, and hunts for bugs. At most 2 review→fix rounds, then escalate to the orchestrator; design questions go to the user.
 - **One task per implementer**, fresh context each time.
 - **Parallelism:** only the opening lane runs in parallel (Django Tasks 1–4 alongside Next.js Tasks 3b, 6, 7, in different repos). Everything else is sequential.

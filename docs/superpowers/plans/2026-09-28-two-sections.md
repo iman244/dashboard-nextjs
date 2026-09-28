@@ -21,8 +21,8 @@
 **Running things locally:**
 - Postgres: `docker start mainreport-walkthrough-pg` (port 55432).
 - Django env, set before any `manage.py` command:
-  - `export PYTHONPATH=<scratchpad>/wt DJANGO_SETTINGS_MODULE=walk_settings`
-  - `<scratchpad>/wt/walk_settings.py` imports development settings and sets `DATABASES["default"]["PORT"]="55432"`.
+  - `export PYTHONPATH=/Users/iman244/Repositories/mainreport/.claude/dev DJANGO_SETTINGS_MODULE=walk_settings`
+  - `/Users/iman244/Repositories/mainreport/.claude/dev/walk_settings.py` imports development settings and sets `DATABASES["default"]["PORT"]="55432"`.
   - Python is `../dashboard-django/venv/bin/python`.
 - Django server: `runserver 127.0.0.1:8001`. Next dev server: `npm run dev -- -p 3000` in `N`.
 - Browser checks: `require()` the cached playwright at `/Users/iman244/.npm/_npx/9833c18b2d85bc59/node_modules/playwright`, launch with `{ channel: "chrome", headless: true }`, always in a **fresh context** (the default profile autofills saved logins).
