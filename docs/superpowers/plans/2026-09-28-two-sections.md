@@ -823,7 +823,7 @@ A refused upload's `AxiosError.response.data` is `{ file: string[]; issues: Uplo
   - `rowMatches(row: Record<string, unknown>, query: string): boolean`
 - Produces, in `@/lib/national-id` (same exports as today): `fullNationalId`, `isNationalId`, `PATIENT_PATH`, `patientHref`, plus `CAMPAIGN_PATIENT_PATH(campaignId: number, nationalId: string)`.
 
-- [ ] **Step 1: Write the failing tests.** `tests/national-id.test.mjs`:
+- [x] **Step 1: Write the failing tests.** `tests/national-id.test.mjs`:
 
 ```js
 import { test } from 'node:test';
@@ -894,9 +894,9 @@ test('row search matches any cell, with Persian digits folded', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify they fail.** `node --test --experimental-strip-types tests/national-id.test.mjs tests/campaign.test.mjs`. Expected: FAIL. `national-id.ts` cannot resolve `@/components/schema-form/types`, and `campaign.ts` does not exist.
+- [x] **Step 2: Run to verify they fail.** `node --test --experimental-strip-types tests/national-id.test.mjs tests/campaign.test.mjs`. Expected: FAIL. `national-id.ts` cannot resolve `@/components/schema-form/types`, and `campaign.ts` does not exist.
 
-- [ ] **Step 3: Implement.** In `src/lib/national-id.ts`, replace `import { toDigits } from "@/components/schema-form/types";` with a local function, and add the campaign path:
+- [x] **Step 3: Implement.** In `src/lib/national-id.ts`, replace `import { toDigits } from "@/components/schema-form/types";` with a local function, and add the campaign path:
 
 ```ts
 /** Persian and Arabic-Indic digits to ASCII, everything else dropped. */
@@ -980,9 +980,9 @@ export const rowMatches = (row: Record<string, unknown>, query: string) => {
 
 Node's type stripping needs the `.ts` extension on relative imports, and tsc refuses those by default. Add `"allowImportingTsExtensions": true` to `compilerOptions` in `N/tsconfig.json` (valid because it already has `"noEmit": true`). `national-id.ts` imports `format` from `date-fns`; node resolves it from `node_modules`.
 
-- [ ] **Step 4: Run the tests and tsc.** Both test files pass; `npx tsc --noEmit` exits 0; `node --test --experimental-strip-types tests/patient-session.test.mjs` still passes.
+- [x] **Step 4: Run the tests and tsc.** Both test files pass; `npx tsc --noEmit` exits 0; `node --test --experimental-strip-types tests/patient-session.test.mjs` still passes.
 
-- [ ] **Step 5: Commit** `feat: campaign and national id helpers with tests`
+- [x] **Step 5: Commit** `feat: campaign and national id helpers with tests`
 
 ### Task 7: Sidebar and console home in two sections
 
