@@ -131,6 +131,20 @@ const OTHER_FINDING_KEYS = [
   "اقدامات و مشاوره های موردنیاز",
 ];
 
+/** The cells the administrative card shows. */
+const ADMINISTRATIVE_KEYS = [
+  "نام پدر",
+  "سال",
+  "بيمه",
+  "اپراتور",
+  "نام صنعت",
+  "name_goroh",
+  "ID_SANAT",
+  "ID_goroh",
+  "ID_shobeh",
+  "کدپایش",
+];
+
 export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
   const locale = useLocale();
   const t = useTranslations(
@@ -242,8 +256,112 @@ export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
     ...liverTests,
     ...clinicalSections,
   ].map((test) => test.key);
+
+  // Administrative Information: shown with or without findings.
+  const administrative = (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <FileText className="h-5 w-5" />
+          اطلاعات اداری
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
+          {row["نام پدر"] && (
+            <div>
+              <div className="text-muted-foreground mb-1">نام پدر</div>
+              <div className="font-medium">
+                {formatCellValue(row["نام پدر"], locale)}
+              </div>
+            </div>
+          )}
+          {row["سال"] != null && (
+            <div>
+              <div className="text-muted-foreground mb-1">سال</div>
+              <div className="font-medium">
+                {formatCellValue(row["سال"], locale)}
+              </div>
+            </div>
+          )}
+          {row["بيمه"] && (
+            <div>
+              <div className="text-muted-foreground mb-1">بیمه</div>
+              <div className="font-medium">
+                {formatCellValue(row["بيمه"], locale)}
+              </div>
+            </div>
+          )}
+          {row["اپراتور"] && (
+            <div>
+              <div className="text-muted-foreground mb-1">اپراتور</div>
+              <div className="font-medium">
+                {formatCellValue(row["اپراتور"], locale)}
+              </div>
+            </div>
+          )}
+          {row["نام صنعت"] && (
+            <div>
+              <div className="text-muted-foreground mb-1">نام صنعت</div>
+              <div className="font-medium">
+                {formatCellValue(row["نام صنعت"], locale)}
+              </div>
+            </div>
+          )}
+          {row["name_goroh"] && (
+            <div>
+              <div className="text-muted-foreground mb-1">نام گروه</div>
+              <div className="font-medium">
+                {formatCellValue(row["name_goroh"], locale)}
+              </div>
+            </div>
+          )}
+          {row["ID_SANAT"] != null && (
+            <div>
+              <div className="text-muted-foreground mb-1">ID صنعت</div>
+              <div className="font-medium">
+                {formatCellValue(row["ID_SANAT"], locale)}
+              </div>
+            </div>
+          )}
+          {row["ID_goroh"] != null && (
+            <div>
+              <div className="text-muted-foreground mb-1">ID گروه</div>
+              <div className="font-medium">
+                {formatCellValue(row["ID_goroh"], locale)}
+              </div>
+            </div>
+          )}
+          {row["ID_shobeh"] != null && (
+            <div>
+              <div className="text-muted-foreground mb-1">ID شعبه</div>
+              <div className="font-medium">
+                {formatCellValue(row["ID_shobeh"], locale)}
+              </div>
+            </div>
+          )}
+          {row["کدپایش"] != null && (
+            <div>
+              <div className="text-muted-foreground mb-1">کد پایش</div>
+              <div className="font-medium">
+                {formatCellValue(row["کدپایش"], locale)}
+              </div>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   if (!hasAnyValue(row, [...findingKeys, ...OTHER_FINDING_KEYS])) {
-    return <NoFindings />;
+    return hasAnyValue(row, ADMINISTRATIVE_KEYS) ? (
+      <div className="space-y-6">
+        <NoFindings />
+        {administrative}
+      </div>
+    ) : (
+      <NoFindings />
+    );
   }
 
   return (
@@ -854,99 +972,7 @@ export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
         </Card>
       )}
 
-      {/* Administrative Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            اطلاعات اداری
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
-            {row["نام پدر"] && (
-              <div>
-                <div className="text-muted-foreground mb-1">نام پدر</div>
-                <div className="font-medium">
-                  {formatCellValue(row["نام پدر"], locale)}
-                </div>
-              </div>
-            )}
-            {row["سال"] != null && (
-              <div>
-                <div className="text-muted-foreground mb-1">سال</div>
-                <div className="font-medium">
-                  {formatCellValue(row["سال"], locale)}
-                </div>
-              </div>
-            )}
-            {row["بيمه"] && (
-              <div>
-                <div className="text-muted-foreground mb-1">بیمه</div>
-                <div className="font-medium">
-                  {formatCellValue(row["بيمه"], locale)}
-                </div>
-              </div>
-            )}
-            {row["اپراتور"] && (
-              <div>
-                <div className="text-muted-foreground mb-1">اپراتور</div>
-                <div className="font-medium">
-                  {formatCellValue(row["اپراتور"], locale)}
-                </div>
-              </div>
-            )}
-            {row["نام صنعت"] && (
-              <div>
-                <div className="text-muted-foreground mb-1">نام صنعت</div>
-                <div className="font-medium">
-                  {formatCellValue(row["نام صنعت"], locale)}
-                </div>
-              </div>
-            )}
-            {row["name_goroh"] && (
-              <div>
-                <div className="text-muted-foreground mb-1">نام گروه</div>
-                <div className="font-medium">
-                  {formatCellValue(row["name_goroh"], locale)}
-                </div>
-              </div>
-            )}
-            {row["ID_SANAT"] != null && (
-              <div>
-                <div className="text-muted-foreground mb-1">ID صنعت</div>
-                <div className="font-medium">
-                  {formatCellValue(row["ID_SANAT"], locale)}
-                </div>
-              </div>
-            )}
-            {row["ID_goroh"] != null && (
-              <div>
-                <div className="text-muted-foreground mb-1">ID گروه</div>
-                <div className="font-medium">
-                  {formatCellValue(row["ID_goroh"], locale)}
-                </div>
-              </div>
-            )}
-            {row["ID_shobeh"] != null && (
-              <div>
-                <div className="text-muted-foreground mb-1">ID شعبه</div>
-                <div className="font-medium">
-                  {formatCellValue(row["ID_shobeh"], locale)}
-                </div>
-              </div>
-            )}
-            {row["کدپایش"] != null && (
-              <div>
-                <div className="text-muted-foreground mb-1">کد پایش</div>
-                <div className="font-medium">
-                  {formatCellValue(row["کدپایش"], locale)}
-                </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      {administrative}
 
       {/* Medical History & Recommendations */}
       {(row["تاریخچه قبلی پزشکی"] ||
