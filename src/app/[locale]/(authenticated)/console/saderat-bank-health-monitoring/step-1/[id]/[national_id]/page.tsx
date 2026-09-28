@@ -466,9 +466,12 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {toNumber(person_data["BMI"])?.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-              }) ?? formatCellValue(String(person_data["BMI"] ?? "-"), locale)}
+              {formatCellValue(
+                toNumber(person_data["BMI"])?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                }) ?? String(person_data["BMI"] ?? "-"),
+                locale
+              )}
             </div>
             <Badge
               variant={getStatusColor(person_data["BMI_Group"])}
