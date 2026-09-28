@@ -1497,15 +1497,15 @@ export const useUploadCampaign = (uploadId: number) => {
 **Interfaces:**
 - Produces: `Step1PersonSections`, `Step2PersonSections`, `FieldList`. Each renders only the person's findings: no header card, no EHR table, no monitoring records.
 
-- [ ] **Step 1: Step 1.** `git mv` the person page. In the moved file:
+- [x] **Step 1: Step 1.** `git mv` the person page. In the moved file:
   - Delete the header card, the EHR fetching (`useEHRByNationalNumberApi`, `usePersonEhr`, `EhrRecordsTable`, `EhrTrendDialog`, `useRecordDetail`, `ServiceDetailsTable` and the sheet using it), `PatientRecordsSection`, `PatientPageLink`, and the route-context lookup.
   - Keep every findings section exactly as rendered, fed from the `row` prop instead of `person_data`: rename `person_data` to `row` throughout.
   - The loading, not-found and error branches go; the caller handles them.
   - Keep the `MonitoringData` type import. The old route file is deleted here (Task 15 recreates it as a redirect).
 
-- [ ] **Step 2: Step 2.** Move `RecordSections` (lines 44-~135 of the step-2 person page) with its imports into `step-2-person.tsx` as `Step2PersonSections`. Delete the old step-2 person page (Task 15 recreates it as a redirect).
+- [x] **Step 2: Step 2.** Move `RecordSections` (lines 44-~135 of the step-2 person page) with its imports into `step-2-person.tsx` as `Step2PersonSections`. Delete the old step-2 person page (Task 15 recreates it as a redirect).
 
-- [ ] **Step 3: Field list** for campaigns without a layout:
+- [x] **Step 3: Field list** for campaigns without a layout:
 
 ```tsx
 "use client";
@@ -1529,9 +1529,9 @@ export const FieldList = ({ row }: { row: Record<string, unknown> }) => {
 };
 ```
 
-- [ ] **Step 4: Verify.** `npx tsc --noEmit` (the old person routes are gone, so any links to them must already point elsewhere: grep for `step-1/${` and `step-2/${` template URLs and confirm only the Task 10 wrappers and redirects remain). Lint: the moved Step 1 file must not gain errors.
+- [x] **Step 4: Verify.** `npx tsc --noEmit` (the old person routes are gone, so any links to them must already point elsewhere: grep for `step-1/${` and `step-2/${` template URLs and confirm only the Task 10 wrappers and redirects remain). Lint: the moved Step 1 file must not gain errors.
 
-- [ ] **Step 5: Commit** `refactor: person findings render from a row prop`
+- [x] **Step 5: Commit** `refactor: person findings render from a row prop`
 
 ### Task 14: Patient-in-campaign page
 

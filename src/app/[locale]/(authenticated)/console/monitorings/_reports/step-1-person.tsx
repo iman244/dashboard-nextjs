@@ -1,11 +1,6 @@
 "use client";
 
-import { LoadingState } from "@/components/app/loading-state";
 import React from "react";
-import { useMonitoringIdRouteContext } from "../route-context";
-import { useEHRByNationalNumberApi } from "@/data/electronic health record/api/EHR-by-national-number";
-import { digitsFaToEn } from "@persian-tools/persian-tools";
-import { PatientType } from "@/components/app/patient-type-selector";
 import {
   Card,
   CardContent,
@@ -29,28 +24,8 @@ import {
   Stethoscope,
   FileText,
   Brain,
-  XIcon,
-  ChartArea,
 } from "lucide-react";
-import { toast } from "sonner";
-import { usePersonEhr, type LabSeries } from "../../../_ehr/use-person-ehr";
-import { EhrTrendDialog } from "../../../_ehr/trend-dialog";
-import { EhrRecordsTable } from "../../../_ehr/records-table";
-import { PatientRecordsSection } from "@/components/app/patient-records-section";
-import { PatientPageLink } from "@/components/app/patient-page-link";
-import { fullNationalId } from "@/lib/national-id";
 import { toNumber } from "@/lib/campaign";
-import { useRecordDetail } from "../../../_ehr/use-record-detail";
-import { ElectronicHealthRecord } from "@/data/electronic health record/type";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { ServiceDetailsTable } from "../../../../patient-reports/client";
 
 type MonitoringData = {
   [key: string]: string | number | null;
@@ -116,130 +91,17 @@ const getStatusIcon = (value: string | number | null) => {
   }
 };
 
-const PersonMonitoringPage = (
-  props: PageProps<"/[locale]/console/saderat-bank-health-monitoring/step-1/[id]/[national_id]">
-) => {
-  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
-  const [selectedService, setSelectedService] = React.useState<string | null>(
-    null
-  );
-  const [serviceData, setServiceData] = React.useState<
-    ElectronicHealthRecord[] | null
-  >(null);
-  const { national_id } = React.use(props.params);
-  const { monitoring_query } = useMonitoringIdRouteContext();
-  const { data, isPending, error } = monitoring_query;
-
-  const recordDetail = useRecordDetail();
-
+/**
+ * One person's Step 1 findings, from their upload row. The caller owns the
+ * header, EHR and loading/not-found states; this renders only the findings.
+ */
+export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
   const locale = useLocale();
-  const tEhr = useTranslations("/console/saderat-bank-health-monitoring.Ehr");
-  const tLoading = useTranslations("common.Loading");
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.PersonRecord"
   );
-  const tDictionary = useTranslations("common.Dictionary");
-  // ErrorTitle lives in the page namespace the other monitoring routes read.
-  const tPage = useTranslations(
-    "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage"
-  );
   // Defaults to off: nothing is hidden from a clinician unless they ask.
   const [abnormalOnly, setAbnormalOnly] = React.useState(false);
-  const today = new Date().toLocaleDateString("fa-IR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  const ehr_query = useEHRByNationalNumberApi({
-    input: {
-      params: {
-        nationalNumber: national_id,
-        fromDate: "1403/01/01",
-        toDate: digitsFaToEn(today),
-        patientType: PatientType.LAB,
-      },
-    },
-  });
-  const { error: ehr_error } = ehr_query;
-
-  const person_data = React.useMemo(() => {
-    return data?.json.find(
-      (item) => fullNationalId(item["personel.کد ملی"]) === fullNationalId(national_id)
-    ) as MonitoringData | undefined;
-  }, [data, national_id]);
-
-  // The shared EHR layer, alongside step-1's own ehr_query. It reads the same
-  // person but classifies against `نرمال رنج` and covers imaging/pathology as
-  // well, which the LAB-only query above does not.
-  const ehr = usePersonEhr({
-    nationalId: national_id,
-    campaignDate: data?.created_at ?? "",
-    enabled: Boolean(data),
-  });
-  const [selectedSeries, setSelectedSeries] = React.useState<LabSeries | null>(
-    null
-  );
-
-  React.useEffect(() => {
-    if (ehr_error) {
-      // `Ehr.loadError` already named this failure — the records table on this
-      // same page renders it. A second, hardcoded sentence for one error meant
-      // the page could describe the same problem two different ways.
-      toast.error(`${tEhr("loadError")} ${ehr_error.message}`);
-    }
-  }, [ehr_error, tEhr]);
-
-  const labData = React.useMemo(() => {
-    return ehr_query.data || [];
-  }, [ehr_query.data]);
-
-  // Group lab data by test name and prepare for charts
-  const groupedLabData = React.useMemo(() => {
-    const grouped: Record<string, ElectronicHealthRecord[]> = {};
-    labData.forEach((record) => {
-      const testName = record["نام خدمت"];
-      if (!grouped[testName]) {
-        grouped[testName] = [];
-      }
-      grouped[testName].push(record);
-    });
-    return grouped;
-  }, [labData]);
-
-  // Get latest lab values
-  const latestLabValues = React.useMemo(() => {
-    const latest: Record<string, ElectronicHealthRecord> = {};
-    labData.forEach((record) => {
-      const testName = record["نام خدمت"];
-      const existing = latest[testName];
-      if (!existing || record["تاريخ"] > existing["تاريخ"]) {
-        latest[testName] = record;
-      }
-    });
-    return latest;
-  }, [labData]);
-
-  if (isPending || ehr_query.isPending) {
-    return (
-      <LoadingState label={tLoading("record")} />
-    );
-  }
-
-  if (error) {
-    // role=alert per ux-guidelines #44: an error must be announced, not only
-    // coloured. The label was a hardcoded English "Error:" on a Persian-first
-    // product, so it now comes from the same key the other routes use.
-    return (
-      <div role="alert" className="text-destructive">
-        {tPage("ErrorTitle")}: {error?.message}
-      </div>
-    );
-  }
-
-  if (!person_data) {
-    return <div>No Data</div>;
-  }
 
   // All lab tests to display
   const keyLabTests = [
@@ -317,16 +179,16 @@ const PersonMonitoringPage = (
     { key: "علائم عمومی", label: "علائم عمومی", icon: Activity },
   ];
 
-  // Order abnormal results first within a group. Reads person_data through the
+  // Order abnormal results first within a group. Reads row through the
   // same classifier the badges use, so ordering can never disagree with colour.
   const bySeverity = <T extends { key: string }>(a: T, b: T) =>
-    SEVERITY_RANK[getResultStatus(person_data[a.key])] -
-    SEVERITY_RANK[getResultStatus(person_data[b.key])];
+    SEVERITY_RANK[getResultStatus(row[a.key])] -
+    SEVERITY_RANK[getResultStatus(row[b.key])];
 
   const visible = <T extends { key: string }>(tests: T[]) =>
     [...tests]
       .sort(bySeverity)
-      .filter((test) => !abnormalOnly || isAbnormal(person_data[test.key]));
+      .filter((test) => !abnormalOnly || isAbnormal(row[test.key]));
 
   // Every abnormal finding on the record, for the summary at the top.
   const abnormalFindings = [
@@ -334,79 +196,10 @@ const PersonMonitoringPage = (
     ...urineTests,
     ...liverTests,
     ...clinicalSections,
-  ].filter((test) => isAbnormal(person_data[test.key]));
+  ].filter((test) => isAbnormal(row[test.key]));
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Patient Header */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-2xl">
-                {person_data["نام"]} {person_data["نام خانوادگی"]}
-              </CardTitle>
-              <CardDescription className="mt-2">
-                <div className="flex flex-wrap gap-4 text-sm">
-                  <span>
-                    <strong>کد ملی:</strong>{" "}
-                    {formatCellValue(national_id, locale)}
-                  </span>
-                  <span>
-                    <strong>سن:</strong>{" "}
-                    {person_data["سن"] != null
-                      ? formatCellValue(person_data["سن"], locale)
-                      : "-"}{" "}
-                    سال
-                  </span>
-                  <span>
-                    <strong>جنسیت:</strong>{" "}
-                    {person_data["جنسیت"] != null
-                      ? formatCellValue(person_data["جنسیت"], locale)
-                      : "-"}
-                  </span>
-                  <span>
-                    <strong>تاریخ معاینه:</strong>{" "}
-                    {person_data["تاریخ"] != null
-                      ? formatCellValue(person_data["تاریخ"], locale)
-                      : "-"}
-                  </span>
-                </div>
-              </CardDescription>
-            </div>
-            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-              <Badge
-                variant={getStatusColor(person_data["BMI_Group"])}
-                className="text-sm"
-              >
-                {person_data["BMI_Group"] != null
-                  ? formatCellValue(person_data["BMI_Group"], locale)
-                  : "-"}
-              </Badge>
-              <PatientPageLink nationalId={national_id} />
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-
-
-      {data && (
-        <Card>
-          <CardHeader>
-            <CardTitle>{tEhr("recordsTitle")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <EhrRecordsTable
-              ehr={ehr}
-              onViewRecord={recordDetail.open}
-              onSelectSeries={setSelectedSeries}
-            />
-          </CardContent>
-        </Card>
-      )}
-
-      <PatientRecordsSection nationalId={national_id} authorized />
-
+    <div className="space-y-6">
       {/* Abnormal findings summary. The classification already existed and drove
           only badge colour; this is the question a clinician opens the record to
           ask, so it leads rather than being buried among ~50 equal-weight tiles. */}
@@ -444,7 +237,7 @@ const PersonMonitoringPage = (
                 >
                   {finding.label}
                   <span className="ps-1">
-                    {getResultStatus(person_data[finding.key]) === "high"
+                    {getResultStatus(row[finding.key]) === "high"
                       ? "↑"
                       : "↓"}
                   </span>
@@ -467,18 +260,18 @@ const PersonMonitoringPage = (
           <CardContent>
             <div className="text-2xl font-bold">
               {formatCellValue(
-                toNumber(person_data["BMI"])?.toLocaleString("en-US", {
+                toNumber(row["BMI"])?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
-                }) ?? String(person_data["BMI"] ?? "-"),
+                }) ?? String(row["BMI"] ?? "-"),
                 locale
               )}
             </div>
             <Badge
-              variant={getStatusColor(person_data["BMI_Group"])}
+              variant={getStatusColor(row["BMI_Group"])}
               className="mt-2"
             >
-              {person_data["BMI_Group"] != null
-                ? formatCellValue(person_data["BMI_Group"], locale)
+              {row["BMI_Group"] != null
+                ? formatCellValue(row["BMI_Group"], locale)
                 : "-"}
             </Badge>
           </CardContent>
@@ -493,20 +286,20 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {person_data["Sys_Bp"] != null
-                ? formatCellValue(person_data["Sys_Bp"], locale)
+              {row["Sys_Bp"] != null
+                ? formatCellValue(row["Sys_Bp"], locale)
                 : "-"}
               /
-              {person_data["Dia_BP"] != null
-                ? formatCellValue(person_data["Dia_BP"], locale)
+              {row["Dia_BP"] != null
+                ? formatCellValue(row["Dia_BP"], locale)
                 : "-"}
             </div>
             <Badge
-              variant={getStatusColor(person_data["BP_Group"])}
+              variant={getStatusColor(row["BP_Group"])}
               className="mt-2"
             >
-              {person_data["BP_Group"] != null
-                ? formatCellValue(person_data["BP_Group"], locale)
+              {row["BP_Group"] != null
+                ? formatCellValue(row["BP_Group"], locale)
                 : "-"}
             </Badge>
           </CardContent>
@@ -521,14 +314,14 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {person_data["تعداد نبض"] != null
-                ? formatCellValue(person_data["تعداد نبض"], locale)
+              {row["تعداد نبض"] != null
+                ? formatCellValue(row["تعداد نبض"], locale)
                 : "-"}{" "}
               bpm
             </div>
             <div className="text-sm text-muted-foreground mt-2">
-              {person_data["نبض"] != null
-                ? formatCellValue(person_data["نبض"], locale)
+              {row["نبض"] != null
+                ? formatCellValue(row["نبض"], locale)
                 : "-"}
             </div>
           </CardContent>
@@ -544,15 +337,15 @@ const PersonMonitoringPage = (
           <CardContent>
             <div className="text-lg font-bold">
               <span dir="ltr">
-                {person_data["وزن"] != null
-                  ? formatCellValue(person_data["وزن"], locale)
+                {row["وزن"] != null
+                  ? formatCellValue(row["وزن"], locale)
                   : "-"}{" "}
                 kg
               </span>{" "}
               /{" "}
               <span dir="ltr">
-                {person_data["قد"] != null
-                  ? formatCellValue(person_data["قد"], locale)
+                {row["قد"] != null
+                  ? formatCellValue(row["قد"], locale)
                   : "-"}{" "}
                 cm
               </span>
@@ -573,7 +366,7 @@ const PersonMonitoringPage = (
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
             {visible(keyLabTests).map((test) => {
-              const value = person_data[test.key];
+              const value = row[test.key];
               const status = getStatusColor(value);
               const icon = getStatusIcon(value);
               return (
@@ -594,96 +387,6 @@ const PersonMonitoringPage = (
               );
             })}
           </div>
-
-
-          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-            <SheetContent side="bottom" className="max-h-[100dvh]">
-              <SheetHeader className="flex flex-row items-center justify-between">
-                <SheetTitle>گزارش رکوردهای خدمت: {selectedService}</SheetTitle>
-                <SheetClose aria-label={tDictionary("Close")}>
-                  <XIcon className="h-4 w-4" />
-                </SheetClose>
-              </SheetHeader>
-              {selectedService && serviceData && (
-                <div className="p-4">
-                  <ServiceDetailsTable
-                    data={serviceData}
-                    selectedService={selectedService}
-                  />
-                </div>
-              )}
-            </SheetContent>
-          </Sheet>
-
-          {recordDetail.modal}
-
-          {/* Detailed Lab Results Table */}
-          {labData.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-4">جزئیات آزمایشات</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.entries(groupedLabData).map(([testName]) => {
-                  const latest = latestLabValues[testName];
-                  if (!latest) return null;
-
-                  const range = latest["نرمال رنج"];
-
-                  return (
-                    <div
-                      key={testName}
-                      className="border rounded-lg p-4 space-y-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="font-medium">{testName}</div>
-                        {latest["جواب"] && (
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm">
-                              {localeDigits(latest["جواب"], locale)}{" "}
-                              {range && `(${localeDigits(range, locale)})`}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs text-muted-foreground">
-                          تاریخ: {formatCellValue(latest["تاريخ"], locale)} |
-                          پزشک: {latest["نام پزشك معالج"]}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              recordDetail.open(latest);
-                            }}
-                          >
-                            جزییات
-                          </Button>
-                          <Button
-                            disabled={latest["جواب"] === null}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedService(testName);
-                              setServiceData(
-                                labData.filter(
-                                  (item) => item["نام خدمت"] === testName
-                                )
-                              );
-                              setIsSheetOpen(true);
-                            }}
-                            aria-label={t("ViewTestChart")}
-                          >
-                            <ChartArea className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </CardContent>
       </Card>
 
@@ -698,7 +401,7 @@ const PersonMonitoringPage = (
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {visible(clinicalSections).map((section) => {
-              const value = person_data[section.key];
+              const value = row[section.key];
               const Icon = section.icon;
               if (!value || value === "انجام نشده") return null;
 
@@ -735,7 +438,7 @@ const PersonMonitoringPage = (
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {visible(urineTests).map((test) => {
-              const value = person_data[test.key];
+              const value = row[test.key];
               const status = getStatusColor(value);
               const icon = getStatusIcon(value);
               if (!value || value === "انجام نشده") return null;
@@ -771,7 +474,7 @@ const PersonMonitoringPage = (
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {visible(liverTests).map((test) => {
-              const value = person_data[test.key];
+              const value = row[test.key];
               const status = getStatusColor(value);
               const icon = getStatusIcon(value);
               if (!value || value === "انجام نشده") return null;
@@ -806,56 +509,56 @@ const PersonMonitoringPage = (
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {person_data["سونوگرافی شکم و لگن"] && (
+            {row["سونوگرافی شکم و لگن"] && (
               <div className="p-3 border rounded-lg">
                 <div className="text-sm font-medium mb-2">
                   سونوگرافی شکم و لگن
                 </div>
                 <Badge
-                  variant={getStatusColor(person_data["سونوگرافی شکم و لگن"])}
+                  variant={getStatusColor(row["سونوگرافی شکم و لگن"])}
                   className="text-xs"
                 >
-                  {person_data["سونوگرافی شکم و لگن"] != null
+                  {row["سونوگرافی شکم و لگن"] != null
                     ? formatCellValue(
-                        person_data["سونوگرافی شکم و لگن"],
+                        row["سونوگرافی شکم و لگن"],
                         locale
                       )
                     : "-"}
                 </Badge>
               </div>
             )}
-            {person_data["رادیوگرافی قفسه سینه"] && (
+            {row["رادیوگرافی قفسه سینه"] && (
               <div className="p-3 border rounded-lg">
                 <div className="text-sm font-medium mb-2">
                   رادیوگرافی قفسه سینه
                 </div>
                 <Badge
-                  variant={getStatusColor(person_data["رادیوگرافی قفسه سینه"])}
+                  variant={getStatusColor(row["رادیوگرافی قفسه سینه"])}
                   className="text-xs"
                 >
-                  {person_data["رادیوگرافی قفسه سینه"] != null
+                  {row["رادیوگرافی قفسه سینه"] != null
                     ? formatCellValue(
-                        person_data["رادیوگرافی قفسه سینه"],
+                        row["رادیوگرافی قفسه سینه"],
                         locale
                       )
                     : "-"}
                 </Badge>
               </div>
             )}
-            {person_data["تفسیر الکتروکاردیوگرام"] && (
+            {row["تفسیر الکتروکاردیوگرام"] && (
               <div className="p-3 border rounded-lg">
                 <div className="text-sm font-medium mb-2">
                   تفسیر الکتروکاردیوگرام
                 </div>
                 <Badge
                   variant={getStatusColor(
-                    person_data["تفسیر الکتروکاردیوگرام"]
+                    row["تفسیر الکتروکاردیوگرام"]
                   )}
                   className="text-xs"
                 >
-                  {person_data["تفسیر الکتروکاردیوگرام"] != null
+                  {row["تفسیر الکتروکاردیوگرام"] != null
                     ? formatCellValue(
-                        person_data["تفسیر الکتروکاردیوگرام"],
+                        row["تفسیر الکتروکاردیوگرام"],
                         locale
                       )
                     : "-"}
@@ -867,10 +570,10 @@ const PersonMonitoringPage = (
       </Card>
 
       {/* Gender-Specific Examinations */}
-      {(person_data["پستان"] ||
-        person_data["تناسلی مردان"] ||
-        person_data["معاینات بالینی زنان"] ||
-        person_data["پاپ اسمیر"]) && (
+      {(row["پستان"] ||
+        row["تناسلی مردان"] ||
+        row["معاینات بالینی زنان"] ||
+        row["پاپ اسمیر"]) && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -880,59 +583,59 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {person_data["پستان"] && (
+              {row["پستان"] && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">پستان</div>
                   <Badge
-                    variant={getStatusColor(person_data["پستان"])}
+                    variant={getStatusColor(row["پستان"])}
                     className="text-xs"
                   >
-                    {person_data["پستان"] != null
-                      ? formatCellValue(person_data["پستان"], locale)
+                    {row["پستان"] != null
+                      ? formatCellValue(row["پستان"], locale)
                       : "-"}
                   </Badge>
                 </div>
               )}
-              {person_data["تناسلی مردان"] && (
+              {row["تناسلی مردان"] && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">تناسلی مردان</div>
                   <Badge
-                    variant={getStatusColor(person_data["تناسلی مردان"])}
+                    variant={getStatusColor(row["تناسلی مردان"])}
                     className="text-xs"
                   >
-                    {person_data["تناسلی مردان"] != null
-                      ? formatCellValue(person_data["تناسلی مردان"], locale)
+                    {row["تناسلی مردان"] != null
+                      ? formatCellValue(row["تناسلی مردان"], locale)
                       : "-"}
                   </Badge>
                 </div>
               )}
-              {person_data["معاینات بالینی زنان"] && (
+              {row["معاینات بالینی زنان"] && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">
                     معاینات بالینی زنان
                   </div>
                   <Badge
-                    variant={getStatusColor(person_data["معاینات بالینی زنان"])}
+                    variant={getStatusColor(row["معاینات بالینی زنان"])}
                     className="text-xs"
                   >
-                    {person_data["معاینات بالینی زنان"] != null
+                    {row["معاینات بالینی زنان"] != null
                       ? formatCellValue(
-                          person_data["معاینات بالینی زنان"],
+                          row["معاینات بالینی زنان"],
                           locale
                         )
                       : "-"}
                   </Badge>
                 </div>
               )}
-              {person_data["پاپ اسمیر"] && (
+              {row["پاپ اسمیر"] && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">پاپ اسمیر</div>
                   <Badge
-                    variant={getStatusColor(person_data["پاپ اسمیر"])}
+                    variant={getStatusColor(row["پاپ اسمیر"])}
                     className="text-xs"
                   >
-                    {person_data["پاپ اسمیر"] != null
-                      ? formatCellValue(person_data["پاپ اسمیر"], locale)
+                    {row["پاپ اسمیر"] != null
+                      ? formatCellValue(row["پاپ اسمیر"], locale)
                       : "-"}
                   </Badge>
                 </div>
@@ -943,11 +646,11 @@ const PersonMonitoringPage = (
       )}
 
       {/* ENT and Dental */}
-      {(person_data["معاینه بالینی ENT"] ||
-        person_data["دهان و حلق و دندان"] ||
-        person_data["تعداد دندان پوسیده _ D"] ||
-        person_data["تعداد دندان غیرموجود _ M"] ||
-        person_data["تعداد دندان ترمیم شده _ F"]) && (
+      {(row["معاینه بالینی ENT"] ||
+        row["دهان و حلق و دندان"] ||
+        row["تعداد دندان پوسیده _ D"] ||
+        row["تعداد دندان غیرموجود _ M"] ||
+        row["تعداد دندان ترمیم شده _ F"]) && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -957,76 +660,76 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {person_data["معاینه بالینی ENT"] && (
+              {row["معاینه بالینی ENT"] && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">
                     معاینه بالینی ENT
                   </div>
                   <Badge
-                    variant={getStatusColor(person_data["معاینه بالینی ENT"])}
+                    variant={getStatusColor(row["معاینه بالینی ENT"])}
                     className="text-xs"
                   >
-                    {person_data["معاینه بالینی ENT"] != null
+                    {row["معاینه بالینی ENT"] != null
                       ? formatCellValue(
-                          person_data["معاینه بالینی ENT"],
+                          row["معاینه بالینی ENT"],
                           locale
                         )
                       : "-"}
                   </Badge>
                 </div>
               )}
-              {person_data["دهان و حلق و دندان"] && (
+              {row["دهان و حلق و دندان"] && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">
                     دهان و حلق و دندان
                   </div>
                   <Badge
-                    variant={getStatusColor(person_data["دهان و حلق و دندان"])}
+                    variant={getStatusColor(row["دهان و حلق و دندان"])}
                     className="text-xs"
                   >
-                    {person_data["دهان و حلق و دندان"] != null
+                    {row["دهان و حلق و دندان"] != null
                       ? formatCellValue(
-                          person_data["دهان و حلق و دندان"],
+                          row["دهان و حلق و دندان"],
                           locale
                         )
                       : "-"}
                   </Badge>
                 </div>
               )}
-              {person_data["تعداد دندان پوسیده _ D"] != null && (
+              {row["تعداد دندان پوسیده _ D"] != null && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">
                     تعداد دندان پوسیده (D)
                   </div>
                   <div className="text-sm">
                     {formatCellValue(
-                      person_data["تعداد دندان پوسیده _ D"],
+                      row["تعداد دندان پوسیده _ D"],
                       locale
                     )}
                   </div>
                 </div>
               )}
-              {person_data["تعداد دندان غیرموجود _ M"] != null && (
+              {row["تعداد دندان غیرموجود _ M"] != null && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">
                     تعداد دندان غیرموجود (M)
                   </div>
                   <div className="text-sm">
                     {formatCellValue(
-                      person_data["تعداد دندان غیرموجود _ M"],
+                      row["تعداد دندان غیرموجود _ M"],
                       locale
                     )}
                   </div>
                 </div>
               )}
-              {person_data["تعداد دندان ترمیم شده _ F"] != null && (
+              {row["تعداد دندان ترمیم شده _ F"] != null && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">
                     تعداد دندان ترمیم شده (F)
                   </div>
                   <div className="text-sm">
                     {formatCellValue(
-                      person_data["تعداد دندان ترمیم شده _ F"],
+                      row["تعداد دندان ترمیم شده _ F"],
                       locale
                     )}
                   </div>
@@ -1038,7 +741,7 @@ const PersonMonitoringPage = (
       )}
 
       {/* Cardiac-Specific */}
-      {(person_data["مشاوره قلب"] || person_data["بیماریهای عضلانی قلب"]) && (
+      {(row["مشاوره قلب"] || row["بیماریهای عضلانی قلب"]) && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -1048,33 +751,33 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {person_data["مشاوره قلب"] && (
+              {row["مشاوره قلب"] && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">مشاوره قلب</div>
                   <Badge
-                    variant={getStatusColor(person_data["مشاوره قلب"])}
+                    variant={getStatusColor(row["مشاوره قلب"])}
                     className="text-xs"
                   >
-                    {person_data["مشاوره قلب"] != null
-                      ? formatCellValue(person_data["مشاوره قلب"], locale)
+                    {row["مشاوره قلب"] != null
+                      ? formatCellValue(row["مشاوره قلب"], locale)
                       : "-"}
                   </Badge>
                 </div>
               )}
-              {person_data["بیماریهای عضلانی قلب"] && (
+              {row["بیماریهای عضلانی قلب"] && (
                 <div className="p-3 border rounded-lg">
                   <div className="text-sm font-medium mb-2">
                     بیماریهای عضلانی قلب
                   </div>
                   <Badge
                     variant={getStatusColor(
-                      person_data["بیماریهای عضلانی قلب"]
+                      row["بیماریهای عضلانی قلب"]
                     )}
                     className="text-xs"
                   >
-                    {person_data["بیماریهای عضلانی قلب"] != null
+                    {row["بیماریهای عضلانی قلب"] != null
                       ? formatCellValue(
-                          person_data["بیماریهای عضلانی قلب"],
+                          row["بیماریهای عضلانی قلب"],
                           locale
                         )
                       : "-"}
@@ -1087,7 +790,7 @@ const PersonMonitoringPage = (
       )}
 
       {/* Occupational Hazards */}
-      {person_data["عوامل زیان آورشغلی"] && (
+      {row["عوامل زیان آورشغلی"] && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -1097,7 +800,7 @@ const PersonMonitoringPage = (
           </CardHeader>
           <CardContent>
             <p className="text-sm whitespace-pre-line">
-              {formatCellValue(person_data["عوامل زیان آورشغلی"], locale)}
+              {formatCellValue(row["عوامل زیان آورشغلی"], locale)}
             </p>
           </CardContent>
         </Card>
@@ -1113,83 +816,83 @@ const PersonMonitoringPage = (
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
-            {person_data["نام پدر"] && (
+            {row["نام پدر"] && (
               <div>
                 <div className="text-muted-foreground mb-1">نام پدر</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["نام پدر"], locale)}
+                  {formatCellValue(row["نام پدر"], locale)}
                 </div>
               </div>
             )}
-            {person_data["سال"] != null && (
+            {row["سال"] != null && (
               <div>
                 <div className="text-muted-foreground mb-1">سال</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["سال"], locale)}
+                  {formatCellValue(row["سال"], locale)}
                 </div>
               </div>
             )}
-            {person_data["بيمه"] && (
+            {row["بيمه"] && (
               <div>
                 <div className="text-muted-foreground mb-1">بیمه</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["بيمه"], locale)}
+                  {formatCellValue(row["بيمه"], locale)}
                 </div>
               </div>
             )}
-            {person_data["اپراتور"] && (
+            {row["اپراتور"] && (
               <div>
                 <div className="text-muted-foreground mb-1">اپراتور</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["اپراتور"], locale)}
+                  {formatCellValue(row["اپراتور"], locale)}
                 </div>
               </div>
             )}
-            {person_data["نام صنعت"] && (
+            {row["نام صنعت"] && (
               <div>
                 <div className="text-muted-foreground mb-1">نام صنعت</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["نام صنعت"], locale)}
+                  {formatCellValue(row["نام صنعت"], locale)}
                 </div>
               </div>
             )}
-            {person_data["name_goroh"] && (
+            {row["name_goroh"] && (
               <div>
                 <div className="text-muted-foreground mb-1">نام گروه</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["name_goroh"], locale)}
+                  {formatCellValue(row["name_goroh"], locale)}
                 </div>
               </div>
             )}
-            {person_data["ID_SANAT"] != null && (
+            {row["ID_SANAT"] != null && (
               <div>
                 <div className="text-muted-foreground mb-1">ID صنعت</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["ID_SANAT"], locale)}
+                  {formatCellValue(row["ID_SANAT"], locale)}
                 </div>
               </div>
             )}
-            {person_data["ID_goroh"] != null && (
+            {row["ID_goroh"] != null && (
               <div>
                 <div className="text-muted-foreground mb-1">ID گروه</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["ID_goroh"], locale)}
+                  {formatCellValue(row["ID_goroh"], locale)}
                 </div>
               </div>
             )}
-            {person_data["ID_shobeh"] != null && (
+            {row["ID_shobeh"] != null && (
               <div>
                 <div className="text-muted-foreground mb-1">ID شعبه</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["ID_shobeh"], locale)}
+                  {formatCellValue(row["ID_shobeh"], locale)}
                 </div>
               </div>
             )}
-            {person_data["کدپایش"] != null && (
+            {row["کدپایش"] != null && (
               <div>
                 <div className="text-muted-foreground mb-1">کد پایش</div>
                 <div className="font-medium">
-                  {formatCellValue(person_data["کدپایش"], locale)}
+                  {formatCellValue(row["کدپایش"], locale)}
                 </div>
               </div>
             )}
@@ -1198,11 +901,11 @@ const PersonMonitoringPage = (
       </Card>
 
       {/* Medical History & Recommendations */}
-      {(person_data["تاریخچه قبلی پزشکی"] ||
-        person_data["توصیه های عمومی"] ||
-        person_data["اقدامات و مشاوره های موردنیاز"]) && (
+      {(row["تاریخچه قبلی پزشکی"] ||
+        row["توصیه های عمومی"] ||
+        row["اقدامات و مشاوره های موردنیاز"]) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {person_data["تاریخچه قبلی پزشکی"] && (
+          {row["تاریخچه قبلی پزشکی"] && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
@@ -1212,13 +915,13 @@ const PersonMonitoringPage = (
               </CardHeader>
               <CardContent>
                 <p className="text-sm whitespace-pre-line">
-                  {formatCellValue(person_data["تاریخچه قبلی پزشکی"], locale)}
+                  {formatCellValue(row["تاریخچه قبلی پزشکی"], locale)}
                 </p>
               </CardContent>
             </Card>
           )}
 
-          {person_data["توصیه های عمومی"] && (
+          {row["توصیه های عمومی"] && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
@@ -1228,13 +931,13 @@ const PersonMonitoringPage = (
               </CardHeader>
               <CardContent>
                 <p className="text-sm whitespace-pre-line">
-                  {formatCellValue(person_data["توصیه های عمومی"], locale)}
+                  {formatCellValue(row["توصیه های عمومی"], locale)}
                 </p>
               </CardContent>
             </Card>
           )}
 
-          {person_data["اقدامات و مشاوره های موردنیاز"] && (
+          {row["اقدامات و مشاوره های موردنیاز"] && (
             <Card className="md:col-span-2">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
@@ -1245,7 +948,7 @@ const PersonMonitoringPage = (
               <CardContent>
                 <p className="text-sm whitespace-pre-line">
                   {formatCellValue(
-                    person_data["اقدامات و مشاوره های موردنیاز"],
+                    row["اقدامات و مشاوره های موردنیاز"],
                     locale
                   )}
                 </p>
@@ -1254,16 +957,6 @@ const PersonMonitoringPage = (
           )}
         </div>
       )}
-
-
-      <EhrTrendDialog
-        series={selectedSeries}
-        onOpenChange={(open) => {
-          if (!open) setSelectedSeries(null);
-        }}
-      />
     </div>
   );
 };
-
-export default PersonMonitoringPage;
