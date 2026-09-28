@@ -1195,7 +1195,7 @@ In `/console/monitorings.Builder`: `NewTitle` → "Define a new monitoring" / "�
   - `UploadRowsTable({ uploadId: number; personHref: (nationalId: string) => string })`
   - `SearchPersonnelSheet` gains a required `personHref: (nationalId: string) => string` in both step folders, replacing the hard-coded person URLs (step-1 sheet lines 102 and 179; step-2 sheet lines 105 and 189).
 
-- [ ] **Step 1: Route context.** Change `MonitoringIdRouteProvider` to:
+- [x] **Step 1: Route context.** Change `MonitoringIdRouteProvider` to:
 
 ```tsx
 export const MonitoringIdRouteProvider: React.FC<React.PropsWithChildren<{ uploadId?: number }>> = ({
@@ -1213,7 +1213,7 @@ export const MonitoringIdRouteProvider: React.FC<React.PropsWithChildren<{ uploa
 };
 ```
 
-- [ ] **Step 2: Move and adapt Step 1.** `git mv` the page file to `C/monitorings/_reports/step-1-report.tsx`, then:
+- [x] **Step 2: Move and adapt Step 1.** `git mv` the page file to `C/monitorings/_reports/step-1-report.tsx`, then:
   - Fix relative imports: `./route-context` → `@/app/[locale]/(authenticated)/console/saderat-bank-health-monitoring/step-1/[id]/route-context`; `../../_report/report-frame` is dropped (see below); `./_search-personnel-sheet/sheet` → the same absolute folder path.
   - Rename `const MonitoringPage = (props) => {…}` to `const Step1ReportBody = ({ personHref }: { personHref: (nid: string) => string }) => {…}`, and delete `const { id: monitoring_id } = React.use(props.params);`. Wherever `monitoring_id` was used (the sheet's `monitoringId`), use `monitoring_query.data?.id ?? 0`.
   - Replace each `<ReportFrame title=…>…</ReportFrame>` state wrapper with `<div className="space-y-6">…</div>`. Replace the main `<ReportFrame title=… actions=…>` with `<div className="space-y-6"><div className="flex justify-end">{actions}</div>…</div>`, keeping the search button. The campaign page owns the h1 now.
@@ -1230,17 +1230,17 @@ export const Step1Report = ({ uploadId, personHref }: { uploadId: number; person
 
 Remove `export default`.
 
-- [ ] **Step 3: Move and adapt Step 2** the same way into `step-2-report.tsx`:
+- [x] **Step 3: Move and adapt Step 2** the same way into `step-2-report.tsx`:
   - `Step2MonitoringPage(props)` → `Step2Report({ uploadId, personHref })`, using `uploadId` where it used `parseInt(id)`.
   - Drop the `ReportFrame` wrappers the same way; the record count moves into the actions row as muted text.
   - Pass `personHref` to its sheet.
 
-- [ ] **Step 4: Sheets.** In both `sheet.tsx` files add `personHref: (nationalId: string) => string;` to the props type, and replace each template-literal person URL with `personHref(nationalId)`.
+- [x] **Step 4: Sheets.** In both `sheet.tsx` files add `personHref: (nationalId: string) => string;` to the props type, and replace each template-literal person URL with `personHref(nationalId)`.
   - **Never link a row whose ID is not valid.** Where the Step 1 desktop table builds the link from `row.original["personel.کد ملی"]` unchecked (a blank cell became `/null`, verified 2026-09-28), compute `const nationalId = fullNationalId(row.original["personel.کد ملی"] as string | number | null)`. Render the link only when `isNationalId(nationalId)`, and plain text otherwise.
   - Apply the same rule to the mobile lists (`href: isNationalId(id) ? personHref(id) : null`), the Step 2 sheet and `UploadRowsTable`.
   - Also show `""` instead of the literal `null`/`undefined` for blank names in the Step 1 desktop table (`String(info.getValue() ?? "")`).
 
-- [ ] **Step 5: Thin wrappers**, so the old routes still build until Task 12. `step-1/[id]/page.tsx`:
+- [x] **Step 5: Thin wrappers**, so the old routes still build until Task 12. `step-1/[id]/page.tsx`:
 
 ```tsx
 "use client";
@@ -1255,7 +1255,7 @@ export default function Page(props: PageProps<"/[locale]/console/saderat-bank-he
 
 Write the step-2 wrapper the same way with `Step2Report` and `step-2`.
 
-- [ ] **Step 6: Generic rows table** in `rows-table.tsx`:
+- [x] **Step 6: Generic rows table** in `rows-table.tsx`:
 
 ```tsx
 "use client";
@@ -1322,9 +1322,9 @@ export const UploadRowsTable = ({ uploadId, personHref }: { uploadId: number; pe
 
 `formatCellValue(value: string, locale)` takes a string; the code above always passes `String(...)`, and the row count uses `localeDigits`.
 
-- [ ] **Step 7: Verify.** `npx tsc --noEmit`; the lint comparison for every moved or changed file (compare the moved reports against the old page files: `git show HEAD:<old path> | npx eslint --stdin --stdin-filename <new path>`; Step 1 has 25 existing `react-hooks/static-components` errors, which must stay 25); the old routes `/fa/console/saderat-bank-health-monitoring/step-2/<id>` still render charts in the browser.
+- [x] **Step 7: Verify.** `npx tsc --noEmit`; the lint comparison for every moved or changed file (compare the moved reports against the old page files: `git show HEAD:<old path> | npx eslint --stdin --stdin-filename <new path>`; Step 1 has 25 existing `react-hooks/static-components` errors, which must stay 25); the old routes `/fa/console/saderat-bank-health-monitoring/step-2/<id>` still render charts in the browser.
 
-- [ ] **Step 8: Commit** `refactor: step reports and the rows table mount by upload id`
+- [x] **Step 8: Commit** `refactor: step reports and the rows table mount by upload id`
 
 ### Task 11: Campaign page
 

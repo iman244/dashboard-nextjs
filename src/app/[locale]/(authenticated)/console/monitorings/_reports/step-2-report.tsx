@@ -1,0 +1,179 @@
+"use client";
+
+import { LoadingState } from "@/components/app/loading-state";
+
+import React from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { AlertCircle, Inbox, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
+import { localeDigits } from "@/lib/utils";
+import { useRetrieve_SBHM_API } from "@/data/saderat-bank-health-monitoring/api/retrieve";
+import {
+  SBHM_DETAIL_PATH,
+  type SBHM_Step2Record,
+} from "@/data/saderat-bank-health-monitoring/types";
+import { STEP2_CHART_SECTIONS } from "@/app/[locale]/(authenticated)/console/saderat-bank-health-monitoring/step-2/[id]/_charts/config";
+import { DistributionChart } from "@/app/[locale]/(authenticated)/console/saderat-bank-health-monitoring/step-2/[id]/_charts/distribution-chart";
+import { useStep2Report } from "@/app/[locale]/(authenticated)/console/saderat-bank-health-monitoring/step-2/[id]/_data/use-step2-report";
+import {
+  SearchPersonnelSheet,
+  type PersonnelFilter,
+} from "@/app/[locale]/(authenticated)/console/saderat-bank-health-monitoring/step-2/[id]/_search-personnel-sheet/sheet";
+
+// The campaign page owns the h1 now, so the report renders no header of its own.
+export const Step2Report = ({
+  uploadId,
+  personHref,
+}: {
+  uploadId: number;
+  personHref: (nid: string) => string;
+}) => {
+  const t = useTranslations(
+    "/console/saderat-bank-health-monitoring.SaderatBankHealthMonitoringPage"
+  );
+  const tLoading = useTranslations("common.Loading");
+  const tReport = useTranslations(
+    "/console/saderat-bank-health-monitoring.Step2Report"
+  );
+  const locale = useLocale();
+
+  const { data, isPending, error } = useRetrieve_SBHM_API({
+    input: { pathVariables: { id: uploadId } },
+  });
+
+  // SBHM_RetrieveSerializer still types `json` as step_1 rows (see the note in
+  // types.ts). The `data.type` check below is what makes this reinterpretation
+  // safe; it disappears once that type becomes SBHM_Retrieve_ByType.
+  const records = React.useMemo(
+    () =>
+      data?.type === "step_2"
+        ? (data.json as unknown as SBHM_Step2Record[])
+        : undefined,
+    [data]
+  );
+
+  const report = useStep2Report(records);
+
+  // Clicking a bar drills into the people behind it, matching step-1.
+  const [activeFilter, setActiveFilter] = React.useState<PersonnelFilter>();
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+
+  const showPersonnelFor = React.useCallback(
+    (field: keyof SBHM_Step2Record, value: string, chartTitle: string) => {
+      setActiveFilter({
+        // the chart counts String(record[field]), so match the same way
+        filterFn: (record) => String(record[field] ?? "") === value,
+        description: `${chartTitle}: ${value}`,
+      });
+      setIsSheetOpen(true);
+    },
+    []
+  );
+
+  if (isPending) {
+    return (
+      <LoadingState label={tLoading("report")} />
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
+          <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+          <div className="flex flex-col gap-1">
+            <p className="font-semibold text-destructive">{t("ErrorTitle")}</p>
+            <p className="text-sm text-muted-foreground">{error.message}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // The retrieve endpoint is shared between steps, so a step_1 id resolves here
+  // happily and would render nothing recognisable. Point it at the right view.
+  if (data.type !== "step_2") {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col items-center justify-center py-12 gap-3">
+          <AlertCircle className="h-10 w-10 text-muted-foreground" />
+          <p className="text-lg font-semibold">{t("WrongStepTitle")}</p>
+          <Button asChild variant="outline">
+            <Link href={SBHM_DETAIL_PATH(data.type, data.id)}>
+              {t("WrongStepAction")}
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!report) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col items-center justify-center py-12 gap-3">
+          <Inbox className="h-12 w-12 text-muted-foreground" />
+          <p className="text-lg font-semibold">{t("EmptyStateTitle")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("EmptyStateDescriptionDetail")}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    // The embedding page owns the h1; the sections below are h2s.
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-muted-foreground">
+          {tReport("recordCount", {
+            count: localeDigits(report.totalRecords, locale),
+          })}
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setActiveFilter(undefined);
+            setIsSheetOpen(true);
+          }}
+        >
+          <Users className="h-4 w-4 ms-2" />
+          {t("SearchPersonnel")}
+        </Button>
+      </div>
+      {STEP2_CHART_SECTIONS.map((section) => (
+        <section key={section.titleKey} className="space-y-3">
+          {/* h2, not h3: PageHeader now owns the page h1, so sections sit one level
+              below it rather than skipping a level (#39). */}
+          <h2 className="text-lg font-semibold">{tReport(section.titleKey)}</h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {section.charts.map((chart) => (
+              <DistributionChart
+                key={chart.field}
+                title={tReport(chart.titleKey)}
+                data={report.distributions[chart.field] ?? []}
+                onBarClick={(name) =>
+                  showPersonnelFor(chart.field, name, tReport(chart.titleKey))
+                }
+              />
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <SearchPersonnelSheet
+        open={isSheetOpen}
+        onOpenChange={(open) => {
+          setIsSheetOpen(open);
+          if (!open) setActiveFilter(undefined);
+        }}
+        data={records ?? []}
+        personHref={personHref}
+        filter={activeFilter}
+      />
+    </div>
+  );
+};

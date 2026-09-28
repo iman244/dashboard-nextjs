@@ -27,6 +27,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { PersonnelList } from "../../../_personnel/personnel-list";
+import { fullNationalId, isNationalId } from "@/lib/national-id";
 
 const columnHelper =
   createColumnHelper<AppTableFeatures, SBHM_RetrieveSerializer["json"][number]>();
@@ -35,7 +36,8 @@ interface SearchPersonnelSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   data: SBHM_RetrieveSerializer["json"];
-  monitoringId: string;
+  /** The person's page for a (ten-digit) national ID. */
+  personHref: (nationalId: string) => string;
   filterFn?: (record: SBHM_RetrieveSerializer["json"][number]) => boolean;
   filterDescription?: string;
 }
@@ -44,7 +46,7 @@ export function SearchPersonnelSheet({
   open,
   onOpenChange,
   data,
-  monitoringId,
+  personHref,
   filterFn,
   filterDescription,
 }: SearchPersonnelSheetProps) {
@@ -79,11 +81,11 @@ export function SearchPersonnelSheet({
     columns: columnHelper.columns([
       columnHelper.accessor("نام", {
         header: "نام",
-        cell: (info) => `${info.getValue()}`,
+        cell: (info) => String(info.getValue() ?? ""),
       }),
       columnHelper.accessor("نام خانوادگی", {
         header: "نام خانوادگی",
-        cell: (info) => `${info.getValue()}`,
+        cell: (info) => String(info.getValue() ?? ""),
       }),
       columnHelper.accessor((row) => row["personel.کد ملی"], {
         id: "personel.کد ملی",
@@ -95,14 +97,21 @@ export function SearchPersonnelSheet({
       }),
       columnHelper.display({
         header: tDictionary("Actions"),
-        cell: ({ row }) => (
-          <RowAction
-            icon={FileUser}
-            label={tDictionary("PatientRecord")}
-            href={`/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${row.original["personel.کد ملی"]}`}
-            onClick={() => onOpenChange(false)}
-          />
-        ),
+        cell: ({ row }) => {
+          const nationalId = fullNationalId(
+            row.original["personel.کد ملی"] as string | number | null
+          );
+          // a blank or malformed ID used to link to `/null`; such a row has nowhere to go
+          if (!isNationalId(nationalId)) return null;
+          return (
+            <RowAction
+              icon={FileUser}
+              label={tDictionary("PatientRecord")}
+              href={personHref(nationalId)}
+              onClick={() => onOpenChange(false)}
+            />
+          );
+        },
       }),
     ]),
     data: filteredData,
@@ -172,13 +181,12 @@ export function SearchPersonnelSheet({
             <PersonnelList
               items={table.getRowModel().rows.map((row) => {
                 const nationalId = String(row.original["personel.کد ملی"] ?? "");
+                const id = fullNationalId(nationalId);
                 return {
                   key: row.id,
                   name: `${row.original["نام"] ?? ""} ${row.original["نام خانوادگی"] ?? ""}`.trim(),
                   nationalId: localeDigits(nationalId, locale),
-                  href: nationalId
-                    ? `/console/saderat-bank-health-monitoring/step-1/${monitoringId}/${nationalId}`
-                    : null,
+                  href: isNationalId(id) ? personHref(id) : null,
                 };
               })}
               openLabel={tDictionary("PatientRecord")}

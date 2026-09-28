@@ -719,6 +719,13 @@
       "UploadsFailed": "{n} image(s) failed to upload. Nothing was saved — retry or remove them.",
       "StorageUnreachable": "Storage could not be reached.",
       "NationalIdLength": "A national ID has 10 digits."
+    },
+    "Campaign": {
+      "loadingRows": "Loading rows…",
+      "rowsError": "The rows could not be loaded.",
+      "noRows": "This upload has no rows.",
+      "searchRows": "Search rows",
+      "rowCount": "{shown} of {total} rows"
     }
   },
   "/patient/sign-in": {

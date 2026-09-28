@@ -719,6 +719,13 @@
       "UploadsFailed": "آپلود {n} تصویر انجام نشد. چیزی ذخیره نشد؛ دوباره تلاش کنید یا آن‌ها را حذف کنید.",
       "StorageUnreachable": "اتصال به فضای ذخیره‌سازی برقرار نشد.",
       "NationalIdLength": "کد ملی باید ۱۰ رقم باشد."
+    },
+    "Campaign": {
+      "loadingRows": "در حال بارگذاری ردیف‌ها…",
+      "rowsError": "ردیف‌ها بارگذاری نشد.",
+      "noRows": "این فایل ردیفی ندارد.",
+      "searchRows": "جستجو در ردیف‌ها",
+      "rowCount": "{shown} از {total} ردیف"
     }
   },
   "/patient/sign-in": {
