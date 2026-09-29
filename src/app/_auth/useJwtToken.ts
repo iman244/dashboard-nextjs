@@ -6,6 +6,7 @@ import { jwt_refresh, JWT_REFRESH_KEY } from "@/data/user/auth/jwt_refresh";
 import { JwtCreateApiResponse } from "@/data/user/auth";
 import { useLoadToken } from "../_side-effects/load_token";
 import { useRefreshTokenSetup } from "../_side-effects/refresh_token_setup";
+import { SESSION_EXPIRED_EVENT } from "@/lib/api/django/apiInstance";
 
 export const useJwtToken = ({
   setAuthenticationStatus,
@@ -80,6 +81,13 @@ export const useJwtToken = ({
 
   // refresh token setup side effect
   useRefreshTokenSetup({ actions: { addFailedQueries, addFailedMutations } });
+
+  // A request made outside React Query (the image uploads' presign) found
+  // the refresh token refused; the session is over just the same.
+  React.useEffect(() => {
+    window.addEventListener(SESSION_EXPIRED_EVENT, unauthenticateUser);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, unauthenticateUser);
+  }, [unauthenticateUser]);
 
   // actions to be passed to load token side effect
   const saveAccessToken = React.useCallback(

@@ -11,7 +11,10 @@ type Options = {
   /** The refresh endpoint, relative to the instance's baseURL. */
   path: string;
   getRefresh: () => string | null;
+  getAccess: () => string | null;
   setAccess: (access: string) => void;
+  /** The session is over: the refresh token is missing, expired or refused. */
+  onRefreshFailed: () => void;
 };
 
 /**
@@ -24,9 +27,11 @@ type Options = {
  * expired mid-form. Here every authorized request gets the same treatment.
  *
  * Requests that fail together share one refresh: several uploads, or a page's
- * parallel queries, must not each spend the refresh token. If the refresh
- * fails, the original 401 is returned, and the React Query path signs the
- * user out as before.
+ * parallel queries, must not each spend the refresh token, and one sent with
+ * a token that has since been replaced just goes again with the new one. If
+ * the refresh fails, the original 401 is returned and `onRefreshFailed` ends
+ * the session: a direct call's failure never reaches the React Query path
+ * that would otherwise sign the user out.
  */
 export const refreshOn401 = (instance: AxiosInstance, options: Options) => {
   let inFlight: Promise<void> | null = null;
@@ -39,10 +44,22 @@ export const refreshOn401 = (instance: AxiosInstance, options: Options) => {
         refresh: token,
       });
       options.setAccess(response.data.access);
-    })().finally(() => {
-      inFlight = null;
-    });
+    })()
+      .catch((error) => {
+        options.onRefreshFailed();
+        throw error;
+      })
+      .finally(() => {
+        inFlight = null;
+      });
     return inFlight;
+  };
+
+  /** Whether the request went out with a token that has since been replaced. */
+  const sentWithOldToken = (config: InternalAxiosRequestConfig) => {
+    const access = options.getAccess();
+    const sent = String(config.headers?.Authorization ?? "");
+    return Boolean(access) && !sent.endsWith(` ${access}`);
   };
 
   instance.interceptors.response.use(undefined, async (error) => {
@@ -57,10 +74,12 @@ export const refreshOn401 = (instance: AxiosInstance, options: Options) => {
     ) {
       throw error;
     }
-    try {
-      await refresh();
-    } catch {
-      throw error;
+    if (!sentWithOldToken(config)) {
+      try {
+        await refresh();
+      } catch {
+        throw error;
+      }
     }
     // The request interceptor reads the new access token as it re-sends.
     return instance({ ...config, refreshedAfter401: true });

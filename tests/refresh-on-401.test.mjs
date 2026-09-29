@@ -33,12 +33,15 @@ const setup = ({ refreshWorks = true } = {}) => {
     if (config.headers.Authorization === `JWT ${server.access}`) return reply(200, 'ok');
     return reply(401, { code: 'token_not_valid' });
   };
+  const signals = { signedOut: 0 };
   refreshOn401(instance, {
     path: '/auth/jwt/refresh/',
     getRefresh: () => store.refresh,
+    getAccess: () => store.access,
     setAccess: (access) => { store.access = access; },
+    onRefreshFailed: () => { signals.signedOut += 1; },
   });
-  return { instance, server, store };
+  return { instance, server, store, signals };
 };
 
 test('an expired access token is refreshed and the request retried', async () => {
@@ -102,4 +105,28 @@ test('with no refresh token it gives back the 401 without calling refresh', asyn
     (error) => error.response?.status === 401
   );
   assert.equal(server.refreshes, 0);
+});
+
+test('a failed refresh signs the user out, once', async () => {
+  const { instance, signals } = setup({ refreshWorks: false });
+  await Promise.allSettled(
+    ['/a/', '/b/'].map((url) => instance.post(url, {}, { withAuthorization: true }))
+  );
+  assert.equal(signals.signedOut, 1);
+});
+
+test('a 401 arriving after the refresh finished retries without refreshing again', async () => {
+  const { instance, server, store } = setup();
+  // Sent with the old token, answered only after another request refreshed.
+  const late = instance.post('/late/', {}, {
+    withAuthorization: true,
+    adapter: async (config) => {
+      await new Promise((resolve) => setTimeout(resolve, 60));
+      return instance.defaults.adapter(config);
+    },
+  });
+  await instance.post('/early/', {}, { withAuthorization: true });
+  assert.equal(store.access, 'fresh');
+  assert.equal((await late).data, 'ok');
+  assert.equal(server.refreshes, 1);
 });
