@@ -75,12 +75,27 @@ jobs:
     # Only pushed tags deploy. Branch pushes, PRs and manual runs check only.
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    # A release-candidate tag (1.2.0-rc.1) rehearses on staging; the plain tag
+    # on the same commit (1.2.0) promotes it to production. See the platform
+    # README, "Staging".
+    #
+    # Staging's own values are the STAGING_* secrets, sent under the plain
+    # names, written `staging && STAGING_X || !staging && X || ''`. GitHub's
+    # `a && b || c` returns c when b is empty, so the short form would send
+    # production's value whenever a staging secret is missing; this sends an
+    # empty one, which deploy.sh refuses. The other NEXT_PUBLIC_* are shared
+    # with production.
+    env:
+      DEPLOY_ENV: ${{ contains(github.ref_name, '-rc.') && 'staging' || 'production' }}
     steps:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.5
         env:
           DEPLOY_SHA: ${{ github.sha }}
-          NEXT_PUBLIC_DJANGO_ADDRESS: ${{ secrets.NEXT_PUBLIC_DJANGO_ADDRESS }}
+          NEXT_PUBLIC_DJANGO_ADDRESS: ${{ env.DEPLOY_ENV == 'staging' && secrets.STAGING_NEXT_PUBLIC_DJANGO_ADDRESS || env.DEPLOY_ENV != 'staging' && secrets.NEXT_PUBLIC_DJANGO_ADDRESS || '' }}
+          # Production keeps its hostname in the server's .env and deploy.sh
+          # ignores this there; a staging run writes it into .env.staging.
+          WEB_HOST: ${{ env.DEPLOY_ENV == 'staging' && secrets.STAGING_WEB_HOST || '' }}
           NEXT_PUBLIC_DJANGO_API_PATH: ${{ secrets.NEXT_PUBLIC_DJANGO_API_PATH }}
           NEXT_PUBLIC_5_160_115_210_ADDRESS: ${{ secrets.NEXT_PUBLIC_5_160_115_210_ADDRESS }}
           NEXT_PUBLIC_5_160_115_210_API_PATH: ${{ secrets.NEXT_PUBLIC_5_160_115_210_API_PATH }}
@@ -96,7 +111,7 @@ jobs:
           # Forwarded into the remote shell, where deploy.sh writes them into
           # /app/.env. build.sh reads them from there as --build-arg values,
           # which is the only way NEXT_PUBLIC_* reaches the browser bundle.
-          envs: DEPLOY_SHA,NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME,NEXT_PUBLIC_PATIENT_SESSION_KEY
+          envs: DEPLOY_ENV,DEPLOY_SHA,WEB_HOST,NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME,NEXT_PUBLIC_PATIENT_SESSION_KEY
           # A full `npm install` and `next build` on a two-core VM.
           command_timeout: 40m
           # /app is a clone of mainreport-platform, where deploy.sh lives. Nothing
@@ -109,4 +124,4 @@ jobs:
             git -C /app fetch --quiet origin main
             git -C /app reset --quiet --hard origin/main
             chmod +x /app/deploy.sh
-            /app/deploy.sh nextjs
+            /app/deploy.sh --env "$DEPLOY_ENV" nextjs
