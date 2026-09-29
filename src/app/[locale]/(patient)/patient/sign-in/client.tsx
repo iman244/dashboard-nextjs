@@ -7,7 +7,6 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useDirection } from "@/lib/use-direction";
-import { digitsFaToEn } from "@persian-tools/persian-tools";
 import { localeDigits } from "@/lib/utils";
 import {
   Form,
@@ -24,6 +23,7 @@ import { DJANGO_ADDRESS, DJANGO_API_PATH } from "@/settings";
 import { useRouter } from "@/i18n/navigation";
 import { AppRoutes } from "@/app/paths";
 import { usePatientSession } from "../../provider";
+import { fullNationalId } from "@/lib/national-id";
 
 export function Client() {
   const t = useTranslations("/patient/sign-in.SignInPage");
@@ -50,7 +50,7 @@ export function Client() {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ nationalId, password }: FormData) => authenticatePatient(DJANGO_ADDRESS + DJANGO_API_PATH, digitsFaToEn(nationalId).trim(), password),
+    mutationFn: ({ nationalId, password }: FormData) => authenticatePatient(DJANGO_ADDRESS + DJANGO_API_PATH, fullNationalId(nationalId), password),
     gcTime: 0,
   });
   const [redirecting, setRedirecting] = React.useState(false);
@@ -59,7 +59,7 @@ export function Client() {
     setFormError(null);
     mutate(data, {
       onSuccess: (tokens) => {
-        signIn(tokens, digitsFaToEn(data.nationalId).trim());
+        signIn(tokens, fullNationalId(data.nationalId));
         setRedirecting(true);
         router.replace(AppRoutes.PATIENT_RECORDS);
       },

@@ -27,7 +27,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { PersonnelList } from "../../../_personnel/personnel-list";
-import { fullNationalId, isNationalId } from "@/lib/national-id";
+import { fullNationalId, isNationalId, nationalIdMatches } from "@/lib/national-id";
 
 const columnHelper =
   createColumnHelper<AppTableFeatures, SBHM_RetrieveSerializer["json"][number]>();
@@ -90,10 +90,9 @@ export function SearchPersonnelSheet({
       columnHelper.accessor((row) => row["personel.کد ملی"], {
         id: "personel.کد ملی",
         header: "کد ملی",
-        cell: (info) => {
-          const value = String(info.getValue() || "");
-          return localeDigits(value, locale);
-        },
+        // Older uploads hold the id as a number, without its leading zeros.
+        cell: (info) =>
+          localeDigits(fullNationalId(info.getValue() as string | number | null), locale),
       }),
       columnHelper.display({
         header: tDictionary("Actions"),
@@ -118,15 +117,15 @@ export function SearchPersonnelSheet({
     globalFilterFn: (row, columnId, value) => {
       const firstName = String(row.getValue("نام") || "").toLowerCase();
       const lastName = String(row.getValue("نام خانوادگی") || "").toLowerCase();
-      const nationalId = String(
-        row.original["personel.کد ملی"] || ""
-      ).toLowerCase();
       const searchValue = value.toLowerCase();
 
       return (
         firstName.includes(searchValue) ||
         lastName.includes(searchValue) ||
-        nationalId.includes(searchValue)
+        nationalIdMatches(
+          row.original["personel.کد ملی"] as string | number | null,
+          value
+        )
       );
     },
     state: {
@@ -180,12 +179,13 @@ export function SearchPersonnelSheet({
           <div className="sm:hidden">
             <PersonnelList
               items={table.getRowModel().rows.map((row) => {
-                const nationalId = String(row.original["personel.کد ملی"] ?? "");
-                const id = fullNationalId(nationalId);
+                const id = fullNationalId(
+                  row.original["personel.کد ملی"] as string | number | null
+                );
                 return {
                   key: row.id,
                   name: `${row.original["نام"] ?? ""} ${row.original["نام خانوادگی"] ?? ""}`.trim(),
-                  nationalId: localeDigits(nationalId, locale),
+                  nationalId: localeDigits(id, locale),
                   href: isNationalId(id) ? personHref(id) : null,
                 };
               })}

@@ -20,7 +20,7 @@ import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { localeDigits } from "@/lib/utils";
 import type { SBHM_Step2Record } from "@/data/saderat-bank-health-monitoring/types";
 import { PersonnelList } from "../../../_personnel/personnel-list";
-import { fullNationalId, isNationalId } from "@/lib/national-id";
+import { fullNationalId, isNationalId, nationalIdMatches } from "@/lib/national-id";
 
 const columnHelper = createColumnHelper<
   typeof appTableFeatures,
@@ -91,7 +91,9 @@ export function SearchPersonnelSheet({
         }),
         columnHelper.accessor("کد ملی", {
           header: "کد ملی",
-          cell: (info) => localeDigits(String(info.getValue() ?? ""), locale),
+          // Step 2's Excel keeps the id as a number, without its leading zeros.
+          cell: (info) =>
+            localeDigits(fullNationalId(info.getValue() as string | number | null), locale),
         }),
         columnHelper.display({
           id: "actions",
@@ -128,7 +130,10 @@ export function SearchPersonnelSheet({
       ]
         .map((v) => String(v ?? "").toLowerCase())
         .join(" ");
-      return haystack.includes(String(value).toLowerCase());
+      return (
+        haystack.includes(String(value).toLowerCase()) ||
+        nationalIdMatches(row.original["کد ملی"] as string | number | null, String(value))
+      );
     },
     state: { globalFilter: searchTerm },
     onGlobalFilterChange: setSearchTerm,
@@ -185,12 +190,11 @@ export function SearchPersonnelSheet({
         <div className="flex-1 overflow-auto sm:hidden">
           <PersonnelList
             items={table.getRowModel().rows.map((row) => {
-              const nationalId = String(row.original["کد ملی"] ?? "");
-              const id = fullNationalId(nationalId);
+              const id = fullNationalId(row.original["کد ملی"] as string | number | null);
               return {
                 key: row.id,
                 name: `${row.original["نام"] ?? ""} ${row.original["نام خانوادگی"] ?? ""}`.trim(),
-                nationalId: localeDigits(nationalId, locale),
+                nationalId: localeDigits(id, locale),
                 href: isNationalId(id) ? personHref(id) : null,
               };
             })}

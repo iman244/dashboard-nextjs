@@ -9,12 +9,12 @@ import {
   EHRByNationalNumberApiResponse,
 } from "@/data/electronic health record/api/EHR-by-national-number";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import { digitsFaToEn } from "@persian-tools/persian-tools";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import { mobile_laboratory_by_national_number, MobileLaboratoryByNationalNumberApiResponse, PDD_MOBILE_LABORATORY_BY_NATIONAL_NUMBER_KEY } from "@/data/electronic health record/api/mobile-laboratory-by-national-number";
 import { mobile_xray_by_national_number, MobileXRayByNationalNumberApiResponse, PDD_MOBILE_XRAY_BY_NATIONAL_NUMBER_KEY } from "@/data/electronic health record/api/mobile-xray-by-national-number";
 import { mobile_number_by_national_number, MobileNumberByNationalNumberApiResponse, PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY } from "@/data/electronic health record/api/mobile-number-by-national-number";
 import { toast } from "sonner";
+import { fullNationalId } from "@/lib/national-id";
 
 export type ElectronicHealthRecordContextProps = {
   mobileLaboratoryByNationalNumber_m: UseMutationResult<
@@ -124,7 +124,7 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const callMutation = React.useCallback(() => {
     mutate({
       params: {
-        nationalNumber: digitsFaToEn(filters.nationalNumber || ""),
+        nationalNumber: fullNationalId(filters.nationalNumber),
         fromDate: filters.dateRange?.from
           ? format(filters.dateRange.from, "yyyy/MM/dd")
           : "",
@@ -140,7 +140,7 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   React.useEffect(() => {
     mutate({
       params: {
-        nationalNumber: digitsFaToEn(filters.nationalNumber || ""),
+        nationalNumber: fullNationalId(filters.nationalNumber),
         fromDate: filters.dateRange?.from
           ? format(filters.dateRange.from, "yyyy/MM/dd")
           : "",
