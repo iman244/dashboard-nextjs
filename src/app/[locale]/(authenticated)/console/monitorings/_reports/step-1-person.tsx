@@ -518,14 +518,16 @@ export const Step1PersonSections = ({ row }: { row: MonitoringData }) => {
 
       {/* Filters the test sections below (lab, clinical, urine, liver), so it
           sits at their head, not in the summary above. */}
-      <label className="flex items-center justify-end gap-2 text-sm">
-        <Switch
-          checked={abnormalOnly}
-          onCheckedChange={setAbnormalOnly}
-          aria-label={t("ShowAbnormalOnly")}
-        />
-        {t("ShowAbnormalOnly")}
-      </label>
+      <div className="flex justify-end">
+        <label className="inline-flex items-center gap-2 text-sm">
+          <Switch
+            checked={abnormalOnly}
+            onCheckedChange={setAbnormalOnly}
+            aria-label={t("ShowAbnormalOnly")}
+          />
+          {t("ShowAbnormalOnly")}
+        </label>
+      </div>
 
       {/* Lab Results Summary */}
       <Card>
