@@ -191,6 +191,9 @@
       "OpenImage": "Open image {name}",
       "Position": "{index} of {count}",
       "Previous": "Previous image",
+      "ZoomIn": "Zoom in",
+      "ZoomOut": "Zoom out",
+      "ResetZoom": "Reset zoom",
       "Next": "Next image",
       "OpenOriginal": "Open original",
       "PatientEmpty": "No monitoring records have been added yet. Contact your care team if you expected a record."
