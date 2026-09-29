@@ -64,6 +64,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/patient/jwt/create/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["auth_patient_jwt_create_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/users/": {
         parameters: {
             query?: never;
@@ -434,14 +450,55 @@ export interface paths {
         };
         /**
          * A patient's records across every monitoring
-         * @description Everything recorded for one patient, for display.
+         * @description Lookup across monitorings for a supplied national ID.
          *
-         *     Open to anonymous callers because the patient portal has no sign-in of
-         *     its own (the upstream EHR it fronts takes no credentials either). The
-         *     national ID is therefore the only key: this never answers without a
-         *     well-formed one, and anonymous callers are throttled.
+         *     Any signed-in console user reads; patient accounts get 403.
          */
         get: operations["saderat_bank_health_monitoring_patient_records_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/saderat-bank-health-monitoring/patient-records/me/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The authenticated patient’s own monitoring records */
+        get: operations["saderat_bank_health_monitoring_patient_records_me_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/saderat-bank-health-monitoring/person-reports/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Excel uploads that mention a national ID
+         * @description Which Excel uploads contain rows for one person.
+         *
+         *     Any signed-in console user reads; patient accounts get 403.
+         *
+         *     The rows live in each upload's `json` blob, so Postgres filters the
+         *     candidates with jsonb containment and the rows are counted here. Uploads
+         *     made before ids were stored as text hold them as numbers without their
+         *     leading zeros, so those spellings are searched too.
+         */
+        get: operations["saderat_bank_health_monitoring_person_reports_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -462,13 +519,41 @@ export interface components {
             uid: string;
             token: string;
         };
+        CampaignRef: {
+            readonly id: number;
+            slug: string;
+            name_en: string;
+            name_fa: string;
+        };
+        /** @description A campaign, with its upload and record counts. */
         MonitoringType: {
             readonly id: number;
             slug: string;
             name_en: string;
             name_fa: string;
             field_schema?: unknown;
+            /** @default 0 */
+            readonly upload_count: number;
+            /** @default 0 */
+            readonly record_count: number;
         };
+        /**
+         * @description A monitoring type's own fields, with no campaign counts.
+         *
+         *     Used wherever a type is nested inside another record (e.g.
+         *     PatientRecordSerializer) rather than listed by MonitoringTypeViewSet:
+         *     those instances are never annotated with upload_count/record_count, and
+         *     the fields' own defaults would otherwise render plausible-looking zeros
+         *     that are not actually counts of anything.
+         */
+        MonitoringTypeFields: {
+            readonly id: number;
+            slug: string;
+            name_en: string;
+            name_fa: string;
+            field_schema?: unknown;
+        };
+        /** @description A campaign, with its upload and record counts. */
         MonitoringTypeRequest: {
             slug: string;
             name_en: string;
@@ -485,6 +570,7 @@ export interface components {
             token: string;
             new_password: string;
         };
+        /** @description A campaign, with its upload and record counts. */
         PatchedMonitoringTypeRequest: {
             slug?: string;
             name_en?: string;
@@ -551,12 +637,33 @@ export interface components {
          */
         PatientRecord: {
             readonly id: number;
-            readonly monitoring: components["schemas"]["MonitoringType"];
+            readonly monitoring: components["schemas"]["MonitoringTypeFields"];
             readonly national_id: string;
             readonly values: unknown;
             readonly files: components["schemas"]["PatientEntryFile"][];
             /** Format: date-time */
             readonly updated_at: string;
+        };
+        PatientToken: {
+            readonly access: string;
+            readonly refresh: string;
+        };
+        PatientTokenRequest: {
+            national_id: string;
+            password: string;
+        };
+        /** @description One Excel upload that mentions a person; `rows` only when asked for. */
+        PersonReport: {
+            readonly id: number;
+            name: string;
+            readonly type: string;
+            readonly monitoring: components["schemas"]["CampaignRef"];
+            /** Format: date-time */
+            readonly created_at: string;
+            readonly match_count: number;
+            rows?: {
+                [key: string]: unknown;
+            }[];
         };
         /** @description What the browser must state before Django will sign anything. */
         PresignRequestRequest: {
@@ -651,6 +758,10 @@ export interface components {
         };
         UploadExcelResponse: {
             message: string;
+            id: number;
+            issues: {
+                [key: string]: unknown;
+            }[];
         };
         User: {
             /** Email address */
@@ -776,6 +887,31 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    auth_patient_jwt_create_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PatientTokenRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatientTokenRequest"];
+                "multipart/form-data": components["schemas"]["PatientTokenRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientToken"];
+                };
             };
         };
     };
@@ -1741,7 +1877,113 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Too many anonymous requests. */
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Console access required; patient accounts are refused. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saderat_bank_health_monitoring_patient_records_me_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientRecord"][];
+                };
+            };
+            /** @description Patient selection is not accepted. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A patient identity is required. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saderat_bank_health_monitoring_person_reports_list: {
+        parameters: {
+            query: {
+                /** @description Limit to one monitoring and include the rows. */
+                monitoring?: number;
+                /** @description Ten digits; Persian and Arabic-Indic digits accepted. */
+                national_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonReport"][];
+                };
+            };
+            /** @description Missing or malformed national_id or monitoring. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Console access required; patient accounts are refused. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests. */
             429: {
                 headers: {
                     [name: string]: unknown;

@@ -1,172 +1,40 @@
 "use client";
 
-import React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useTable } from "@tanstack/react-table";
-import { LogOut, RefreshCw, XIcon } from "lucide-react";
-import { appTableFeatures } from "@/components/app/table-features";
-import { TablePagination } from "@/components/app/table-pagination";
-import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import { LogOut, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
 import { DarkModeToggle } from "@/components/app/theme-toggle";
-import { formatDate, localeDigits } from "@/lib/utils";
-import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
-import { useRouter } from "@/i18n/navigation";
-import { AppRoutes } from "@/app/paths";
+import { PatientRecordsContent } from "@/components/app/patient-records-section";
+import { localeDigits } from "@/lib/utils";
+import { fetchPatientRecords } from "@/lib/patient-session";
+import { DJANGO_ADDRESS, DJANGO_API_PATH } from "@/settings";
+import type { PatientRecord } from "@/data/patient-entry/types";
 import { usePatientSession } from "../../provider";
-import { usePatientRecords } from "./provider";
-import { usePatientRecordColumns } from "./_columns";
-import { RecordsFilter } from "./_components/records-filter";
-import { RecordsTable } from "./_components/records-table";
-import { PatientRecordsSection } from "@/components/app/patient-records-section";
 
-const Client = () => {
+export default function Client() {
   const t = useTranslations("/patient/records.PatientRecords");
-  const tPatientTypes = useTranslations("common.PatientTypes");
   const locale = useLocale();
-  const router = useRouter();
-  const { signOut } = usePatientSession();
-  const {
-    nationalId,
-    filters,
-    setFilters,
-    loadRecords,
-    records_m,
-    openDetail,
-    closeDetail,
-    selectedRecord,
-    isDetailModalOpen,
-    mobileLaboratoryByNationalNumber_m,
-    mobileXRayByNationalNumber_m,
-  } = usePatientRecords();
-
-  const columns = usePatientRecordColumns({ onViewDetails: openDetail });
-
-  const table = useTable({
-    features: appTableFeatures,
-    data: records_m.data || [],
-    columns,
-    initialState: {
-      pagination: { pageIndex: 0, pageSize: 10 },
-      sorting: [{ id: "تاريخ", desc: true }],
-    },
+  const { nationalId, sessionId, signOut } = usePatientSession();
+  const records = useQuery<PatientRecord[]>({
+    queryKey: ["patient-own-records", sessionId],
+    queryFn: ({ signal }) => fetchPatientRecords(DJANGO_ADDRESS + DJANGO_API_PATH, signal),
+    enabled: Boolean(sessionId),
+    retry: false,
+    gcTime: 0,
   });
-
-  const handleSignOut = React.useCallback(() => {
-    signOut();
-    router.replace(AppRoutes.PATIENT_SIGN_IN);
-  }, [router, signOut]);
-
   return (
-    // min-h-dvh, not min-h-screen: 100vh overshoots the visible area on iOS
-    // Safari while its toolbar is showing. The sign-in card next door already
-    // uses dvh; this is the same page in the same session.
-    <main className="container mx-auto p-4 space-y-4 min-h-dvh flex flex-col">
-      {/* Was a hand-rolled h1 + p that duplicated PageHeader's job at slightly
-          different values (font-bold vs font-semibold, no measure cap, no rule).
-          Patients are outside the console, so there is no breadcrumb — but the
-          heading, the type scale and the action slot are the same everywhere.
-          The theme toggle lives here because this route group has no sidebar:
-          without it a patient has no way to reach it at all. */}
-      <PageHeader
-        title={t("title")}
-        description={t("subtitle", {
-          nationalId: localeDigits(nationalId ?? "", locale),
-        })}
-        actions={
-          <>
-            <DarkModeToggle />
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="me-2 h-4 w-4" />
-              {t("signOut")}
-            </Button>
-          </>
-        }
-      />
-
-      <div className="flex items-center justify-between gap-2">
-        <RecordsFilter isLoading={records_m.isPending} />
-        <Button
-          onClick={loadRecords}
-          variant="outline"
-          size="sm"
-          disabled={records_m.isPending}
-          className="flex items-center gap-2"
-        >
-          <RefreshCw
-            className={`h-4 w-4 ${records_m.isPending ? "animate-spin" : ""}`}
-          />
-          <span>{t("refresh")}</span>
+    <main className="container mx-auto flex min-h-dvh flex-col gap-6 p-4">
+      <PageHeader title={t("title")} description={t("subtitle", { nationalId: localeDigits(nationalId ?? "", locale) })}
+        actions={<><DarkModeToggle /><Button variant="ghost" size="sm" onClick={signOut}><LogOut className="me-2 size-4" />{t("signOut")}</Button></>} />
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="max-w-prose text-sm text-muted-foreground">{t("availability")}</p>
+        <Button variant="outline" size="sm" disabled={records.isFetching} onClick={() => void records.refetch()}>
+          <RefreshCw className="size-4" />{t("refresh")}
         </Button>
       </div>
-
-      {(filters.dateRange?.from || filters.patientType) && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-medium text-foreground">
-            {t("activeFilters.label")}
-          </span>
-          {/* The date badge is not clearable: clearing it would mean an
-              unbounded query, and the range always has a sensible default. */}
-          {filters.dateRange?.from && filters.dateRange?.to && (
-            <Badge variant="secondary">
-              <span>{t("activeFilters.dateRange")}</span>
-              <span className="ms-1">
-                {localeDigits(
-                  `${formatDate(filters.dateRange.from, locale)} - ${formatDate(
-                    filters.dateRange.to,
-                    locale
-                  )}`,
-                  locale
-                )}
-              </span>
-            </Badge>
-          )}
-          {filters.patientType && (
-            <Badge
-              variant="secondary"
-              className="cursor-pointer"
-              onClick={() => setFilters({ ...filters, patientType: "" })}
-            >
-              <XIcon className="w-4 h-4" />
-              <span>{t("activeFilters.patientType")}</span>
-              <span className="ms-1">{tPatientTypes(filters.patientType)}</span>
-            </Badge>
-          )}
-        </div>
-      )}
-
-      <div className="flex-1">
-        <RecordsTable
-          table={table}
-          columns={columns}
-          isLoading={records_m.isPending}
-          isError={records_m.isError}
-          error={records_m.error}
-          onRetry={loadRecords}
-        />
-      </div>
-
-      <TablePagination table={table} />
-
-      {/* No staff token: the portal has no Django session, and the endpoint
-          answers anonymous reads (rate-limited). */}
-      <PatientRecordsSection nationalId={nationalId} authorized={false} />
-
-      {/* No mobileNumberByNationalNumber_m: the patient's phone number has no
-          business being looked up on the patient's own page, and omitting the
-          mutation is what removes the control. */}
-      <EHRDetailModal
-        record={selectedRecord}
-        isOpen={isDetailModalOpen}
-        onClose={closeDetail}
-        actions={{
-          mobileLaboratoryByNationalNumber_m,
-          mobileXRayByNationalNumber_m,
-        }}
-      />
+      <PatientRecordsContent key={sessionId} records={records} patientPortal />
     </main>
   );
-};
-
-export default Client;
+}

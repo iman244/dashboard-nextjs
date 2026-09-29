@@ -43,8 +43,10 @@ export const EHRTablePagination = ({
   const NextIcon = isRtl ? ChevronLeft : ChevronRight;
   const LastIcon = isRtl ? ChevronsLeft : ChevronsRight;
 
+  // Both rows wrap: on a phone the page-size picker and the page buttons do
+  // not fit beside the count, and pushed the page 3px sideways.
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
       <div className="flex items-center gap-2">
         <p className="text-sm text-muted-foreground">
           {t("pagination.showing", {
@@ -65,7 +67,7 @@ export const EHRTablePagination = ({
         </p>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         {showPageSizeSelector && (
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{t("pagination.rowsPerPage")}</p>

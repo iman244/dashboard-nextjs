@@ -7,6 +7,7 @@ import { useTable } from "@tanstack/react-table";
 import { appTableFeatures } from "@/components/app/table-features";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { RefreshCw, XIcon } from "lucide-react";
 
 import { useEHRColumns } from "./_columns";
@@ -16,14 +17,20 @@ import { EHRFilter } from "./_components/ehr-filter";
 import { EHRDetailModal } from "@/data/electronic health record/components/EHRDetailModal";
 import { formatNumber, formatDate } from "@/lib/utils";
 import { useElectronicHealthRecord } from "./provider";
-import { Badge } from "@/components/ui/badge";
 import { ElectronicHealthRecord } from "@/data/electronic health record/type";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "@/i18n/navigation";
+import { fullNationalId, isNationalId, PATIENT_PATH } from "@/lib/national-id";
 
 const Client = () => {
   const t = useTranslations("/console/electronic-health-record.EHRTable");
   const fmt = useLocaleDigits();
   const tPatientTypes = useTranslations("common.PatientTypes");
   const locale = useLocale();
+  const router = useRouter();
+  const [openPatientId, setOpenPatientId] = React.useState("");
+  const [openPatientInvalid, setOpenPatientInvalid] = React.useState(false);
+  const openPatientErrorId = React.useId();
   const {
     filters,
     setFilters,
@@ -42,6 +49,19 @@ const Client = () => {
   const handleViewDetails = (record: ElectronicHealthRecord) => {
     setSelectedRecord(record);
     setIsDetailModalOpen(true);
+  };
+
+  // Opens the patient page directly, skipping the table and its date filters
+  // entirely. The id folds Persian digits and a lost leading zero the same
+  // way every other patient link on the console does.
+  const handleOpenPatient = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const id = fullNationalId(openPatientId);
+    if (isNationalId(id)) {
+      router.push(PATIENT_PATH(id));
+      return;
+    }
+    setOpenPatientInvalid(true);
   };
 
   // Column definitions with locale-aware formatting
@@ -72,7 +92,9 @@ const Client = () => {
   return (
     <div className="space-y-4 h-full flex flex-col">
       <PageHeader
+        breadcrumbs={<ConsoleBreadcrumbs />}
         title={t("title")}
+        description={t("description")}
         actions={
           <>
             <EHRFilter isLoading={ehrByNationalNumber_m.isPending} />
@@ -88,42 +110,80 @@ const Client = () => {
                   ehrByNationalNumber_m.isPending ? "animate-spin" : ""
                 }`}
               />
-              <span>بروزرسانی</span>
+              <span>{t("refresh")}</span>
             </Button>
           </>
         }
       />
 
+      <form onSubmit={handleOpenPatient} className="flex flex-col">
+        <div className="flex flex-wrap items-center gap-2">
+          <Input
+            inputMode="numeric"
+            dir="ltr"
+            aria-label={t("openPatientLabel")}
+            placeholder={t("openPatientPlaceholder")}
+            value={openPatientId}
+            onChange={(e) => {
+              setOpenPatientId(e.target.value);
+              setOpenPatientInvalid(false);
+            }}
+            aria-invalid={openPatientInvalid || undefined}
+            aria-describedby={openPatientInvalid ? openPatientErrorId : undefined}
+            className="max-w-48"
+          />
+          <Button type="submit" variant="outline" size="sm">
+            {t("openPatientAction")}
+          </Button>
+        </div>
+        {/* Always mounted: a live region added together with its text is
+            often not announced. Only the text comes and goes, and while it
+            is empty the region takes no room (not display:none, which would
+            take it out of the accessibility tree). */}
+        <span
+          id={openPatientErrorId}
+          aria-live="polite"
+          className="pt-1 text-sm text-destructive empty:pt-0"
+        >
+          {openPatientInvalid ? t("openPatientInvalid") : null}
+        </span>
+      </form>
+
       {(filters.nationalNumber ||
         filters.dateRange?.from ||
-        filters.dateRange?.to) && (
+        filters.dateRange?.to ||
+        filters.patientType) && (
         // flex-wrap per ux-guidelines #115: a chip collection must reflow,
         // not clip, when space or text size changes.
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-medium text-foreground">فیلترها</span>
+          <span className="text-sm font-medium text-foreground">{t("activeFilters")}</span>
           {filters.nationalNumber && (
-            <Badge
-              variant={"secondary"}
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
               onClick={() => setFilters({ ...filters, nationalNumber: "" })}
-              className="cursor-pointer"
+              aria-label={t("removeNationalNumber")}
             >
-              <XIcon className="w-4 h-4" />
-              <span>شماره ملی: {filters.nationalNumber}</span>
-            </Badge>
+              <XIcon aria-hidden="true" className="size-4" />
+              <span>{t("nationalNumberFilter")}: {fmt(filters.nationalNumber)}</span>
+            </Button>
           )}
           {filters.dateRange?.from && filters.dateRange.to && (
-            <Badge
-              variant={"secondary"}
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
               onClick={() =>
                 setFilters({
                   ...filters,
                   dateRange: { from: undefined, to: undefined },
                 })
               }
-              className="cursor-pointer"
+              aria-label={t("removeDateRange")}
             >
-              <XIcon className="w-4 h-4" />
-              <span>بازه تاریخ:</span>
+              <XIcon aria-hidden="true" className="size-4" />
+              <span>{t("dateRangeFilter")}:</span>
               <span>
                 {fmt(
                   `${formatDate(
@@ -132,17 +192,19 @@ const Client = () => {
                   )} - ${formatDate(filters.dateRange?.to, locale)}`
                 )}
               </span>
-            </Badge>
+            </Button>
           )}
           {filters.patientType && (
-            <Badge
-              variant={"secondary"}
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
               onClick={() => setFilters({ ...filters, patientType: "" })}
-              className="cursor-pointer"
+              aria-label={t("removePatientType")}
             >
-              <XIcon className="w-4 h-4" />
-              <span>نوع بیمار: {tPatientTypes(filters.patientType)}</span>
-            </Badge>
+              <XIcon aria-hidden="true" className="size-4" />
+              <span>{t("patientTypeFilter")}: {tPatientTypes(filters.patientType)}</span>
+            </Button>
           )}
         </div>
       )}

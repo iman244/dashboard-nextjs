@@ -51,7 +51,7 @@ export enum PatientType {
  * was the one nobody rendered — this selector appears on four routes, so every
  * one of them showed Persian in the English UI.
  */
-const PATIENT_TYPE_ORDER: PatientType[] = [
+export const PATIENT_TYPE_ORDER: PatientType[] = [
   PatientType.INFORMATION,
   PatientType.LAB,
   PatientType.IMAGE,

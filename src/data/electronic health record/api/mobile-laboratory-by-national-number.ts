@@ -31,5 +31,7 @@ export const useMobileLaboratoryByNationalNumberApi = () => {
   return useMutation({
     mutationKey: [PDD_MOBILE_LABORATORY_BY_NATIONAL_NUMBER_KEY],
     mutationFn: mobile_laboratory_by_national_number,
+    // Its only caller, the EHR detail modal, toasts the failure itself.
+    meta: { silentNetworkError: true },
   });
 };

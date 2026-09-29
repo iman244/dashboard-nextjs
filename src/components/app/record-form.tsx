@@ -12,6 +12,7 @@ import { localeDigits } from "@/lib/utils";
 import type { MonitoringType } from "@/data/monitoring-type/types";
 import type { PatientEntry } from "@/data/patient-entry/types";
 import { uploadToField } from "@/data/patient-entry/upload";
+import { refreshRecords } from "@/data/patient-entry/refresh";
 import { useCreate_PatientEntry_API } from "@/data/patient-entry/api/create";
 import { useUpdate_PatientEntry_API } from "@/data/patient-entry/api/update";
 import {
@@ -179,17 +180,10 @@ export const RecordForm = ({
       const done = (saved: PatientEntry) => {
         // "all", not the default "active": the pages that show these queries
         // are not mounted while this form is, and the app turns refetchOnMount
-        // off, so a merely-stale list would come back showing the old rows.
-        queryClient.invalidateQueries({
-          queryKey: ["patient-entries"],
-          refetchType: "all",
-        });
+        // off, so a merely-stale query would come back showing the old rows.
+        refreshRecords(queryClient);
         queryClient.invalidateQueries({
           queryKey: ["patient-entry", saved.id],
-          refetchType: "all",
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["patient-records"],
           refetchType: "all",
         });
         toast.success(t("Saved"));

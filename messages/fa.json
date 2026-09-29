@@ -1,5 +1,13 @@
 {
   "common": {
+    "StaffAccess": {
+      "checking": "در حال بررسی دسترسی…",
+      "checkFailedTitle": "بررسی دسترسی انجام نشد",
+      "checkFailedDescription": "سامانه حساب کاربری پاسخ نداد.",
+      "retry": "تلاش دوباره",
+      "title": "دسترسی کارکنان لازم است",
+      "description": "برای دسترسی به این بخش با مدیر سامانه تماس بگیرید."
+    },
     "Navigation": {
       "backToHome": "بازگشت به صفحه اصلی",
       "toggleSidebar": "باز و بستن نوار کناری"
@@ -7,7 +15,6 @@
     "Loading": {
       "default": "در حال بارگذاری…",
       "session": "در حال بررسی نشست شما…",
-      "datasets": "در حال بارگذاری مجموعه‌داده‌ها…",
       "report": "در حال ساخت گزارش…",
       "record": "در حال بارگذاری پرونده سلامت…",
       "records": "در حال بارگذاری سوابق…",
@@ -136,7 +143,7 @@
       "Close": "بستن",
       "ViewDetails": "مشاهده جزئیات",
       "PatientRecord": "پرونده بیمار",
-      "PatientReport": "گزارش بیمار",
+      "PatientPage": "صفحه بیمار",
       "TrendChart": "نمودار روند",
       "ServiceRecords": "رکوردهای خدمت",
       "OpenReport": "مشاهده گزارش",
@@ -185,7 +192,8 @@
       "Position": "{index} از {count}",
       "Previous": "تصویر قبلی",
       "Next": "تصویر بعدی",
-      "OpenOriginal": "باز کردن فایل اصلی"
+      "OpenOriginal": "باز کردن فایل اصلی",
+      "PatientEmpty": "هنوز سابقه پایشی ثبت نشده است. اگر انتظار مشاهده سابقه‌ای را دارید، با تیم مراقبت تماس بگیرید."
     },
     "StaffOnly": {
       "Title": "فقط برای کارکنان",
@@ -198,26 +206,16 @@
     },
     "HomePage": {
       "title": "خوش آمدید",
-      "description": "کنسول داده‌های بالینی برای مرور پرونده الکترونیک سلامت، گزارش‌های دوره‌ای و گزارش‌های بیمار.",
+      "description": "مسیر دسترسی به سوابق سلامت را انتخاب کنید.",
+      "choosePath": "از کدام مسیر وارد می‌شوید؟",
       "buttons": {
-        "goToConsole": "ورود به داشبورد",
+        "goToConsole": "کنسول کارکنان",
         "signInRegister": "ورود / ثبت نام",
-        "patientSignIn": "بیمار هستم"
+        "patientSignIn": "سوابق بیمار"
       },
-      "features": {
-        "ehr": {
-          "title": "سوابق پزشکی الکترونیکی",
-          "description": "جستجو و فیلتر رکوردهای بالینی با جدول‌های قابل مرتب‌سازی و جزئیات."
-        },
-        "periodical": {
-          "title": "گزارشات دوره‌ای",
-          "description": "نمایش روندها با نمودارهای تعداد رکورد و بیماران در گذر زمان."
-        },
-        "patient": {
-          "title": "گزارشات بیمار",
-          "description": "تجمیع خدمات برای هر بیمار و مشاهده روند نتایج در طول زمان."
-        },
-        "cta": "شروع کنید"
+      "staffWork": {
+        "title": "در کنسول کارکنان",
+        "description": "بیمار را پیدا کنید، اطلاعات پایش را ثبت کنید و گزارش‌های بالینی و دوره‌ای را بررسی کنید."
       }
     }
   },
@@ -252,42 +250,34 @@
       }
     }
   },
-  "/auth-authenticated": {
-    "AuthAuthenticated": {
-      "description1": "شما احراز هویت شده اید، تا چند ثانیه دیگر به صفحه مورد نظر منتقل خواهید شد.",
-      "description2": "اگر منتقل نشدید، لطفاً بر روی دکمه زیر کلیک کنید.",
-      "redirect": "برو"
-    }
-  },
-  "/console-unauthenticate": {
-    "AuthenticatedGroupLayout": {
-      "description1": "شما احراز هویت نشده اید، تا چند ثانیه دیگر به صفحه ورود منتقل خواهید شد.",
-      "description2": "اگر منتقل نشدید، لطفاً بر روی دکمه ورود کلیک کنید.",
-      "redirectToLogin": "صفحه ورود"
-    }
-  },
   "/form-sabt-payesh": {},
   "/console": {
     "ConsoleHome": {
       "title": "داشبورد",
-      "subtitle": "برای شروع، یکی از بخش‌های زیر را انتخاب کنید.",
+      "subtitle": "کاری را که می‌خواهید انجام دهید انتخاب کنید.",
+      "tasksLabel": "کارهای کنسول",
       "descriptions": {
-        "electronicHealthRecord": "جستجو و مرور سوابق پزشکی بیماران",
-        "periodicalReports": "تولید گزارشات جامع برای دوره‌های زمانی",
-        "patientReports": "تولید گزارشات جامع برای بیماران",
-        "saderatBankHealthMonitoring": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای",
-        "monitorings": "پایش‌هایی که اطلاعات ذیل آن‌ها ثبت می‌شود و فیلدهای هر کدام",
-        "formSabtPayesh": "ثبت اطلاعات پایش با فرم آنلاین"
+        "home": "بازگشت به کارهای کنسول",
+        "findPatient": "پرونده سلامت یک بیمار را باز کنید",
+        "periodicalReports": "نمودار خدمات و بیماران در یک بازه",
+        "campaigns": "همه پایش‌ها با اکسل‌ها و اطلاعات ثبت‌شده",
+        "formSabtPayesh": "فرم پایش خارجی فرم‌افزار",
+        "recordMonitoring": "پایش را انتخاب کنید و اطلاعات بیمار را ثبت کنید",
+        "uploadExcel": "فایل اکسل یک پایش را اضافه کنید",
+        "defineCampaign": "پایش و فیلدهای فرم آن را بسازید"
       }
     },
     "ConsoleSidebar": {
       "dashboard": "داشبورد",
-      "electronicHealthRecord": "سوابق پزشکی الکترونیکی",
-      "periodicalReports": "گزارشات دوره‌ای",
-      "patientReports": "گزارشات بیمار",
-      "saderatBankHealthMonitoring": "پایش سلامت بانک صادرات",
-      "monitorings": "پایش‌ها",
-      "formSabtPayesh": "فرم ثبت پایش",
+      "home": "خانه کنسول",
+      "findPatient": "جستجوی بیمار",
+      "periodicalReports": "گزارش دوره‌ای",
+      "campaigns": "فهرست پایش‌ها",
+      "formSabtPayesh": "فرم آنلاین (فرم‌افزار)",
+      "recordMonitoring": "ثبت اطلاعات بیمار",
+      "uploadExcel": "بارگذاری اکسل پایش",
+      "defineCampaign": "تعریف پایش جدید",
+      "groups": {"health": "پرونده سلامت", "monitorings": "پایش‌ها"},
       "account": "حساب کاربری",
       "logout": "خروج"
     }
@@ -295,6 +285,19 @@
   "/console/electronic-health-record": {
     "EHRTable": {
       "title": "سوابق پزشکی الکترونیکی",
+      "description": "بیمار را پیدا کنید، سوابق درمان او را ببینید و از ردیف نتیجه به گزارش بیمار بروید.",
+      "refresh": "بروزرسانی",
+      "activeFilters": "فیلترهای فعال",
+      "nationalNumberFilter": "شماره ملی",
+      "dateRangeFilter": "بازه تاریخ",
+      "patientTypeFilter": "نوع بیمار",
+      "removeNationalNumber": "حذف فیلتر شماره ملی",
+      "removeDateRange": "حذف فیلتر بازه تاریخ",
+      "removePatientType": "حذف فیلتر نوع بیمار",
+      "openPatientLabel": "باز کردن بیمار با کد ملی",
+      "openPatientPlaceholder": "کد ملی",
+      "openPatientAction": "باز کردن",
+      "openPatientInvalid": "کد ملی ۱۰ رقم است.",
       "pagination": {
         "showing": "نمایش {start} تا {end} از {total} رکورد",
         "rowsPerPage": "ردیف در صفحه:",
@@ -325,36 +328,24 @@
     }
   },
   "/console/form-sabt-payesh": {},
-  "/console/patient-reports": {
-    "PatientReports": {
-      "title": "گزارشات بیمار",
-      "description": "تولید گزارشات جامع برای بیماران",
-      "patientType": "نوع بیمار",
-      "selectPatientType": "انتخاب نوع بیمار",
-      "loadingMessage": "گزارش در حال آماده‌سازی است…",
-      "selectPatientAndPeriod": "انتخاب بیمار و دوره زمانی",
-      "nationalNumber": "شماره ملی",
-      "nationalNumberPlaceholder": "شماره ملی را وارد کنید",
-      "dateRange": "انتخاب بازه تاریخ",
-      "selectDateRange": "انتخاب بازه تاریخ",
-      "generateReport": "تولید گزارش",
-      "reportResults": "نتایج گزارش",
-      "totalRecords": "تعداد کل رکوردها",
-      "patientInfo": "اطلاعات بیمار",
-      "selectedPatientAndPeriod": "بیمار و دوره انتخابی",
-      "chartPlaceholder": "نمودار",
-      "chartComingSoon": "نمودار به زودی",
-      "errorMessage": "خطا در بارگذاری داده‌های گزارش",
-      "serviceChartTitle": "تعداد خدمات",
-      "validation": {
-        "nationalNumberRequired": "وارد کردن شماره ملی الزامی است",
-        "patientTypeRequired": "انتخاب نوع بیمار الزامی است",
-        "dateRangeInvalid": "تاریخ پایان باید پس از تاریخ شروع باشد"
-      },
-      "columnServiceCount": "تعداد دفعات",
-      "columnNormalResults": "تعداد جواب‌های طبیعی",
-      "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
-      "noLabResult": "بدون نتیجه آزمایشگاهی"
+  "/console/patients": {
+    "PatientPage": {
+      "fallbackTitle": "بیمار",
+      "nationalId": "کد ملی {id}",
+      "rangeHint": "بازه زمانی فقط روی سوابق پرونده الکترونیک اعمال می‌شود. سوابق پایش و گزارش‌های اکسل همیشه کامل نمایش داده می‌شوند.",
+      "invalidTitle": "کد ملی معتبر نیست",
+      "invalidDescription": "کد ملی ۱۰ رقم است. بیمار را دوباره جستجو کنید.",
+      "ehrTitle": "سوابق پرونده الکترونیک",
+      "tabsLoading": "در حال بارگذاری انواع پرونده…",
+      "ehrEmpty": "در این بازه سابقه‌ای در پرونده الکترونیک نیست.",
+      "ehrFailed": "سوابق {type} بارگذاری نشد.",
+      "campaignsTitle": "پایش‌های این بیمار",
+      "campaignsDescription": "پایش‌هایی که ردیف اکسل یا اطلاعات ثبت‌شده برای این بیمار دارند.",
+      "campaignsEmpty": "این بیمار در هیچ پایشی نیست.",
+      "campaignsError": "پایش‌ها بارگذاری نشد.",
+      "campaignSummary": "{uploads, number} ردیف اکسل · {records, number} اطلاعات ثبت‌شده",
+      "retry": "تلاش دوباره",
+      "open": "مشاهده"
     }
   },
   "/console/periodical-reports": {
@@ -374,6 +365,8 @@
       "errorMessage": "خطا در بارگذاری داده‌های گزارش",
       "chartTitle": "تعداد رکوردها بر اساس تاریخ",
       "patientChartTitle": "تعداد بیماران بر اساس تاریخ",
+      "patientDateRangeTitle": "گزارش بیماران در بازه تاریخ انتخاب‌شده",
+      "serviceResultsTitle": "خدمات و تعداد نتایج",
       "serviceChartTitle": "توزیع خدمات",
       "debugData": "داده‌های دیباگ",
       "noDataAvailable": "هیچ داده‌ای موجود نیست",
@@ -415,12 +408,17 @@
       "columnServiceCount": "تعداد دفعات",
       "columnNormalResults": "تعداد جواب‌های طبیعی",
       "columnAbnormalResults": "تعداد جواب‌های غیرطبیعی",
-      "noLabResult": "بدون نتیجه آزمایشگاهی"
+      "noLabResult": "بدون نتیجه آزمایشگاهی",
+      "noServices": "هیچ خدمتی یافت نشد",
+      "searchService": "جستجو در نام خدمت…",
+      "clearSearch": "پاک کردن جستجو",
+      "serviceRecordsTitle": "گزارش رکوردهای خدمت: {service}"
     }
   },
   "/console/saderat-bank-health-monitoring": {
     "UploadSaderatBankHealthMonitoringExcelDialog": {
-      "DialogTitle": "بارگذاری اکسل",
+      "PageTitle": "بارگذاری اکسل",
+      "NoSupportedTypes": "هیچ نوع گزارشی با نمای جزئیات برای بارگذاری اکسل در دسترس نیست.",
       "Form": {
         "NameLabel": "نام",
         "NamePlaceholder": "نام را وارد کنید",
@@ -429,7 +427,23 @@
       },
       "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد",
       "ErrorTitle": "بارگذاری انجام نشد",
-      "ErrorMessage": "بارگذاری فایل با خطا مواجه شد. لطفاً دوباره تلاش کنید."
+      "ErrorMessage": "بارگذاری فایل با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+      "refusedTitle": "فایل بارگذاری نشد",
+      "savedWithIssues": "بارگذاری شد. {count, number} مورد برای بررسی:",
+      "openUpload": "مشاهده این فایل",
+      "uploadAnother": "بارگذاری فایل دیگر",
+      "issues": {
+        "unreadable": "فایل خوانده نشد. آن را با قالب ‎.xlsx ذخیره کنید و دوباره تلاش کنید.",
+        "no_rows": "برگه زیر ردیف سرستون‌ها هیچ ردیف داده‌ای ندارد و چیزی برای نمایش نیست.",
+        "missing_id_column": "ستون «{column}» وجود ندارد: نمودارها کار می‌کنند، اما هیچ‌کس در این فایل باز نمی‌شود. ستون‌های موجود: <bdi>{found}</bdi>",
+        "looks_like": "این فایل شبیه فایل «{campaign}» است. آیا پایش درست را انتخاب کرده‌اید؟",
+        "no_id_column": "ستون کد ملی پیدا نشد، بنابراین این ردیف‌ها به بیماران وصل نمی‌شوند.",
+        "blank_ids": "{count, number} ردیف کد ملی ندارند و باز نمی‌شوند. ردیف‌ها: {rows}",
+        "invalid_ids": "{count, number} ردیف کد ملی ۱۰ رقمی ندارند و به بیماری وصل نمی‌شوند: {rows}",
+        "duplicate_ids": "{count, number} کد ملی در بیش از یک ردیف آمده‌اند؛ همه ردیف‌ها نگه داشته می‌شوند: {groups}",
+        "missing_columns": "این ستون‌ها وجود ندارند و نمودارهای مربوط خالی می‌مانند: <bdi>{columns}</bdi>",
+        "more": "و {count} مورد دیگر"
+      }
     },
     "DeleteSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "حذف اکسل",
@@ -438,13 +452,12 @@
       "ErrorMessage": "حذف اکسل انجام نشد: {message}"
     },
     "SaderatBankHealthMonitoringPage": {
-      "UploadExcel": "بارگذاری اکسل",
+      "PageDescription": "گزارش‌های بارگذاری‌شده پایش سلامت بانک را بررسی کنید. فرم بارگذاری فقط نوع‌های دارای نمای گزارش را نشان می‌دهد.",
       "Loading": "در حال بارگذاری…",
       "ErrorTitle": "خطا در بارگذاری داده‌ها",
       "EmptyStateTitle": "هیچ داده‌ای موجود نیست",
       "EmptyStateDescription": "لطفاً یک فایل اکسل آپلود کنید",
       "EmptyStateDescriptionDetail": "هیچ رکوردی برای نمایش وجود ندارد",
-      "ReportTitle": "گزارش آماری",
       "SearchPersonnel": "جست و جوی بیماران",
       "SearchPersonnelDescription": "جست و جو و مشاهده جزئیات بیماران",
       "SearchPlaceholder": "جست و جو در نام، نام خانوادگی یا کد ملی…",
@@ -453,13 +466,12 @@
       "NoResults": "نتیجه‌ای یافت نشد",
       "WrongStepTitle": "این رکورد مربوط به مرحله دیگری است.",
       "WrongStepAction": "مشاهده در نمای درست",
-      "PageTitle": "پایش سلامت بانک صادرات",
+      "PageTitle": "گزارش‌های اکسل",
       "MatchCount": "{count} بیمار"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} یافته غیرطبیعی",
-      "ShowAbnormalOnly": "فقط موارد غیرطبیعی",
-      "ViewTestChart": "مشاهده نمودار روند آزمایش"
+      "ShowAbnormalOnly": "فقط موارد غیرطبیعی"
     },
     "Step2Report": {
       "recordCount": "{count} رکورد",
@@ -500,7 +512,6 @@
       }
     },
     "Ehr": {
-      "recordsTitle": "سوابق الکترونیک سلامت",
       "rangeLabel": "محدوده طبیعی",
       "noRange": "بدون محدوده مرجع",
       "loadError": "دریافت سوابق الکترونیک ناموفق بود.",
@@ -513,9 +524,6 @@
     },
     "Detail": {
       "notFound": "رکوردی با این کد ملی در این پایش یافت نشد.",
-      "backToReport": "بازگشت به گزارش",
-      "duplicateNationalId": "این کد ملی در {count} رکورد وجود دارد. همه در ادامه نمایش داده شده‌اند.",
-      "recordIndex": "رکورد {index}",
       "sections": {
         "ecg": "نوار قلب",
         "clinicalExam": "معاینات بالینی",
@@ -532,15 +540,30 @@
       }
     }
   },
+  "/console/record-monitoring": {
+    "accessDeniedTitle": "دسترسی کارکنان لازم است",
+    "accessDeniedDescription": "برای دسترسی به سوابق پایش با مدیر سامانه تماس بگیرید.",
+    "title": "ثبت پایش",
+    "description": "نوع پایشی را که می‌خواهید برایش رکورد بیمار ثبت کنید انتخاب کنید.",
+    "loading": "در حال بارگذاری انواع پایش…",
+    "errorTitle": "انواع پایش بارگذاری نشد",
+    "errorDescription": "اتصال را بررسی کنید و دوباره تلاش کنید.",
+    "retry": "تلاش دوباره",
+    "emptyTitle": "هنوز نوع پایشی وجود ندارد",
+    "emptyStaff": "برای شروع ثبت، یک نوع پایش بسازید.",
+    "emptyViewer": "از مدیر بخواهید یک نوع پایش بسازد.",
+    "createType": "نوع جدید",
+    "addRecord": "افزودن رکورد",
+    "noFormsTitle": "هنوز هیچ نوع پایشی فرم ندارد",
+    "noFormsDescription": "برای شروع ثبت، در بخش پایش‌ها برای یک نوع پایش فیلد تعریف کنید.",
+    "hiddenNote": "انواعی که فیلد فرم ندارند، مانند انواع گزارش اکسل، اینجا نمایش داده نمی‌شوند."
+  },
   "/console/monitorings": {
     "MonitoringTypesPage": {
-      "PageTitle": "انواع پایش",
-      "PageDescription": "انواعی که یک گزارش پایش می‌تواند زیر آن ثبت شود. بارگذاری‌ها از همین فهرست انتخاب می‌کنند.",
-      "CreateType": "نوع جدید",
-      "SlugColumn": "شناسه",
-      "NameEnColumn": "نام (انگلیسی)",
-      "NameFaColumn": "نام (فارسی)",
-      "NoViewBadge": "بدون نما",
+      "PageTitle": "پایش‌ها",
+      "PageDescription": "هر پایش با فایل‌های اکسل و اطلاعات ثبت‌شده‌اش.",
+      "CreateType": "تعریف پایش جدید",
+      "counts": "{uploads, number} اکسل · {records, number} اطلاعات ثبت‌شده",
       "ErrorTitle": "خطا در بارگذاری انواع پایش",
       "EmptyStateTitle": "هیچ نوع پایشی وجود ندارد",
       "EmptyStateDescription": "پیش از بارگذاری گزارش، یک نوع بسازید.",
@@ -556,8 +579,8 @@
       "InUseDescriptionUnknown": "هنوز گزارش‌هایی زیر این نوع ثبت شده‌اند. ابتدا آن‌ها را حذف کنید، یا به‌جای حذف این نوع را تغییر نام دهید."
     },
     "Builder": {
-      "NewTitle": "نوع پایش جدید",
-      "EditTitle": "ویرایش نوع پایش",
+      "NewTitle": "تعریف پایش جدید",
+      "EditTitle": "ویرایش پایش",
       "NotFound": "این نوع پایش پیدا نشد.",
       "Back": "بازگشت به فهرست",
       "Save": "ذخیره",
@@ -642,13 +665,40 @@
       "UploadsFailed": "آپلود {n} تصویر انجام نشد. چیزی ذخیره نشد؛ دوباره تلاش کنید یا آن‌ها را حذف کنید.",
       "StorageUnreachable": "اتصال به فضای ذخیره‌سازی برقرار نشد.",
       "NationalIdLength": "کد ملی باید ۱۰ رقم باشد."
+    },
+    "Campaign": {
+      "uploadsTab": "فایل‌های اکسل",
+      "recordsTab": "اطلاعات ثبت‌شده",
+      "editDefinition": "ویرایش تعریف",
+      "uploadExcel": "بارگذاری اکسل",
+      "chooseUpload": "فایل اکسل",
+      "noUploads": "هنوز فایل اکسلی برای این پایش بارگذاری نشده است.",
+      "uploadMissing": "آن فایل در این پایش نیست؛ آخرین فایل نمایش داده می‌شود.",
+      "notFound": "پایش پیدا نشد",
+      "backToList": "بازگشت به پایش‌ها",
+      "deleteUpload": "حذف این فایل",
+      "loadingRows": "در حال بارگذاری ردیف‌ها…",
+      "rowsError": "ردیف‌ها بارگذاری نشد.",
+      "noRows": "این فایل ردیفی ندارد.",
+      "searchRows": "جستجو در ردیف‌ها",
+      "rowCount": "{shown, number} از {total, number} ردیف"
+    },
+    "CampaignPatient": {
+      "fallbackTitle": "بیمار",
+      "nationalId": "کد ملی {id}",
+      "healthRecord": "پرونده سلامت",
+      "rowIndex": "ردیف {index}",
+      "nothing": "این بیمار در این پایش اطلاعاتی ندارد.",
+      "loadError": "اطلاعات پایش این بیمار بارگذاری نشد.",
+      "noFindings": "یافته‌ای در این ردیف ثبت نشده است.",
+      "demographics": { "age": "سن", "gender": "جنسیت", "examDate": "تاریخ معاینه" }
     }
   },
   "/patient/sign-in": {
     "SignInPage": {
       "eyebrow": "پرونده سلامت",
       "title": "ورود بیمار",
-      "description": "برای مشاهده سوابق سلامت کد ملی خود را وارد کنید.",
+      "description": "برای مشاهده سوابق پایش، با کد ملی و رمز عبوری که تیم مراقبت در اختیار شما قرار داده وارد شوید. برای ایجاد حساب یا بازنشانی رمز عبور با تیم مراقبت تماس بگیرید.",
       "status": {
         "signedIn": "با موفقیت وارد شدید."
       },
@@ -676,7 +726,7 @@
   },
   "/patient/records": {
     "PatientRecords": {
-      "title": "سوابق سلامت من",
+      "title": "سوابق پایش من",
       "subtitle": "کد ملی: {nationalId}",
       "refresh": "بروزرسانی",
       "signOut": "خروج",
@@ -706,7 +756,8 @@
         "error": "بارگذاری سوابق ناموفق بود: {message}",
         "retry": "تلاش دوباره",
         "noData": "در این بازه سابقه‌ای یافت نشد"
-      }
+      },
+      "availability": "این صفحه سوابق پایش ثبت‌شده توسط تیم مراقبت را نمایش می‌دهد. ویزیت‌ها، نتایج آزمایشگاه و تصاویر رادیولوژی در این بخش در دسترس نیستند."
     }
   },
   "/authentication/register": {
@@ -767,17 +818,33 @@
       "title": "گزارشات دوره‌ای",
       "description": "تولید گزارشات جامع برای دوره‌های زمانی."
     },
-    "patientReports": {
-      "title": "گزارشات بیمار",
-      "description": "تولید گزارشات جامع برای بیماران."
+    "patient": {
+      "title": "بیمار",
+      "description": "سوابق کامل یک بیمار."
     },
     "saderatBankHealthMonitoring": {
-      "title": "پایش سلامت بانک صادرات",
+      "title": "گزارش‌های اکسل",
       "description": "مجموعه‌داده‌های بارگذاری‌شده و گزارش‌های مرحله‌ای."
+    },
+    "recordMonitoring": {
+      "title": "ثبت پایش",
+      "description": "نوع پایش را انتخاب کنید و رکوردهای بیماران را ببینید."
+    },
+    "campaign": {
+      "title": "پایش",
+      "description": "فایل‌ها و اطلاعات ثبت‌شده یک پایش."
+    },
+    "campaignPatient": {
+      "title": "بیمار در پایش",
+      "description": "اطلاعات یک بیمار در یک پایش."
     },
     "monitorings": {
       "title": "پایش‌ها",
       "description": "تعریف پایش‌ها و فیلدهایی که ثبت می‌کنند."
+    },
+    "uploadExcel": {
+      "title": "بارگذاری اکسل",
+      "description": "فایل اکسل یک پایش را اضافه کنید."
     },
     "sbhmStep1": {
       "title": "گزارش مرحله ۱",
@@ -802,14 +869,6 @@
     "patientRecords": {
       "title": "سوابق سلامت من",
       "description": "سوابق پزشکی الکترونیکی شما."
-    },
-    "loading": {
-      "title": "در حال بارگذاری",
-      "description": "در حال بارگذاری."
-    },
-    "redirecting": {
-      "title": "در حال انتقال",
-      "description": "در حال انتقال به صفحه‌ی درست."
     }
   }
 }

@@ -2,29 +2,33 @@
 
 Uploaded Excel workbooks of occupational health screening, one row per person.
 
-## Routes
+## What is left here
+
+Every route under this folder is a redirect now. The uploads list, the reports
+and the person views moved to the campaign pages under `/console/monitorings`,
+and their components to `monitorings/_reports/`:
 
 ```
 saderat-bank-health-monitoring/
-  page.tsx                       list of uploaded monitorings
-  step-1/[id]/                   step_1 report
-  step-1/[id]/[national_id]/     one person's step_1 detail
-  step-2/[id]/                   step_2 report
+  page.tsx                       -> /console/monitorings
+  step-1/[id]/, step-2/[id]/     -> /console/monitorings/<campaign>?upload=<id>
+  step-*/[id]/[national_id]/     -> /console/monitorings/<campaign>/patients/<national_id>
 ```
+
+They stay so bookmarked links still land somewhere, for viewers too (see
+`layout.tsx`). What else stays is shared code the campaign pages import:
+`_detail/blocks.tsx`, `_ehr/`, `_personnel/`, `_charts/`,
+`_delete-excel-dialog/`, step-1's `route-context.tsx`, and step-2's `_charts/`,
+`_data/` and `_detail/`.
 
 The two steps have **unrelated record shapes** — different fields, different
-spellings, almost no overlap. That is why there is no `[step]` segment
-branching at runtime: each step gets its own route with its own components.
+spellings, almost no overlap. That is why each has its own report and person
+components rather than one that branches on the step.
 
-Never hardcode a detail URL. Use the helper, which maps step to segment:
-
-```ts
-import { SBHM_DETAIL_PATH } from "@/data/saderat-bank-health-monitoring/types";
-href={SBHM_DETAIL_PATH(row.original.type, row.original.id)}
-```
-
-`SBHM_TYPE_SEGMENTS` is declared `satisfies Record<SBHM_Type, string>`, so
-adding a step to the Django model fails to compile here until its route exists.
+`SBHM_DETAIL_PATH` still builds the old step URLs, and they only redirect. A new
+link should point at the campaign page instead. `SBHM_TYPE_SEGMENTS` is
+declared `satisfies Record<SBHM_Type, string>`, so adding a step to the Django
+model fails to compile here until its redirect exists.
 
 ## Types
 
@@ -65,11 +69,11 @@ step; it just means the backend can get ahead of it.
 `SBHM_RetrieveSerializer.json` is typed as `SBHM_Step1Record[]` for *both*
 steps. The correct model is `SBHM_Retrieve_ByType`, a union discriminated on
 `type`, which is exported and ready. It is not yet the default because
-`keyof` over a union collapses to the shared keys, and step-1's page uses
+`keyof` over a union collapses to the shared keys, and step-1's report uses
 `keyof SBHM_RetrieveSerializer["json"][number]` throughout — switching breaks
 it in **99 places**.
 
-So `step-2/[id]/page.tsx` reinterprets `json` through `unknown`, guarded by a
+So `monitorings/_reports/step-2-report.tsx` reinterprets `json` through `unknown`, guarded by a
 `data.type === "step_2"` check. When step-1 is refactored, switch
 `SBHM_RetrieveSerializer` to `SBHM_Retrieve_ByType` and that cast deletes
 itself.
@@ -102,11 +106,11 @@ columnHelper.accessor((row) => row["personel.کد ملی"], { id: "personel.کد
 `step-2/[id]/` declares its charts as data and derives everything from that:
 
 ```
-_charts/config.ts               22 charts as an array
-_charts/distribution-chart.tsx  the chart, written once
-_charts/locale-tooltip.tsx      module scope on purpose
-_data/use-step2-report.ts       computes from the same array
-page.tsx                        composition only
+_charts/config.ts                        22 charts as an array
+_charts/distribution-chart.tsx           the chart, written once
+../../_charts/locale-tooltip.tsx         module scope on purpose
+_data/use-step2-report.ts                computes from the same array
+monitorings/_reports/step-2-report.tsx   composition only
 ```
 
 Adding a metric is one entry:

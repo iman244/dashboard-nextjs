@@ -1,0 +1,54 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { findNationalIdColumn, campaignUploads, pickUpload, rowMatches, toNumber, hasAnyValue } from '../src/lib/campaign.ts';
+
+const up = (id, type, day) => ({ id, type, created_at: `2026-09-${day}T00:00:00Z`, name: String(id) });
+
+test('uploads of one campaign, newest first', () => {
+  const all = [up(1, 'step_2', '01'), up(2, 'step_1', '02'), up(3, 'step_2', '03')];
+  assert.deepEqual(campaignUploads(all, 'step_2').map(u => u.id), [3, 1]);
+});
+
+test('pickUpload keeps a valid request, else falls back to the newest', () => {
+  const list = [up(3, 'step_2', '03'), up(1, 'step_2', '01')];
+  assert.deepEqual(pickUpload(list, '1'), { selected: list[1], requestedMissing: false });
+  assert.deepEqual(pickUpload(list, '99'), { selected: list[0], requestedMissing: true });
+  assert.deepEqual(pickUpload(list, null), { selected: list[0], requestedMissing: false });
+  assert.deepEqual(pickUpload([], '1'), { selected: undefined, requestedMissing: true });
+});
+
+test('national id column: only the three known names, else none', () => {
+  assert.equal(findNationalIdColumn([{ 'کد ملی': '1' }]), 'کد ملی');
+  assert.equal(findNationalIdColumn([{ a: 1 }, { 'personel.کد ملی': '1' }]), 'personel.کد ملی');
+  assert.equal(findNationalIdColumn([{ 'کد ملی همسر': '1' }]), undefined);
+  assert.equal(findNationalIdColumn([{ name: 'x' }]), undefined);
+  assert.equal(findNationalIdColumn([]), undefined);
+});
+
+test('row search matches any cell, with Persian digits folded', () => {
+  const row = { name: 'Ali Rezaei', id: 12345678 };
+  assert.equal(rowMatches(row, 'rez'), true);
+  assert.equal(rowMatches(row, '۱۲۳۴'), true);
+  assert.equal(rowMatches(row, 'sara'), false);
+  assert.equal(rowMatches(row, '  '), true);
+});
+
+test('toNumber reads text and numbers alike, and refuses anything else', () => {
+  assert.equal(toNumber(24.5), 24.5);
+  assert.equal(toNumber('24.5'), 24.5);
+  assert.equal(toNumber(' ۲۴٫۵ '), 24.5);
+  assert.equal(toNumber('70'), 70);
+  assert.equal(toNumber('-3'), -3);
+  assert.equal(toNumber(''), undefined);
+  assert.equal(toNumber(null), undefined);
+  assert.equal(toNumber('12 kg'), undefined);
+  assert.equal(toNumber(Number.NaN), undefined);
+});
+
+test('hasAnyValue: a row with only blank finding cells has no findings', () => {
+  const row = { 'نام': 'علی', 'کد ملی': '0012345678', FBS: null, TSH: '', PSA: '   ' };
+  assert.equal(hasAnyValue(row, ['FBS', 'TSH', 'PSA', 'Missing']), false);
+  assert.equal(hasAnyValue(row, []), false);
+  assert.equal(hasAnyValue({ ...row, FBS: '95' }, ['FBS', 'TSH']), true);
+  assert.equal(hasAnyValue({ ...row, FBS: 0 }, ['FBS']), true);
+});

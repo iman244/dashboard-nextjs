@@ -10,7 +10,7 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { Spinner } from "@/components/ui/spinner";
-import { LIST_SBHM_QUERY_KEY } from "@/data/saderat-bank-health-monitoring/api";
+import { refreshUploads } from "@/data/saderat-bank-health-monitoring/refresh";
 import { useDestroy_SBHM_API } from "@/data/saderat-bank-health-monitoring/api/destroy";
 import { SBHM_ListSerializer } from "@/data/saderat-bank-health-monitoring/types";
 import { localeDigits } from "@/lib/utils";
@@ -33,9 +33,7 @@ const DeleteSaderatBankHealthMonitoringExcelDialog = ({
    useDestroy_SBHM_API({
     onSuccess: () => {
       toast.success(t("SuccessMessage"));
-      queryClient.invalidateQueries({
-        queryKey: LIST_SBHM_QUERY_KEY(),
-      });
+      refreshUploads(queryClient);
       onOpenChange(false);
     },
     onError: (error) => {

@@ -2,81 +2,122 @@ import {
   BarChart,
   ClipboardList,
   FileText,
-  SquareActivity,
+  House,
+  Plus,
+  Search,
   Tags,
-  User,
+  Upload,
   type LucideIcon,
 } from "lucide-react";
 
-/**
- * The console's destinations, defined once.
- *
- * The sidebar and the console home render the same list, and the home page is
- * the only way in on mobile, where the sidebar is behind a trigger. Two copies
- * of this array would drift the moment a section is added — and the copy that
- * gets forgotten is the one nobody on the team uses, which is the mobile one.
- *
- * Titles live under `/console.ConsoleSidebar` because the sidebar already owns
- * them; the descriptions are home-only, so they sit under `/console.ConsoleHome`.
- */
+export type ConsoleNavGroup = "home" | "health" | "monitorings";
+
 export type ConsoleNavItem = {
-  /** key under `/console.ConsoleSidebar` */
   titleKey: string;
-  /** key under `/console.ConsoleHome.descriptions` */
   descriptionKey: string;
   url: string;
   icon: LucideIcon;
-  /**
-   * Hide from the sidebar and the console home unless the user is staff.
-   *
-   * Not a security boundary — the backend decides that, and it lets any
-   * signed-in user read this one. It keeps a page whose every control is
-   * disabled for most users out of everyone else's way.
-   */
+  group: ConsoleNavGroup;
+  /** Extra route prefixes owned by this task. */
+  activePrefixes?: readonly string[];
   staffOnly?: boolean;
+  primary?: boolean;
 };
 
+/** Ordered once for the sidebar and the console home. */
 export const CONSOLE_NAV_ITEMS: ConsoleNavItem[] = [
   {
-    titleKey: "electronicHealthRecord",
-    descriptionKey: "electronicHealthRecord",
+    titleKey: "home",
+    descriptionKey: "home",
+    url: "/console",
+    icon: House,
+    group: "home",
+  },
+  {
+    titleKey: "findPatient",
+    descriptionKey: "findPatient",
     url: "/console/electronic-health-record",
-    icon: FileText,
+    icon: Search,
+    group: "health",
+    primary: true,
+    // A patient opens from search, so it sits under this task rather than
+    // in the sidebar.
+    activePrefixes: ["/console/patients"],
   },
   {
     titleKey: "periodicalReports",
     descriptionKey: "periodicalReports",
     url: "/console/periodical-reports",
     icon: BarChart,
+    group: "health",
   },
   {
-    titleKey: "patientReports",
-    descriptionKey: "patientReports",
-    url: "/console/patient-reports",
-    icon: User,
-  },
-  {
-    titleKey: "saderatBankHealthMonitoring",
-    descriptionKey: "saderatBankHealthMonitoring",
-    url: "/console/saderat-bank-health-monitoring",
-    icon: SquareActivity,
-  },
-  {
-    titleKey: "monitorings",
-    descriptionKey: "monitorings",
+    titleKey: "campaigns",
+    descriptionKey: "campaigns",
     url: "/console/monitorings",
     icon: Tags,
-    // NOT staffOnly, though it once was: records now live under a monitoring,
-    // and recording is an operator's job. The page gates its own create, edit
-    // and delete controls on `isStaff`; reaching the list is not gated.
+    group: "monitorings",
   },
   {
     titleKey: "formSabtPayesh",
     descriptionKey: "formSabtPayesh",
-    // Not under /console: it is a standalone embedded form.
     url: "/form-sabt-payesh",
-    // Was SquareActivity, the same icon as the monitoring section above it —
-    // two identical icons in a list of five is a coin toss, not a signpost.
+    icon: FileText,
+    group: "monitorings",
+  },
+  {
+    titleKey: "recordMonitoring",
+    descriptionKey: "recordMonitoring",
+    url: "/console/record-monitoring",
     icon: ClipboardList,
+    group: "monitorings",
+    activePrefixes: ["/console/monitorings/*/records"],
+    staffOnly: true,
+  },
+  {
+    titleKey: "uploadExcel",
+    descriptionKey: "uploadExcel",
+    url: "/console/monitorings/upload",
+    icon: Upload,
+    group: "monitorings",
+    staffOnly: true,
+  },
+  {
+    titleKey: "defineCampaign",
+    descriptionKey: "defineCampaign",
+    url: "/console/monitorings/new",
+    icon: Plus,
+    group: "monitorings",
+    staffOnly: true,
   },
 ];
+
+const ownsPath = (prefix: string, pathname: string) => {
+  const parts = prefix.split("/");
+  const pathParts = pathname.split("/");
+  return parts.length <= pathParts.length && parts.every((part, index) =>
+    part === "*" || part === pathParts[index]
+  );
+};
+
+/**
+ * The most specific item wins: a longer URL or prefix that also owns the
+ * path beats a shorter one, so `/console/monitorings/upload` activates
+ * "uploadExcel" and not the "campaigns" item that owns every other
+ * `/console/monitorings/...` path.
+ */
+export const isConsoleNavItemActive = (item: ConsoleNavItem, pathname: string) => {
+  if (item.url === "/console") return pathname === item.url;
+  if (item.activePrefixes?.some((prefix) => ownsPath(prefix, pathname))) return true;
+  const owns = pathname === item.url || pathname.startsWith(`${item.url}/`);
+  if (!owns) return false;
+  // A longer item URL or prefix that also owns the path wins.
+  return !CONSOLE_NAV_ITEMS.some((other) =>
+    other !== item &&
+    ((other.url.length > item.url.length &&
+      (pathname === other.url || pathname.startsWith(`${other.url}/`))) ||
+      other.activePrefixes?.some((prefix) => ownsPath(prefix, pathname)))
+  );
+};
+
+export const CONSOLE_NAV_GROUPS: ConsoleNavGroup[] = ["home", "health", "monitorings"];

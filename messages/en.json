@@ -1,5 +1,13 @@
 {
   "common": {
+    "StaffAccess": {
+      "checking": "Checking access…",
+      "checkFailedTitle": "Could not check access",
+      "checkFailedDescription": "The account service did not respond.",
+      "retry": "Try again",
+      "title": "Staff access required",
+      "description": "Ask an administrator for access to this section."
+    },
     "Navigation": {
       "backToHome": "Back to home",
       "toggleSidebar": "Toggle sidebar"
@@ -7,7 +15,6 @@
     "Loading": {
       "default": "Loading…",
       "session": "Checking your session…",
-      "datasets": "Loading datasets…",
       "report": "Building the report…",
       "record": "Loading the health record…",
       "records": "Loading records…",
@@ -136,7 +143,7 @@
       "Close": "Close",
       "ViewDetails": "View details",
       "PatientRecord": "Patient record",
-      "PatientReport": "Patient report",
+      "PatientPage": "Patient page",
       "TrendChart": "Trend chart",
       "ServiceRecords": "Service records",
       "OpenReport": "Open report",
@@ -185,7 +192,8 @@
       "Position": "{index} of {count}",
       "Previous": "Previous image",
       "Next": "Next image",
-      "OpenOriginal": "Open original"
+      "OpenOriginal": "Open original",
+      "PatientEmpty": "No monitoring records have been added yet. Contact your care team if you expected a record."
     },
     "StaffOnly": {
       "Title": "Staff only",
@@ -198,26 +206,16 @@
     },
     "HomePage": {
       "title": "Welcome",
-      "description": "Clinical data console to explore EHRs, run periodical analytics, and build patient-specific reports.",
+      "description": "Choose how you access health records.",
+      "choosePath": "Where would you like to go?",
       "buttons": {
-        "goToConsole": "Go to Console",
+        "goToConsole": "Staff console",
         "signInRegister": "Sign In / Register",
-        "patientSignIn": "I'm a patient"
+        "patientSignIn": "Patient records"
       },
-      "features": {
-        "ehr": {
-          "title": "Electronic Health Records",
-          "description": "Search and filter clinical records with sortable tables and detail views."
-        },
-        "periodical": {
-          "title": "Periodical Reports",
-          "description": "Visualize trends with charts for records and patients over time."
-        },
-        "patient": {
-          "title": "Patient Reports",
-          "description": "Aggregate services per patient and drill down into result trends."
-        },
-        "cta": "Get started"
+      "staffWork": {
+        "title": "Inside the staff console",
+        "description": "Find a patient, record monitoring information, and review clinical and periodical reports."
       }
     }
   },
@@ -252,42 +250,34 @@
       }
     }
   },
-  "/auth-authenticated": {
-    "AuthAuthenticated": {
-      "description1": "You are authenticated, you will be redirected to the desired page in a few seconds.",
-      "description2": "If you are not redirected, please click the button below.",
-      "redirect": "Redirect"
-    }
-  },
-  "/console-unauthenticate": {
-    "AuthenticatedGroupLayout": {
-      "description1": "You are not authenticated, you will be redirected to login in a few seconds.",
-      "description2": "If you are not redirected, please click the login button.",
-      "redirectToLogin": "Login"
-    }
-  },
   "/form-sabt-payesh": {},
   "/console": {
     "ConsoleHome": {
       "title": "Dashboard",
-      "subtitle": "Choose a section to get started.",
+      "subtitle": "Choose the task you need to complete.",
+      "tasksLabel": "Console tasks",
       "descriptions": {
-        "electronicHealthRecord": "Search and browse patient health records",
-        "periodicalReports": "Generate comprehensive reports for time periods",
-        "patientReports": "Generate comprehensive reports for patients",
-        "saderatBankHealthMonitoring": "Uploaded datasets and their step reports",
-        "monitorings": "The monitorings you record against, and the fields each one collects",
-        "formSabtPayesh": "Register monitoring data with the online form"
+        "home": "Return to console tasks",
+        "findPatient": "Open one patient's health record",
+        "periodicalReports": "Charts of services and patients over a period",
+        "campaigns": "Every monitoring, its Excel uploads and records",
+        "formSabtPayesh": "The external FormAfzar monitoring form",
+        "recordMonitoring": "Choose a monitoring and enter a patient's data",
+        "uploadExcel": "Add a monitoring's Excel file",
+        "defineCampaign": "Create a monitoring and its form fields"
       }
     },
     "ConsoleSidebar": {
       "dashboard": "Dashboard",
-      "electronicHealthRecord": "Electronic Health Record",
-      "periodicalReports": "Periodical Reports",
-      "patientReports": "Patient Reports",
-      "saderatBankHealthMonitoring": "Saderat Bank Health Monitoring",
-      "monitorings": "Monitorings",
-      "formSabtPayesh": "Form Sabt Payesh",
+      "home": "Console home",
+      "findPatient": "Find a patient",
+      "periodicalReports": "Periodic reports",
+      "campaigns": "All monitorings",
+      "formSabtPayesh": "Online form (FormAfzar)",
+      "recordMonitoring": "Enter patient data",
+      "uploadExcel": "Upload monitoring Excel",
+      "defineCampaign": "Define a new monitoring",
+      "groups": {"health": "Health record", "monitorings": "Monitorings"},
       "account": "Account",
       "logout": "Log out"
     }
@@ -295,6 +285,19 @@
   "/console/electronic-health-record": {
     "EHRTable": {
       "title": "Electronic Health Records",
+      "description": "Find a patient, inspect their care history, and open a patient report from a result.",
+      "refresh": "Refresh",
+      "activeFilters": "Active filters",
+      "nationalNumberFilter": "National ID",
+      "dateRangeFilter": "Date range",
+      "patientTypeFilter": "Patient type",
+      "removeNationalNumber": "Remove national ID filter",
+      "removeDateRange": "Remove date range filter",
+      "removePatientType": "Remove patient type filter",
+      "openPatientLabel": "Open a patient by national ID",
+      "openPatientPlaceholder": "National ID",
+      "openPatientAction": "Open",
+      "openPatientInvalid": "A national ID has 10 digits.",
       "pagination": {
         "showing": "Showing {start} to {end} of {total} records",
         "rowsPerPage": "Rows per page:",
@@ -325,36 +328,24 @@
     }
   },
   "/console/form-sabt-payesh": {},
-  "/console/patient-reports": {
-    "PatientReports": {
-      "title": "Patient Reports",
-      "description": "Generate comprehensive reports for specific patients",
-      "loadingMessage": "Report is getting ready…",
-      "selectPatientAndPeriod": "Select Patient and Time Period",
-      "nationalNumber": "National Number",
-      "nationalNumberPlaceholder": "Enter national number",
-      "dateRange": "Select date range",
-      "selectDateRange": "Select date range",
-      "patientType": "Patient Type",
-      "selectPatientType": "Select Patient Type",
-      "generateReport": "Generate Report",
-      "reportResults": "Report Results",
-      "totalRecords": "Total Records",
-      "patientInfo": "Patient Information",
-      "selectedPatientAndPeriod": "Selected Patient and Period",
-      "chartPlaceholder": "Chart",
-      "chartComingSoon": "Chart coming soon",
-      "errorMessage": "Error loading report data",
-      "serviceChartTitle": "Service Count",
-      "validation": {
-        "nationalNumberRequired": "National number is required",
-        "patientTypeRequired": "Patient type is required",
-        "dateRangeInvalid": "End date must be after start date"
-      },
-      "columnServiceCount": "Times recorded",
-      "columnNormalResults": "Normal results",
-      "columnAbnormalResults": "Abnormal results",
-      "noLabResult": "No lab result"
+  "/console/patients": {
+    "PatientPage": {
+      "fallbackTitle": "Patient",
+      "nationalId": "National ID {id}",
+      "rangeHint": "The date range applies to EHR results. Monitoring records and Excel reports are always shown in full.",
+      "invalidTitle": "Not a valid national ID",
+      "invalidDescription": "A national ID has 10 digits. Search for the patient again.",
+      "ehrTitle": "EHR results",
+      "tabsLoading": "Loading health record types…",
+      "ehrEmpty": "No EHR records in this date range.",
+      "ehrFailed": "{type} records could not be loaded.",
+      "campaignsTitle": "This patient's monitorings",
+      "campaignsDescription": "Monitorings with an Excel row or entered data for this patient.",
+      "campaignsEmpty": "This patient is in no monitoring.",
+      "campaignsError": "Monitorings could not be loaded.",
+      "campaignSummary": "{uploads, plural, one {# Excel row} other {# Excel rows}} · {records, plural, one {# entered record} other {# entered records}}",
+      "retry": "Try again",
+      "open": "Open"
     }
   },
   "/console/periodical-reports": {
@@ -374,6 +365,8 @@
       "errorMessage": "Error loading report data",
       "chartTitle": "Records Count by Date",
       "patientChartTitle": "Patient Count by Date",
+      "patientDateRangeTitle": "Patient reports for the selected date range",
+      "serviceResultsTitle": "Services and result counts",
       "serviceChartTitle": "Service Distribution",
       "debugData": "Debug Data",
       "noDataAvailable": "No data available",
@@ -415,12 +408,17 @@
       "columnServiceCount": "Times recorded",
       "columnNormalResults": "Normal results",
       "columnAbnormalResults": "Abnormal results",
-      "noLabResult": "No lab result"
+      "noLabResult": "No lab result",
+      "noServices": "No services found",
+      "searchService": "Search service names…",
+      "clearSearch": "Clear search",
+      "serviceRecordsTitle": "Service records: {service}"
     }
   },
   "/console/saderat-bank-health-monitoring": {
     "UploadSaderatBankHealthMonitoringExcelDialog": {
-      "DialogTitle": "Upload Excel",
+      "PageTitle": "Upload Excel",
+      "NoSupportedTypes": "No report type with a detail view is available for Excel upload.",
       "Form": {
         "NameLabel": "Name",
         "NamePlaceholder": "Enter name",
@@ -429,7 +427,23 @@
       },
       "SuccessMessage": "Excel uploaded successfully",
       "ErrorTitle": "Upload failed",
-      "ErrorMessage": "The file could not be uploaded. Please try again."
+      "ErrorMessage": "The file could not be uploaded. Please try again.",
+      "refusedTitle": "The file was not uploaded",
+      "savedWithIssues": "Uploaded. {count, plural, one {# thing} other {# things}} to check:",
+      "openUpload": "Open this upload",
+      "uploadAnother": "Upload another file",
+      "issues": {
+        "unreadable": "The file could not be read. Save it as an .xlsx file and try again.",
+        "no_rows": "The sheet has no data rows under its header row, so there is nothing to show.",
+        "missing_id_column": "The column “{column}” is missing: the charts work, but no one in this file can be opened. Columns found: <bdi>{found}</bdi>",
+        "looks_like": "This looks like a “{campaign}” file. Did you choose the right monitoring?",
+        "no_id_column": "No national ID column was found, so these rows can’t be linked to patients.",
+        "blank_ids": "{count, plural, one {# row has} other {# rows have}} no national ID and can’t be opened. Rows: {rows}",
+        "invalid_ids": "{count, plural, one {# row has} other {# rows have}} a national ID that isn’t 10 digits and won’t match a patient: {rows}",
+        "duplicate_ids": "{count, plural, one {# national ID appears} other {# national IDs appear}} on more than one row; every row is kept: {groups}",
+        "missing_columns": "These columns are missing, so the charts that use them will be empty: <bdi>{columns}</bdi>",
+        "more": "and {count} more"
+      }
     },
     "DeleteSaderatBankHealthMonitoringExcelDialog": {
       "DialogTitle": "Delete Excel",
@@ -438,13 +452,12 @@
       "ErrorMessage": "Could not delete the Excel file: {message}"
     },
     "SaderatBankHealthMonitoringPage": {
-      "UploadExcel": "Upload Excel",
+      "PageDescription": "Review uploaded Bank monitoring reports. Excel upload supports the report types shown in the form.",
       "Loading": "Loading…",
       "ErrorTitle": "Error loading data",
       "EmptyStateTitle": "No data available",
       "EmptyStateDescription": "Please upload an Excel file",
       "EmptyStateDescriptionDetail": "No records available to display",
-      "ReportTitle": "Statistical Report",
       "SearchPersonnel": "Search Patients",
       "SearchPersonnelDescription": "Search and view patient details",
       "SearchPlaceholder": "Search by first name, surname or national ID…",
@@ -453,13 +466,12 @@
       "NoResults": "No results found",
       "WrongStepTitle": "This record belongs to a different step.",
       "WrongStepAction": "Open it in the right view",
-      "PageTitle": "Saderat Bank Health Monitoring",
+      "PageTitle": "Excel reports",
       "MatchCount": "{count} patients"
     },
     "PersonRecord": {
       "AbnormalFindings": "{count} abnormal findings",
-      "ShowAbnormalOnly": "Abnormal only",
-      "ViewTestChart": "View test trend chart"
+      "ShowAbnormalOnly": "Abnormal only"
     },
     "Step2Report": {
       "recordCount": "{count} records",
@@ -500,7 +512,6 @@
       }
     },
     "Ehr": {
-      "recordsTitle": "Electronic Health Records",
       "rangeLabel": "Normal range",
       "noRange": "No reference range",
       "loadError": "Could not load electronic health records.",
@@ -513,9 +524,6 @@
     },
     "Detail": {
       "notFound": "No record with this national ID in this monitoring.",
-      "backToReport": "Back to report",
-      "duplicateNationalId": "This national ID appears on {count} records. All are shown below.",
-      "recordIndex": "Record {index}",
       "sections": {
         "ecg": "Electrocardiogram",
         "clinicalExam": "Clinical Examination",
@@ -532,15 +540,30 @@
       }
     }
   },
+  "/console/record-monitoring": {
+    "accessDeniedTitle": "Staff access required",
+    "accessDeniedDescription": "Ask an administrator for access to monitoring records.",
+    "title": "Record monitoring",
+    "description": "Choose a monitoring type to add a patient record to it.",
+    "loading": "Loading monitoring types…",
+    "errorTitle": "Monitoring types could not be loaded",
+    "errorDescription": "Check your connection and try again.",
+    "retry": "Try again",
+    "emptyTitle": "No monitoring types yet",
+    "emptyStaff": "Create a monitoring type to start recording.",
+    "emptyViewer": "Ask an administrator to create a monitoring type.",
+    "createType": "New type",
+    "addRecord": "Add record",
+    "noFormsTitle": "No monitoring type has a form yet",
+    "noFormsDescription": "Add fields to a monitoring type under Monitorings to start recording.",
+    "hiddenNote": "Types without form fields, such as Excel report types, are not listed here."
+  },
   "/console/monitorings": {
     "MonitoringTypesPage": {
-      "PageTitle": "Monitoring Types",
-      "PageDescription": "The types a monitoring report can be filed under. Uploads choose from this list.",
-      "CreateType": "New type",
-      "SlugColumn": "Slug",
-      "NameEnColumn": "Name (English)",
-      "NameFaColumn": "Name (Persian)",
-      "NoViewBadge": "No view",
+      "PageTitle": "Monitorings",
+      "PageDescription": "Every monitoring with its Excel uploads and entered records.",
+      "CreateType": "Define a new monitoring",
+      "counts": "{uploads, plural, one {# Excel upload} other {# Excel uploads}} · {records, plural, one {# record} other {# records}}",
       "ErrorTitle": "Error loading monitoring types",
       "EmptyStateTitle": "No monitoring types",
       "EmptyStateDescription": "Create one before uploading a report.",
@@ -556,8 +579,8 @@
       "InUseDescriptionUnknown": "Monitoring reports are still filed under this type. Delete them first, or rename this type instead."
     },
     "Builder": {
-      "NewTitle": "New monitoring type",
-      "EditTitle": "Edit monitoring type",
+      "NewTitle": "Define a new monitoring",
+      "EditTitle": "Edit monitoring",
       "NotFound": "This monitoring type was not found.",
       "Back": "Back to list",
       "Save": "Save",
@@ -642,13 +665,40 @@
       "UploadsFailed": "{n} image(s) failed to upload. Nothing was saved — retry or remove them.",
       "StorageUnreachable": "Storage could not be reached.",
       "NationalIdLength": "A national ID has 10 digits."
+    },
+    "Campaign": {
+      "uploadsTab": "Excel uploads",
+      "recordsTab": "Entered records",
+      "editDefinition": "Edit definition",
+      "uploadExcel": "Upload Excel",
+      "chooseUpload": "Excel upload",
+      "noUploads": "No Excel has been uploaded to this monitoring yet.",
+      "uploadMissing": "That upload is not in this monitoring; showing the latest instead.",
+      "notFound": "Monitoring not found",
+      "backToList": "Back to monitorings",
+      "deleteUpload": "Delete this upload",
+      "loadingRows": "Loading rows…",
+      "rowsError": "The rows could not be loaded.",
+      "noRows": "This upload has no rows.",
+      "searchRows": "Search rows",
+      "rowCount": "{shown, number} of {total, plural, one {# row} other {# rows}}"
+    },
+    "CampaignPatient": {
+      "fallbackTitle": "Patient",
+      "nationalId": "National ID {id}",
+      "healthRecord": "Health record",
+      "rowIndex": "Row {index}",
+      "nothing": "This patient has no data in this monitoring.",
+      "loadError": "This patient's monitoring data could not be loaded.",
+      "noFindings": "No findings recorded in this row.",
+      "demographics": { "age": "Age", "gender": "Gender", "examDate": "Exam date" }
     }
   },
   "/patient/sign-in": {
     "SignInPage": {
       "eyebrow": "Health Record",
       "title": "Patient sign in",
-      "description": "Enter your national ID to see your own health records.",
+      "description": "Sign in with your national ID and the password provided by your care team to view your monitoring records. Contact your care team to set up access or reset your password.",
       "status": {
         "signedIn": "Signed in successfully."
       },
@@ -676,7 +726,7 @@
   },
   "/patient/records": {
     "PatientRecords": {
-      "title": "My health records",
+      "title": "My monitoring records",
       "subtitle": "National ID: {nationalId}",
       "refresh": "Refresh",
       "signOut": "Sign out",
@@ -706,7 +756,8 @@
         "error": "Could not load your records: {message}",
         "retry": "Try again",
         "noData": "No records in this date range"
-      }
+      },
+      "availability": "This page shows monitoring records entered by your care team. EHR visits, laboratory results and X-rays are not available here."
     }
   },
   "/authentication/register": {
@@ -767,17 +818,33 @@
       "title": "Periodical Reports",
       "description": "Generate comprehensive reports for time periods."
     },
-    "patientReports": {
-      "title": "Patient Reports",
-      "description": "Generate comprehensive reports for patients."
+    "patient": {
+      "title": "Patient",
+      "description": "One patient’s full history."
     },
     "saderatBankHealthMonitoring": {
-      "title": "Saderat Bank Health Monitoring",
+      "title": "Excel reports",
       "description": "Uploaded datasets and their step reports."
+    },
+    "recordMonitoring": {
+      "title": "Record Monitoring",
+      "description": "Choose a monitoring type and work with patient entries."
+    },
+    "campaign": {
+      "title": "Monitoring",
+      "description": "One monitoring's uploads and records."
+    },
+    "campaignPatient": {
+      "title": "Patient in monitoring",
+      "description": "One patient's data within one monitoring."
     },
     "monitorings": {
       "title": "Monitorings",
       "description": "Define monitorings and the fields they collect."
+    },
+    "uploadExcel": {
+      "title": "Upload Excel",
+      "description": "Add an Excel file to a monitoring."
     },
     "sbhmStep1": {
       "title": "Step 1 Report",
@@ -802,14 +869,6 @@
     "patientRecords": {
       "title": "My Health Records",
       "description": "Your own electronic health records."
-    },
-    "loading": {
-      "title": "Loading",
-      "description": "Loading."
-    },
-    "redirecting": {
-      "title": "Redirecting",
-      "description": "Taking you to the right page."
     }
   }
 }

@@ -15,14 +15,19 @@ const MonitoringIdRouteContext = React.createContext<
   MonitoringIdRouteContextType | undefined
 >(undefined);
 
-export const MonitoringIdRouteProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+/**
+ * `uploadId` mounts the report outside its own route (the campaign page);
+ * without it the upload comes from the URL, as on the old step routes.
+ */
+export const MonitoringIdRouteProvider: React.FC<
+  React.PropsWithChildren<{ uploadId?: number }>
+> = ({ children, uploadId }) => {
   const params = useParams<{ id: string }>();
+  const id = uploadId ?? parseInt(params.id);
   const monitoring_query = useRetrieve_SBHM_API({
     input: {
       pathVariables: {
-        id: parseInt(params.id),
+        id,
       },
     },
   });

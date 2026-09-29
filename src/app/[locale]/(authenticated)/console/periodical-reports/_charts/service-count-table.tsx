@@ -18,8 +18,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ServiceRecordsTable } from "./service-records-table";
-import { formatNumber, localeDigits } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { localeDigits } from "@/lib/utils";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ServiceCountTableProps {
   data: ElectronicHealthRecord[];
@@ -47,10 +47,11 @@ interface ServiceCountData {
 const renderResultCount = (
   value: number,
   resultCount: number,
-  noResultLabel: string
+  noResultLabel: string,
+  locale: string
 ) =>
   resultCount > 0 ? (
-    <span>{localeDigits(value.toString(), "fa")}</span>
+    <span>{localeDigits(value.toString(), locale)}</span>
   ) : (
     <span className="text-muted-foreground" aria-label={noResultLabel}>
       &mdash;
@@ -67,6 +68,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const tSCT = useTranslations("/console/periodical-reports.ServiceCountTable");
   const tDictionary = useTranslations("common.Dictionary");
+  const locale = useLocale();
 
   // Process data to create aggregated service counts.
   //
@@ -155,7 +157,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
         id: "serviceCount",
         header: tSCT("columnServiceCount"),
         cell: (info) => (
-          <span>{localeDigits(info.getValue().toString(), "fa")}</span>
+          <span>{localeDigits(info.getValue().toString(), locale)}</span>
         ),
       }),
       columnHelper.accessor((row) => row.normalResults, {
@@ -165,7 +167,8 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
           renderResultCount(
             info.getValue(),
             info.row.original.resultCount,
-            tSCT("noLabResult")
+            tSCT("noLabResult"),
+            locale
           ),
       }),
       columnHelper.accessor((row) => row.abnormalResults, {
@@ -175,7 +178,8 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
           renderResultCount(
             info.getValue(),
             info.row.original.resultCount,
-            tSCT("noLabResult")
+            tSCT("noLabResult"),
+            locale
           ),
       }),
       columnHelper.display({
@@ -198,7 +202,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
         ),
       }),
     ]),
-    [tSCT, tDictionary]
+    [tSCT, tDictionary, locale]
   );
 
   const table = useTable({
@@ -223,7 +227,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
   if (aggregatedData.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-muted-foreground">
-        هیچ خدمتی یافت نشد
+        {tSCT("noServices")}
       </div>
     );
   }
@@ -236,7 +240,8 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="جستجو در نام خدمت..."
+              placeholder={tSCT("searchService")}
+              aria-label={tSCT("searchService")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pe-10"
@@ -249,7 +254,7 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
               onClick={() => setSearchTerm("")}
               className="h-10"
             >
-              پاک کردن
+              {tSCT("clearSearch")}
             </Button>
           )}
         </div>
@@ -263,7 +268,9 @@ export const ServiceCountTable: React.FC<ServiceCountTableProps> = ({
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="bottom" className="max-h-[100dvh]">
           <SheetHeader className="flex flex-row items-center justify-between">
-            <SheetTitle>گزارش رکوردهای خدمت: {selectedService}</SheetTitle>
+            <SheetTitle>
+              {tSCT("serviceRecordsTitle", { service: selectedService ?? "" })}
+            </SheetTitle>
             <SheetClose aria-label={tDictionary("Close")}>
               <XIcon className="h-4 w-4" />
             </SheetClose>

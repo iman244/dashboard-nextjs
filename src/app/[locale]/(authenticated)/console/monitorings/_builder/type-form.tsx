@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { PageHeader } from "@/components/app/page-header";
+import { ConsoleBreadcrumbs } from "@/components/app/console-breadcrumbs";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -69,14 +70,18 @@ export const TypeForm = ({ id }: { id?: number }) => {
         // editor rows have a stable identity to be keyed on.
         existing ? withIds(asFieldSchema(existing.field_schema)) : EMPTY_SCHEMA
       }
-      onDone={() => {
+      onDone={async (campaignId) => {
         // "all": the list is not mounted on this page, and with refetchOnMount
         // off it would otherwise come back with the old names and schema.
-        queryClient.invalidateQueries({
+        // Awaited: a new campaign is not in the cached list, so its page would
+        // flash "Monitoring not found" until the refetch landed.
+        await queryClient.invalidateQueries({
           queryKey: LIST_MONITORING_TYPE_QUERY_KEY(),
           refetchType: "all",
         });
-        router.push(LIST_PATH);
+        // Off to the campaign's own page, not the list: that is where its
+        // uploads and records now live.
+        router.push(`/console/monitorings/${campaignId}`);
       }}
       t={t}
     />
@@ -97,9 +102,10 @@ const TypeFormBody = ({
   initialNameFa: string;
   initialNameEn: string;
   initialSchema: FieldSchema;
-  onDone: () => void;
+  onDone: (campaignId: number) => void;
   t: ReturnType<typeof useTranslations<"/console/monitorings.Builder">>;
 }) => {
+  const tNav = useTranslations("/console.ConsoleSidebar");
   const [slug, setSlug] = React.useState(initialSlug);
   // The dashboard routes step_1 and step_2 reports by slug, so renaming one
   // leaves those reports with no detail page. Warn, do not block: Django
@@ -115,7 +121,10 @@ const TypeFormBody = ({
 
   const create = useCreate_MonitoringType_API();
   const update = useUpdate_MonitoringType_API();
-  const saving = create.isPending || update.isPending;
+  // Saved, and waiting for the list to refetch before leaving: still busy,
+  // or a second click would create the campaign twice.
+  const [finishing, setFinishing] = React.useState(false);
+  const saving = create.isPending || update.isPending || finishing;
 
   const problems = draftProblems(schema);
   const incomplete =
@@ -129,36 +138,57 @@ const TypeFormBody = ({
       name_en: nameEn.trim(),
       field_schema: toPayload(schema),
     };
-    const handlers = {
-      onSuccess: () => {
-        toast.success(id === undefined ? t("Created") : t("Updated"));
-        onDone();
-      },
-      onError: (error: {
-        response?: { data?: Record<string, string[] | undefined> };
-      }) => {
-        const data = error.response?.data;
-        if (data && typeof data === "object") {
-          setFieldErrors(
-            Object.fromEntries(
-              Object.entries(data).filter(([, value]) => Array.isArray(value))
-            ) as Record<string, string[]>
-          );
-        }
-        toast.error(t("SaveFailed"));
-      },
+    const onError = (error: {
+      response?: { data?: Record<string, string[] | undefined> };
+    }) => {
+      const data = error.response?.data;
+      if (data && typeof data === "object") {
+        setFieldErrors(
+          Object.fromEntries(
+            Object.entries(data).filter(([, value]) => Array.isArray(value))
+          ) as Record<string, string[]>
+        );
+      }
+      toast.error(t("SaveFailed"));
     };
 
     if (id === undefined) {
-      create.mutate({ payload }, handlers);
+      create.mutate(
+        { payload },
+        {
+          // The new campaign's id comes back only from the mutation's
+          // response; the list's own id is not known until here.
+          onSuccess: (created) => {
+            toast.success(t("Created"));
+            setFinishing(true);
+            onDone(created.id);
+          },
+          onError,
+        }
+      );
     } else {
-      update.mutate({ pathVariables: { id }, payload }, handlers);
+      update.mutate(
+        { pathVariables: { id }, payload },
+        {
+          onSuccess: () => {
+            toast.success(t("Updated"));
+            setFinishing(true);
+            onDone(id);
+          },
+          onError,
+        }
+      );
     }
   }, [create, id, nameEn, nameFa, onDone, schema, slug, t, update]);
 
   return (
     <div className="space-y-4">
       <PageHeader
+        breadcrumbs={
+          <ConsoleBreadcrumbs
+            parent={{ href: LIST_PATH, label: tNav("campaigns") }}
+          />
+        }
         title={id === undefined ? t("NewTitle") : t("EditTitle")}
         actions={
           <div className="flex items-center gap-2">

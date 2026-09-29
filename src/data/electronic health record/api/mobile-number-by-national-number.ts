@@ -37,5 +37,7 @@ export const useMobileNumberByNationalNumberApi = () => {
   return useMutation({
     mutationKey: [PDD_MOBILE_NUMBER_BY_NATIONAL_NUMBER_KEY],
     mutationFn: mobile_number_by_national_number,
+    // Its only caller, the EHR detail modal, toasts the failure itself.
+    meta: { silentNetworkError: true },
   });
 };

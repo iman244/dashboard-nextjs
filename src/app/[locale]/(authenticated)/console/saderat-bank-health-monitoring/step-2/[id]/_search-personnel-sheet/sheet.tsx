@@ -20,6 +20,7 @@ import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { localeDigits } from "@/lib/utils";
 import type { SBHM_Step2Record } from "@/data/saderat-bank-health-monitoring/types";
 import { PersonnelList } from "../../../_personnel/personnel-list";
+import { fullNationalId, isNationalId } from "@/lib/national-id";
 
 const columnHelper = createColumnHelper<
   typeof appTableFeatures,
@@ -41,13 +42,14 @@ export function SearchPersonnelSheet({
   open,
   onOpenChange,
   data,
-  monitoringId,
+  personHref,
   filter,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   data: SBHM_Step2Record[];
-  monitoringId: number;
+  /** The person's page for a (ten-digit) national ID. */
+  personHref: (nationalId: string) => string;
   filter?: PersonnelFilter;
 }) {
   const t = useTranslations(
@@ -95,21 +97,23 @@ export function SearchPersonnelSheet({
           id: "actions",
           header: tDictionary("Actions"),
           cell: ({ row }) => {
-            const nationalId = String(row.original["کد ملی"] ?? "");
-            // the route keys on national id; a row without one has nowhere to go
-            if (!nationalId) return null;
+            const nationalId = fullNationalId(
+              row.original["کد ملی"] as string | number | null
+            );
+            // the route keys on national id; a row without a valid one has nowhere to go
+            if (!isNationalId(nationalId)) return null;
             return (
               <RowAction
                 icon={FileUser}
                 label={tDictionary("PatientRecord")}
-                href={`/console/saderat-bank-health-monitoring/step-2/${monitoringId}/${nationalId}`}
+                href={personHref(nationalId)}
                 onClick={() => onOpenChange(false)}
               />
             );
           },
         }),
       ]),
-    [locale, monitoringId, onOpenChange, tDictionary]
+    [locale, personHref, onOpenChange, tDictionary]
   );
 
   const table = useTable({
@@ -182,13 +186,12 @@ export function SearchPersonnelSheet({
           <PersonnelList
             items={table.getRowModel().rows.map((row) => {
               const nationalId = String(row.original["کد ملی"] ?? "");
+              const id = fullNationalId(nationalId);
               return {
                 key: row.id,
                 name: `${row.original["نام"] ?? ""} ${row.original["نام خانوادگی"] ?? ""}`.trim(),
                 nationalId: localeDigits(nationalId, locale),
-                href: nationalId
-                  ? `/console/saderat-bank-health-monitoring/step-2/${monitoringId}/${nationalId}`
-                  : null,
+                href: isNationalId(id) ? personHref(id) : null,
               };
             })}
             openLabel={tDictionary("PatientRecord")}

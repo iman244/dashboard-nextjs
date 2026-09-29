@@ -1,13 +1,7 @@
 "use client";
 
-import React from "react";
-import { useQueries, type UseQueryResult } from "@tanstack/react-query";
-import { format, subYears } from "date-fns-jalali";
-import {
-  ehr_by_national_number,
-  EHR_BY_NATIONAL_NUMBER_KEY,
-  type EHRByNationalNumberApiResponse,
-} from "@/data/electronic health record/api/EHR-by-national-number";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { EHRByNationalNumberApiResponse } from "@/data/electronic health record/api/EHR-by-national-number";
 import type { ElectronicHealthRecord } from "@/data/electronic health record/type";
 import {
   classify,
@@ -18,7 +12,6 @@ import {
   type EhrStatus,
   type NormalRange,
 } from "./classify";
-import { EHR_HISTORY_YEARS, EHR_LAB_TYPE, EHR_REPORT_TYPES } from "./config";
 
 export type LabPoint = {
   service: string;
@@ -103,18 +96,28 @@ const toPoint = (record: ElectronicHealthRecord): LabPoint => {
   };
 };
 
+type EhrQuery = UseQueryResult<EHRByNationalNumberApiResponse, unknown>;
+
 /**
- * Shape the four responses into what the page renders.
+ * Shape the lab response and any report responses into what the page renders.
+ *
+ * `lab` is optional so a single report type can be shaped on its own (the
+ * patient page's per-type tabs); its rows then only ever land in `reports`.
  *
  * Unlike the patient-reports page this keeps results whose range will not
  * parse: they surface as `unknown` rather than being filtered away, because a
  * dropped imaging report reads to the user as "this patient had no imaging".
  */
-const buildPersonEhr = (
-  results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]
-): PersonEhr => {
+export const buildPersonEhr = ({
+  lab,
+  reports: reportQueries,
+}: {
+  lab?: EhrQuery;
+  reports: EhrQuery[];
+}): PersonEhr => {
+  const labQuery = lab;
+  const results = lab ? [lab, ...reportQueries] : reportQueries;
   const failed = results.find((r) => r.isError);
-  const [labQuery, ...reportQueries] = results;
 
   const points = (labQuery?.data ?? []).map(toPoint).filter((p) => p.service);
 
@@ -215,55 +218,4 @@ const buildPersonEhr = (
       : undefined,
     hasAny: points.length > 0 || reports.length > 0,
   };
-};
-
-/** Every electronic result for one person, arranged the way the page reads it. */
-export const usePersonEhr = ({
-  nationalId,
-  campaignDate,
-  enabled = true,
-}: {
-  nationalId: string;
-  /** `created_at` of the campaign, ISO. Anchors how far back to ask, only. */
-  campaignDate: string;
-  enabled?: boolean;
-}): PersonEhr => {
-  const range = React.useMemo(() => {
-    const exam = new Date(campaignDate);
-    const anchor = Number.isNaN(exam.getTime()) ? new Date() : exam;
-    return {
-      fromDate: format(subYears(anchor, EHR_HISTORY_YEARS), "yyyy/MM/dd"),
-      toDate: format(new Date(), "yyyy/MM/dd"),
-    };
-  }, [campaignDate]);
-
-  const combine = React.useCallback(
-    (results: UseQueryResult<EHRByNationalNumberApiResponse, unknown>[]) =>
-      buildPersonEhr(results),
-    []
-  );
-
-  return useQueries({
-    queries: [EHR_LAB_TYPE, ...EHR_REPORT_TYPES].map((patientType) => ({
-      queryKey: [
-        EHR_BY_NATIONAL_NUMBER_KEY,
-        nationalId,
-        patientType,
-        range.fromDate,
-        range.toDate,
-      ],
-      queryFn: () =>
-        ehr_by_national_number({
-          params: {
-            nationalNumber: nationalId,
-            fromDate: range.fromDate,
-            toDate: range.toDate,
-            patientType,
-          },
-        }),
-      enabled: enabled && Boolean(nationalId),
-      staleTime: 5 * 60 * 1000,
-    })),
-    combine,
-  });
 };

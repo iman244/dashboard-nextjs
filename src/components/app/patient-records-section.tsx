@@ -39,10 +39,8 @@ import {
   groupFields,
   labelOf,
   titleOf,
-  toDigits,
   type SchemaField,
 } from "@/components/schema-form/types";
-import { useList_PatientRecord_API } from "@/data/patient-entry/api/records";
 import { useIsStaff } from "@/data/user/fetches/me";
 import type {
   PatientEntryFile,
@@ -53,42 +51,19 @@ import { useDirection } from "@/lib/use-direction";
 
 type Viewing = { files: PatientEntryFile[]; index: number; title: string };
 
-/**
- * The ten-digit form of a national ID as a page happens to hold it.
- *
- * Iranian national IDs are always ten digits, but a spreadsheet column read
- * as a number drops the leading zeros -- step 2's Excel turns 0849290351 into
- * 849290351 -- so eight or nine digits can only mean zeros were lost.
- */
-const fullNationalId = (raw: string | null | undefined) => {
-  const digits = toDigits(raw ?? "");
-  return digits.length >= 8 && digits.length < 10
-    ? digits.padStart(10, "0")
-    : digits;
-};
 
 /**
- * What operators recorded for one patient through the monitoring forms: the
- * digit fields and the images, one block per monitoring.
- *
- * Shared by the staff patient pages and the patient portal. `authorized`
- * decides whether the staff token is sent -- see PatientRecordsInput.
+ * Rendering is shared; patient credentials never pass through the staff client.
+ * `patientPortal` picks the wording for the patient's own page; edit rights
+ * never do, since console viewers read without them.
  */
-export const PatientRecordsSection = ({
-  nationalId,
-  authorized,
-}: {
-  nationalId: string | null | undefined;
-  authorized: boolean;
+export const PatientRecordsContent = ({ records, editable = false, patientPortal = false }: {
+  records: { data?: PatientRecord[]; isPending: boolean; isError: boolean };
+  editable?: boolean;
+  patientPortal?: boolean;
 }) => {
   const t = useTranslations("common.PatientRecordsSection");
-  const id = fullNationalId(nationalId);
-  const valid = id.length === 10;
-  const records = useList_PatientRecord_API({ nationalId: id, authorized });
   const [viewing, setViewing] = React.useState<Viewing | null>(null);
-
-  if (!valid) return null;
-
   const shown = (records.data ?? []).filter(hasContent);
 
   return (
@@ -108,13 +83,13 @@ export const PatientRecordsSection = ({
         ) : records.isError ? (
           <p className="text-sm text-destructive">{t("LoadFailed")}</p>
         ) : shown.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t("Empty")}</p>
+          <p className="text-sm text-muted-foreground">{t(patientPortal ? "PatientEmpty" : "Empty")}</p>
         ) : (
           shown.map((record) => (
             <RecordBlock
               key={record.id}
               record={record}
-              editable={authorized}
+              editable={editable}
               onOpen={setViewing}
             />
           ))
@@ -190,8 +165,7 @@ const RecordBlock = ({
             })}
           </p>
         </div>
-        {/* Mounted only on staff pages: the portal has no Django session, so
-            asking who the user is there would only fail. */}
+        {/* Staff permissions are checked only on staff pages. */}
         {editable ? <EditLink record={record} /> : null}
       </div>
 

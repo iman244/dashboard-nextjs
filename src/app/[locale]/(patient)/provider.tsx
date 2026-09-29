@@ -4,14 +4,10 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { PatientSessionStatus } from "./type";
 import type { PatientSessionContextType } from "./type";
-import {
-  clearStoredNationalId,
-  getServerSnapshot,
-  getSnapshot,
-  hydrationStore,
-  setStoredNationalId,
-  subscribe,
-} from "./session-store";
+import { clearPatientSession, patientSnapshot, parsePatientSession, savePatientSession, subscribePatientSession } from "@/lib/patient-session";
+import type { PatientTokens } from "@/lib/patient-session";
+import { clearPatientRecords } from "@/lib/patient-query-cache";
+import { getServerSnapshot, hydrationStore } from "./session-store";
 
 const PatientSessionContext = React.createContext<
   PatientSessionContextType | undefined
@@ -28,11 +24,21 @@ export const PatientSessionProvider: React.FC<React.PropsWithChildren> = ({
     hydrationStore.getServerSnapshot
   );
 
-  const nationalId = React.useSyncExternalStore(
-    subscribe,
-    getSnapshot,
+  const raw = React.useSyncExternalStore(
+    subscribePatientSession,
+    patientSnapshot,
     getServerSnapshot
   );
+
+  const session = React.useMemo(() => parsePatientSession(raw), [raw]);
+  const nationalId = session?.nationalId ?? null;
+
+  const clearRecords = React.useCallback(() => {
+    clearPatientRecords(queryClient);
+  }, [queryClient]);
+  React.useEffect(() => subscribePatientSession(() => {
+    if (!parsePatientSession(patientSnapshot())) clearRecords();
+  }), [clearRecords]);
 
   const status = !isHydrated
     ? PatientSessionStatus.Loading
@@ -40,21 +46,19 @@ export const PatientSessionProvider: React.FC<React.PropsWithChildren> = ({
     ? PatientSessionStatus.Authenticated
     : PatientSessionStatus.Unauthenticated;
 
-  const signIn = React.useCallback((id: string) => {
-    setStoredNationalId(id);
-  }, []);
+  const signIn = React.useCallback((tokens: PatientTokens, id: string) => {
+    clearRecords();
+    savePatientSession(tokens, id);
+  }, [clearRecords]);
 
   const signOut = React.useCallback(() => {
-    clearStoredNationalId();
-    // A second patient on the same device must not inherit the first one's
-    // rows. Mirrors `unauthenticateUser` in src/app/_auth/useJwtToken.ts.
-    queryClient.clear();
-    queryClient.getMutationCache().clear();
-  }, [queryClient]);
+    clearPatientSession();
+    clearRecords();
+  }, [clearRecords]);
 
   const value = React.useMemo(
-    () => ({ status, nationalId, signIn, signOut }),
-    [status, nationalId, signIn, signOut]
+    () => ({ status, nationalId, sessionId: session?.id ?? null, signIn, signOut }),
+    [status, nationalId, session?.id, signIn, signOut]
   );
 
   return (
