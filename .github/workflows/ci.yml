@@ -75,6 +75,11 @@ jobs:
     # Only pushed tags deploy. Branch pushes, PRs and manual runs check only.
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    # A release-candidate tag (1.2.0-rc.1) rehearses on staging; the plain tag
+    # on the same commit (1.2.0) promotes it to production. See the platform
+    # README, "Staging".
+    env:
+      DEPLOY_ENV: ${{ contains(github.ref_name, '-rc.') && 'staging' || 'production' }}
     steps:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.5
@@ -96,7 +101,9 @@ jobs:
           # Forwarded into the remote shell, where deploy.sh writes them into
           # /app/.env. build.sh reads them from there as --build-arg values,
           # which is the only way NEXT_PUBLIC_* reaches the browser bundle.
-          envs: DEPLOY_SHA,NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME,NEXT_PUBLIC_PATIENT_SESSION_KEY
+          # A staging run keeps its own NEXT_PUBLIC_DJANGO_ADDRESS and ignores
+          # this one, so its bundle calls the staging API.
+          envs: DEPLOY_ENV,DEPLOY_SHA,NEXT_PUBLIC_DJANGO_ADDRESS,NEXT_PUBLIC_DJANGO_API_PATH,NEXT_PUBLIC_5_160_115_210_ADDRESS,NEXT_PUBLIC_5_160_115_210_API_PATH,NEXT_PUBLIC_AUTHORIZATION_TOKEN_NAME,NEXT_PUBLIC_ACCESS_TOKEN_KEY,NEXT_PUBLIC_REFRESH_TOKEN_KEY,NEXT_PUBLIC_LOCALE_COOKIE_NAME,NEXT_PUBLIC_PATIENT_SESSION_KEY
           # A full `npm install` and `next build` on a two-core VM.
           command_timeout: 40m
           # /app is a clone of mainreport-platform, where deploy.sh lives. Nothing
@@ -109,4 +116,4 @@ jobs:
             git -C /app fetch --quiet origin main
             git -C /app reset --quiet --hard origin/main
             chmod +x /app/deploy.sh
-            /app/deploy.sh nextjs
+            /app/deploy.sh --env "$DEPLOY_ENV" nextjs
