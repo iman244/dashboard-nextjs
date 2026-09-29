@@ -52,3 +52,14 @@ test('hasAnyValue: a row with only blank finding cells has no findings', () => {
   assert.equal(hasAnyValue({ ...row, FBS: '95' }, ['FBS', 'TSH']), true);
   assert.equal(hasAnyValue({ ...row, FBS: 0 }, ['FBS']), true);
 });
+
+test('row search finds a national id stored without its leading zero', async () => {
+  const { rowMatches } = await import('../src/lib/campaign.ts');
+  const row = { 'کد ملی': 850157269, 'نام': 'زهرا' };
+  assert.equal(rowMatches(row, '0850157269'), true);
+  assert.equal(rowMatches(row, '۰۸۵۰۱۵۷۲۶۹'), true);
+  assert.equal(rowMatches(row, 'زهرا'), true);
+  assert.equal(rowMatches(row, '0850157268'), false);
+  // Another numeric column is not padded into a false match.
+  assert.equal(rowMatches({ 'وزن': 85015726, 'کد ملی': '1111111111' }, '0085015726'), false);
+});

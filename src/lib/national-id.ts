@@ -14,6 +14,17 @@ const foldDigits = (raw: string) =>
     .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
 
 /**
+ * Digits folded, and whitespace, dashes and invisible marks dropped.
+ *
+ * Spreadsheet rows can hold the id as a number at runtime, whatever the type
+ * says. Persian copy-paste and Excel also carry invisible bidi/zero-width
+ * marks (ZWNJ/ZWJ/LRM/RLM, bidi embeddings/overrides, isolates, BOM) that
+ * must fold away like whitespace and dashes, never count as "not a digit".
+ */
+const compactId = (raw: string | number | null | undefined) =>
+  foldDigits(String(raw ?? "")).replace(/[\s\-‌-‏‪-‮⁦-⁩﻿]/g, "");
+
+/**
  * The ten-digit form of a national ID as a page happens to hold it.
  *
  * Iranian national IDs are always ten digits, but a spreadsheet column read
@@ -24,19 +35,28 @@ const foldDigits = (raw: string) =>
  * `0012345678` would open another real person (verified 2026-09-28).
  */
 export const fullNationalId = (raw: string | number | null | undefined) => {
-  // Spreadsheet rows can hold the id as a number at runtime, whatever the type says.
-  // Persian copy-paste and Excel also carry invisible bidi/zero-width marks
-  // (ZWNJ/ZWJ/LRM/RLM, bidi embeddings/overrides, isolates, BOM) that must
-  // fold away like whitespace and dashes, never count as "not a digit".
-  const compact = foldDigits(String(raw ?? "")).replace(
-    /[\s\-‌-‏‪-‮⁦-⁩﻿]/g,
-    ""
-  );
+  const compact = compactId(raw);
   if (!/^\d+$/.test(compact)) return compact;
   return compact.length >= 8 && compact.length < 10 ? compact.padStart(10, "0") : compact;
 };
 
 export const isNationalId = (value: string) => /^\d{10}$/.test(value);
+
+/**
+ * Whether a stored national ID contains what was typed into a search box.
+ *
+ * Both sides fold to the same form: older uploads hold 0850157269 as the
+ * number 850157269, and the typed text may carry Persian digits, spaces or
+ * copy-paste marks. A plain `includes` on the raw values made operators drop
+ * the leading zero to find anyone.
+ */
+export const nationalIdMatches = (
+  stored: string | number | null | undefined,
+  query: string
+) => {
+  const typed = compactId(query);
+  return /^\d+$/.test(typed) && fullNationalId(stored).includes(typed);
+};
 
 /**
  * A route segment decoded, or left as it came when its escapes are malformed

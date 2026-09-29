@@ -1,4 +1,4 @@
-import { asciiDigits } from "./national-id.ts";
+import { asciiDigits, nationalIdMatches } from "./national-id.ts";
 
 /** Where a spreadsheet keeps the national id: step_1, its summary sheet, step_2. */
 export const NATIONAL_ID_COLUMNS = ["personel.کد ملی", "تجمیع نتایج.کد ملی", "کد ملی"] as const;
@@ -49,12 +49,21 @@ export const toNumber = (value: unknown): number | undefined => {
   return /^-?\d+(\.\d+)?$/.test(text) ? Number(text) : undefined;
 };
 
-/** Whether any cell of `row` contains `query`, ignoring case and digit script. */
+/**
+ * Whether any cell of `row` contains `query`, ignoring case and digit script.
+ * National ID cells also match with their lost leading zeros restored.
+ */
 export const rowMatches = (row: Record<string, unknown>, query: string) => {
   const q = query.trim().toLowerCase();
   if (!q) return true;
   const qDigits = asciiDigits(q);
-  return Object.values(row).some((value) => {
+  return Object.entries(row).some(([column, value]) => {
+    if (
+      (NATIONAL_ID_COLUMNS as readonly string[]).includes(column) &&
+      nationalIdMatches(value as string | number | null, q)
+    ) {
+      return true;
+    }
     const text = String(value ?? "").toLowerCase();
     return text.includes(q) || (qDigits.length > 0 && asciiDigits(text).includes(qDigits));
   });
