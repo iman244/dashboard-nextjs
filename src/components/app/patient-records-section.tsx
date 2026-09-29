@@ -48,6 +48,7 @@ import type {
 } from "@/data/patient-entry/types";
 import { formatDate, localeDigits } from "@/lib/utils";
 import { useDirection } from "@/lib/use-direction";
+import { ZoomableImage } from "./zoomable-image";
 
 type Viewing = { files: PatientEntryFile[]; index: number; title: string };
 
@@ -300,8 +301,9 @@ const Thumbnail = ({
  * The field's images as a carousel, opened on the one that was clicked.
  *
  * Swipe, the arrow buttons, or the arrow keys (which follow the reading
- * direction) move between them. The body is keyed per opening so the
- * carousel starts fresh at the clicked image each time.
+ * direction) move between them; pinch, the wheel, a double tap or the zoom
+ * buttons zoom one in. The body is keyed per opening so the carousel starts
+ * fresh at the clicked image each time.
  */
 const Viewer = ({
   viewing,
@@ -328,12 +330,23 @@ const ViewerBody = ({ viewing }: { viewing: Viewing }) => {
   const direction = useDirection();
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(viewing.index);
+  // While a picture is zoomed in, a drag pans it instead of swiping away.
+  // A ref read by `watchDrag`, not state in the options: Embla re-initialises
+  // when its options change, and that jumped back to `startIndex`.
+  const zoomed = React.useRef(false);
+  const setZoomed = React.useCallback((next: boolean) => {
+    zoomed.current = next;
+  }, []);
   const count = viewing.files.length;
   const file = viewing.files[current];
 
   React.useEffect(() => {
     if (!api) return;
-    const onSelect = () => setCurrent(api.selectedScrollSnap());
+    const onSelect = () => {
+      setCurrent(api.selectedScrollSnap());
+      // The picture left behind is put back to normal size.
+      zoomed.current = false;
+    };
     api.on("select", onSelect);
     return () => {
       api.off("select", onSelect);
@@ -357,7 +370,14 @@ const ViewerBody = ({ viewing }: { viewing: Viewing }) => {
 
       <Carousel
         dir={direction}
-        opts={{ direction, startIndex: viewing.index, loop: count > 1 }}
+        opts={{
+          direction,
+          startIndex: viewing.index,
+          loop: count > 1,
+          // Nor does a two-finger touch swipe: that is a pinch to zoom.
+          watchDrag: (_api, event) =>
+            !zoomed.current && !("touches" in event && event.touches.length > 1),
+        }}
         setApi={setApi}
         // Focusable, and first in the dialog, so it receives focus on open
         // and the arrow keys work straight away.
@@ -370,15 +390,13 @@ const ViewerBody = ({ viewing }: { viewing: Viewing }) => {
             <CarouselItem key={image.id}>
               <div className="bg-muted relative h-[65dvh] w-full overflow-hidden rounded-lg">
                 {image.url ? (
-                  <Image
+                  <ZoomableImage
                     src={image.url}
                     alt={image.original_name}
-                    fill
-                    sizes="(min-width: 640px) 768px, 100vw"
-                    unoptimized
                     // The opening image first; its neighbours as they come.
-                    loading={index === viewing.index ? "eager" : "lazy"}
-                    className="object-contain"
+                    eager={index === viewing.index}
+                    active={index === current}
+                    onZoomedChange={setZoomed}
                   />
                 ) : null}
               </div>

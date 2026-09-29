@@ -120,7 +120,9 @@ const Client = () => {
         <div className="flex flex-wrap items-center gap-2">
           <Input
             inputMode="numeric"
-            dir="ltr"
+            // Digits read left to right, but the placeholder is a sentence in
+            // the page's language: ltr only once something is typed.
+            dir={openPatientId ? "ltr" : undefined}
             aria-label={t("openPatientLabel")}
             placeholder={t("openPatientPlaceholder")}
             value={openPatientId}
