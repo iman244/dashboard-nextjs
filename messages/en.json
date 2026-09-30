@@ -153,8 +153,6 @@
       "Create": "Create"
     },
     "SBHM_Step": {
-      "Label": "Step",
-      "Placeholder": "Select step",
       "Step1": "Step 1",
       "Step2": "Step 2"
     },
@@ -436,7 +434,9 @@
         "NameLabel": "Name",
         "NamePlaceholder": "Enter name",
         "UploadButton": "Upload",
-        "FileLabel": "File"
+        "FileLabel": "File",
+        "MonitoringLabel": "Monitoring",
+        "MonitoringPlaceholder": "Select a monitoring"
       },
       "SuccessMessage": "Excel uploaded successfully",
       "ErrorTitle": "Upload failed",

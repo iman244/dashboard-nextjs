@@ -93,7 +93,6 @@ function UploadExcelFormReady({
   const t = useTranslations(
     "/console/saderat-bank-health-monitoring.UploadSaderatBankHealthMonitoringExcelDialog"
   );
-  const tStep = useTranslations("common.SBHM_Step");
   const locale = useLocale();
 
   const preselected = campaignParam
@@ -276,7 +275,7 @@ function UploadExcelFormReady({
             name="type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{tStep("Label")}</FormLabel>
+                <FormLabel>{t("Form.MonitoringLabel")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value ?? ""}
@@ -284,7 +283,7 @@ function UploadExcelFormReady({
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder={tStep("Placeholder")} />
+                      <SelectValue placeholder={t("Form.MonitoringPlaceholder")} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>

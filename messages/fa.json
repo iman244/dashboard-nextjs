@@ -153,8 +153,6 @@
       "Create": "ایجاد"
     },
     "SBHM_Step": {
-      "Label": "مرحله",
-      "Placeholder": "مرحله را انتخاب کنید",
       "Step1": "مرحله ۱",
       "Step2": "مرحله ۲"
     },
@@ -436,7 +434,9 @@
         "NameLabel": "نام",
         "NamePlaceholder": "نام را وارد کنید",
         "UploadButton": "بارگذاری",
-        "FileLabel": "فایل"
+        "FileLabel": "فایل",
+        "MonitoringLabel": "پایش",
+        "MonitoringPlaceholder": "پایش را انتخاب کنید"
       },
       "SuccessMessage": "بارگذاری اکسل با موفقیت انجام شد",
       "ErrorTitle": "بارگذاری انجام نشد",
